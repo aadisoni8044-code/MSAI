@@ -3,8 +3,8 @@
 // ============================================================================
 
 import { initializeApp } from "firebase/app";
-import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, runTransaction } from "firebase/firestore";
+import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "firebase/auth";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs, runTransaction, onSnapshot } from "firebase/firestore";
 import { getStorage, ref, uploadString, getDownloadURL } from "firebase/storage";
 import { getDatabase, ref as rtdbRef, set, onValue, push, remove, get as rtdbGet } from "firebase/database";
 
@@ -22,6 +22,16 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
+
+// Enable Firebase Auth Persistence explicitly
+setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+        console.log("[Auth] Persistence enabled successfully using browserLocalPersistence.");
+    })
+    .catch((error) => {
+        console.error("[Auth] Error setting persistence:", error);
+    });
+
 const db = getFirestore(app);
 const storage = getStorage(app);
 const rtdb = getDatabase(app);
@@ -29,6 +39,7 @@ const provider = new GoogleAuthProvider();
 
 // Track currently logged-in user
 let currentUser = null;
+let activeUserDocListener = null;
 
 // --- GOOGLE AUTHENTICATION HANDLERS ---
 
@@ -80,38 +91,77 @@ onAuthStateChanged(auth, async (user) => {
         if (authModal) authModal.classList.remove("active");
 
         // Fetch user data from Firestore or initialize if new
-        const userDoc = await getOrCreateUserDoc(user);
+        await getOrCreateUserDoc(user);
 
-        // Update local game state with fetched database stats
-        if (userDoc) {
-            updateLocalGameState(userDoc, user);
+        // Unsubscribe from any previous listener
+        if (activeUserDocListener) {
+            activeUserDocListener();
+            activeUserDocListener = null;
         }
 
-        // Toggle UI widgets to Logged In state
-        if (loggedOutSection) loggedOutSection.style.display = "none";
-        if (loggedInSection) loggedInSection.style.display = "flex";
+        // Setup real-time listener on the Firestore users/{userId} doc
+        activeUserDocListener = onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+            if (docSnap.exists()) {
+                const userDoc = docSnap.data();
+                console.log("[Firestore] Real-time user doc update received:", userDoc);
 
-        const finalPhotoURL = (userDoc && userDoc.photoURL) || user.photoURL;
-        window.UI_STATE.photoURL = finalPhotoURL;
+                // Update local game state with fetched database stats
+                updateLocalGameState(userDoc, user);
 
-        if (userPhoto) userPhoto.src = finalPhotoURL || "https://placehold.co/32";
-        if (userName) userName.innerText = user.displayName || "Google User";
-        if (userEmail) userEmail.innerText = user.email || "";
+                // Toggle UI widgets to Logged In state
+                if (loggedOutSection) loggedOutSection.style.display = "none";
+                if (loggedInSection) loggedInSection.style.display = "flex";
 
-        // Update mini and large profile avatars with actual profile picture
-        updateUIAvatars(finalPhotoURL);
+                const finalPhotoURL = userDoc.photoURL || user.photoURL;
+                window.UI_STATE.photoURL = finalPhotoURL;
+
+                if (userPhoto) userPhoto.src = finalPhotoURL || "https://placehold.co/32";
+                if (userName) userName.innerText = userDoc.displayName || user.displayName || "Google User";
+                if (userEmail) userEmail.innerText = userDoc.email || user.email || "";
+
+                // Update mini and large profile avatars with actual profile picture
+                updateUIAvatars(finalPhotoURL);
+            }
+        }, (error) => {
+            console.error("[Firestore] Snapshot listener error:", error);
+        });
 
     } else {
         currentUser = null;
         console.log("[Auth] User logged out.");
 
+        // Unsubscribe from active user doc snapshot listener
+        if (activeUserDocListener) {
+            activeUserDocListener();
+            activeUserDocListener = null;
+        }
+
         // Toggle UI widgets to Logged Out state
         if (loggedOutSection) loggedOutSection.style.display = "block";
         if (loggedInSection) loggedInSection.style.display = "none";
 
-        // Clear UI STATE uid
+        // Reset in-memory values to defaults (0 coins, default map)
         if (window.UI_STATE) {
+            window.UI_STATE.ploCoins = 0;
+            window.UI_STATE.eloRating = 1000;
+            window.UI_STATE.streakDays = 0;
+            window.UI_STATE.username = "Rider_01";
             window.UI_STATE.uid = "--------";
+            window.UI_STATE.bio = "";
+            window.UI_STATE.youtube = "";
+            window.UI_STATE.instagram = "";
+            window.UI_STATE.twitter = "";
+            window.UI_STATE.twitch = "";
+            window.UI_STATE.followersCount = 0;
+            window.UI_STATE.followingCount = 0;
+            window.UI_STATE.unlockedLevels = { 1: 0 };
+            window.UI_STATE.equippedSkin = "classic";
+            window.UI_STATE.ownedSkins = ["classic"];
+            window.UI_STATE.totalCrashes = 0;
+            window.UI_STATE.totalPerfectRuns = 0;
+            window.UI_STATE.highScore = 0;
+            window.UI_STATE.raceWins = 0;
+            window.UI_STATE.photoURL = null;
         }
 
         // Close profile screen if user logged out
@@ -120,6 +170,20 @@ onAuthStateChanged(auth, async (user) => {
 
         // Reset avatars to default emoji 👤
         updateUIAvatars(null);
+
+        // Immediately repaint all widgets to defaults
+        if (typeof window.renderHeaderWidgets === "function") {
+            window.renderHeaderWidgets();
+        }
+        if (typeof window.renderProfileDetails === "function") {
+            window.renderProfileDetails();
+        }
+        if (typeof window.renderLevelSelector === "function") {
+            window.renderLevelSelector();
+        }
+        if (typeof window.renderShopSkins === "function") {
+            window.renderShopSkins();
+        }
     }
 });
 
@@ -191,7 +255,7 @@ async function getOrCreateUserDoc(user) {
                 createdAt: new Date().toISOString()
             };
 
-            await setDoc(docRef, initialData);
+            await setDoc(docRef, initialData, { merge: true });
             console.log("[Firestore] Successfully created new user record with +50 Coins signup bonus.");
 
             // Show alert/notification about the bonus coins
