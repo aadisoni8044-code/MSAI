@@ -80,30 +80,18 @@ onAuthStateChanged(auth, async (user) => {
         if (authModal) authModal.classList.remove("active");
 
         // Fetch user data from Firestore or initialize if new
-        const playerDoc = await getOrCreatePlayerDoc(user);
-
-        // Try fetching photoURL from users/{uid}
-        let customPhotoURL = "";
-        try {
-            const userDocRef = doc(db, "users", user.uid);
-            const userDocSnap = await getDoc(userDocRef);
-            if (userDocSnap.exists()) {
-                customPhotoURL = userDocSnap.data().photoURL || "";
-            }
-        } catch (err) {
-            console.error("[Firestore] Error fetching from users collection:", err);
-        }
+        const userDoc = await getOrCreateUserDoc(user);
 
         // Update local game state with fetched database stats
-        if (playerDoc) {
-            updateLocalGameState(playerDoc, user);
+        if (userDoc) {
+            updateLocalGameState(userDoc, user);
         }
 
         // Toggle UI widgets to Logged In state
         if (loggedOutSection) loggedOutSection.style.display = "none";
         if (loggedInSection) loggedInSection.style.display = "flex";
 
-        const finalPhotoURL = customPhotoURL || (playerDoc && playerDoc.photoURL) || user.photoURL;
+        const finalPhotoURL = (userDoc && userDoc.photoURL) || user.photoURL;
         window.UI_STATE.photoURL = finalPhotoURL;
 
         if (userPhoto) userPhoto.src = finalPhotoURL || "https://placehold.co/32";
@@ -138,19 +126,19 @@ onAuthStateChanged(auth, async (user) => {
 // --- CLOUD DATABASE SYNC (FIRESTORE) ---
 
 /**
- * Retrieves the user profile from the Firestore 'players' collection.
+ * Retrieves the user profile from the Firestore 'users' collection.
  * Creates a new document with +50 PLO Coins sign-up bonus if it doesn't exist.
  */
-async function getOrCreatePlayerDoc(user) {
-    const docRef = doc(db, "players", user.uid);
+async function getOrCreateUserDoc(user) {
+    const docRef = doc(db, "users", user.uid);
     try {
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            console.log("[Firestore] Found returning player profile:", docSnap.data());
+            console.log("[Firestore] Found returning user profile:", docSnap.data());
             return docSnap.data();
         } else {
-            console.log("[Firestore] No profile found. Initializing new player profile...");
+            console.log("[Firestore] No profile found. Initializing new user profile...");
 
             // Get current local coins if any, and add +50 sign-up bonus coins
             const currentLocalCoins = window.UI_STATE ? window.UI_STATE.ploCoins : 0;
@@ -163,8 +151,8 @@ async function getOrCreatePlayerDoc(user) {
             while (!isUnique && safetyCheck < 10) {
                 safetyCheck++;
                 const candidate = Math.floor(10000000 + Math.random() * 90000000).toString();
-                // Check if candidate UID exists in players collection
-                const q = query(collection(db, "players"), where("uid", "==", candidate));
+                // Check if candidate UID exists in users collection
+                const q = query(collection(db, "users"), where("uid", "==", candidate));
                 const snap = await getDocs(q);
                 if (snap.empty) {
                     finalUID = candidate;
@@ -193,18 +181,25 @@ async function getOrCreatePlayerDoc(user) {
                 followersCount: 0,
                 followingCount: 0,
                 uid: finalUID,
+                unlockedLevels: { 1: 0 },
+                equippedSkin: "classic",
+                ownedSkins: ["classic"],
+                totalCrashes: 0,
+                totalPerfectRuns: 0,
+                highScore: 0,
+                raceWins: 0,
                 createdAt: new Date().toISOString()
             };
 
             await setDoc(docRef, initialData);
-            console.log("[Firestore] Successfully created new player record with +50 Coins signup bonus.");
+            console.log("[Firestore] Successfully created new user record with +50 Coins signup bonus.");
 
             // Show alert/notification about the bonus coins
             alert("Welcome! You've received a +50 Speedy Coins signup bonus!");
             return initialData;
         }
     } catch (e) {
-        console.error("[Firestore] Error fetching/creating player document:", e);
+        console.error("[Firestore] Error fetching/creating user document:", e);
         return null;
     }
 }
@@ -233,14 +228,16 @@ function updateLocalGameState(cloudData, user) {
     window.UI_STATE.followersCount = cloudData.followersCount || 0;
     window.UI_STATE.followingCount = cloudData.followingCount || 0;
 
-    // 2. Persistent Save to local storage to sync across engines
-    localStorage.setItem(window.KEYS.COINS, window.UI_STATE.ploCoins.toString());
-    localStorage.setItem(window.KEYS.RATING, window.UI_STATE.eloRating.toString());
-    localStorage.setItem(window.KEYS.STREAK, window.UI_STATE.streakDays.toString());
-    localStorage.setItem(window.KEYS.USERNAME, window.UI_STATE.username);
+    // Load additional fields strictly from Firestore
+    window.UI_STATE.unlockedLevels = cloudData.unlockedLevels || { 1: 0 };
+    window.UI_STATE.equippedSkin = cloudData.equippedSkin || "classic";
+    window.UI_STATE.ownedSkins = cloudData.ownedSkins || ["classic"];
+    window.UI_STATE.totalCrashes = cloudData.totalCrashes || 0;
+    window.UI_STATE.totalPerfectRuns = cloudData.totalPerfectRuns || 0;
+    window.UI_STATE.highScore = cloudData.highScore || 0;
+    window.UI_STATE.raceWins = cloudData.raceWins || 0;
 
-    if (cloudData.high_score) {
-        localStorage.setItem("plo_io_endless_hiscore_v2", cloudData.high_score.toString());
+    if (cloudData.highScore) {
         if (typeof window.updateEngineMenuTags === "function") {
             window.updateEngineMenuTags();
         }
@@ -255,6 +252,9 @@ function updateLocalGameState(cloudData, user) {
     }
     if (typeof window.renderLevelSelector === "function") {
         window.renderLevelSelector();
+    }
+    if (typeof window.renderShopSkins === "function") {
+        window.renderShopSkins();
     }
 }
 
@@ -280,50 +280,41 @@ function updateUIAvatars(photoURL) {
     }
 }
 
-// --- INTERCEPT LOCAL STORAGE SAVES TO AUTO-SYNC TO FIRESTORE ---
-
 /**
- * Hook into standard localStorage.setItem writes to capture rating, distance and coins
- * updates in real-time, syncing them automatically to Firestore without invasive hacks.
+ * Real-time state syncing to cloud Firestore.
  */
-const originalSetItem = localStorage.setItem;
-localStorage.setItem = function(key, val) {
-    // Invoke standard local write
-    originalSetItem.apply(this, arguments);
-
-    // If a user is logged in, sync changes instantly to Firestore
-    if (currentUser) {
-        syncLocalStorageKeyToCloud(key, val);
-    }
-};
-
-async function syncLocalStorageKeyToCloud(key, val) {
+export async function syncUIStateToCloud() {
     if (!currentUser) return;
-
-    const userDocRef = doc(db, "players", currentUser.uid);
+    const userDocRef = doc(db, "users", currentUser.uid);
     try {
-        const updateData = {};
+        const syncData = {
+            plo_coins: window.UI_STATE.ploCoins || 0,
+            rating: window.UI_STATE.eloRating || 1000,
+            active_days: window.UI_STATE.streakDays || 1,
+            displayName: window.UI_STATE.username || "WaveRunner",
+            bio: window.UI_STATE.bio || "",
+            youtube: window.UI_STATE.youtube || "",
+            instagram: window.UI_STATE.instagram || "",
+            twitter: window.UI_STATE.twitter || "",
+            twitch: window.UI_STATE.twitch || "",
+            followersCount: window.UI_STATE.followersCount || 0,
+            followingCount: window.UI_STATE.followingCount || 0,
+            unlockedLevels: window.UI_STATE.unlockedLevels || { 1: 0 },
+            equippedSkin: window.UI_STATE.equippedSkin || "classic",
+            ownedSkins: window.UI_STATE.ownedSkins || ["classic"],
+            totalCrashes: window.UI_STATE.totalCrashes || 0,
+            totalPerfectRuns: window.UI_STATE.totalPerfectRuns || 0,
+            highScore: window.UI_STATE.highScore || 0,
+            raceWins: window.UI_STATE.raceWins || 0
+        };
 
-        if (key === "plo_coins_balance") {
-            updateData.plo_coins = parseInt(val) || 0;
-        } else if (key === "plo_login_streak") {
-            updateData.active_days = parseInt(val) || 0;
-        } else if (key === "plo_skill_rating") {
-            updateData.rating = parseInt(val) || 1000;
-        } else if (key === "plo_io_endless_hiscore_v2") {
-            updateData.high_score = parseInt(val) || 0;
-        } else if (key === "plo_username") {
-            updateData.displayName = val;
-        }
-
-        if (Object.keys(updateData).length > 0) {
-            await updateDoc(userDocRef, updateData);
-            console.log(`[Cloud Sync] Synced '${key}' to Firestore.`);
-        }
+        await setDoc(userDocRef, syncData, { merge: true });
+        console.log("[Cloud Sync] Synced entire UI_STATE to Firestore users collection.");
     } catch (err) {
-        console.error(`[Cloud Sync] Error syncing key '${key}':`, err);
+        console.error("[Cloud Sync] Error syncing UI_STATE to Cloud:", err);
     }
 }
+window.syncUIStateToCloud = syncUIStateToCloud;
 
 // --- ADDITIONAL MULTIPLAYER, REALTIME & SOCIAL APIS ---
 
@@ -381,10 +372,6 @@ export async function uploadProfilePicture(fileInput) {
         const userDocRef = doc(db, "users", currentUser.uid);
         await setDoc(userDocRef, { photoURL: downloadUrl }, { merge: true });
 
-        // Update players collection profile doc as well to ensure backward compatibility
-        const playerDocRef = doc(db, "players", currentUser.uid);
-        await setDoc(playerDocRef, { photoURL: downloadUrl }, { merge: true });
-
         // Update UI state and refresh UI avatars immediately without page reload
         window.UI_STATE.photoURL = downloadUrl;
         updateUIAvatars(downloadUrl);
@@ -408,8 +395,8 @@ export async function uploadProfilePicture(fileInput) {
 export async function updateProfileBio(newBio) {
     if (!currentUser) return;
     try {
-        const playerDocRef = doc(db, "players", currentUser.uid);
-        await updateDoc(playerDocRef, { bio: newBio });
+        const userDocRef = doc(db, "users", currentUser.uid);
+        await updateDoc(userDocRef, { bio: newBio });
         window.UI_STATE.bio = newBio;
         console.log("[Firestore] Bio updated successfully.");
     } catch (e) {
@@ -423,10 +410,10 @@ export async function updateProfileBio(newBio) {
 export async function updateSocialLink(network, url) {
     if (!currentUser) return;
     try {
-        const playerDocRef = doc(db, "players", currentUser.uid);
+        const userDocRef = doc(db, "users", currentUser.uid);
         const updateData = {};
         updateData[network] = url;
-        await updateDoc(playerDocRef, updateData);
+        await updateDoc(userDocRef, updateData);
         window.UI_STATE[network] = url;
         console.log(`[Firestore] Social link for '${network}' updated.`);
     } catch (e) {
@@ -446,7 +433,7 @@ export async function searchPlayersByUID(searchQuery) {
 
     try {
         const qByUID = query(
-            collection(db, "players"),
+            collection(db, "users"),
             where("uid", "==", searchQuery.trim())
         );
         const snapshot = await getDocs(qByUID);
@@ -496,7 +483,7 @@ export async function viewPublicProfile(uid) {
     if (!publicModal) return;
 
     try {
-        const docRef = doc(db, "players", uid);
+        const docRef = doc(db, "users", uid);
         const docSnap = await getDoc(docRef);
 
         if (!docSnap.exists()) return;
@@ -509,7 +496,7 @@ export async function viewPublicProfile(uid) {
         document.getElementById("public-profile-country").innerText = player.country || "USA";
         document.getElementById("public-profile-bio").innerText = player.bio || "No bio description provided.";
         document.getElementById("public-profile-rating").innerText = player.rating || 1000;
-        document.getElementById("public-profile-highscore").innerText = `${player.high_score || 0}m`;
+        document.getElementById("public-profile-highscore").innerText = `${player.highScore || player.high_score || 0}m`;
         document.getElementById("public-profile-followers").innerText = player.followersCount || 0;
         document.getElementById("public-profile-following").innerText = player.followingCount || 0;
         document.getElementById("public-profile-uid-display").innerText = `UID: ${player.uid || "--------"}`;
@@ -534,7 +521,7 @@ export async function viewPublicProfile(uid) {
         // Set Follow / Unfollow text based on active relations
         const followBtn = document.getElementById("public-follow-btn");
         if (currentUser) {
-            const checkRef = doc(db, "players", currentUser.uid, "following", uid);
+            const checkRef = doc(db, "users", currentUser.uid, "following", uid);
             const checkSnap = await getDoc(checkRef);
             followBtn.innerText = checkSnap.exists() ? "UNFOLLOW" : "FOLLOW";
         }
@@ -563,10 +550,10 @@ export async function toggleFollowPublicUser() {
     const isCurrentlyFollowing = followBtn.innerText === "UNFOLLOW";
 
     try {
-        const followerDocRef = doc(db, "players", activePublicProfileUid, "followers", currentUser.uid);
-        const followingDocRef = doc(db, "players", currentUser.uid, "following", activePublicProfileUid);
-        const targetUserRef = doc(db, "players", activePublicProfileUid);
-        const currentUserRef = doc(db, "players", currentUser.uid);
+        const followerDocRef = doc(db, "users", activePublicProfileUid, "followers", currentUser.uid);
+        const followingDocRef = doc(db, "users", currentUser.uid, "following", activePublicProfileUid);
+        const targetUserRef = doc(db, "users", activePublicProfileUid);
+        const currentUserRef = doc(db, "users", currentUser.uid);
 
         await runTransaction(db, async (transaction) => {
             const targetSnap = await transaction.get(targetUserRef);

@@ -308,15 +308,11 @@ function updateInputActiveState() {
 // --- ENGINE RECOVERY DATA ---
 function loadEngineSavedData() {
     try {
-        const savedHiScore = localStorage.getItem(SAVE_ENDLESS_HI_SCORE);
-        if (savedHiScore) {
-            endlessDistance = parseInt(savedHiScore, 10);
-        }
+        const savedHiScore = window.UI_STATE ? (window.UI_STATE.highScore || 0) : 0;
+        endlessDistance = savedHiScore;
 
-        const savedRaceWins = localStorage.getItem(SAVE_RACE_WINS);
-        if (savedRaceWins) {
-            raceWinsCount = parseInt(savedRaceWins, 10);
-        }
+        const savedRaceWins = window.UI_STATE ? (window.UI_STATE.raceWins || 0) : 0;
+        raceWinsCount = savedRaceWins;
 
         updateEngineMenuTags();
     } catch (e) {
@@ -1420,7 +1416,12 @@ function triggerGameOverScreen() {
 
         if (levelProgress > endlessDistance) {
             endlessDistance = levelProgress;
-            localStorage.setItem(SAVE_ENDLESS_HI_SCORE, endlessDistance.toString());
+            if (window.UI_STATE) {
+                window.UI_STATE.highScore = endlessDistance;
+            }
+            if (window.isLoggedIn && typeof window.syncUIStateToCloud === 'function') {
+                window.syncUIStateToCloud();
+            }
             updateEngineMenuTags();
         }
     } else {
@@ -1709,7 +1710,12 @@ function updateRaceLeaderboardRows() {
         if (index === 0) {
             // First place victory
             raceWinsCount++;
-            localStorage.setItem(SAVE_RACE_WINS, raceWinsCount.toString());
+            if (window.UI_STATE) {
+                window.UI_STATE.raceWins = raceWinsCount;
+            }
+            if (window.isLoggedIn && typeof window.syncUIStateToCloud === 'function') {
+                window.syncUIStateToCloud();
+            }
             updateEngineMenuTags();
             triggerLevelCleared();
         } else {
