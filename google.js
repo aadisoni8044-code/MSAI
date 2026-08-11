@@ -101,8 +101,24 @@ onAuthStateChanged(auth, async (user) => {
         const authModal = document.getElementById("auth-modal");
         if (authModal) authModal.classList.remove("active");
 
-        // Fetch user data from Firestore or initialize if new
-        await getOrCreateUserDoc(user);
+        // Fetch user data from Firestore strictly using user.uid as document path
+        try {
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                const userDoc = docSnap.data();
+                console.log("[Firestore] Synced existing user profile on login:", userDoc);
+                // Immediately update global RAM variables with saved coins, level, and stats, and trigger UI updates
+                updateLocalGameState(userDoc, user);
+            } else {
+                // Initialize if new
+                await getOrCreateUserDoc(user);
+            }
+        } catch (err) {
+            console.error("[Firestore] Error fetching user document on auth state change:", err);
+            // Fallback to getOrCreateUserDoc
+            await getOrCreateUserDoc(user);
+        }
 
         // Unsubscribe from any previous listener
         if (activeUserDocListener) {

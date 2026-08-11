@@ -1,3 +1,12 @@
+// Purge legacy data on page init
+try {
+    localStorage.clear();
+    sessionStorage.clear();
+    console.log("[Storage Purge] Absolute localStorage and sessionStorage purge complete on page init.");
+} catch (e) {
+    console.error("[Storage Purge] Error purging storage:", e);
+}
+
 // --- SETTINGS OVERLAY CONTROLLER ---
 function openSettingsOverlay() {
     const overlay = document.getElementById('settings-overlay');
