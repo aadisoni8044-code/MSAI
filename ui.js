@@ -381,7 +381,7 @@ function buyUnlockLevel(level, cost) {
         renderLevelSelector();
         playBuySound();
     } else {
-        alert("Not enough Speedy Coins to unlock this level! Keep racing.");
+        window.showToast("Not enough Speedy Coins to unlock this level! Keep racing.", "error");
     }
 }
 
@@ -536,7 +536,7 @@ function selectSkin(skinId) {
 
             playBuySound();
         } else {
-            alert("Insufficient Speedy Coins! Keep playing to earn more.");
+            window.showToast("Insufficient Speedy Coins! Keep playing to earn more.", "error");
         }
     }
 
@@ -678,7 +678,7 @@ function navigateToProfileScreen() {
     if (isUserLoggedIn) {
         showScreen('profile-screen');
     } else {
-        alert("Please login with Google to access the Profile and save your progress!");
+        window.showToast("Please login with Google to access the Profile and save your progress!", "warning");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }
@@ -701,7 +701,7 @@ function navigateToSearchScreen() {
 
         showScreen('search-screen');
     } else {
-        alert("Please login with Google to access the Search and save your progress!");
+        window.showToast("Please login with Google to access the Search and save your progress!", "warning");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }
@@ -716,7 +716,7 @@ function navigateToShopScreen() {
     if (isUserLoggedIn) {
         showScreen('shop-screen');
     } else {
-        alert("Please login with Google to access the Shop and save your progress!");
+        window.showToast("Please login with Google to access the Shop and save your progress!", "warning");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }
@@ -730,9 +730,9 @@ function navigateToLeaderboardScreen() {
     const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
     if (isUserLoggedIn) {
         // Since tournament features/leaderboard are enabled in race mode, let them know or play race mode
-        alert("Leaderboard features are enabled! Play Race mode to climb the ranks.");
+        window.showToast("Leaderboard features are enabled! Play Race mode to climb the ranks.", "info");
     } else {
-        alert("Please login with Google to access the Leaderboard and save your progress!");
+        window.showToast("Please login with Google to access the Leaderboard and save your progress!", "warning");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }

@@ -61,3 +61,48 @@ function openGameModes() {
     }
 }
 window.openGameModes = openGameModes;
+
+// --- CUSTOM UI TOAST SYSTEM ---
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast-notification ${type}`;
+
+    let icon = 'ℹ️';
+    if (type === 'success') icon = '✅';
+    if (type === 'error') icon = '❌';
+    if (type === 'warning') icon = '⚠️';
+
+    toast.innerHTML = `<span class="toast-icon">${icon}</span><span style="flex-grow: 1;">${message}</span>`;
+    container.appendChild(toast);
+
+    // Force reflow and add class for CSS fade-in
+    setTimeout(() => {
+        toast.classList.add('active');
+    }, 50);
+
+    // Auto-dismiss after 3 seconds
+    setTimeout(() => {
+        toast.classList.remove('active');
+        setTimeout(() => {
+            toast.remove();
+        }, 300);
+    }, 3000);
+}
+window.showToast = showToast;
+
+// Override window.alert for legacy/compatibility safety
+window.alert = function(msg) {
+    let type = 'info';
+    const lower = msg.toLowerCase();
+    if (lower.includes('success') || lower.includes('welcome')) {
+        type = 'success';
+    } else if (lower.includes('fail') || lower.includes('error') || lower.includes('not enough') || lower.includes('insufficient')) {
+        type = 'error';
+    } else if (lower.includes('login') || lower.includes('sign in')) {
+        type = 'warning';
+    }
+    window.showToast(msg, type);
+};

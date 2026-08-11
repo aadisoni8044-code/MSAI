@@ -65,7 +65,7 @@ export async function loginWithGoogle() {
         console.log(`[Auth] Google Sign-In successful for: ${user.displayName}`);
     } catch (error) {
         console.error("[Auth] Error during Google Sign-In:", error);
-        alert(`Sign-in failed: ${error.message}`);
+        window.showToast(`Sign-in failed: ${error.message}`, "error");
     }
 }
 
@@ -329,7 +329,7 @@ async function getOrCreateUserDoc(user) {
             console.log("[Firestore] Successfully created new user record with +50 Coins signup bonus.");
 
             // Show alert/notification about the bonus coins
-            alert("Welcome! You've received a +50 Speedy Coins signup bonus!");
+            window.showToast("Welcome! You've received a +50 Speedy Coins signup bonus!", "success");
             return initialData;
         }
     } catch (e) {
@@ -520,10 +520,10 @@ export async function uploadProfilePicture(fileInput) {
             userPhoto.src = downloadUrl;
         }
 
-        alert("Profile picture uploaded successfully!");
+        window.showToast("Profile picture uploaded successfully!", "success");
     } catch (error) {
         console.error("[Storage] Error during PFP upload:", error);
-        alert(`Failed to upload avatar: ${error.message}`);
+        window.showToast(`Failed to upload avatar: ${error.message}`, "error");
     }
 }
 
@@ -688,11 +688,11 @@ export async function viewPublicProfile(uid) {
  */
 export async function toggleFollowPublicUser() {
     if (!currentUser || !activePublicProfileUid) {
-        alert("Please log in to follow other players!");
+        window.showToast("Please log in to follow other players!", "warning");
         return;
     }
     if (currentUser.uid === activePublicProfileUid) {
-        alert("You cannot follow your own shadow profile!");
+        window.showToast("You cannot follow your own shadow profile!", "error");
         return;
     }
 
@@ -755,7 +755,7 @@ let activeRoomId = null;
  */
 export async function createMultiplayerRoom() {
     if (!currentUser) {
-        alert("Please sign in to host real-time tournament lobbies!");
+        window.showToast("Please sign in to host real-time tournament lobbies!", "warning");
         return;
     }
 
@@ -859,7 +859,7 @@ export async function challengePublicUser() {
             timestamp: Date.now()
         });
 
-        alert("Challenge Invite sent successfully!");
+        window.showToast("Challenge Invite sent successfully!", "success");
         document.getElementById("public-profile-modal").classList.remove("active");
     } catch (e) {
         console.error("[RTDB] Error sending direct challenge:", e);

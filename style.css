@@ -1903,3 +1903,50 @@ canvas {
     color: var(--neon-pink) !important;
     transform: scale(1.2);
 }
+
+/* Custom UI Toast Notification System */
+.toast-notification {
+    background: rgba(4, 10, 15, 0.9);
+    border: 1.5px solid var(--neon-cyan);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    min-width: 250px;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    pointer-events: auto;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 10000;
+}
+
+.toast-notification.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-notification.error {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 15px rgba(255, 0, 127, 0.45);
+}
+
+.toast-notification.success {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 15px rgba(0, 255, 102, 0.45);
+}
+
+.toast-notification.warning {
+    border-color: var(--neon-gold);
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.45);
+}
+
+.toast-icon {
+    font-size: 18px;
+}
