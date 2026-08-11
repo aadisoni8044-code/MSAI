@@ -637,6 +637,10 @@ function handleFullscreenChange() {
             }
         }
     }
+    const fsBtn = document.getElementById('settings-fullscreen-toggle');
+    if (fsBtn) {
+        fsBtn.innerHTML = isFullscreen ? '<span>🖥️</span> EXIT FULLSCREEN' : '<span>🖥️</span> ENTER FULLSCREEN';
+    }
 }
 
 /**
@@ -670,9 +674,11 @@ window.showScreen = showScreen;
  * Navigate to Profile full-screen SPA View
  */
 function navigateToProfileScreen() {
-    if (window.isLoggedIn) {
+    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
+    if (isUserLoggedIn) {
         showScreen('profile-screen');
     } else {
+        alert("Please login with Google to access the Profile and save your progress!");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }
@@ -683,7 +689,8 @@ window.navigateToProfileScreen = navigateToProfileScreen;
  * Navigate to Search full-screen SPA View
  */
 function navigateToSearchScreen() {
-    if (window.isLoggedIn) {
+    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
+    if (isUserLoggedIn) {
         // Reset previous search results and values for cleanliness
         const results = document.getElementById('social-search-results');
         if (results) {
@@ -694,6 +701,7 @@ function navigateToSearchScreen() {
 
         showScreen('search-screen');
     } else {
+        alert("Please login with Google to access the Search and save your progress!");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }
@@ -704,6 +712,29 @@ window.navigateToSearchScreen = navigateToSearchScreen;
  * Navigate to Shop full-screen SPA View
  */
 function navigateToShopScreen() {
-    showScreen('shop-screen');
+    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
+    if (isUserLoggedIn) {
+        showScreen('shop-screen');
+    } else {
+        alert("Please login with Google to access the Shop and save your progress!");
+        const aModal = document.getElementById('auth-modal');
+        if (aModal) aModal.classList.add('active');
+    }
 }
 window.navigateToShopScreen = navigateToShopScreen;
+
+/**
+ * Navigate to Leaderboard full-screen SPA View / restricted feedback action
+ */
+function navigateToLeaderboardScreen() {
+    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
+    if (isUserLoggedIn) {
+        // Since tournament features/leaderboard are enabled in race mode, let them know or play race mode
+        alert("Leaderboard features are enabled! Play Race mode to climb the ranks.");
+    } else {
+        alert("Please login with Google to access the Leaderboard and save your progress!");
+        const aModal = document.getElementById('auth-modal');
+        if (aModal) aModal.classList.add('active');
+    }
+}
+window.navigateToLeaderboardScreen = navigateToLeaderboardScreen;

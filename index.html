@@ -48,6 +48,11 @@
 
                 <!-- Custom Daily currency balances & streaks widgets -->
                 <div class="economy-widgets">
+                    <div id="login-save-progress-indicator" class="glass-panel widget-item streak"
+                        style="cursor: pointer; border-color: var(--neon-pink); color: var(--neon-pink); display: none;"
+                        onclick="document.getElementById('auth-modal').classList.add('active')">
+                        🔑 LOGIN TO SAVE PROGRESS
+                    </div>
                     <div class="glass-panel widget-item streak"
                         onclick="document.getElementById('daily-rewards-modal').classList.add('active')">
                         <span>🔥</span> <span class="streak-days-val">1</span> Days
@@ -60,66 +65,27 @@
             </div>
 
             <!-- Central Title logo branding -->
-            <div class="title-container">
+            <div class="title-container" style="margin-top: 40px; margin-bottom: 20px;">
                 <h1 class="title-logo">Speedy<span> Arrow</span></h1>
                 <div class="subtitle">Neon Geometry Wave Runner</div>
             </div>
 
-            <!-- Game Mode Cards Container -->
-            <div class="cards-container">
-                <!-- Classic Level select mode -->
-                <div class="glass-panel mode-card classic-card" onclick="openLevelSelect()">
-                    <div class="mode-icon">🏆</div>
-                    <div class="mode-title">Classic</div>
-                    <div class="mode-desc">Survive through 100 thematic hand-crafted levels divided across 5 unique
-                        visual biomes.</div>
-                </div>
-
-                <!-- Endless survival mode -->
-                <div class="glass-panel mode-card endless-card" onclick="launchEndlessMode()">
-                    <div class="mode-icon">⚡</div>
-                    <div class="mode-title">Endless</div>
-                    <div class="mode-desc">Dynamic procedurally generated course. Speed and density increase infinitely
-                        as you fly.</div>
-                    <div id="endless-high-score-v2" class="best-score-tag">Best Survival: 0m</div>
-                </div>
-
-                <!-- Live Tournament AI competition mode -->
-                <div class="glass-panel mode-card race-card" onclick="launchRaceMode()">
-                    <div class="mode-icon">🏁</div>
-                    <div class="mode-title">Race</div>
-                    <div class="mode-desc">Face off in real-time speedways against 4 smart geometry drone competitors.
-                    </div>
-                    <div id="race-wins-v2" class="best-score-tag">Championship Wins: 0</div>
-                </div>
+            <!-- Main Menu Clean Buttons Row -->
+            <div class="main-buttons-container" style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 320px; margin: 30px auto; z-index: 10;">
+                <button id="menu-start-btn" class="settings-btn" style="border-color: var(--neon-cyan); padding: 16px; font-size: 18px; width: 100%; letter-spacing: 2px;" onclick="window.openGameModes()">
+                    <span>🎮</span> START GAME
+                </button>
+                <button id="menu-shop-btn-main" class="settings-btn" style="border-color: rgba(0, 243, 255, 0.5); padding: 16px; font-size: 18px; width: 100%; letter-spacing: 2px;" onclick="window.navigateToShopScreen()">
+                    <span>🛒</span> SKIN SHOP
+                </button>
+                <button id="menu-settings-btn" class="settings-btn" style="border-color: var(--neon-pink); padding: 16px; font-size: 18px; width: 100%; letter-spacing: 2px;" onclick="window.openSettingsOverlay()">
+                    <span>⚙️</span> SETTINGS
+                </button>
             </div>
 
-            <!-- Footer settings buttons toolbar -->
-            <div class="menu-footer-row">
-                <div class="toolbar-buttons">
-                    <button id="audio-toggle" class="settings-btn" onclick="toggleAudio()">
-                        <span>🔊</span> AUDIO: ON
-                    </button>
-                    <button id="pwa-install-btn" class="settings-btn"
-                        style="border-color: rgba(255, 170, 0, 0.3); display: none;">
-                        <span>📥</span> DOWNLOAD APP
-                    </button>
-                    <button class="settings-btn" style="border-color: rgba(0, 243, 255, 0.3);"
-                        onclick="window.navigateToShopScreen()">
-                        <span>🛒</span> SKIN SHOP
-                    </button>
-                    <button class="settings-btn" style="border-color: rgba(176, 38, 255, 0.3);"
-                        onclick="window.navigateToProfileScreen()">
-                        <span>👤</span> PROFILE
-                    </button>
-                    <button class="settings-btn" style="border-color: var(--neon-cyan);"
-                        onclick="window.navigateToSearchScreen()">
-                        <span>💬</span> SOCIAL & SEARCH
-                    </button>
-                </div>
-
-                <!-- Social link icons -->
-                <div class="social-links">
+            <!-- Social link icons -->
+            <div class="menu-footer-row" style="margin-top: auto;">
+                <div class="social-links" style="margin: auto; display: flex; gap: 15px; justify-content: center; z-index: 10;">
                     <a href="https://github.com/aadisoni8044-code" target="_blank" rel="noopener noreferrer"
                         class="social-btn github-btn" title="GitHub">
                         <svg viewBox="0 0 24 24">
@@ -158,6 +124,45 @@
                 </div>
             </div>
 
+        </div>
+
+        <!-- SPA: GAME MODES SCREEN -->
+        <div id="game-modes-screen" class="screen hidden">
+            <button class="back-btn" onclick="openMainMenu()">← MENU</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo" style="font-size: 40px; margin-bottom: 2px;">Game Modes</h2>
+                <div class="subtitle">Select your run type</div>
+            </div>
+
+            <!-- Game Mode Cards Container -->
+            <div class="cards-container">
+                <!-- Classic Level select mode -->
+                <div class="glass-panel mode-card classic-card" onclick="openLevelSelect()">
+                    <div class="mode-icon">🏆</div>
+                    <div class="mode-title">Classic</div>
+                    <div class="mode-desc">Survive through 100 thematic hand-crafted levels divided across 5 unique
+                        visual biomes.</div>
+                </div>
+
+                <!-- Endless survival mode -->
+                <div class="glass-panel mode-card endless-card" onclick="launchEndlessMode()">
+                    <div class="mode-icon">⚡</div>
+                    <div class="mode-title">Endless</div>
+                    <div class="mode-desc">Dynamic procedurally generated course. Speed and density increase infinitely
+                        as you fly.</div>
+                    <div id="endless-high-score-v2" class="best-score-tag">Best Survival: 0m</div>
+                </div>
+
+                <!-- Live Tournament AI competition mode -->
+                <div class="glass-panel mode-card race-card" onclick="launchRaceMode()">
+                    <div class="mode-icon">🏁</div>
+                    <div class="mode-title">Race</div>
+                    <div class="mode-desc">Face off in real-time speedways against 4 smart geometry drone competitors.
+                    </div>
+                    <div id="race-wins-v2" class="best-score-tag">Championship Wins: 0</div>
+                </div>
+            </div>
         </div>
 
         <!-- BIOME PAGED LEVEL SELECTION OVERLAY -->
@@ -717,11 +722,59 @@
             </div>
         </div>
 
+        <!-- SETTINGS OVERLAY -->
+        <div id="settings-overlay" class="modal-overlay" style="z-index: 100;">
+            <div class="modal-content settings-content" style="border-color: var(--neon-cyan); max-width: 500px; position: relative;">
+                <button class="modal-close-btn" onclick="window.closeSettingsOverlay()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
+                <h2 class="modal-title" style="color: var(--neon-cyan); text-shadow: var(--cyan-glow); font-size: 32px; margin-bottom: 20px;">SETTINGS</h2>
+
+                <div class="settings-section" style="margin-bottom: 25px; width: 100%; text-align: left;">
+                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Search Rider by UID</div>
+                    <div style="display: flex; gap: 8px; width: 100%;">
+                        <input type="text" id="settings-search-input" placeholder="Enter 8-Digit UID..."
+                            style="flex-grow: 1; background: rgba(0,0,0,0.4); border: 2px solid rgba(0, 243, 255, 0.3); border-radius: 8px; color: #fff; padding: 10px; font-size: 15px; font-family: 'Orbitron', sans-serif; outline: none; text-align: center; letter-spacing: 1px;">
+                        <button class="settings-btn"
+                            onclick="window.searchPlayersByUID(document.getElementById('settings-search-input').value)"
+                            style="border-color: var(--neon-cyan); padding: 10px 20px; font-size: 14px;">SEARCH</button>
+                    </div>
+                    <div id="settings-search-results" class="glass-panel"
+                        style="border-color: rgba(0, 243, 255, 0.15); padding: 15px; text-align: center; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; margin-top: 10px; background: rgba(0, 0, 0, 0.2); font-size: 13px; color: #a4c4c1;">
+                        Enter an 8-digit Player ID above to search...
+                    </div>
+                </div>
+
+                <div class="settings-section" style="margin-bottom: 25px; width: 100%; text-align: left;">
+                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Game Sound</div>
+                    <button id="settings-audio-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; text-shadow: var(--cyan-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleAudioInSettings()">
+                        <span>🔊</span> AUDIO: ON
+                    </button>
+                </div>
+
+                <div class="settings-section" style="margin-bottom: 25px; width: 100%; text-align: left;">
+                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Screen Mode</div>
+                    <button id="settings-fullscreen-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; text-shadow: var(--cyan-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleFullscreenInSettings()">
+                        <span>🖥️</span> ENTER FULLSCREEN
+                    </button>
+                </div>
+
+                <!-- Secondary utility buttons for Profile, Leaderboard to retain functional integrity -->
+                <div class="settings-section" style="width: 100%; display: flex; gap: 8px;">
+                    <button class="settings-btn" style="flex: 1; border-color: rgba(176, 38, 255, 0.3); padding: 10px; font-size: 12px;" onclick="window.navigateToProfileScreen(); window.closeSettingsOverlay();">
+                        <span>👤</span> PROFILE
+                    </button>
+                    <button class="settings-btn" style="flex: 1; border-color: rgba(255, 170, 0, 0.3); padding: 10px; font-size: 12px;" onclick="window.navigateToLeaderboardScreen(); window.closeSettingsOverlay();">
+                        <span>📊</span> LEADERBOARD
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- Core modular game script links -->
     <script src="ui.js"></script>
     <script src="game-engine.js"></script>
+    <script src="main.js"></script>
 
     <!-- Firebase v10 Modular SDK via ES Modules & google.js Integration -->
     <script type="importmap">

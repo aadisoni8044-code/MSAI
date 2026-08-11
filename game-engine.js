@@ -2084,7 +2084,11 @@ function nextLevel() {
 
 function toggleAudio() {
     isMuted = !isMuted;
-    document.getElementById('audio-toggle').innerHTML = isMuted ? '<span>🔇</span> AUDIO: OFF' : '<span>🔊</span> AUDIO: ON';
+    const label = isMuted ? '<span>🔇</span> AUDIO: OFF' : '<span>🔊</span> AUDIO: ON';
+    const mainBtn = document.getElementById('audio-toggle');
+    if (mainBtn) mainBtn.innerHTML = label;
+    const settingsBtn = document.getElementById('settings-audio-toggle');
+    if (settingsBtn) settingsBtn.innerHTML = label;
 }
 
 // --- MAIN LOOP ---

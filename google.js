@@ -23,6 +23,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
+// Expose legacy-compatible firebase.auth().currentUser on the global window object
+window.firebase = {
+    auth: () => {
+        return {
+            get currentUser() {
+                return auth.currentUser;
+            }
+        };
+    }
+};
+
 // Enable Firebase Auth Persistence explicitly
 setPersistence(auth, browserLocalPersistence)
     .then(() => {
@@ -185,7 +196,64 @@ onAuthStateChanged(auth, async (user) => {
             window.renderShopSkins();
         }
     }
+
+    // Refresh restricted/unrestricted UI elements based on current auth state
+    if (typeof updateAuthUI === "function") {
+        updateAuthUI();
+    }
 });
+
+/**
+ * Updates the visibility and enabled states of restricted features
+ * depending on whether a user is currently logged in.
+ */
+export function updateAuthUI() {
+    // Always check firebase.auth().currentUser
+    const user = window.firebase ? window.firebase.auth().currentUser : null;
+
+    const shopBtn = document.getElementById("menu-shop-btn");
+    const profileBtn = document.getElementById("menu-profile-btn");
+    const searchBtn = document.getElementById("menu-search-btn");
+    const leaderboardBtn = document.getElementById("menu-leaderboard-btn");
+    const loginIndicator = document.getElementById("login-save-progress-indicator");
+
+    if (!user) {
+        // Guest user: Hide or Disable features
+        if (shopBtn) {
+            shopBtn.classList.add("restricted-feature");
+        }
+        if (profileBtn) {
+            profileBtn.classList.add("restricted-feature");
+        }
+        if (searchBtn) {
+            searchBtn.classList.add("restricted-feature");
+        }
+        if (leaderboardBtn) {
+            leaderboardBtn.classList.add("restricted-feature");
+        }
+        if (loginIndicator) {
+            loginIndicator.style.display = "flex";
+        }
+    } else {
+        // Logged-in user: Enable all features
+        if (shopBtn) {
+            shopBtn.classList.remove("restricted-feature");
+        }
+        if (profileBtn) {
+            profileBtn.classList.remove("restricted-feature");
+        }
+        if (searchBtn) {
+            searchBtn.classList.remove("restricted-feature");
+        }
+        if (leaderboardBtn) {
+            leaderboardBtn.classList.remove("restricted-feature");
+        }
+        if (loginIndicator) {
+            loginIndicator.style.display = "none";
+        }
+    }
+}
+window.updateAuthUI = updateAuthUI;
 
 // --- CLOUD DATABASE SYNC (FIRESTORE) ---
 
@@ -255,7 +323,9 @@ async function getOrCreateUserDoc(user) {
                 createdAt: new Date().toISOString()
             };
 
-            await setDoc(docRef, initialData, { merge: true });
+            if (user) {
+                await setDoc(docRef, initialData, { merge: true });
+            }
             console.log("[Firestore] Successfully created new user record with +50 Coins signup bonus.");
 
             // Show alert/notification about the bonus coins
@@ -372,7 +442,9 @@ export async function syncUIStateToCloud() {
             raceWins: window.UI_STATE.raceWins || 0
         };
 
-        await setDoc(userDocRef, syncData, { merge: true });
+        if (currentUser) {
+            await setDoc(userDocRef, syncData, { merge: true });
+        }
         console.log("[Cloud Sync] Synced entire UI_STATE to Firestore users collection.");
     } catch (err) {
         console.error("[Cloud Sync] Error syncing UI_STATE to Cloud:", err);
@@ -434,7 +506,9 @@ export async function uploadProfilePicture(fileInput) {
 
         // Save this download URL to the user's Firestore document (users/{userId}/photoURL)
         const userDocRef = doc(db, "users", currentUser.uid);
-        await setDoc(userDocRef, { photoURL: downloadUrl }, { merge: true });
+        if (currentUser) {
+            await setDoc(userDocRef, { photoURL: downloadUrl }, { merge: true });
+        }
 
         // Update UI state and refresh UI avatars immediately without page reload
         window.UI_STATE.photoURL = downloadUrl;
@@ -460,7 +534,9 @@ export async function updateProfileBio(newBio) {
     if (!currentUser) return;
     try {
         const userDocRef = doc(db, "users", currentUser.uid);
-        await updateDoc(userDocRef, { bio: newBio });
+        if (currentUser) {
+            await updateDoc(userDocRef, { bio: newBio });
+        }
         window.UI_STATE.bio = newBio;
         console.log("[Firestore] Bio updated successfully.");
     } catch (e) {
@@ -477,7 +553,9 @@ export async function updateSocialLink(network, url) {
         const userDocRef = doc(db, "users", currentUser.uid);
         const updateData = {};
         updateData[network] = url;
-        await updateDoc(userDocRef, updateData);
+        if (currentUser) {
+            await updateDoc(userDocRef, updateData);
+        }
         window.UI_STATE[network] = url;
         console.log(`[Firestore] Social link for '${network}' updated.`);
     } catch (e) {
@@ -490,10 +568,18 @@ export async function updateSocialLink(network, url) {
  */
 export async function searchPlayersByUID(searchQuery) {
     if (!searchQuery || searchQuery.trim() === "") return;
-    const container = document.getElementById("social-search-results");
-    if (!container) return;
+    const containers = [
+        document.getElementById("social-search-results"),
+        document.getElementById("settings-search-results")
+    ].filter(el => el !== null);
 
-    container.innerHTML = `<div style="text-align: center; color: var(--neon-cyan);">Querying Player ID...</div>`;
+    if (containers.length === 0) return;
+
+    const setHTML = (html) => {
+        containers.forEach(c => c.innerHTML = html);
+    };
+
+    setHTML(`<div style="text-align: center; color: var(--neon-cyan);">Querying Player ID...</div>`);
 
     try {
         const qByUID = query(
@@ -509,7 +595,7 @@ export async function searchPlayersByUID(searchQuery) {
         });
 
         if (foundDocs.length === 0) {
-            container.innerHTML = `<div style="text-align: center; color: var(--neon-pink); font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Player Not Found</div>`;
+            setHTML(`<div style="text-align: center; color: var(--neon-pink); font-size: 14px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px;">Player Not Found</div>`);
             return;
         }
 
@@ -528,10 +614,10 @@ export async function searchPlayersByUID(searchQuery) {
             `;
         });
 
-        container.innerHTML = resultsHTML;
+        setHTML(resultsHTML);
     } catch (e) {
         console.error("[Firestore] Player search by UID failed:", e);
-        container.innerHTML = `<div style="text-align: center; color: var(--neon-pink); font-size: 13px;">Search error occurred.</div>`;
+        setHTML(`<div style="text-align: center; color: var(--neon-pink); font-size: 13px;">Search error occurred.</div>`);
     }
 }
 
@@ -619,32 +705,34 @@ export async function toggleFollowPublicUser() {
         const targetUserRef = doc(db, "users", activePublicProfileUid);
         const currentUserRef = doc(db, "users", currentUser.uid);
 
-        await runTransaction(db, async (transaction) => {
-            const targetSnap = await transaction.get(targetUserRef);
-            const currentSnap = await transaction.get(currentUserRef);
+        if (currentUser) {
+            await runTransaction(db, async (transaction) => {
+                const targetSnap = await transaction.get(targetUserRef);
+                const currentSnap = await transaction.get(currentUserRef);
 
-            if (!targetSnap.exists() || !currentSnap.exists()) return;
+                if (!targetSnap.exists() || !currentSnap.exists()) return;
 
-            const targetData = targetSnap.data();
-            const currentData = currentSnap.data();
+                const targetData = targetSnap.data();
+                const currentData = currentSnap.data();
 
-            let targetFollowers = targetData.followersCount || 0;
-            let currentFollowing = currentData.followingCount || 0;
+                let targetFollowers = targetData.followersCount || 0;
+                let currentFollowing = currentData.followingCount || 0;
 
-            if (isCurrentlyFollowing) {
-                // Perform Unfollow
-                transaction.delete(followerDocRef);
-                transaction.delete(followingDocRef);
-                transaction.update(targetUserRef, { followersCount: Math.max(0, targetFollowers - 1) });
-                transaction.update(currentUserRef, { followingCount: Math.max(0, currentFollowing - 1) });
-            } else {
-                // Perform Follow
-                transaction.set(followerDocRef, { followedAt: new Date().toISOString() });
-                transaction.set(followingDocRef, { followedAt: new Date().toISOString() });
-                transaction.update(targetUserRef, { followersCount: targetFollowers + 1 });
-                transaction.update(currentUserRef, { followingCount: currentFollowing + 1 });
-            }
-        });
+                if (isCurrentlyFollowing) {
+                    // Perform Unfollow
+                    transaction.delete(followerDocRef);
+                    transaction.delete(followingDocRef);
+                    transaction.update(targetUserRef, { followersCount: Math.max(0, targetFollowers - 1) });
+                    transaction.update(currentUserRef, { followingCount: Math.max(0, currentFollowing - 1) });
+                } else {
+                    // Perform Follow
+                    transaction.set(followerDocRef, { followedAt: new Date().toISOString() });
+                    transaction.set(followingDocRef, { followedAt: new Date().toISOString() });
+                    transaction.update(targetUserRef, { followersCount: targetFollowers + 1 });
+                    transaction.update(currentUserRef, { followingCount: currentFollowing + 1 });
+                }
+            });
+        }
 
         console.log("[Firestore] Transaction follow updated successfully.");
         followBtn.innerText = isCurrentlyFollowing ? "FOLLOW" : "UNFOLLOW";

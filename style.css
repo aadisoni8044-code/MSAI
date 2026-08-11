@@ -1864,3 +1864,42 @@ canvas {
     letter-spacing: 1.5px;
     text-transform: uppercase;
 }
+
+/* UI restrictions for guest user */
+.restricted-feature {
+    filter: grayscale(80%) !important;
+    cursor: pointer !important;
+}
+.restricted-feature:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Custom Settings Overlay Enhancements */
+#settings-overlay {
+    background: rgba(4, 10, 15, 0.92) !important; /* semi-transparent modern dark backdrop */
+    z-index: 100 !important;
+}
+
+.settings-content {
+    background: rgba(4, 10, 15, 0.95);
+    border: 2px solid var(--neon-cyan);
+    box-shadow: 0 10px 40px rgba(0, 243, 255, 0.35);
+    padding: 30px;
+    border-radius: 16px;
+    transform: scale(0.9);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#settings-overlay.active .settings-content {
+    transform: scale(1);
+}
+
+.modal-close-btn {
+    transition: color 0.2s, transform 0.2s;
+}
+
+.modal-close-btn:hover {
+    color: var(--neon-pink) !important;
+    transform: scale(1.2);
+}
