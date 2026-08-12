@@ -351,7 +351,7 @@ canvas {
     gap: 16px;
 }
 
-.settings-btn {
+.settings-btn, .menu-btn {
     background: var(--glass-bg);
     border: 1px solid rgba(0, 255, 102, 0.3);
     padding: 10px 20px;
@@ -366,7 +366,7 @@ canvas {
     transition: all 0.2s ease;
 }
 
-.settings-btn:hover {
+.settings-btn:hover, .menu-btn:hover {
     border-color: var(--neon-green);
     background: rgba(0, 255, 102, 0.15);
     box-shadow: 0 0 12px rgba(0, 255, 102, 0.25);

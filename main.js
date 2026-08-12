@@ -61,7 +61,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof window.renderShopSkins === 'function') window.renderShopSkins();
     }
 
-    // Add click event listeners to SKIN SHOP and SETTINGS buttons
+    // Add click event listeners to SKIN SHOP, SETTINGS, and SELECT MAPS buttons
+    const mapsBtn = document.getElementById('home-maps-btn');
+    if (mapsBtn) {
+        mapsBtn.addEventListener('click', () => {
+            window.openMapsModal();
+        });
+    }
+
     const shopBtn = document.getElementById('menu-shop-btn-main');
     if (shopBtn) {
         shopBtn.addEventListener('click', () => {
