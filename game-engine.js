@@ -45,12 +45,10 @@ let bgScrollY = 0;
 
 // Offscreen Hexagon Grid Canvas for high performance rendering
 let hexPatternCanvas = null;
-let cyberGridPatternCanvas = null;
-let classicArcadePatternCanvas = null;
 let hexPatternWidth = 256;
 let hexPatternHeight = 256;
 
-// Local in-memory keys for endless & race
+// LocalStorage keys for endless & race
 const SAVE_ENDLESS_HI_SCORE = 'plo_io_endless_hiscore_v2';
 const SAVE_RACE_WINS = 'plo_io_race_wins_v2';
 
@@ -211,70 +209,6 @@ function drawHexagonPath(context, x, y, radius) {
     context.closePath();
 }
 
-function createCustomMapPatterns() {
-    // 1. Cyber Grid Pattern
-    cyberGridPatternCanvas = document.createElement('canvas');
-    cyberGridPatternCanvas.width = 128;
-    cyberGridPatternCanvas.height = 128;
-    const cCtx = cyberGridPatternCanvas.getContext('2d');
-    cCtx.fillStyle = '#0F021A'; // Dark Purple/Black
-    cCtx.fillRect(0, 0, 128, 128);
-    // Draw subtle grid overlay
-    cCtx.strokeStyle = 'rgba(0, 255, 255, 0.08)'; // faint cyan grid
-    cCtx.lineWidth = 1;
-    cCtx.beginPath();
-    for (let i = 0; i <= 128; i += 32) {
-        cCtx.moveTo(i, 0);
-        cCtx.lineTo(i, 128);
-        cCtx.moveTo(0, i);
-        cCtx.lineTo(128, i);
-    }
-    cCtx.stroke();
-
-    // 2. Classic Arcade Pattern
-    classicArcadePatternCanvas = document.createElement('canvas');
-    classicArcadePatternCanvas.width = 128;
-    classicArcadePatternCanvas.height = 128;
-    const aCtx = classicArcadePatternCanvas.getContext('2d');
-    aCtx.fillStyle = '#050D0D'; // Pitch Dark Teal
-    aCtx.fillRect(0, 0, 128, 128);
-    // Grid or simple scanline/retro arcade background
-    aCtx.strokeStyle = 'rgba(0, 255, 204, 0.05)';
-    aCtx.lineWidth = 1;
-    aCtx.beginPath();
-    for (let i = 0; i <= 128; i += 32) {
-        aCtx.moveTo(i, 0);
-        aCtx.lineTo(i, 128);
-        aCtx.moveTo(0, i);
-        aCtx.lineTo(128, i);
-    }
-    aCtx.stroke();
-}
-
-function drawStar(ctx, cx, cy, spikes, outerRadius, innerRadius) {
-    let rot = Math.PI / 2 * 3;
-    let x = cx;
-    let y = cy;
-    let step = Math.PI / spikes;
-
-    ctx.beginPath();
-    ctx.moveTo(cx, cy - outerRadius);
-    for (let i = 0; i < spikes; i++) {
-        x = cx + Math.cos(rot) * outerRadius;
-        y = cy + Math.sin(rot) * outerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
-
-        x = cx + Math.cos(rot) * innerRadius;
-        y = cy + Math.sin(rot) * innerRadius;
-        ctx.lineTo(x, y);
-        rot += step;
-    }
-    ctx.lineTo(cx, cy - outerRadius);
-    ctx.closePath();
-    ctx.fill();
-}
-
 // --- INPUT HANDLERS ---
 function initInputListeners() {
     window.addEventListener('keydown', (e) => {
@@ -374,11 +308,15 @@ function updateInputActiveState() {
 // --- ENGINE RECOVERY DATA ---
 function loadEngineSavedData() {
     try {
-        const savedHiScore = window.UI_STATE ? (window.UI_STATE.highScore || 0) : 0;
-        endlessDistance = savedHiScore;
+        const savedHiScore = localStorage.getItem(SAVE_ENDLESS_HI_SCORE);
+        if (savedHiScore) {
+            endlessDistance = parseInt(savedHiScore, 10);
+        }
 
-        const savedRaceWins = window.UI_STATE ? (window.UI_STATE.raceWins || 0) : 0;
-        raceWinsCount = savedRaceWins;
+        const savedRaceWins = localStorage.getItem(SAVE_RACE_WINS);
+        if (savedRaceWins) {
+            raceWinsCount = parseInt(savedRaceWins, 10);
+        }
 
         updateEngineMenuTags();
     } catch (e) {
@@ -955,7 +893,7 @@ function updatePlayerPhysics(dt) {
                     const myPlayerRef = ref(rtdb, `rooms/${activeMutiplayerRoomId}/players/${currentUser.uid}`);
                     set(myPlayerRef, {
                         name: window.UI_STATE.username || "Rider_01",
-                        pfp: window.UI_STATE.photoURL || currentUser.photoURL || "",
+                        pfp: currentUser.photoURL || "",
                         rating: window.UI_STATE.eloRating || 1000,
                         x: player.x,
                         y: player.y,
@@ -1116,40 +1054,7 @@ function drawPlayer(ctx) {
         return;
     }
 
-    const currentTheme = (window.gameState && window.gameState.currentMap) || 'cyber_grid';
     const skin = getActiveSkinDetails();
-
-    if (currentTheme === 'cyber_grid') {
-        // Draw Glowing Pink Orb / Particle effect (#FF66CC)
-        ctx.save();
-        ctx.translate(player.x, player.y);
-
-        // Back glow
-        const glowGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, player.width);
-        glowGrad.addColorStop(0, '#FF66CC');
-        glowGrad.addColorStop(1, 'transparent');
-        ctx.fillStyle = glowGrad;
-        ctx.beginPath();
-        ctx.arc(0, 0, player.width, 0, Math.PI * 2);
-        ctx.fill();
-
-        // Main Pink Orb
-        ctx.fillStyle = '#FF66CC';
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 2.5;
-        ctx.shadowColor = '#FF66CC';
-        ctx.shadowBlur = 12;
-        ctx.beginPath();
-        ctx.arc(0, 0, player.width / 2.5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-        ctx.restore();
-
-        // Draw trail and particles too
-        drawPlayerTrail(ctx, skin);
-        drawPlayerParticles(ctx);
-        return;
-    }
 
     // 1. Draw Customized Waves / Trails
     drawPlayerTrail(ctx, skin);
@@ -1424,135 +1329,78 @@ function pointInTriangle(px, py, x1, y1, x2, y2, x3, y3) {
 // --- RENDERING MODULES ---
 function drawObstacles(ctx) {
     ctx.save();
-    const currentTheme = (window.gameState && window.gameState.currentMap) || 'cyber_grid';
 
     for (const obs of obstacles) {
         if (obs.x < camera.x - 120 || obs.x > camera.x + width + 120) continue;
 
-        if (currentTheme === 'cyber_grid') {
-            // Obstacles & Rectangles: Dark fill with bright Neon Cyan stroke (#00FFFF) and outer glow.
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#00FFFF';
-            ctx.strokeStyle = '#00FFFF';
-            ctx.lineWidth = 3;
-            ctx.fillStyle = '#0F021A'; // dark purple fill
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = obs.color;
 
-            if (obs.type === 'spike') {
-                ctx.beginPath();
-                if (obs.dir === 1) {
-                    ctx.moveTo(obs.x, obs.y);
-                    ctx.lineTo(obs.x + obs.width, obs.y);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y + obs.height);
-                } else {
-                    ctx.moveTo(obs.x, obs.y);
-                    ctx.lineTo(obs.x + obs.width, obs.y);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y - obs.height);
-                }
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
+        if (obs.type === 'spike') {
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.4;
+            ctx.fillStyle = obs.color;
+
+            ctx.beginPath();
+            if (obs.dir === 1) {
+                ctx.moveTo(obs.x, obs.y);
+                ctx.lineTo(obs.x + obs.width, obs.y);
+                ctx.lineTo(obs.x + obs.width / 2, obs.y + obs.height);
             } else {
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+                ctx.moveTo(obs.x, obs.y);
+                ctx.lineTo(obs.x + obs.width, obs.y);
+                ctx.lineTo(obs.x + obs.width / 2, obs.y - obs.height);
             }
-        } else if (currentTheme === 'classic_arcade') {
-            // Obstacles & Boundaries: Bright Neon Lime Green (#00FFCC / #AAFF00) hollow outlines with dark fill.
-            ctx.shadowBlur = 15;
-            const arcadeCol = obs.type === 'spike' ? '#00FFCC' : '#AAFF00';
-            ctx.shadowColor = arcadeCol;
-            ctx.strokeStyle = arcadeCol;
-            ctx.lineWidth = 3;
-            ctx.fillStyle = '#050D0D'; // pitch dark teal fill
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
 
-            if (obs.type === 'spike') {
-                ctx.beginPath();
-                if (obs.dir === 1) {
-                    ctx.moveTo(obs.x, obs.y);
-                    ctx.lineTo(obs.x + obs.width, obs.y);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y + obs.height);
-                } else {
-                    ctx.moveTo(obs.x, obs.y);
-                    ctx.lineTo(obs.x + obs.width, obs.y);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y - obs.height);
-                }
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
+            // Core inner triangle
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 1.0;
+            ctx.beginPath();
+            if (obs.dir === 1) {
+                ctx.moveTo(obs.x + obs.width / 4, obs.y + 4);
+                ctx.lineTo(obs.x + 3 * obs.width / 4, obs.y + 4);
+                ctx.lineTo(obs.x + obs.width / 2, obs.y + obs.height * 0.7);
             } else {
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+                ctx.moveTo(obs.x + obs.width / 4, obs.y - 4);
+                ctx.lineTo(obs.x + 3 * obs.width / 4, obs.y - 4);
+                ctx.lineTo(obs.x + obs.width / 2, obs.y - obs.height * 0.7);
             }
-        } else {
-            // Default Biome theme
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = obs.color;
+            ctx.closePath();
+            ctx.stroke();
 
-            if (obs.type === 'spike') {
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2.4;
-                ctx.fillStyle = obs.color;
+        } else if (obs.type === 'block') {
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 2.4;
+            ctx.fillStyle = 'rgba(2, 6, 6, 0.95)';
 
+            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
+
+            // Glowing boundary lines
+            ctx.strokeStyle = obs.color;
+            ctx.lineWidth = 1.4;
+            ctx.strokeRect(obs.x + 4, obs.y + 4, obs.width - 8, obs.height - 8);
+
+            // Draw golden runic details on block faces inside Ancient Biome
+            const activeBiome = getBiomeForLevel(currentLevel);
+            if (activeBiome === 'ancient') {
+                ctx.strokeStyle = 'rgba(255, 170, 0, 0.4)';
                 ctx.beginPath();
-                if (obs.dir === 1) {
-                    ctx.moveTo(obs.x, obs.y);
-                    ctx.lineTo(obs.x + obs.width, obs.y);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y + obs.height);
-                } else {
-                    ctx.moveTo(obs.x, obs.y);
-                    ctx.lineTo(obs.x + obs.width, obs.y);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y - obs.height);
-                }
-                ctx.closePath();
-                ctx.fill();
+                ctx.moveTo(obs.x + 10, obs.y + 10);
+                ctx.lineTo(obs.x + obs.width - 10, obs.y + obs.height - 10);
+                ctx.moveTo(obs.x + obs.width - 10, obs.y + 10);
+                ctx.lineTo(obs.x + 10, obs.y + obs.height - 10);
                 ctx.stroke();
-
-                // Core inner triangle
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 1.0;
-                ctx.beginPath();
-                if (obs.dir === 1) {
-                    ctx.moveTo(obs.x + obs.width / 4, obs.y + 4);
-                    ctx.lineTo(obs.x + 3 * obs.width / 4, obs.y + 4);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y + obs.height * 0.7);
-                } else {
-                    ctx.moveTo(obs.x + obs.width / 4, obs.y - 4);
-                    ctx.lineTo(obs.x + 3 * obs.width / 4, obs.y - 4);
-                    ctx.lineTo(obs.x + obs.width / 2, obs.y - obs.height * 0.7);
-                }
-                ctx.closePath();
-                ctx.stroke();
-
-            } else if (obs.type === 'block') {
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2.4;
-                ctx.fillStyle = 'rgba(2, 6, 6, 0.95)';
-
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
-
-                // Glowing boundary lines
-                ctx.strokeStyle = obs.color;
-                ctx.lineWidth = 1.4;
-                ctx.strokeRect(obs.x + 4, obs.y + 4, obs.width - 8, obs.height - 8);
-
-                // Draw golden runic details on block faces inside Ancient Biome
-                const activeBiome = getBiomeForLevel(currentLevel);
-                if (activeBiome === 'ancient') {
-                    ctx.strokeStyle = 'rgba(255, 170, 0, 0.4)';
-                    ctx.beginPath();
-                    ctx.moveTo(obs.x + 10, obs.y + 10);
-                    ctx.lineTo(obs.x + obs.width - 10, obs.y + obs.height - 10);
-                    ctx.moveTo(obs.x + obs.width - 10, obs.y + 10);
-                    ctx.lineTo(obs.x + 10, obs.y + obs.height - 10);
-                    ctx.stroke();
-                }
-            } else if (obs.type === 'gate') {
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 4;
-                ctx.fillStyle = 'rgba(0, 243, 255, 0.35)';
-                ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-                ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
             }
+        } else if (obs.type === 'gate') {
+            ctx.strokeStyle = '#ffffff';
+            ctx.lineWidth = 4;
+            ctx.fillStyle = 'rgba(0, 243, 255, 0.35)';
+            ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+            ctx.strokeRect(obs.x, obs.y, obs.width, obs.height);
         }
     }
 
@@ -1572,12 +1420,7 @@ function triggerGameOverScreen() {
 
         if (levelProgress > endlessDistance) {
             endlessDistance = levelProgress;
-            if (window.UI_STATE) {
-                window.UI_STATE.highScore = endlessDistance;
-            }
-            if (window.isLoggedIn && typeof window.syncUIStateToCloud === 'function') {
-                window.syncUIStateToCloud();
-            }
+            localStorage.setItem(SAVE_ENDLESS_HI_SCORE, endlessDistance.toString());
             updateEngineMenuTags();
         }
     } else {
@@ -1866,12 +1709,7 @@ function updateRaceLeaderboardRows() {
         if (index === 0) {
             // First place victory
             raceWinsCount++;
-            if (window.UI_STATE) {
-                window.UI_STATE.raceWins = raceWinsCount;
-            }
-            if (window.isLoggedIn && typeof window.syncUIStateToCloud === 'function') {
-                window.syncUIStateToCloud();
-            }
+            localStorage.setItem(SAVE_RACE_WINS, raceWinsCount.toString());
             updateEngineMenuTags();
             triggerLevelCleared();
         } else {
@@ -2240,11 +2078,7 @@ function nextLevel() {
 
 function toggleAudio() {
     isMuted = !isMuted;
-    const label = isMuted ? '<span>🔇</span> AUDIO: OFF' : '<span>🔊</span> AUDIO: ON';
-    const mainBtn = document.getElementById('audio-toggle');
-    if (mainBtn) mainBtn.innerHTML = label;
-    const settingsBtn = document.getElementById('settings-audio-toggle');
-    if (settingsBtn) settingsBtn.innerHTML = label;
+    document.getElementById('audio-toggle').innerHTML = isMuted ? '<span>🔇</span> AUDIO: OFF' : '<span>🔊</span> AUDIO: ON';
 }
 
 // --- MAIN LOOP ---
@@ -2277,24 +2111,13 @@ function update(dt) {
 function render() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Select pattern based on active render theme
-    const currentTheme = (window.gameState && window.gameState.currentMap) || 'cyber_grid';
-    let activePatternCanvas = hexPatternCanvas;
-    if (currentTheme === 'cyber_grid') {
-        if (!cyberGridPatternCanvas) createCustomMapPatterns();
-        activePatternCanvas = cyberGridPatternCanvas;
-    } else if (currentTheme === 'classic_arcade') {
-        if (!classicArcadePatternCanvas) createCustomMapPatterns();
-        activePatternCanvas = classicArcadePatternCanvas;
-    }
-
     // 1. Draw background grid across full canvas (unscaled & untranslated)
-    if (activePatternCanvas) {
+    if (hexPatternCanvas) {
         ctx.save();
-        const left = -(bgScrollX * 0.3) % activePatternCanvas.width;
-        const top = -(bgScrollY * 0.3) % activePatternCanvas.height;
+        const left = -(bgScrollX * 0.3) % hexPatternWidth;
+        const top = -(bgScrollY * 0.3) % hexPatternHeight;
 
-        ctx.fillStyle = ctx.createPattern(activePatternCanvas, 'repeat');
+        ctx.fillStyle = ctx.createPattern(hexPatternCanvas, 'repeat');
         ctx.translate(left, top);
         // Cover entire canvas width and height
         ctx.fillRect(-left, -top, canvas.width, canvas.height);
@@ -2330,24 +2153,11 @@ function render() {
         water: 'rgba(255, 0, 127, 0.4)',
         ancient: 'rgba(255, 170, 0, 0.4)'
     };
-
-    let boundCol = borderColors[biome];
-    let boundWidth = 4;
-    let boundGlow = 12;
-
-    if (currentTheme === 'cyber_grid') {
-        boundCol = '#00FFFF';
-        boundWidth = 5;
-        boundGlow = 15;
-    } else if (currentTheme === 'classic_arcade') {
-        boundCol = '#AAFF00';
-        boundWidth = 5;
-        boundGlow = 15;
-    }
+    const boundCol = borderColors[biome];
 
     ctx.strokeStyle = boundCol;
-    ctx.lineWidth = boundWidth;
-    ctx.shadowBlur = boundGlow;
+    ctx.lineWidth = 4;
+    ctx.shadowBlur = 12;
     ctx.shadowColor = boundCol;
 
     ctx.beginPath();
@@ -2366,73 +2176,6 @@ function render() {
     ctx.save();
     ctx.translate(-camera.x, -camera.y);
 
-    // Draw custom decorative elements based on active theme
-    if (currentTheme === 'cyber_grid') {
-        // Draw Laser Dividers (Glowing Magenta vertical lines at intervals)
-        // Draw Bright Yellow Star Collectibles floating at intervals
-        ctx.save();
-        const startX = Math.floor(camera.x / 500) * 500;
-        for (let gx = startX - 500; gx < camera.x + width + 500; gx += 500) {
-            if (gx < 0) continue;
-
-            // Draw Laser Divider line (vertical line)
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#FF00FF';
-            ctx.strokeStyle = '#FF00FF';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.moveTo(gx + 250, 40);
-            ctx.lineTo(gx + 250, height - 40);
-            ctx.stroke();
-
-            // Draw Collectible: Bright Yellow Star (#FFCC00)
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#FFCC00';
-            ctx.fillStyle = '#FFCC00';
-            drawStar(ctx, gx + 150, 200, 5, 12, 6);
-            drawStar(ctx, gx + 350, 450, 5, 12, 6);
-        }
-        ctx.restore();
-    } else if (currentTheme === 'classic_arcade') {
-        // Draw Custom Elements: Neon Green Rings and Floating Target Blocks
-        ctx.save();
-        const startX = Math.floor(camera.x / 600) * 600;
-        for (let gx = startX - 600; gx < camera.x + width + 600; gx += 600) {
-            if (gx < 0) continue;
-
-            // Draw Neon Green Ring (#00FFCC)
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = '#00FFCC';
-            ctx.strokeStyle = '#00FFCC';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.arc(gx + 200, 300, 30, 0, Math.PI * 2);
-            ctx.stroke();
-
-            ctx.beginPath();
-            ctx.arc(gx + 450, 150, 20, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Draw Floating Target Block (Hollow neon green square with inner target dot/ring)
-            ctx.shadowBlur = 12;
-            ctx.shadowColor = '#AAFF00';
-            ctx.strokeStyle = '#AAFF00';
-            ctx.lineWidth = 3;
-            ctx.fillStyle = 'rgba(5, 13, 13, 0.9)';
-
-            // Outer Square
-            ctx.fillRect(gx + 300, 350, 40, 40);
-            ctx.strokeRect(gx + 300, 350, 40, 40);
-
-            // Inner Target Dot
-            ctx.fillStyle = '#AAFF00';
-            ctx.beginPath();
-            ctx.arc(gx + 320, 370, 5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        ctx.restore();
-    }
-
     // Draw obstacles
     drawObstacles(ctx);
 
@@ -2447,62 +2190,9 @@ function render() {
     ctx.restore(); // Restore clip
 
     ctx.restore(); // Restore scale & translate
-
-    // Draw Classic Arcade Top HUD on top of the viewport/unscaled screen coordinates
-    if (currentTheme === 'classic_arcade') {
-        ctx.save();
-        ctx.fillStyle = '#050D0D'; // Dark background for HUD bar
-        ctx.fillRect(0, 0, canvas.width, 50);
-
-        ctx.strokeStyle = '#00FFFF'; // Solid Cyan/Teal border
-        ctx.lineWidth = 2;
-        ctx.beginPath();
-        ctx.moveTo(0, 50);
-        ctx.lineTo(canvas.width, 50);
-        ctx.stroke();
-
-        ctx.fillStyle = '#00FFCC'; // Neon green/cyan text
-        ctx.font = 'bold 16px "Orbitron", "Courier New", monospace';
-        ctx.textBaseline = 'middle';
-
-        const scoreVal = Math.floor(levelProgress || 0);
-        const seedVal = currentLevel * 123 + 456;
-
-        ctx.fillText(`SCORE: ${scoreVal}`, 20, 25);
-        ctx.fillText(`LIVES: 3`, canvas.width * 0.3, 25);
-        ctx.fillText(`MULTIPLIER: x1.5`, canvas.width * 0.6, 25);
-        ctx.fillText(`SEED: 0x${seedVal.toString(16).toUpperCase()}`, canvas.width - 200, 25);
-
-        ctx.restore();
-    }
 }
 
 function drawBiomeWeatherGlow(ctx) {
-    const currentTheme = (window.gameState && window.gameState.currentMap) || 'cyber_grid';
-
-    if (currentTheme === 'cyber_grid') {
-        // Subtle cyber grid ambient dark purple glow
-        ctx.save();
-        const grad = ctx.createLinearGradient(0, 0, 0, height);
-        grad.addColorStop(0, 'rgba(15, 2, 26, 0.25)');
-        grad.addColorStop(1, 'transparent');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, width, height);
-        ctx.restore();
-        return;
-    }
-    if (currentTheme === 'classic_arcade') {
-        // Deep arcade teal ambient glow
-        ctx.save();
-        const grad = ctx.createLinearGradient(0, 0, 0, height);
-        grad.addColorStop(0, 'rgba(5, 13, 13, 0.25)');
-        grad.addColorStop(1, 'transparent');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, width, height);
-        ctx.restore();
-        return;
-    }
-
     const biome = getBiomeForLevel(currentLevel);
     ctx.save();
 

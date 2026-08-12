@@ -30,7 +30,7 @@ const UI_STATE = {
     totalPerfectRuns: 0
 };
 
-// Local in-memory state keys
+// LocalStorage Keys
 const KEYS = {
     COINS: 'plo_coins_balance',
     STREAK: 'plo_login_streak',
@@ -72,26 +72,41 @@ window.openMainMenu = openMainMenu;
 
 function loadSavedState() {
     try {
-        UI_STATE.ploCoins = 0;
-        UI_STATE.streakDays = 0;
-        UI_STATE.lastLoginDate = '';
-        UI_STATE.username = 'Rider_01';
-        UI_STATE.country = 'USA';
-        UI_STATE.equippedSkin = 'classic';
-        UI_STATE.totalCrashes = 0;
-        UI_STATE.totalPerfectRuns = 0;
-        UI_STATE.ownedSkins = ['classic'];
-        UI_STATE.unlockedLevels = { 1: 0 }; // level 1 starts with 0%
-        UI_STATE.highScore = 0;
-        UI_STATE.raceWins = 0;
+        UI_STATE.ploCoins = parseInt(localStorage.getItem(KEYS.COINS)) || 0;
+        UI_STATE.streakDays = parseInt(localStorage.getItem(KEYS.STREAK)) || 0;
+        UI_STATE.lastLoginDate = localStorage.getItem(KEYS.LAST_LOGIN) || '';
+        UI_STATE.username = localStorage.getItem(KEYS.USERNAME) || 'WaveRunner';
+        UI_STATE.country = localStorage.getItem(KEYS.COUNTRY) || 'USA';
+        UI_STATE.equippedSkin = localStorage.getItem(KEYS.EQUIPPED_SKIN) || 'classic';
+        UI_STATE.totalCrashes = parseInt(localStorage.getItem(KEYS.CRASHES)) || 0;
+        UI_STATE.totalPerfectRuns = parseInt(localStorage.getItem(KEYS.PERFECT_RUNS)) || 0;
+
+        const owned = localStorage.getItem(KEYS.OWNED_SKINS);
+        if (owned) {
+            UI_STATE.ownedSkins = JSON.parse(owned);
+        } else {
+            UI_STATE.ownedSkins = ['classic'];
+            localStorage.setItem(KEYS.OWNED_SKINS, JSON.stringify(UI_STATE.ownedSkins));
+        }
+
+        // Initialize 100 levels maps. First unlocked, rest locked
+        const savedLevels = localStorage.getItem(KEYS.LEVELS);
+        if (savedLevels) {
+            UI_STATE.unlockedLevels = JSON.parse(savedLevels);
+        } else {
+            UI_STATE.unlockedLevels = { 1: 0 }; // level 1 starts with 0%
+            localStorage.setItem(KEYS.LEVELS, JSON.stringify(UI_STATE.unlockedLevels));
+        }
     } catch (e) {
         console.error('Error loading game state: ', e);
     }
 }
 
 function saveStateItem(key, val) {
-    if (window.isLoggedIn && typeof window.syncUIStateToCloud === 'function') {
-        window.syncUIStateToCloud();
+    try {
+        localStorage.setItem(key, typeof val === 'object' ? JSON.stringify(val) : val);
+    } catch (e) {
+        console.error('Error saving ' + key, e);
     }
 }
 
@@ -381,7 +396,7 @@ function buyUnlockLevel(level, cost) {
         renderLevelSelector();
         playBuySound();
     } else {
-        window.showToast("Not enough Speedy Coins to unlock this level! Keep racing.", "error");
+        alert("Not enough Speedy Coins to unlock this level! Keep racing.");
     }
 }
 
@@ -536,7 +551,7 @@ function selectSkin(skinId) {
 
             playBuySound();
         } else {
-            window.showToast("Insufficient Speedy Coins! Keep playing to earn more.", "error");
+            alert("Insufficient Speedy Coins! Keep playing to earn more.");
         }
     }
 
@@ -637,10 +652,6 @@ function handleFullscreenChange() {
             }
         }
     }
-    const fsBtn = document.getElementById('settings-fullscreen-toggle');
-    if (fsBtn) {
-        fsBtn.innerHTML = isFullscreen ? '<span>🖥️</span> EXIT FULLSCREEN' : '<span>🖥️</span> ENTER FULLSCREEN';
-    }
 }
 
 /**
@@ -674,11 +685,9 @@ window.showScreen = showScreen;
  * Navigate to Profile full-screen SPA View
  */
 function navigateToProfileScreen() {
-    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
-    if (isUserLoggedIn) {
+    if (window.isLoggedIn) {
         showScreen('profile-screen');
     } else {
-        window.showToast("Please login with Google to access the Profile and save your progress!", "warning");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }
@@ -689,8 +698,7 @@ window.navigateToProfileScreen = navigateToProfileScreen;
  * Navigate to Search full-screen SPA View
  */
 function navigateToSearchScreen() {
-    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
-    if (isUserLoggedIn) {
+    if (window.isLoggedIn) {
         // Reset previous search results and values for cleanliness
         const results = document.getElementById('social-search-results');
         if (results) {
@@ -701,7 +709,6 @@ function navigateToSearchScreen() {
 
         showScreen('search-screen');
     } else {
-        window.showToast("Please login with Google to access the Search and save your progress!", "warning");
         const aModal = document.getElementById('auth-modal');
         if (aModal) aModal.classList.add('active');
     }
@@ -712,29 +719,6 @@ window.navigateToSearchScreen = navigateToSearchScreen;
  * Navigate to Shop full-screen SPA View
  */
 function navigateToShopScreen() {
-    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
-    if (isUserLoggedIn) {
-        showScreen('shop-screen');
-    } else {
-        window.showToast("Please login with Google to access the Shop and save your progress!", "warning");
-        const aModal = document.getElementById('auth-modal');
-        if (aModal) aModal.classList.add('active');
-    }
+    showScreen('shop-screen');
 }
 window.navigateToShopScreen = navigateToShopScreen;
-
-/**
- * Navigate to Leaderboard full-screen SPA View / restricted feedback action
- */
-function navigateToLeaderboardScreen() {
-    const isUserLoggedIn = window.isLoggedIn || (window.firebase && window.firebase.auth().currentUser);
-    if (isUserLoggedIn) {
-        // Since tournament features/leaderboard are enabled in race mode, let them know or play race mode
-        window.showToast("Leaderboard features are enabled! Play Race mode to climb the ranks.", "info");
-    } else {
-        window.showToast("Please login with Google to access the Leaderboard and save your progress!", "warning");
-        const aModal = document.getElementById('auth-modal');
-        if (aModal) aModal.classList.add('active');
-    }
-}
-window.navigateToLeaderboardScreen = navigateToLeaderboardScreen;

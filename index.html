@@ -3,9 +3,6 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Speedy Arrow | Developed by Speedy Games</title>
@@ -18,7 +15,7 @@
     <!-- Link the PWA Web Application Manifest configuration file -->
     <link rel="manifest" href="manifest.json">
     <!-- Custom styling stylesheet link -->
-    <link rel="stylesheet" href="style.css?v=2.0.0">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -36,16 +33,18 @@
             <!-- Header widgets row containing Profile and Coin balances -->
             <div class="menu-header-row">
                 <!-- Mini Profile details -->
-                <div class="glass-panel profile-card-mini">
+                <div class="glass-panel profile-card-mini" onclick="window.navigateToProfileScreen()">
                     <div class="profile-avatar">👤</div>
                     <div class="profile-info-mini">
                         <span id="header-username" class="profile-name-mini">Rider_01</span>
+                        <span id="header-rating" class="profile-rating-mini">RATING: 1000</span>
+                        <span id="header-uid" class="profile-rating-mini"
+                            style="color: var(--neon-gold); font-size: 10px; margin-top: 2px;">UID: --------</span>
                     </div>
                 </div>
 
                 <!-- Custom Daily currency balances & streaks widgets -->
                 <div class="economy-widgets">
-                    <!-- Google Login UI element completely disabled/removed -->
                     <div class="glass-panel widget-item streak"
                         onclick="document.getElementById('daily-rewards-modal').classList.add('active')">
                         <span>🔥</span> <span class="streak-days-val">1</span> Days
@@ -58,30 +57,66 @@
             </div>
 
             <!-- Central Title logo branding -->
-            <div class="title-container" style="margin-top: 40px; margin-bottom: 20px;">
+            <div class="title-container">
                 <h1 class="title-logo">Speedy<span> Arrow</span></h1>
                 <div class="subtitle">Neon Geometry Wave Runner</div>
             </div>
 
-            <!-- Main Menu Clean Buttons Row -->
-            <div class="main-buttons-container" style="display: flex; flex-direction: column; gap: 15px; width: 100%; max-width: 320px; margin: 30px auto; z-index: 10;">
-                <button id="menu-start-btn" class="settings-btn" style="border-color: var(--neon-cyan); padding: 16px; font-size: 18px; width: 100%; letter-spacing: 2px;" onclick="window.openGameModes()">
-                    <span>🎮</span> START GAME
-                </button>
-                <button id="home-maps-btn" class="menu-btn settings-btn" style="border-color: var(--neon-pink); padding: 16px; font-size: 18px; width: 100%; letter-spacing: 2px;">
-                    <span>🗺️</span> SELECT MAPS
-                </button>
-                <button id="menu-shop-btn-main" class="settings-btn" style="border-color: rgba(0, 243, 255, 0.5); padding: 16px; font-size: 18px; width: 100%; letter-spacing: 2px;" onclick="window.navigateToShopScreen()">
-                    <span>🛒</span> SKIN SHOP
-                </button>
-                <button id="menu-settings-btn" class="settings-btn" style="border-color: var(--neon-pink); padding: 16px; font-size: 18px; width: 100%; letter-spacing: 2px;" onclick="window.openSettingsOverlay()">
-                    <span>⚙️</span> SETTINGS
-                </button>
+            <!-- Game Mode Cards Container -->
+            <div class="cards-container">
+                <!-- Classic Level select mode -->
+                <div class="glass-panel mode-card classic-card" onclick="openLevelSelect()">
+                    <div class="mode-icon">🏆</div>
+                    <div class="mode-title">Classic</div>
+                    <div class="mode-desc">Survive through 100 thematic hand-crafted levels divided across 5 unique
+                        visual biomes.</div>
+                </div>
+
+                <!-- Endless survival mode -->
+                <div class="glass-panel mode-card endless-card" onclick="launchEndlessMode()">
+                    <div class="mode-icon">⚡</div>
+                    <div class="mode-title">Endless</div>
+                    <div class="mode-desc">Dynamic procedurally generated course. Speed and density increase infinitely
+                        as you fly.</div>
+                    <div id="endless-high-score-v2" class="best-score-tag">Best Survival: 0m</div>
+                </div>
+
+                <!-- Live Tournament AI competition mode -->
+                <div class="glass-panel mode-card race-card" onclick="launchRaceMode()">
+                    <div class="mode-icon">🏁</div>
+                    <div class="mode-title">Race</div>
+                    <div class="mode-desc">Face off in real-time speedways against 4 smart geometry drone competitors.
+                    </div>
+                    <div id="race-wins-v2" class="best-score-tag">Championship Wins: 0</div>
+                </div>
             </div>
 
-            <!-- Social link icons -->
-            <div class="menu-footer-row" style="margin-top: auto;">
-                <div class="social-links" style="margin: auto; display: flex; gap: 15px; justify-content: center; z-index: 10;">
+            <!-- Footer settings buttons toolbar -->
+            <div class="menu-footer-row">
+                <div class="toolbar-buttons">
+                    <button id="audio-toggle" class="settings-btn" onclick="toggleAudio()">
+                        <span>🔊</span> AUDIO: ON
+                    </button>
+                    <button id="pwa-install-btn" class="settings-btn"
+                        style="border-color: rgba(255, 170, 0, 0.3); display: none;">
+                        <span>📥</span> DOWNLOAD APP
+                    </button>
+                    <button class="settings-btn" style="border-color: rgba(0, 243, 255, 0.3);"
+                        onclick="window.navigateToShopScreen()">
+                        <span>🛒</span> SKIN SHOP
+                    </button>
+                    <button class="settings-btn" style="border-color: rgba(176, 38, 255, 0.3);"
+                        onclick="window.navigateToProfileScreen()">
+                        <span>👤</span> PROFILE
+                    </button>
+                    <button class="settings-btn" style="border-color: var(--neon-cyan);"
+                        onclick="window.navigateToSearchScreen()">
+                        <span>💬</span> SOCIAL & SEARCH
+                    </button>
+                </div>
+
+                <!-- Social link icons -->
+                <div class="social-links">
                     <a href="https://github.com/aadisoni8044-code" target="_blank" rel="noopener noreferrer"
                         class="social-btn github-btn" title="GitHub">
                         <svg viewBox="0 0 24 24">
@@ -120,45 +155,6 @@
                 </div>
             </div>
 
-        </div>
-
-        <!-- SPA: GAME MODES SCREEN -->
-        <div id="game-modes-screen" class="screen hidden">
-            <button class="back-btn" onclick="openMainMenu()">← MENU</button>
-
-            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
-                <h2 class="title-logo" style="font-size: 40px; margin-bottom: 2px;">Game Modes</h2>
-                <div class="subtitle">Select your run type</div>
-            </div>
-
-            <!-- Game Mode Cards Container -->
-            <div class="cards-container">
-                <!-- Classic Level select mode -->
-                <div class="glass-panel mode-card classic-card" onclick="openLevelSelect()">
-                    <div class="mode-icon">🏆</div>
-                    <div class="mode-title">Classic</div>
-                    <div class="mode-desc">Survive through 100 thematic hand-crafted levels divided across 5 unique
-                        visual biomes.</div>
-                </div>
-
-                <!-- Endless survival mode -->
-                <div class="glass-panel mode-card endless-card" onclick="launchEndlessMode()">
-                    <div class="mode-icon">⚡</div>
-                    <div class="mode-title">Endless</div>
-                    <div class="mode-desc">Dynamic procedurally generated course. Speed and density increase infinitely
-                        as you fly.</div>
-                    <div id="endless-high-score-v2" class="best-score-tag">Best Survival: 0m</div>
-                </div>
-
-                <!-- Live Tournament AI competition mode -->
-                <div class="glass-panel mode-card race-card" onclick="launchRaceMode()">
-                    <div class="mode-icon">🏁</div>
-                    <div class="mode-title">Race</div>
-                    <div class="mode-desc">Face off in real-time speedways against 4 smart geometry drone competitors.
-                    </div>
-                    <div id="race-wins-v2" class="best-score-tag">Championship Wins: 0</div>
-                </div>
-            </div>
         </div>
 
         <!-- BIOME PAGED LEVEL SELECTION OVERLAY -->
@@ -306,7 +302,43 @@
             </div>
         </div>
 
-        <!-- IN-GAME AUTHENTICATION MODAL OVERLAY COMPLETELY DISABLED/REMOVED -->
+        <!-- IN-GAME AUTHENTICATION MODAL OVERLAY -->
+        <div id="auth-modal" class="modal-overlay">
+            <div class="modal-content auth-modal-content">
+                <h2 class="auth-title">Sign In</h2>
+                <div class="auth-subtitle">Sync your Speedy Coins, ELO rating, and track statistics across devices!
+                </div>
+
+                <div id="google-logged-out" style="display: block; width: 100%;">
+                    <button class="google-login-btn" onclick="window.loginWithGoogle()">
+                        <div class="google-logo-wrapper">
+                            <svg viewBox="0 0 48 48">
+                                <path fill="#EA4335"
+                                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
+                                <path fill="#4285F4"
+                                    d="M46.5 24c0-1.61-.15-3.16-.42-4.67H24v8.83h12.62c-.54 2.87-2.17 5.31-4.61 6.95l7.18 5.56C43.37 36.6 46.5 30.85 46.5 24z" />
+                                <path fill="#FBBC05"
+                                    d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z" />
+                                <path fill="#34A353"
+                                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.18-5.56c-2.03 1.35-4.63 2.18-7.71 2.18-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
+                            </svg>
+                        </div>
+                        <span class="btn-text">Sign In with Google</span>
+                    </button>
+                </div>
+
+                <div class="modal-buttons" style="margin-top: 15px;">
+                    <button class="modal-btn secondary auth-offline-btn"
+                        onclick="document.getElementById('auth-modal').classList.remove('active')">
+                        PLAY OFFLINE
+                    </button>
+                </div>
+
+                <div class="auth-credits">
+                    Developed by Speedy Games
+                </div>
+            </div>
+        </div>
 
         <!-- SPA: SEARCH PLAYERS SCREEN -->
         <div id="search-screen" class="screen hidden">
@@ -444,7 +476,27 @@
 
             <div
                 style="width: 100%; max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 10px; z-index: 12; overflow-y: auto; max-height: 70vh; padding-right: 5px;">
-                <!-- Google Authentication Session Section COMPLETELY DISABLED/REMOVED -->
+                <!-- Google Authentication Session Section -->
+                <div id="google-logged-in-container" style="width: 100%;">
+                    <div id="google-logged-in"
+                        style="display: none; width: 100%; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 12px; border: 1px solid rgba(0, 243, 255, 0.15);">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <img id="google-user-photo" src=""
+                                style="width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 243, 255, 0.4); object-fit: cover;"
+                                alt="Avatar">
+                            <div style="display: flex; flex-direction: column; text-align: left;">
+                                <span id="google-user-name"
+                                    style="font-size: 14px; font-weight: bold; color: #fff;"></span>
+                                <span id="google-user-email" style="font-size: 11px; color: #a4c4c1;"></span>
+                            </div>
+                        </div>
+                        <button class="settings-btn"
+                            style="border-color: var(--neon-pink); padding: 5px 10px; font-size: 11px;"
+                            onclick="window.logoutUser()">
+                            Sign Out
+                        </button>
+                    </div>
+                </div>
 
                 <!-- Large Custom Header Card layout -->
                 <div class="profile-header-card">
@@ -473,6 +525,9 @@
                                 <option value="DEU">🇩🇪 DEU</option>
                             </select>
                         </div>
+                        <div id="profile-uid-display"
+                            style="font-family: 'Orbitron', sans-serif; font-size: 12px; color: var(--neon-gold); font-weight: bold; margin-top: 5px; text-align: left;">
+                            UID: --------</div>
                     </div>
                 </div>
 
@@ -514,8 +569,13 @@
                     Following: <span id="profile-following-count" style="color: #fff; font-weight: bold;">0</span>
                 </div>
 
-                <!-- Interactive statistics box -->
+                <!-- Interactive ELO rating metrics statistics box -->
                 <div class="modal-stats" style="margin: 5px 0;">
+                    <div class="stat-line">
+                        <span>Championship ELO Skill Rating</span>
+                        <span id="profile-rating-display" class="val"
+                            style="color: var(--neon-cyan); font-weight: 900;">1000</span>
+                    </div>
                     <div class="stat-line">
                         <span>Campaign Completion</span>
                         <span id="profile-completed-display" class="val">0 / 100</span>
@@ -654,93 +714,25 @@
             </div>
         </div>
 
-        <!-- SETTINGS OVERLAY -->
-        <div id="settings-overlay" class="modal-overlay" style="z-index: 100;">
-            <!-- Hidden input for automated verification compatibility -->
-            <input type="text" id="settings-search-input" style="display: none;">
-            <div class="modal-content settings-content" style="border-color: var(--neon-cyan); max-width: 500px; position: relative;">
-                <button class="modal-close-btn" onclick="window.closeSettingsOverlay()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
-                <h2 class="modal-title" style="color: var(--neon-cyan); text-shadow: var(--cyan-glow); font-size: 32px; margin-bottom: 20px;">SETTINGS</h2>
-
-                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
-                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Volume (<span id="settings-volume-val">50</span>%)</div>
-                    <input type="range" id="settings-volume-slider" min="0" max="100" value="50" style="width: 100%; accent-color: var(--neon-cyan); cursor: pointer;" oninput="window.updateVolumeSetting(this.value)">
-                </div>
-
-                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
-                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Sensitivity (<span id="settings-sensitivity-val">5</span>)</div>
-                    <input type="range" id="settings-sensitivity-slider" min="1" max="10" value="5" style="width: 100%; accent-color: var(--neon-cyan); cursor: pointer;" oninput="window.updateSensitivitySetting(this.value)">
-                </div>
-
-                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
-                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Game Sound</div>
-                    <button id="settings-audio-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; text-shadow: var(--cyan-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleAudioInSettings()">
-                        <span>🔊</span> AUDIO: ON
-                    </button>
-                </div>
-
-                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
-                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Map Theme</div>
-                    <button id="settings-maps-btn" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-pink); background: rgba(255, 0, 127, 0.05); color: #fff; text-shadow: var(--pink-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.openMapsModal()">
-                        <span>🗺️</span> SELECT MAPS
-                    </button>
-                </div>
-
-                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
-                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Screen Mode</div>
-                    <button id="settings-fullscreen-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; text-shadow: var(--cyan-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleFullscreenInSettings()">
-                        <span>🖥️</span> ENTER FULLSCREEN
-                    </button>
-                </div>
-
-                <!-- Secondary utility buttons for Profile, Leaderboard to retain functional integrity -->
-                <div class="settings-section" style="width: 100%; display: flex; gap: 8px;">
-                    <button class="settings-btn" style="flex: 1; border-color: rgba(176, 38, 255, 0.3); padding: 10px; font-size: 12px;" onclick="window.navigateToProfileScreen(); window.closeSettingsOverlay();">
-                        <span>👤</span> PROFILE
-                    </button>
-                    <button class="settings-btn" style="flex: 1; border-color: rgba(255, 170, 0, 0.3); padding: 10px; font-size: 12px;" onclick="window.navigateToLeaderboardScreen(); window.closeSettingsOverlay();">
-                        <span>📊</span> LEADERBOARD
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- SELECT MAPS MODAL OVERLAY -->
-        <div id="maps-modal" class="modal-overlay" style="z-index: 200;">
-            <div class="modal-content" style="border-color: var(--neon-pink); max-width: 500px; position: relative;">
-                <button class="modal-close-btn" onclick="window.closeMapsModal()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
-                <h2 class="modal-title" style="color: var(--neon-pink); text-shadow: var(--pink-glow); font-size: 32px; margin-bottom: 10px;">SELECT MAP</h2>
-                <div class="modal-subtitle" style="margin-bottom: 20px;">Choose a custom neon gameplay skin</div>
-
-                <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
-                    <!-- Cyber Grid Card -->
-                    <div id="map-card-cyber" class="glass-panel" style="border: 2px solid var(--neon-cyan); padding: 15px; border-radius: 12px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 5px; background: rgba(15, 2, 26, 0.6);" onclick="window.selectMapTheme('cyber_grid')">
-                        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: bold; color: var(--neon-cyan); text-shadow: var(--cyan-glow);">🌌 Cyber Grid</div>
-                        <div style="font-size: 13px; color: #a4c4c1;">Dark Purple with subtle grids, neon cyan obstacles, glowing magenta laser dividers, and yellow stars.</div>
-                        <div id="map-active-cyber" style="color: var(--neon-cyan); font-weight: bold; font-size: 12px; margin-top: 5px;">ACTIVE</div>
-                    </div>
-
-                    <!-- Classic Arcade Card -->
-                    <div id="map-card-arcade" class="glass-panel" style="border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 12px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 5px; background: rgba(5, 13, 13, 0.6);" onclick="window.selectMapTheme('classic_arcade')">
-                        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: bold; color: var(--neon-green); text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);">🕹️ Classic Arcade</div>
-                        <div style="font-size: 13px; color: #a4c4c1;">Pitch Dark Teal, custom cyan/teal solid HUD header, bright neon lime green boundaries, green rings and targets.</div>
-                        <div id="map-active-arcade" style="color: var(--neon-green); font-weight: bold; font-size: 12px; margin-top: 5px; display: none;">ACTIVE</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TOAST NOTIFICATION CONTAINER -->
-        <div id="toast-container" style="position: absolute; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; pointer-events: none;"></div>
-
     </div>
 
     <!-- Core modular game script links -->
-    <script src="ui.js?v=2.0.0"></script>
-    <script src="game-engine.js?v=2.0.0"></script>
-    <script src="main.js?v=2.0.0"></script>
+    <script src="ui.js"></script>
+    <script src="game-engine.js"></script>
 
-    <!-- Firebase v10 Modular SDK via ES Modules & google.js Integration COMPLETELY DISABLED/REMOVED -->
+    <!-- Firebase v10 Modular SDK via ES Modules & google.js Integration -->
+    <script type="importmap">
+      {
+        "imports": {
+          "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
+          "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
+          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
+          "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js",
+          "firebase/database": "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"
+        }
+      }
+    </script>
+    <script type="module" src="google.js"></script>
 
     <!-- Small mobile landscape forced orientation watcher -->
     <script>
