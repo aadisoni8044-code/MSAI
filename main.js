@@ -1,10 +1,49 @@
-// Purge legacy data on page init
+// Purge legacy data and block all browser storage (No Local Saving)
 try {
-    localStorage.clear();
-    sessionStorage.clear();
+    window.localStorage.clear();
+    window.sessionStorage.clear();
     console.log("[Storage Purge] Absolute localStorage and sessionStorage purge complete on page init.");
 } catch (e) {
-    console.error("[Storage Purge] Error purging storage:", e);
+    console.warn("[Storage Purge] Storage clear failed: ", e);
+}
+
+const dummyStorage = {
+    setItem: () => { console.log("[Storage Blocked] setItem called (no-op)"); },
+    getItem: () => null,
+    removeItem: () => {},
+    clear: () => {},
+    key: () => null,
+    get length() { return 0; }
+};
+
+try {
+    Object.defineProperty(window, 'localStorage', { value: dummyStorage, configurable: true, writable: true });
+    Object.defineProperty(window, 'sessionStorage', { value: dummyStorage, configurable: true, writable: true });
+} catch (e) {
+    console.error("Failed to override storage with defineProperty, applying fallback:", e);
+    window.localStorage = dummyStorage;
+    window.sessionStorage = dummyStorage;
+}
+
+// Block cookies by redefining document.cookie
+try {
+    Object.defineProperty(document, 'cookie', {
+        get: () => '',
+        set: () => '',
+        configurable: true
+    });
+} catch (e) {
+    console.warn("Could not block cookies: ", e);
+}
+
+// Block IndexedDB access by overriding window.indexedDB
+try {
+    Object.defineProperty(window, 'indexedDB', {
+        get: () => null,
+        configurable: true
+    });
+} catch (e) {
+    console.warn("Could not block IndexedDB: ", e);
 }
 
 // --- SETTINGS OVERLAY CONTROLLER ---
@@ -114,4 +153,57 @@ window.alert = function(msg) {
         type = 'warning';
     }
     window.showToast(msg, type);
+};
+
+// --- DUMMY LOCAL STATE & FIREBASE STUBS (OFFLINE EPHEMERAL MODE) ---
+const currentUser = { isLoggedIn: false, name: "Player", highScore: 0, coins: 0 };
+window.currentUser = currentUser;
+
+window.isLoggedIn = false; // Runs in safe guest/offline mode ephemerally
+window.firebaseUser = null;
+
+window.firebase = {
+    auth: () => ({
+        get currentUser() {
+            return null;
+        }
+    })
+};
+
+// Override all google.js actions with safe local stubs
+window.loginWithGoogle = () => {
+    window.showToast("Google Login is disabled. Running in pure offline mode.", "info");
+};
+window.logoutUser = () => {
+    window.showToast("Google Logout is disabled. Running in pure offline mode.", "info");
+};
+window.uploadProfilePicture = (fileInput) => {
+    window.showToast("Profile photo uploads are disabled in offline mode.", "warning");
+};
+window.updateProfileBio = (bio) => {
+    if (window.UI_STATE) window.UI_STATE.bio = bio;
+    console.log("[Offline] Bio updated locally in memory:", bio);
+};
+window.updateSocialLink = (network, url) => {
+    if (window.UI_STATE) window.UI_STATE[network] = url;
+    console.log(`[Offline] Social ${network} updated locally in memory:`, url);
+};
+window.searchPlayersByUID = (query) => {
+    window.showToast("Rider Search is disabled in offline mode.", "warning");
+};
+window.viewPublicProfile = () => {};
+window.toggleFollowPublicUser = () => {};
+window.challengePublicUser = () => {};
+window.createMultiplayerRoom = () => {};
+window.startMultiplayerMatch = () => {};
+window.leaveMultiplayerLobby = () => {};
+window.syncUIStateToCloud = () => {
+    // No-op for offline mode
+};
+
+// Override auth UI state update safely
+window.updateAuthUI = () => {
+    // Retain clean guest features, showing no-login experience
+    const loginIndicator = document.getElementById("login-save-progress-indicator");
+    if (loginIndicator) loginIndicator.style.display = "none";
 };

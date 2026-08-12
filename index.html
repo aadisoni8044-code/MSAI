@@ -48,11 +48,7 @@
 
                 <!-- Custom Daily currency balances & streaks widgets -->
                 <div class="economy-widgets">
-                    <div id="login-save-progress-indicator" class="glass-panel widget-item streak"
-                        style="cursor: pointer; border-color: var(--neon-pink); color: var(--neon-pink); display: none;"
-                        onclick="document.getElementById('auth-modal').classList.add('active')">
-                        🔑 LOGIN TO SAVE PROGRESS
-                    </div>
+                    <!-- Google Login UI element completely disabled/removed -->
                     <div class="glass-panel widget-item streak"
                         onclick="document.getElementById('daily-rewards-modal').classList.add('active')">
                         <span>🔥</span> <span class="streak-days-val">1</span> Days
@@ -310,43 +306,7 @@
             </div>
         </div>
 
-        <!-- IN-GAME AUTHENTICATION MODAL OVERLAY -->
-        <div id="auth-modal" class="modal-overlay">
-            <div class="modal-content auth-modal-content">
-                <h2 class="auth-title">Sign In</h2>
-                <div class="auth-subtitle">Sync your Speedy Coins, ELO rating, and track statistics across devices!
-                </div>
-
-                <div id="google-logged-out" style="display: block; width: 100%;">
-                    <button class="google-login-btn" onclick="window.loginWithGoogle()">
-                        <div class="google-logo-wrapper">
-                            <svg viewBox="0 0 48 48">
-                                <path fill="#EA4335"
-                                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z" />
-                                <path fill="#4285F4"
-                                    d="M46.5 24c0-1.61-.15-3.16-.42-4.67H24v8.83h12.62c-.54 2.87-2.17 5.31-4.61 6.95l7.18 5.56C43.37 36.6 46.5 30.85 46.5 24z" />
-                                <path fill="#FBBC05"
-                                    d="M10.54 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.98-6.19z" />
-                                <path fill="#34A353"
-                                    d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.18-5.56c-2.03 1.35-4.63 2.18-7.71 2.18-6.26 0-11.57-4.22-13.46-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z" />
-                            </svg>
-                        </div>
-                        <span class="btn-text">Sign In with Google</span>
-                    </button>
-                </div>
-
-                <div class="modal-buttons" style="margin-top: 15px;">
-                    <button class="modal-btn secondary auth-offline-btn"
-                        onclick="document.getElementById('auth-modal').classList.remove('active')">
-                        PLAY OFFLINE
-                    </button>
-                </div>
-
-                <div class="auth-credits">
-                    Developed by Speedy Games
-                </div>
-            </div>
-        </div>
+        <!-- IN-GAME AUTHENTICATION MODAL OVERLAY COMPLETELY DISABLED/REMOVED -->
 
         <!-- SPA: SEARCH PLAYERS SCREEN -->
         <div id="search-screen" class="screen hidden">
@@ -484,27 +444,7 @@
 
             <div
                 style="width: 100%; max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 10px; z-index: 12; overflow-y: auto; max-height: 70vh; padding-right: 5px;">
-                <!-- Google Authentication Session Section -->
-                <div id="google-logged-in-container" style="width: 100%;">
-                    <div id="google-logged-in"
-                        style="display: none; width: 100%; align-items: center; justify-content: space-between; gap: 10px; background: rgba(255, 255, 255, 0.03); padding: 12px; border-radius: 12px; border: 1px solid rgba(0, 243, 255, 0.15);">
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <img id="google-user-photo" src=""
-                                style="width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--neon-cyan); box-shadow: 0 0 10px rgba(0, 243, 255, 0.4); object-fit: cover;"
-                                alt="Avatar">
-                            <div style="display: flex; flex-direction: column; text-align: left;">
-                                <span id="google-user-name"
-                                    style="font-size: 14px; font-weight: bold; color: #fff;"></span>
-                                <span id="google-user-email" style="font-size: 11px; color: #a4c4c1;"></span>
-                            </div>
-                        </div>
-                        <button class="settings-btn"
-                            style="border-color: var(--neon-pink); padding: 5px 10px; font-size: 11px;"
-                            onclick="window.logoutUser()">
-                            Sign Out
-                        </button>
-                    </div>
-                </div>
+                <!-- Google Authentication Session Section COMPLETELY DISABLED/REMOVED -->
 
                 <!-- Large Custom Header Card layout -->
                 <div class="profile-header-card">
@@ -779,19 +719,7 @@
     <script src="game-engine.js?v=2.0.0"></script>
     <script src="main.js?v=2.0.0"></script>
 
-    <!-- Firebase v10 Modular SDK via ES Modules & google.js Integration -->
-    <script type="importmap">
-      {
-        "imports": {
-          "firebase/app": "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js",
-          "firebase/auth": "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js",
-          "firebase/firestore": "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js",
-          "firebase/storage": "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js",
-          "firebase/database": "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js"
-        }
-      }
-    </script>
-    <script type="module" src="google.js?v=2.0.0"></script>
+    <!-- Firebase v10 Modular SDK via ES Modules & google.js Integration COMPLETELY DISABLED/REMOVED -->
 
     <!-- Small mobile landscape forced orientation watcher -->
     <script>
