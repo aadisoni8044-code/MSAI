@@ -1,50 +1,84 @@
-// Purge legacy data and block all browser storage (No Local Saving)
-try {
-    window.localStorage.clear();
-    window.sessionStorage.clear();
-    console.log("[Storage Purge] Absolute localStorage and sessionStorage purge complete on page init.");
-} catch (e) {
-    console.warn("[Storage Purge] Storage clear failed: ", e);
-}
+// --- EPHEMERAL IN-MEMORY STATE MANAGER ---
+const gameState = {
+    coins: 1000,
+    purchasedSkins: [],
+    settings: {
+        volume: 50,
+        sensitivity: 5
+    }
+};
+window.gameState = gameState;
 
-const dummyStorage = {
-    setItem: () => { console.log("[Storage Blocked] setItem called (no-op)"); },
-    getItem: () => null,
-    removeItem: () => {},
-    clear: () => {},
-    key: () => null,
-    get length() { return 0; }
+// Sync game state to UI_STATE on startup
+document.addEventListener('DOMContentLoaded', () => {
+    if (window.UI_STATE) {
+        window.UI_STATE.ploCoins = gameState.coins;
+        window.UI_STATE.ownedSkins = ['classic', ...gameState.purchasedSkins];
+        if (typeof window.renderHeaderWidgets === 'function') window.renderHeaderWidgets();
+        if (typeof window.renderShopSkins === 'function') window.renderShopSkins();
+    }
+
+    // Add click event listeners to SKIN SHOP and SETTINGS buttons
+    const shopBtn = document.getElementById('menu-shop-btn-main');
+    if (shopBtn) {
+        shopBtn.addEventListener('click', () => {
+            window.navigateToShopScreen();
+        });
+    }
+
+    const settingsBtn = document.getElementById('menu-settings-btn');
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            window.openSettingsOverlay();
+        });
+    }
+});
+
+// Settings Slider Update Callbacks
+window.updateVolumeSetting = (val) => {
+    gameState.settings.volume = parseInt(val);
+    const label = document.getElementById('settings-volume-val');
+    if (label) label.innerText = val;
+    console.log("[Settings] Volume updated in memory:", gameState.settings.volume);
 };
 
-try {
-    Object.defineProperty(window, 'localStorage', { value: dummyStorage, configurable: true, writable: true });
-    Object.defineProperty(window, 'sessionStorage', { value: dummyStorage, configurable: true, writable: true });
-} catch (e) {
-    console.error("Failed to override storage with defineProperty, applying fallback:", e);
-    window.localStorage = dummyStorage;
-    window.sessionStorage = dummyStorage;
-}
+window.updateSensitivitySetting = (val) => {
+    gameState.settings.sensitivity = parseInt(val);
+    const label = document.getElementById('settings-sensitivity-val');
+    if (label) label.innerText = val;
+    console.log("[Settings] Sensitivity updated in memory:", gameState.settings.sensitivity);
+};
 
-// Block cookies by redefining document.cookie
-try {
-    Object.defineProperty(document, 'cookie', {
-        get: () => '',
-        set: () => '',
-        configurable: true
-    });
-} catch (e) {
-    console.warn("Could not block cookies: ", e);
-}
+// Override selectSkin to strictly use and update the in-memory gameState
+window.selectSkin = (skinId) => {
+    if (typeof VEHICLE_SKINS === 'undefined') return;
+    const skin = VEHICLE_SKINS.find(s => s.id === skinId);
+    if (!skin) return;
 
-// Block IndexedDB access by overriding window.indexedDB
-try {
-    Object.defineProperty(window, 'indexedDB', {
-        get: () => null,
-        configurable: true
-    });
-} catch (e) {
-    console.warn("Could not block IndexedDB: ", e);
-}
+    const isOwned = skinId === 'classic' || gameState.purchasedSkins.includes(skinId);
+
+    if (isOwned) {
+        if (window.UI_STATE) window.UI_STATE.equippedSkin = skinId;
+        if (typeof window.playBuySound === 'function') window.playBuySound();
+    } else {
+        if (gameState.coins >= skin.cost) {
+            gameState.coins -= skin.cost;
+            gameState.purchasedSkins.push(skinId);
+            if (window.UI_STATE) {
+                window.UI_STATE.equippedSkin = skinId;
+                window.UI_STATE.ploCoins = gameState.coins;
+                window.UI_STATE.ownedSkins = ['classic', ...gameState.purchasedSkins];
+            }
+            if (typeof window.playBuySound === 'function') window.playBuySound();
+            window.showToast(`Purchased ${skin.name} successfully!`, "success");
+        } else {
+            window.showToast("Insufficient Speedy Coins! Keep playing to earn more.", "error");
+        }
+    }
+
+    if (typeof window.renderHeaderWidgets === 'function') window.renderHeaderWidgets();
+    if (typeof window.renderShopSkins === 'function') window.renderShopSkins();
+};
 
 // --- SETTINGS OVERLAY CONTROLLER ---
 function openSettingsOverlay() {
@@ -206,4 +240,26 @@ window.updateAuthUI = () => {
     // Retain clean guest features, showing no-login experience
     const loginIndicator = document.getElementById("login-save-progress-indicator");
     if (loginIndicator) loginIndicator.style.display = "none";
+};
+
+// Direct UI screen navigation overrides (offline access)
+window.navigateToProfileScreen = () => {
+    window.showToast("Please login with Google to access the Profile and save your progress! Running in ephemeral local mode.", "warning");
+    if (typeof window.showScreen === 'function') {
+        window.showScreen('profile-screen');
+    }
+};
+window.navigateToSearchScreen = () => {
+    if (typeof window.showScreen === 'function') {
+        window.showScreen('search-screen');
+    }
+};
+window.navigateToShopScreen = () => {
+    window.showToast("Please login with Google to access the Shop and save your progress! Running in ephemeral local mode.", "warning");
+    if (typeof window.showScreen === 'function') {
+        window.showScreen('shop-screen');
+    }
+};
+window.navigateToLeaderboardScreen = () => {
+    window.showToast("Leaderboard features are disabled in offline mode. Play Race mode locally!", "info");
 };

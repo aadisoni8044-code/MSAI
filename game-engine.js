@@ -48,7 +48,7 @@ let hexPatternCanvas = null;
 let hexPatternWidth = 256;
 let hexPatternHeight = 256;
 
-// LocalStorage keys for endless & race
+// Local in-memory keys for endless & race
 const SAVE_ENDLESS_HI_SCORE = 'plo_io_endless_hiscore_v2';
 const SAVE_RACE_WINS = 'plo_io_race_wins_v2';
 

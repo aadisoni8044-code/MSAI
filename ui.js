@@ -30,7 +30,7 @@ const UI_STATE = {
     totalPerfectRuns: 0
 };
 
-// LocalStorage Keys
+// Local in-memory state keys
 const KEYS = {
     COINS: 'plo_coins_balance',
     STREAK: 'plo_login_streak',

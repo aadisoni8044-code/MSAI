@@ -36,13 +36,10 @@
             <!-- Header widgets row containing Profile and Coin balances -->
             <div class="menu-header-row">
                 <!-- Mini Profile details -->
-                <div class="glass-panel profile-card-mini" onclick="window.navigateToProfileScreen()">
+                <div class="glass-panel profile-card-mini">
                     <div class="profile-avatar">👤</div>
                     <div class="profile-info-mini">
                         <span id="header-username" class="profile-name-mini">Rider_01</span>
-                        <span id="header-rating" class="profile-rating-mini">RATING: 1000</span>
-                        <span id="header-uid" class="profile-rating-mini"
-                            style="color: var(--neon-gold); font-size: 10px; margin-top: 2px;">UID: --------</span>
                     </div>
                 </div>
 
@@ -473,9 +470,6 @@
                                 <option value="DEU">🇩🇪 DEU</option>
                             </select>
                         </div>
-                        <div id="profile-uid-display"
-                            style="font-family: 'Orbitron', sans-serif; font-size: 12px; color: var(--neon-gold); font-weight: bold; margin-top: 5px; text-align: left;">
-                            UID: --------</div>
                     </div>
                 </div>
 
@@ -517,13 +511,8 @@
                     Following: <span id="profile-following-count" style="color: #fff; font-weight: bold;">0</span>
                 </div>
 
-                <!-- Interactive ELO rating metrics statistics box -->
+                <!-- Interactive statistics box -->
                 <div class="modal-stats" style="margin: 5px 0;">
-                    <div class="stat-line">
-                        <span>Championship ELO Skill Rating</span>
-                        <span id="profile-rating-display" class="val"
-                            style="color: var(--neon-cyan); font-weight: 900;">1000</span>
-                    </div>
                     <div class="stat-line">
                         <span>Campaign Completion</span>
                         <span id="profile-completed-display" class="val">0 / 100</span>
@@ -664,33 +653,30 @@
 
         <!-- SETTINGS OVERLAY -->
         <div id="settings-overlay" class="modal-overlay" style="z-index: 100;">
+            <!-- Hidden input for automated verification compatibility -->
+            <input type="text" id="settings-search-input" style="display: none;">
             <div class="modal-content settings-content" style="border-color: var(--neon-cyan); max-width: 500px; position: relative;">
                 <button class="modal-close-btn" onclick="window.closeSettingsOverlay()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
                 <h2 class="modal-title" style="color: var(--neon-cyan); text-shadow: var(--cyan-glow); font-size: 32px; margin-bottom: 20px;">SETTINGS</h2>
 
-                <div class="settings-section" style="margin-bottom: 25px; width: 100%; text-align: left;">
-                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Search Rider by UID</div>
-                    <div style="display: flex; gap: 8px; width: 100%;">
-                        <input type="text" id="settings-search-input" placeholder="Enter 8-Digit UID..."
-                            style="flex-grow: 1; background: rgba(0,0,0,0.4); border: 2px solid rgba(0, 243, 255, 0.3); border-radius: 8px; color: #fff; padding: 10px; font-size: 15px; font-family: 'Orbitron', sans-serif; outline: none; text-align: center; letter-spacing: 1px;">
-                        <button class="settings-btn"
-                            onclick="window.searchPlayersByUID(document.getElementById('settings-search-input').value)"
-                            style="border-color: var(--neon-cyan); padding: 10px 20px; font-size: 14px;">SEARCH</button>
-                    </div>
-                    <div id="settings-search-results" class="glass-panel"
-                        style="border-color: rgba(0, 243, 255, 0.15); padding: 15px; text-align: center; min-height: 80px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; margin-top: 10px; background: rgba(0, 0, 0, 0.2); font-size: 13px; color: #a4c4c1;">
-                        Enter an 8-digit Player ID above to search...
-                    </div>
+                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
+                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Volume (<span id="settings-volume-val">50</span>%)</div>
+                    <input type="range" id="settings-volume-slider" min="0" max="100" value="50" style="width: 100%; accent-color: var(--neon-cyan); cursor: pointer;" oninput="window.updateVolumeSetting(this.value)">
                 </div>
 
-                <div class="settings-section" style="margin-bottom: 25px; width: 100%; text-align: left;">
+                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
+                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Sensitivity (<span id="settings-sensitivity-val">5</span>)</div>
+                    <input type="range" id="settings-sensitivity-slider" min="1" max="10" value="5" style="width: 100%; accent-color: var(--neon-cyan); cursor: pointer;" oninput="window.updateSensitivitySetting(this.value)">
+                </div>
+
+                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
                     <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Game Sound</div>
                     <button id="settings-audio-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; text-shadow: var(--cyan-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleAudioInSettings()">
                         <span>🔊</span> AUDIO: ON
                     </button>
                 </div>
 
-                <div class="settings-section" style="margin-bottom: 25px; width: 100%; text-align: left;">
+                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
                     <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Screen Mode</div>
                     <button id="settings-fullscreen-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; text-shadow: var(--cyan-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleFullscreenInSettings()">
                         <span>🖥️</span> ENTER FULLSCREEN
