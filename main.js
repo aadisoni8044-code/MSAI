@@ -5,9 +5,52 @@ const gameState = {
     settings: {
         volume: 50,
         sensitivity: 5
-    }
+    },
+    currentMap: 'cyber_grid'
 };
 window.gameState = gameState;
+
+// Map Theme Modal Controller Functions
+window.openMapsModal = () => {
+    const modal = document.getElementById('maps-modal');
+    if (modal) {
+        modal.classList.add('active');
+        window.updateMapsModalUI();
+    }
+};
+
+window.closeMapsModal = () => {
+    const modal = document.getElementById('maps-modal');
+    if (modal) modal.classList.remove('active');
+};
+
+window.updateMapsModalUI = () => {
+    const activeCyber = document.getElementById('map-active-cyber');
+    const activeArcade = document.getElementById('map-active-arcade');
+    const cardCyber = document.getElementById('map-card-cyber');
+    const cardArcade = document.getElementById('map-card-arcade');
+
+    const currentMap = gameState.currentMap || 'cyber_grid';
+
+    if (currentMap === 'cyber_grid') {
+        if (activeCyber) activeCyber.style.display = 'block';
+        if (activeArcade) activeArcade.style.display = 'none';
+        if (cardCyber) cardCyber.style.borderColor = 'var(--neon-cyan)';
+        if (cardArcade) cardArcade.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+    } else {
+        if (activeCyber) activeCyber.style.display = 'none';
+        if (activeArcade) activeArcade.style.display = 'block';
+        if (cardCyber) cardCyber.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        if (cardArcade) cardArcade.style.borderColor = 'var(--neon-green)';
+    }
+};
+
+window.selectMapTheme = (theme) => {
+    gameState.currentMap = theme;
+    window.updateMapsModalUI();
+    window.showToast(`Selected Theme: ${theme === 'cyber_grid' ? 'Cyber Grid' : 'Classic Arcade'}`, "success");
+    window.closeMapsModal();
+};
 
 // Sync game state to UI_STATE on startup
 document.addEventListener('DOMContentLoaded', () => {

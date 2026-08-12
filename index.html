@@ -677,6 +677,13 @@
                 </div>
 
                 <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
+                    <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Map Theme</div>
+                    <button id="settings-maps-btn" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-pink); background: rgba(255, 0, 127, 0.05); color: #fff; text-shadow: var(--pink-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.openMapsModal()">
+                        <span>🗺️</span> SELECT MAPS
+                    </button>
+                </div>
+
+                <div class="settings-section" style="margin-bottom: 20px; width: 100%; text-align: left;">
                     <div style="font-size: 13px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Screen Mode</div>
                     <button id="settings-fullscreen-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; text-shadow: var(--cyan-glow); padding: 12px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleFullscreenInSettings()">
                         <span>🖥️</span> ENTER FULLSCREEN
@@ -691,6 +698,31 @@
                     <button class="settings-btn" style="flex: 1; border-color: rgba(255, 170, 0, 0.3); padding: 10px; font-size: 12px;" onclick="window.navigateToLeaderboardScreen(); window.closeSettingsOverlay();">
                         <span>📊</span> LEADERBOARD
                     </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SELECT MAPS MODAL OVERLAY -->
+        <div id="maps-modal" class="modal-overlay" style="z-index: 200;">
+            <div class="modal-content" style="border-color: var(--neon-pink); max-width: 500px; position: relative;">
+                <button class="modal-close-btn" onclick="window.closeMapsModal()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
+                <h2 class="modal-title" style="color: var(--neon-pink); text-shadow: var(--pink-glow); font-size: 32px; margin-bottom: 10px;">SELECT MAP</h2>
+                <div class="modal-subtitle" style="margin-bottom: 20px;">Choose a custom neon gameplay skin</div>
+
+                <div style="display: flex; flex-direction: column; gap: 15px; width: 100%;">
+                    <!-- Cyber Grid Card -->
+                    <div id="map-card-cyber" class="glass-panel" style="border: 2px solid var(--neon-cyan); padding: 15px; border-radius: 12px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 5px; background: rgba(15, 2, 26, 0.6);" onclick="window.selectMapTheme('cyber_grid')">
+                        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: bold; color: var(--neon-cyan); text-shadow: var(--cyan-glow);">🌌 Cyber Grid</div>
+                        <div style="font-size: 13px; color: #a4c4c1;">Dark Purple with subtle grids, neon cyan obstacles, glowing magenta laser dividers, and yellow stars.</div>
+                        <div id="map-active-cyber" style="color: var(--neon-cyan); font-weight: bold; font-size: 12px; margin-top: 5px;">ACTIVE</div>
+                    </div>
+
+                    <!-- Classic Arcade Card -->
+                    <div id="map-card-arcade" class="glass-panel" style="border: 1px solid rgba(255, 255, 255, 0.1); padding: 15px; border-radius: 12px; cursor: pointer; text-align: left; display: flex; flex-direction: column; gap: 5px; background: rgba(5, 13, 13, 0.6);" onclick="window.selectMapTheme('classic_arcade')">
+                        <div style="font-family: 'Orbitron', sans-serif; font-size: 18px; font-weight: bold; color: var(--neon-green); text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);">🕹️ Classic Arcade</div>
+                        <div style="font-size: 13px; color: #a4c4c1;">Pitch Dark Teal, custom cyan/teal solid HUD header, bright neon lime green boundaries, green rings and targets.</div>
+                        <div id="map-active-arcade" style="color: var(--neon-green); font-weight: bold; font-size: 12px; margin-top: 5px; display: none;">ACTIVE</div>
+                    </div>
                 </div>
             </div>
         </div>
