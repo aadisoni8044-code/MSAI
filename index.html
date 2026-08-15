@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Speedy Arrow</title>
+  <!-- Force cache refresh with meta control -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <link rel="stylesheet" href="style.css?v=1.0.0">
+</head>
+<body>
+
+  <div id="app-container">
+
+    <!-- Flash Overlay for crashes -->
+    <div id="flash-overlay" class="flash-overlay"></div>
+
+    <!-- ======================================= -->
+    <!-- SCREEN: MAIN MENU                       -->
+    <!-- ======================================= -->
+    <div id="screen-menu" class="screen active">
+      <div class="screen-header">
+        <!-- Shop Shortcut Button (Cart style icon) -->
+        <button id="menu-btn-shop-shortcut" class="back-btn" title="Shop">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </button>
+
+        <div class="currency-and-level">
+          <!-- Premium Gem balance pill -->
+          <div class="currency-pill premium" title="Premium Tokens">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="gold">
+              <polygon points="12,2 22,8.5 12,22 2,8.5"></polygon>
+            </svg>
+            <span id="header-premium-gems-count">0</span>
+          </div>
+
+          <!-- Gems balance pill -->
+          <div class="currency-pill" title="Gems">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--accent-color)">
+              <polygon points="12,2 22,9 17,22 7,22 2,9"></polygon>
+            </svg>
+            <span id="header-gems-count">40</span>
+            <button id="add-gems-btn" class="add-gems-btn" title="Get more gems">+</button>
+          </div>
+        </div>
+      </div>
+
+      <h1>SELECT A GAME MODE</h1>
+
+      <!-- Daily Gift Claim Banner -->
+      <div class="daily-gift-banner">
+        <div>🎁 Free Daily Gift!</div>
+        <div id="daily-timer-text" class="daily-timer-text">00:00:00</div>
+        <button id="daily-claim-btn" class="daily-gift-claim-btn" style="display:none;">CLAIM REWARD</button>
+      </div>
+
+      <!-- Mode Cards Scrollable List -->
+      <div class="menu-grid scrollable">
+        <!-- 1. CLASSIC MODE CARD -->
+        <div class="mode-card">
+          <div class="mode-card-header">
+            <div class="mode-card-icon">
+              <!-- Path with Start (X) & Flag -->
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--accent-color)" stroke-width="2">
+                <path d="M4 18 L10 10 L14 14 L20 6" stroke-dasharray="3,3"></path>
+                <circle cx="4" cy="18" r="2" fill="var(--accent-color)"></circle>
+                <path d="M20 6 L20 2 L17 4 L20 6" fill="var(--accent-color)"></path>
+              </svg>
+            </div>
+            <h2>CLASSIC</h2>
+          </div>
+          <p class="mode-card-desc">Reach the checkered finish line to complete designed obstacle courses.</p>
+          <div class="mode-card-control">
+            <button id="menu-btn-classic-level" class="btn" style="width:100%; font-size:0.85rem; padding: 6px 12px;">
+              SELECT LEVEL
+            </button>
+          </div>
+          <button id="mode-start-classic" class="primary mode-card-btn">START CLASSIC ▶</button>
+        </div>
+
+        <!-- 2. ENDLESS MODE CARD -->
+        <div class="mode-card">
+          <div class="mode-card-header">
+            <div class="mode-card-icon">
+              <!-- Infinite Symbol -->
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--accent-color)" stroke-width="2">
+                <path d="M12 12c-1.5-1.5-3-3-5.5-3a5.5 5.5 0 1 0 0 11c2.5 0 4-1.5 5.5-3s3-3 5.5-3a5.5 5.5 0 1 1 0 11c-2.5 0-4-1.5-5.5-3z"></path>
+              </svg>
+            </div>
+            <h2>ENDLESS</h2>
+          </div>
+          <div class="highscore-large">PB: <span id="endless-highscore-text">0</span>m</div>
+          <p class="mode-card-desc">Fly as far as possible to set a personal highscore and earn progressive gems.</p>
+          <button id="mode-start-endless" class="primary mode-card-btn">START ENDLESS ▶</button>
+        </div>
+
+        <!-- 3. RACE MODE CARD -->
+        <div class="mode-card">
+          <div class="mode-card-header">
+            <div class="mode-card-icon">
+              <!-- Checkered Flag Icon -->
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="var(--accent-color)" stroke-width="2">
+                <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
+                <line x1="4" y1="22" x2="4" y2="15"></line>
+              </svg>
+            </div>
+            <h2>RACE</h2>
+          </div>
+          <p class="mode-card-desc">Race alongside 2 aggressive AI ghost ships. Finish 1st to win!</p>
+          <div class="mode-card-control" style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+            <button id="race-diff-left" class="btn" style="padding: 4px 10px;">◀</button>
+            <span id="race-diff-label" style="font-weight: 700; width: 80px; text-align: center;">MEDIUM</span>
+            <button id="race-diff-right" class="btn" style="padding: 4px 10px;">▶</button>
+          </div>
+          <button id="mode-start-race" class="primary mode-card-btn">START RACE ▶</button>
+        </div>
+      </div>
+
+      <!-- Navigation Footer -->
+      <div class="bottom-bar">
+        <button id="menu-btn-skins" class="btn">
+          <!-- Paper Airplane/Arrow Icon -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+          SKINS
+        </button>
+        <button id="menu-btn-settings" class="btn">
+          <!-- Gear Icon -->
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          SETTINGS
+        </button>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SCREEN: SHOP                            -->
+    <!-- ======================================= -->
+    <div id="screen-shop" class="screen">
+      <div class="screen-header">
+        <button id="shop-btn-back" class="back-btn" title="Back">
+          <!-- Left Arrow Icon -->
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+
+        <!-- Shortcut to skins -->
+        <button id="shop-btn-skins-shortcut" class="back-btn" title="Skins Picker">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="12 2 2 22 12 17 22 22 12 2"></polygon>
+          </svg>
+        </button>
+
+        <div class="currency-and-level">
+          <div class="currency-pill premium">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="gold">
+              <polygon points="12,2 22,8.5 12,22 2,8.5"></polygon>
+            </svg>
+            <span id="shop-premium-gems-count">0</span>
+          </div>
+
+          <div class="currency-pill">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="var(--accent-color)">
+              <polygon points="12,2 22,9 17,22 7,22 2,9"></polygon>
+            </svg>
+            <span id="shop-gems-count">40</span>
+          </div>
+        </div>
+      </div>
+
+      <h1>SHOP</h1>
+
+      <div class="picker-container">
+        <!-- Left Column: Large cosmetic equipped preview -->
+        <div class="preview-panel">
+          <div class="preview-circle" id="shop-preview-svg-container">
+            <!-- Equipped ship loaded here -->
+          </div>
+          <div class="preview-streak" id="shop-preview-streak"></div>
+          <div class="chat-bubble" id="shop-chat-bubble">
+            Welcome to the Shop! Buy neat skins with gems!
+          </div>
+        </div>
+
+        <!-- Right Column: Category Tabbed list and item grid -->
+        <div class="tabs-and-grid">
+          <div class="category-tabs">
+            <button class="tab-btn active" data-category="ship">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <polygon points="12,2 2,22 12,17 22,22"></polygon>
+              </svg>
+              Ship
+            </button>
+            <button class="tab-btn" data-category="trail">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 17 L22 7 M4 20 L22 11 M2 13 L18 5"></path>
+              </svg>
+              Trail
+            </button>
+            <button class="tab-btn" data-category="theme">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.59 2.37 15.09 3 16.42L2 22L7.58 21C8.91 21.63 10.41 22 12 22Z"></path>
+                <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+                <circle cx="11.5" cy="7.5" r="1.5" fill="currentColor"></circle>
+                <circle cx="16.5" cy="9.5" r="1.5" fill="currentColor"></circle>
+                <circle cx="15.5" cy="14.5" r="1.5" fill="currentColor"></circle>
+              </svg>
+              Theme
+            </button>
+          </div>
+
+          <!-- Items Scrollable Grid -->
+          <div class="items-grid scrollable" id="shop-items-grid">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SCREEN: SKIN PICKER                     -->
+    <!-- ======================================= -->
+    <div id="screen-skins" class="screen">
+      <div class="screen-header">
+        <button id="skins-btn-back" class="back-btn" title="Back">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+
+        <!-- Shortcut to shop -->
+        <button id="skins-btn-shop-shortcut" class="back-btn" title="Shop">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+        </button>
+
+        <div class="currency-and-level" style="visibility:hidden;">
+          <!-- Empty spacer or same balance structure -->
+        </div>
+      </div>
+
+      <h1>SKIN PICKER</h1>
+
+      <div class="picker-container">
+        <!-- Left: equipped state -->
+        <div class="preview-panel">
+          <div class="preview-circle" id="skins-preview-svg-container">
+            <!-- Loaded SVG -->
+          </div>
+          <div class="preview-streak" id="skins-preview-streak"></div>
+          <div style="font-weight:700; margin-top:8px;" id="skins-preview-name">ARROW CLASSIC</div>
+          <span style="font-size:0.75rem; opacity:0.7;" id="skins-preview-status">SELECTED</span>
+        </div>
+
+        <!-- Right: tab switches and own filter grid -->
+        <div class="tabs-and-grid">
+          <div class="category-tabs">
+            <button class="tab-btn active" data-category="ship">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor">
+                <polygon points="12,2 2,22 12,17 22,22"></polygon>
+              </svg>
+              Ship
+            </button>
+            <button class="tab-btn" data-category="trail">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M2 17 L22 7 M4 20 L22 11 M2 13 L18 5"></path>
+              </svg>
+              Trail
+            </button>
+            <button class="tab-btn" data-category="theme">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 13.59 2.37 15.09 3 16.42L2 22L7.58 21C8.91 21.63 10.41 22 12 22Z"></path>
+                <circle cx="7.5" cy="10.5" r="1.5" fill="currentColor"></circle>
+                <circle cx="11.5" cy="7.5" r="1.5" fill="currentColor"></circle>
+                <circle cx="16.5" cy="9.5" r="1.5" fill="currentColor"></circle>
+                <circle cx="15.5" cy="14.5" r="1.5" fill="currentColor"></circle>
+              </svg>
+              Theme
+            </button>
+          </div>
+
+          <div class="items-grid scrollable" id="skins-items-grid">
+            <!-- Owned items loaded dynamically -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SCREEN: LEVEL SELECT                    -->
+    <!-- ======================================= -->
+    <div id="screen-levels" class="screen">
+      <div class="screen-header">
+        <button id="levels-btn-back" class="back-btn" title="Back">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="currency-and-level"></div>
+      </div>
+
+      <h1>SELECT LEVEL</h1>
+
+      <div class="level-grid scrollable" id="level-grid-container">
+        <!-- 10 Level squares with stars locked status injected dynamically -->
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SCREEN: SETTINGS                        -->
+    <!-- ======================================= -->
+    <div id="screen-settings" class="screen">
+      <div class="screen-header">
+        <button id="settings-btn-back" class="back-btn" title="Back">
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+        </button>
+        <div class="currency-and-level"></div>
+      </div>
+
+      <h1>SETTINGS</h1>
+
+      <div class="settings-list scrollable">
+        <!-- SFX Toggle -->
+        <div class="settings-item">
+          <span class="settings-label">SOUND EFFECTS (SFX)</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-sfx" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Reduced Motion Toggle -->
+        <div class="settings-item">
+          <span class="settings-label">REDUCE MOTION / SHAKE</span>
+          <label class="switch">
+            <input type="checkbox" id="toggle-reduce-motion">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <!-- Reset Button -->
+        <button id="settings-reset-btn" class="danger btn" style="width:100%; margin-top:12px;">
+          RESET ALL PROGRESS
+        </button>
+
+        <div class="credits-box">
+          <p><strong>SPEEDY ARROW v1.0.0</strong></p>
+          <p>Dodge obstacles. Master the flow.</p>
+          <p style="margin-top:8px; font-size:0.75rem; opacity:0.6;">Built with Pure HTML5 Canvas & Web Audio API synthesis.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- SCREEN: GAMEPLAY WINDOW                 -->
+    <!-- ======================================= -->
+    <div id="screen-gameplay" class="screen" style="padding:0;">
+      <div class="gameplay-wrapper">
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Live Gameplay HUD (fades in or displays overlaid) -->
+        <div class="game-hud">
+          <div class="hud-left">
+            <!-- Pause Button -->
+            <button id="game-btn-pause" class="back-btn" style="background:rgba(0,0,0,0.5); border-radius:50%; width:36px; height:36px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="6" y="4" width="4" height="16"></rect>
+                <rect x="14" y="4" width="4" height="16"></rect>
+              </svg>
+            </button>
+          </div>
+
+          <div id="hud-mode-indicator" class="hud-center">CLASSIC</div>
+
+          <div class="hud-right">
+            <!-- Gem/Coin Counter of the run -->
+            <div class="currency-pill" style="background:rgba(0,0,0,0.5); padding: 4px 8px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="var(--accent-color)">
+                <polygon points="12,2 22,9 17,22 7,22 2,9"></polygon>
+              </svg>
+              <span id="hud-run-gems">0</span>
+            </div>
+
+            <!-- Race placement card / leader status -->
+            <div id="hud-race-leaderboard" class="race-leaderboard" style="display:none;">
+              <div class="leaderboard-rank rank-highlight" id="hud-rank-1">1st: Player</div>
+              <div class="leaderboard-rank" id="hud-rank-2">2nd: BotA</div>
+              <div class="leaderboard-rank" id="hud-rank-3">3rd: BotB</div>
+            </div>
+
+            <!-- Distance progress / completion percentage -->
+            <div style="font-size:0.8rem; font-weight:700; background:rgba(0,0,0,0.5); padding:2px 6px; border-radius:4px; margin-top:4px;">
+              <span id="hud-distance-value">0</span>m / <span id="hud-target-value">100</span>m
+            </div>
+            <div class="progress-container">
+              <div id="hud-progress-fill" class="progress-bar-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================= -->
+    <!-- MODAL OVERLAY: CONFIRMATION/DIALOGS     -->
+    <!-- ======================================= -->
+    <div id="modal-container" class="modal-overlay">
+      <div class="modal-content" id="modal-content-wrapper">
+        <!-- Populated dynamically via state manager -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Game files loading sequentially -->
+  <script src="skins.js?v=1.0.0"></script>
+  <script src="audio.js?v=1.0.0"></script>
+  <script src="game.js?v=1.0.0"></script>
+  <script src="menu.js?v=1.0.0"></script>
+</body>
+</html>
