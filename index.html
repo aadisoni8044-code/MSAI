@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Speedy Games - 2D Action Runner</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div id="game-container">
+    <!-- Main Render Canvas -->
+    <canvas id="game-canvas" width="960" height="540"></canvas>
+
+    <!-- HUD Overlay -->
+    <div id="hud-overlay" class="overlay hidden">
+      <div class="hud-top">
+        <div class="hud-box">
+          <span class="hud-label">SCORE</span>
+          <span id="score-val" class="hud-value">0</span>
+        </div>
+        <div class="hud-box">
+          <span class="hud-label">BEST</span>
+          <span id="highscore-val" class="hud-value">0</span>
+        </div>
+        <div class="hud-box">
+          <span class="hud-label">SPEED</span>
+          <span id="speed-val" class="hud-value">1.0x</span>
+        </div>
+        <div class="hud-box health-box">
+          <span class="hud-label">HEALTH</span>
+          <div id="hearts-container"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Start Menu Overlay -->
+    <div id="start-screen" class="overlay">
+      <div class="menu-card">
+        <h1 class="game-title">SPEEDY GAMES</h1>
+        <p class="subtitle">2D Side-Scrolling Action Runner</p>
+        <div class="instructions">
+          <p><strong>Controls:</strong></p>
+          <p>🎮 Move: <kbd>A</kbd>/<kbd>D</kbd> or <kbd>←</kbd>/<kbd>→</kbd></p>
+          <p>🦘 Jump / Double-Jump: <kbd>Space</kbd> / <kbd>W</kbd></p>
+          <p>⚔️ Sword Attack: <kbd>J</kbd> / <kbd>X</kbd></p>
+          <p>⏸️ Pause: <kbd>P</kbd> / <kbd>Esc</kbd></p>
+        </div>
+        <button id="btn-start" class="btn btn-primary">SELECT MAP & PLAY</button>
+      </div>
+    </div>
+
+    <!-- Map Selection Carousel Overlay -->
+    <div id="map-select-screen" class="overlay hidden">
+      <div class="menu-card map-card">
+        <h2>SELECT BIOME MAP</h2>
+
+        <div class="carousel-container">
+          <button id="btn-prev-map" class="nav-btn">◀</button>
+
+          <div id="map-preview-box" class="map-preview">
+            <h3 id="map-card-title">Lakeside Meadow</h3>
+            <p id="map-card-desc">Serene lakeside with rolling green hills.</p>
+            <div id="map-card-badge" class="badge">SPEED: 1.0x</div>
+          </div>
+
+          <button id="btn-next-map" class="nav-btn">▶</button>
+        </div>
+
+        <div class="map-actions">
+          <button id="btn-back-start" class="btn btn-secondary">BACK</button>
+          <button id="btn-confirm-map" class="btn btn-primary">START RUN</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause Overlay -->
+    <div id="pause-overlay" class="overlay hidden">
+      <div class="menu-card">
+        <h2>GAME PAUSED</h2>
+        <div class="pause-actions">
+          <button id="btn-resume" class="btn btn-primary">RESUME</button>
+          <button id="btn-quit" class="btn btn-secondary">MAIN MENU</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over Overlay -->
+    <div id="gameover-overlay" class="overlay hidden">
+      <div class="menu-card">
+        <h2 class="danger-title">GAME OVER</h2>
+        <div class="score-summary">
+          <p>FINAL SCORE: <span id="final-score-val">0</span></p>
+          <p>BEST SCORE: <span id="best-score-val">0</span></p>
+        </div>
+        <div class="gameover-actions">
+          <button id="btn-restart" class="btn btn-primary">RETRY (R)</button>
+          <button id="btn-gameover-menu" class="btn btn-secondary">CHANGE MAP</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Virtual Touch Controls Overlay for Mobile / Touch Devices -->
+    <div id="virtual-controls" class="virtual-controls-container">
+      <div class="dpad-left">
+        <button id="btn-left" class="vbtn">◀</button>
+        <button id="btn-right" class="vbtn">▶</button>
+      </div>
+      <div class="dpad-right">
+        <button id="btn-attack" class="vbtn action-btn attack">⚔️</button>
+        <button id="btn-jump" class="vbtn action-btn jump">🦘</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.ts"></script>
+</body>
+</html>
