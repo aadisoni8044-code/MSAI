@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MS AI - Multiple System Artificial Intelligence</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 12L2.1 12a10 10 0 0 0 9.9 10V12z"/><path d="M20 12A8 8 0 1 0 12 4v8h8z"/></svg>
+          </div>
+          <div class="brand-text">
+            <h2>MS AI</h2>
+            <span>Multiple System AI</span>
+          </div>
+        </div>
+        <button class="new-chat-btn" id="newChatBtn" title="New Chat">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>New Chat</span>
+        </button>
+      </div>
+
+      <!-- Mode Quick Switcher in Sidebar -->
+      <div class="sidebar-section">
+        <div class="section-title">System Persona</div>
+        <div class="mode-pills" id="sidebarModePills">
+          <!-- Loaded dynamically from modes.json -->
+        </div>
+      </div>
+
+      <!-- Chat History List -->
+      <div class="sidebar-section history-section">
+        <div class="section-title">Recent Chats</div>
+        <div class="history-list" id="historyList">
+          <!-- Loaded dynamically from Firebase/LocalStorage -->
+        </div>
+      </div>
+
+      <!-- User Profile & Settings -->
+      <div class="sidebar-footer">
+        <div class="user-profile" id="userProfileBtn">
+          <div class="avatar" id="userAvatar">G</div>
+          <div class="user-info">
+            <span class="user-name" id="userName">Guest User</span>
+            <span class="user-status" id="userStatus">Local Mode</span>
+          </div>
+        </div>
+        <button class="icon-btn" id="settingsBtn" title="Settings & API Key">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Chat Content Area -->
+    <main class="main-content">
+      <!-- Header Bar -->
+      <header class="top-header">
+        <button class="menu-toggle-btn" id="menuToggleBtn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+
+        <div class="active-mode-selector">
+          <span class="active-mode-label">Mode:</span>
+          <select id="modeDropdown" class="mode-select">
+            <!-- Dynamically populated from modes.json -->
+          </select>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-outline" id="authBtn">Sign In / Account</button>
+        </div>
+      </header>
+
+      <!-- Active Mode Info Banner -->
+      <div class="mode-banner" id="modeBanner">
+        <div class="mode-badge" id="modeBadge">General AI</div>
+        <p class="mode-desc" id="modeDescription">Versatile assistant for everyday tasks, general knowledge, and summaries.</p>
+      </div>
+
+      <!-- Messages Stream -->
+      <div class="chat-messages" id="chatMessages">
+        <!-- Messages rendered here dynamically -->
+      </div>
+
+      <!-- Input Bar -->
+      <div class="chat-input-container">
+        <form class="chat-input-form" id="chatForm">
+          <textarea
+            id="messageInput"
+            class="chat-input"
+            placeholder="Type your prompt here... (Shift + Enter for line break)"
+            rows="1"></textarea>
+          <button type="submit" id="sendBtn" class="send-btn" title="Send Message">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+          </button>
+        </form>
+        <div class="input-footer">
+          <span>MS AI can make mistakes. Verify important information.</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Modals -->
+
+    <!-- Settings & API Key Modal -->
+    <div class="modal-overlay" id="settingsModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Settings & API Configuration</h3>
+          <button class="close-btn" id="closeSettingsModal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="geminiApiKey">Google Gemini API Key</label>
+            <input type="password" id="geminiApiKey" placeholder="AIzaSy..." class="form-input" />
+            <small class="form-help">Get your API key from <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a>.</small>
+          </div>
+
+          <div class="form-divider"></div>
+
+          <div class="form-group">
+            <label>Firebase Project Config (JSON)</label>
+            <textarea id="firebaseConfigJson" rows="6" class="form-input code-font" placeholder='{"apiKey": "...", "authDomain": "..."}'></textarea>
+            <small class="form-help">Optional: Custom Firebase credentials for sync across devices.</small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="cancelSettingsBtn">Cancel</button>
+          <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auth Modal -->
+    <div class="modal-overlay" id="authModal">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h3>Account & Synchronization</h3>
+          <button class="close-btn" id="closeAuthModal">&times;</button>
+        </div>
+        <div class="modal-body auth-body">
+          <p>Sign in to sync your conversation history across browsers and devices via Firebase.</p>
+          <button class="btn btn-google" id="googleAuthBtn">
+            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.665-5.17 3.665-9.17z"/><path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.11-6.72-4.96H1.29v3.15C3.26 21.3 7.37 24 12 24z"/><path fill="#FBBC05" d="M5.28 14.24c-.25-.72-.38-1.49-.38-2.24s.13-1.52.38-2.24V6.61H1.29c-.8 1.6-1.29 3.41-1.29 5.39s.49 3.79 1.29 5.39l3.99-3.15z"/><path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.37 0 3.26 2.7 1.29 6.61l3.99 3.15c.95-2.85 3.6-4.96 6.72-4.96z"/></svg>
+            Sign in with Google
+          </button>
+          <div class="auth-or">or</div>
+          <button class="btn btn-secondary full-width" id="guestAuthBtn">Continue as Guest (Local Storage)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/app.ts"></script>
+</body>
+</html>
