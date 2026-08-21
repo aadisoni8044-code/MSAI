@@ -1,0 +1,60 @@
+/* Toast Notification Styling */
+.toast-container {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.toast {
+    pointer-events: auto;
+    min-width: 260px;
+    max-width: 380px;
+    padding: 0.75rem 1rem;
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    transform: translateY(20px);
+    opacity: 0;
+    transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+
+.toast.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.toast-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.toast.info .toast-icon { color: var(--status-info); }
+.toast.success .toast-icon { color: var(--status-success); }
+.toast.warning .toast-icon { color: var(--status-warning); }
+.toast.error .toast-icon { color: var(--status-error); }
+
+.toast-message {
+    flex: 1;
+}
+
+.toast-close {
+    cursor: pointer;
+    color: var(--text-tertiary);
+    padding: 0.2rem;
+}
+
+.toast-close:hover {
+    color: var(--text-primary);
+}
