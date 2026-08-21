@@ -1,0 +1,117 @@
+.composer-container {
+    width: 100%;
+    max-width: var(--composer-max-width);
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    position: sticky;
+    bottom: 0;
+    background: linear-gradient(to top, var(--bg-primary) 80%, rgba(18, 19, 22, 0));
+    z-index: var(--z-header);
+}
+
+.composer-box {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: 0.75rem 1rem;
+    box-shadow: var(--shadow-md);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.composer-box:focus-within {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-lg);
+}
+
+.composer-textarea {
+    width: 100%;
+    min-height: 44px;
+    max-height: 200px;
+    resize: none;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--text-primary);
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.composer-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.composer-actions-left, .composer-actions-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.composer-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.composer-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.send-btn {
+    background: var(--accent-gradient);
+    color: #ffffff;
+}
+
+.send-btn:hover {
+    opacity: 0.9;
+    color: #ffffff;
+}
+
+.send-btn:disabled {
+    background: var(--bg-hover);
+    color: var(--text-disabled);
+}
+
+.attachments-preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.attachment-chip {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.attachment-chip img {
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.remove-attachment-btn {
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.remove-attachment-btn:hover {
+    color: var(--color-error);
+}

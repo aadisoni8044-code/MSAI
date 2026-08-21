@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MSAI — Intelligent AI Assistant</title>
+    <meta name="description" content="MSAI is a modern, fast, and secure AI web application powered by Google Gemini.">
+
+    <!-- CSS Dependencies -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/composer.css">
+    <link rel="stylesheet" href="css/settings.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/toast.css">
+    <link rel="stylesheet" href="css/code.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/accessibility.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Backdrop for Mobile -->
+        <div id="sidebar-backdrop" class="modal-backdrop" style="z-index: 95;"></div>
+
+        <!-- Left Sidebar Navigation -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-logo">
+                    <div class="brand-icon">M</div>
+                    <span class="brand-name">MSAI</span>
+                </div>
+                <button id="toggle-sidebar-btn" class="icon-btn" title="Toggle Sidebar (Ctrl+B)" aria-label="Toggle Sidebar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </button>
+            </div>
+
+            <button id="new-chat-btn" class="new-chat-btn">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span class="btn-text">New Chat</span>
+            </button>
+
+            <div class="sidebar-search-container">
+                <div class="search-input-wrapper">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="search-chats-input" class="sidebar-search-input" placeholder="Search chats... (Ctrl+K)" aria-label="Search conversations">
+                </div>
+            </div>
+
+            <div id="conversations-list" class="conversations-list">
+                <!-- Dynamically populated conversations -->
+            </div>
+
+            <div class="sidebar-footer">
+                <button id="theme-toggle-btn" class="footer-btn" title="Switch Theme">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="theme-icon-dark"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    <span class="btn-text">Dark Mode</span>
+                </button>
+                <button id="open-settings-btn" class="footer-btn" title="Settings">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    <span class="btn-text">Settings</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main View Area -->
+        <main class="main-content">
+            <!-- Header Bar -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button id="mobile-menu-btn" class="icon-btn" aria-label="Open Navigation Menu">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                    </button>
+                    <div id="model-selector-btn" class="model-selector" title="Select Gemini Model">
+                        <span id="active-model-name">Gemini 2.5 Flash</span>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </div>
+                </div>
+
+                <div class="header-right">
+                    <button id="header-new-chat-btn" class="icon-btn" title="New Chat (Ctrl+N)">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    </button>
+                    <button id="header-api-key-btn" class="icon-btn" title="Configure API Key">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Scrollable Chat Viewport -->
+            <div id="chat-viewport" class="chat-viewport">
+                <!-- Welcome Screen Container -->
+                <div id="welcome-screen" class="welcome-container">
+                    <div class="welcome-logo">M</div>
+                    <h1 class="welcome-title">How can I help you today?</h1>
+                    <p class="welcome-subtitle">MSAI is powered by Google Gemini to help you code, write, analyze, and create.</p>
+
+                    <div class="suggestions-grid">
+                        <div class="suggestion-card" data-prompt="Explain how JavaScript Promises and Async/Await work under the hood.">
+                            <div class="suggestion-title">💻 Write Code</div>
+                            <div class="suggestion-desc">Explain JS Promises & Async/Await with concise examples</div>
+                        </div>
+                        <div class="suggestion-card" data-prompt="Summarize the core concepts of quantum computing in 3 simple paragraphs.">
+                            <div class="suggestion-title">💡 Learn Something</div>
+                            <div class="suggestion-desc">Explain quantum computing concepts simply</div>
+                        </div>
+                        <div class="suggestion-card" data-prompt="Write a professional follow-up email after a job interview.">
+                            <div class="suggestion-title">✉️ Write & Edit</div>
+                            <div class="suggestion-desc">Draft a follow-up email for a software engineering interview</div>
+                        </div>
+                        <div class="suggestion-card" data-prompt="Brainstorm 5 innovative project ideas using AI and web development.">
+                            <div class="suggestion-title">🚀 Generate Ideas</div>
+                            <div class="suggestion-desc">Brainstorm unique full-stack web application projects</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Messages Stream -->
+                <div id="chat-container" class="chat-container" style="display: none;">
+                    <!-- Dynamically populated messages -->
+                </div>
+            </div>
+
+            <!-- Bottom Composer Area -->
+            <div class="composer-container">
+                <div class="composer-box">
+                    <div id="attachments-preview" class="attachments-preview-container" style="display: none;"></div>
+                    <textarea id="chat-input" class="composer-textarea" placeholder="Send a message to MSAI... (Shift + Enter for new line)" rows="1" aria-label="Message Input"></textarea>
+                    <div class="composer-controls">
+                        <div class="composer-actions-left">
+                            <input type="file" id="file-input" multiple accept="image/*,text/*,.pdf" style="display: none;">
+                            <button id="attach-file-btn" class="composer-btn" title="Attach file or image">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+                            </button>
+                            <button id="voice-input-btn" class="composer-btn" title="Voice Input">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                            </button>
+                        </div>
+                        <div class="composer-actions-right">
+                            <button id="stop-generation-btn" class="composer-btn" title="Stop Generation" style="display: none; color: var(--color-error);">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></svg>
+                            </button>
+                            <button id="send-message-btn" class="composer-btn send-btn" title="Send Message (Enter)">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-backdrop">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="icon-btn close-modal-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-grid">
+                    <div class="settings-section">
+                        <div class="settings-section-title">General</div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-title">Theme</span>
+                                <span class="setting-desc">Choose app interface appearance</span>
+                            </div>
+                            <div class="setting-control">
+                                <select id="setting-theme-select">
+                                    <option value="dark">Dark</option>
+                                    <option value="light">Light</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-title">Enter to Send</span>
+                                <span class="setting-desc">Press Enter to send message, Shift+Enter for new line</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-enter-send" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-title">Auto Scroll</span>
+                                <span class="setting-desc">Automatically scroll down during AI response streaming</span>
+                            </div>
+                            <div class="setting-control">
+                                <label class="switch">
+                                    <input type="checkbox" id="setting-auto-scroll" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="settings-section-title">AI Engine Configuration</div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-title">Gemini Model</span>
+                                <span class="setting-desc">Select Google AI model</span>
+                            </div>
+                            <div class="setting-control">
+                                <select id="setting-model-select">
+                                    <option value="gemini-2.5-flash">Gemini 2.5 Flash (Fast)</option>
+                                    <option value="gemini-2.5-pro">Gemini 2.5 Pro (Advanced)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-title">Google Gemini API Key</span>
+                                <span class="setting-desc">Enter your Google AI API Key</span>
+                            </div>
+                            <div class="setting-control">
+                                <input type="password" id="setting-api-key-input" placeholder="AIzaSy..." style="width: 180px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <div class="settings-section-title">Data & Privacy</div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-title">Export Conversations</span>
+                                <span class="setting-desc">Download all chats as JSON</span>
+                            </div>
+                            <button id="export-chats-btn" class="btn-secondary">Export</button>
+                        </div>
+                        <div class="setting-row">
+                            <div class="setting-info">
+                                <span class="setting-title">Clear All Conversations</span>
+                                <span class="setting-desc">Permanently remove all local chats</span>
+                            </div>
+                            <button id="clear-all-chats-btn" class="btn-danger">Clear All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings-btn" class="btn-primary">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- JavaScript Application Modules (ES Modules) -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
