@@ -1,0 +1,100 @@
+/**
+ * MSAI - Responsive Breakpoints & Mobile Adaptations
+ */
+
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 280px;
+    --header-height: 52px;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar.sidebar-collapsed {
+    width: var(--sidebar-width);
+  }
+
+  .sidebar-toggle-btn {
+    display: none;
+  }
+
+  #mobile-menu-toggle-btn {
+    display: flex !important;
+  }
+
+  .chat-inner-container {
+    padding: 16px 12px 140px 12px;
+  }
+
+  .welcome-brand-title {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .suggestion-pills-container {
+    gap: 6px;
+  }
+
+  .suggestion-pill-btn {
+    padding: 6px 10px;
+    font-size: 12px;
+  }
+
+  .composer-dock {
+    padding: 0 10px 12px 10px;
+  }
+
+  .composer-container {
+    padding: 10px 12px;
+    border-radius: var(--radius-lg);
+  }
+
+  .user-bubble {
+    max-width: 92%;
+  }
+
+  .settings-layout {
+    flex-direction: column;
+    margin: -16px;
+  }
+
+  .settings-tabs-nav {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 8px;
+  }
+
+  .settings-tab-btn {
+    padding: 6px 10px;
+    white-space: nowrap;
+  }
+
+  .shortcuts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .artifacts-drawer {
+    width: 100%;
+    right: -100%;
+  }
+}
+
+@media (min-width: 769px) {
+  #mobile-menu-toggle-btn {
+    display: none;
+  }
+}
