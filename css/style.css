@@ -1,0 +1,16 @@
+/**
+ * MSAI - Main Stylesheet Aggregator
+ */
+
+@import "./variables.css";
+@import "./reset.css";
+@import "./layout.css";
+@import "./sidebar.css";
+@import "./chat.css";
+@import "./composer.css";
+@import "./code.css";
+@import "./modal.css";
+@import "./toast.css";
+@import "./animations.css";
+@import "./responsive.css";
+@import "./accessibility.css";
