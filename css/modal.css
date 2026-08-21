@@ -1,0 +1,147 @@
+/* Modal & Dialog Styling */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-overlay);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-normal), visibility var(--transition-normal);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    width: 90%;
+    max-width: 560px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: scale(0.95);
+    transition: transform var(--transition-normal);
+}
+
+.modal-overlay.active .modal-card {
+    transform: scale(1);
+}
+
+.modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.modal-title {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background-color: var(--bg-tertiary);
+}
+
+.btn-secondary {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color var(--transition-fast);
+}
+
+.btn-secondary:hover {
+    background-color: var(--bg-active);
+}
+
+.btn-primary {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: var(--brand-primary);
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: background-color var(--transition-fast);
+}
+
+.btn-primary:hover {
+    background-color: var(--brand-primary-hover);
+}
+
+.btn-danger {
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-md);
+    background-color: var(--status-error);
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: opacity var(--transition-fast);
+}
+
+.btn-danger:hover {
+    opacity: 0.9;
+}
+
+/* Settings Form Group */
+.setting-group {
+    margin-bottom: 1.25rem;
+}
+
+.setting-label {
+    display: block;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    margin-bottom: 0.35rem;
+}
+
+.setting-description {
+    font-size: 0.825rem;
+    color: var(--text-tertiary);
+    margin-bottom: 0.5rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    background-color: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.form-control:focus {
+    border-color: var(--brand-primary);
+}

@@ -1,0 +1,144 @@
+/* Composer & Input Area Styles */
+.composer-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0.75rem 1rem 1.25rem;
+    background-color: var(--bg-primary);
+}
+
+.composer-container {
+    width: 100%;
+    max-width: var(--composer-max-width);
+    position: relative;
+}
+
+.composer-box {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    padding: 0.75rem 1rem;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.composer-box:focus-within {
+    border-color: var(--brand-primary);
+    box-shadow: var(--shadow-lg);
+}
+
+.attachment-preview-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color-light);
+}
+
+.attachment-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.6rem;
+    background-color: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.attachment-chip img {
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+
+.attachment-remove {
+    cursor: pointer;
+    color: var(--text-tertiary);
+    border-radius: 50%;
+    padding: 2px;
+}
+
+.attachment-remove:hover {
+    color: var(--status-error);
+}
+
+.composer-textarea {
+    width: 100%;
+    min-height: 24px;
+    max-height: 200px;
+    resize: none;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.composer-textarea::placeholder {
+    color: var(--text-muted);
+}
+
+.composer-tools {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+    margin-top: 0.25rem;
+}
+
+.composer-tools-left, .composer-tools-right {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.btn-send, .btn-stop {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-full);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.btn-send {
+    background-color: var(--brand-primary);
+    color: white;
+}
+
+.btn-send:hover:not(:disabled) {
+    background-color: var(--brand-primary-hover);
+    transform: scale(1.03);
+}
+
+.btn-send:disabled {
+    background-color: var(--bg-hover);
+    color: var(--text-muted);
+    cursor: not-allowed;
+}
+
+.btn-stop {
+    background-color: var(--status-error);
+    color: white;
+}
+
+.disclaimer-text {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-top: 0.5rem;
+    text-align: center;
+}
+
+.token-counter {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}

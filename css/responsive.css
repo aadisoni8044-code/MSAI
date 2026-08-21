@@ -1,0 +1,73 @@
+/* Responsive Adjustments & Breakpoints */
+@media (max-width: 768px) {
+    .app-sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        transform: translateX(-100%);
+        box-shadow: var(--shadow-xl);
+        width: 280px !important;
+    }
+
+    .app-sidebar.mobile-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-overlay {
+        position: fixed;
+        inset: 0;
+        background-color: var(--bg-overlay);
+        z-index: 25;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity var(--transition-normal);
+    }
+
+    .sidebar-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .suggestion-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .message-content-box {
+        max-width: 90%;
+    }
+
+    .modal-card {
+        width: 95%;
+        max-height: 90vh;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-left, .header-right {
+        gap: 0.35rem;
+    }
+
+    .model-badge span:not(.model-dot) {
+        display: none;
+    }
+
+    .composer-wrapper {
+        padding: 0.5rem 0.5rem 0.75rem;
+    }
+
+    .message-wrapper {
+        gap: 0.5rem;
+    }
+
+    .message-avatar {
+        width: 28px;
+        height: 28px;
+        font-size: 0.75rem;
+    }
+
+    .message-bubble {
+        padding: 0.75rem 0.9rem;
+        font-size: 0.9rem;
+    }
+}
