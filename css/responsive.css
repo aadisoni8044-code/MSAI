@@ -1,0 +1,32 @@
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        box-shadow: var(--shadow-xl);
+    }
+
+    .sidebar.mobile-open {
+        transform: translateX(0);
+        width: 80%;
+        max-width: 300px;
+    }
+
+    .sidebar.collapsed {
+        transform: translateX(-100%);
+    }
+
+    .chat-container {
+        padding: 1rem 0.75rem;
+    }
+
+    .composer-container {
+        padding: 0 0.75rem 0.75rem 0.75rem;
+    }
+
+    .suggestions-grid {
+        grid-template-columns: 1fr;
+    }
+}
