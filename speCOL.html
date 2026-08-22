@@ -1,0 +1,2036 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>speCOL — 2D Battle Royale</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #0d1117;
+      color: #f0f6fc;
+    }
+
+    #game-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    canvas#gameCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: #233912;
+      cursor: crosshair;
+    }
+
+    /* OVERLAYS & MENUS */
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: rgba(13, 17, 23, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .title-box {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .title-box h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      letter-spacing: 4px;
+      background: linear-gradient(135deg, #ff4e50, #f9d423);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 4px 20px rgba(255, 78, 80, 0.4);
+      margin-bottom: 5px;
+    }
+
+    .title-box p {
+      font-size: 1.1rem;
+      color: #8b949e;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 260px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: #fff;
+      background: #238636;
+      box-shadow: 0 4px 12px rgba(35, 134, 54, 0.4);
+      transition: all 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn:hover {
+      background: #2ea043;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(46, 160, 67, 0.5);
+    }
+
+    .btn-secondary {
+      background: #21262d;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: #30363d;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .btn-danger {
+      background: #da3633;
+      box-shadow: 0 4px 12px rgba(218, 54, 51, 0.4);
+    }
+
+    .btn-danger:hover {
+      background: #f85149;
+    }
+
+    .modal-card {
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-radius: 12px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-card h2 {
+      margin-bottom: 20px;
+      color: #58a6ff;
+      border-bottom: 1px solid #30363d;
+      padding-bottom: 10px;
+    }
+
+    .modal-card p, .modal-card ul {
+      margin-bottom: 15px;
+      color: #c9d1d9;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .modal-card ul {
+      padding-left: 20px;
+    }
+
+    /* HUD OVERLAY */
+    #hud {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    /* Top Left: Player Vitals */
+    .hud-vitals {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 250px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      background: rgba(16, 22, 30, 0.75);
+      padding: 12px 16px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+    }
+
+    .bar-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .bar-label {
+      width: 55px;
+      color: #8b949e;
+      text-transform: uppercase;
+    }
+
+    .bar-container {
+      flex: 1;
+      height: 12px;
+      background: #21262d;
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 100%;
+      transition: width 0.15s ease-out;
+      border-radius: 6px;
+    }
+
+    #health-bar { background: linear-gradient(90deg, #e53935, #ff5252); }
+    #armor-bar { background: linear-gradient(90deg, #1e88e5, #42a5f5); }
+    #stamina-bar { background: linear-gradient(90deg, #fbc02d, #ffee58); }
+
+    /* Top Center: Game Info & Timer */
+    .hud-center-info {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      background: rgba(16, 22, 30, 0.75);
+      padding: 10px 20px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(4px);
+    }
+
+    .info-badge {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .info-badge .value {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #f0f6fc;
+    }
+
+    .info-badge .label {
+      font-size: 0.65rem;
+      color: #8b949e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Top Right: Minimap & Kill Feed */
+    .hud-top-right {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    #minimap-container {
+      width: 150px;
+      height: 150px;
+      border-radius: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.6);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    canvas#minimapCanvas {
+      width: 100%;
+      height: 100%;
+    }
+
+    #killfeed {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 120px;
+      overflow: hidden;
+      width: 220px;
+    }
+
+    .kill-msg {
+      background: rgba(22, 27, 34, 0.85);
+      border-left: 3px solid #ff4e50;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: #e6edf3;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(10px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Bottom Center: Weapon & Ammo */
+    .hud-bottom-center {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: rgba(16, 22, 30, 0.85);
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(4px);
+    }
+
+    .inventory-slots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .inv-slot {
+      width: 60px;
+      height: 50px;
+      background: #21262d;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      color: #8b949e;
+      position: relative;
+    }
+
+    .inv-slot.active {
+      border-color: #58a6ff;
+      background: rgba(88, 166, 255, 0.15);
+      color: #fff;
+    }
+
+    .inv-slot .slot-key {
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      font-size: 0.6rem;
+      color: #8b949e;
+    }
+
+    .inv-slot .slot-name {
+      font-weight: bold;
+      font-size: 0.75rem;
+      text-align: center;
+      padding: 0 2px;
+    }
+
+    .ammo-display {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #ffee58;
+      min-width: 70px;
+      text-align: right;
+    }
+
+    .ammo-display span {
+      font-size: 0.8rem;
+      color: #8b949e;
+    }
+
+    /* Action Prompt Overlay */
+    #action-prompt {
+      position: absolute;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.75);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      pointer-events: none;
+      display: none;
+    }
+
+    /* MOBILE TOUCH CONTROLS */
+    #touch-controls {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 20;
+    }
+
+    .touch-enabled .touch-btn, .touch-enabled #joystick-zone {
+      pointer-events: auto;
+    }
+
+    #joystick-zone {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      width: 120px;
+      height: 120px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: none;
+    }
+
+    #joystick-knob {
+      position: absolute;
+      top: 35px;
+      left: 35px;
+      width: 50px;
+      height: 50px;
+      background: rgba(88, 166, 255, 0.6);
+      border-radius: 50%;
+    }
+
+    .touch-btn {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: white;
+      font-weight: bold;
+      font-size: 0.8rem;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      user-select: none;
+    }
+
+    #btn-touch-fire {
+      bottom: 50px;
+      right: 40px;
+      width: 80px;
+      height: 80px;
+      background: rgba(229, 57, 53, 0.5);
+      border-color: rgba(229, 57, 53, 0.8);
+      font-size: 1rem;
+    }
+
+    #btn-touch-reload {
+      bottom: 140px;
+      right: 40px;
+    }
+
+    #btn-touch-use {
+      bottom: 140px;
+      right: 110px;
+    }
+
+    #btn-touch-sprint {
+      bottom: 50px;
+      right: 130px;
+    }
+
+    /* GAME OVER / VICTORY OVERLAY */
+    #end-screen {
+      text-align: center;
+    }
+
+    #end-title {
+      font-size: 3.5rem;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .victory-title {
+      color: #f1e05a;
+      text-shadow: 0 0 20px rgba(241, 224, 90, 0.6);
+    }
+
+    .defeat-title {
+      color: #f85149;
+      text-shadow: 0 0 20px rgba(248, 81, 73, 0.6);
+    }
+
+    #end-stats {
+      margin: 20px 0;
+      font-size: 1.1rem;
+      color: #8b949e;
+      line-height: 1.8;
+    }
+
+    #end-stats span {
+      color: #f0f6fc;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="game-container">
+    <!-- Canvas for rendering the game world -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- HUD Overlay -->
+    <div id="hud" class="hidden">
+      <!-- Player Vitals -->
+      <div class="hud-vitals">
+        <div class="bar-wrapper">
+          <span class="bar-label">HP</span>
+          <div class="bar-container">
+            <div id="health-bar" class="bar-fill"></div>
+          </div>
+        </div>
+        <div class="bar-wrapper">
+          <span class="bar-label">Armor</span>
+          <div class="bar-container">
+            <div id="armor-bar" class="bar-fill"></div>
+          </div>
+        </div>
+        <div class="bar-wrapper">
+          <span class="bar-label">Stamina</span>
+          <div class="bar-container">
+            <div id="stamina-bar" class="bar-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Info: Zone Timer & Alive Counter -->
+      <div class="hud-center-info">
+        <div class="info-badge">
+          <div id="hud-alive" class="value">13</div>
+          <div class="label">Alive</div>
+        </div>
+        <div class="info-badge">
+          <div id="hud-kills" class="value">0</div>
+          <div class="label">Kills</div>
+        </div>
+        <div class="info-badge">
+          <div id="hud-zone-timer" class="value">01:30</div>
+          <div id="hud-zone-label" class="label">Zone Shrinks</div>
+        </div>
+      </div>
+
+      <!-- Top Right: Minimap & Kill feed -->
+      <div class="hud-top-right">
+        <div id="minimap-container">
+          <canvas id="minimapCanvas" width="150" height="150"></canvas>
+        </div>
+        <div id="killfeed"></div>
+      </div>
+
+      <!-- Bottom Center: Weapon Slots & Ammo -->
+      <div class="hud-bottom-center">
+        <div class="inventory-slots">
+          <div id="slot-1" class="inv-slot active">
+            <span class="slot-key">1</span>
+            <span id="slot-1-name" class="slot-name">P9 Sidearm</span>
+          </div>
+          <div id="slot-2" class="inv-slot">
+            <span class="slot-key">2</span>
+            <span id="slot-2-name" class="slot-name">Empty</span>
+          </div>
+          <div id="slot-3" class="inv-slot">
+            <span class="slot-key">3</span>
+            <span id="slot-3-name" class="slot-name">Empty</span>
+          </div>
+        </div>
+        <div class="ammo-display">
+          <span id="ammo-clip">15</span>/<span id="ammo-reserve">Infinity</span>
+        </div>
+      </div>
+
+      <!-- Action Prompt -->
+      <div id="action-prompt">Press 'E' to pickup Falcon SMG</div>
+    </div>
+
+    <!-- Mobile Touch Controls -->
+    <div id="touch-controls">
+      <div id="joystick-zone">
+        <div id="joystick-knob"></div>
+      </div>
+      <div id="btn-touch-fire" class="touch-btn">FIRE</div>
+      <div id="btn-touch-reload" class="touch-btn">RELOAD</div>
+      <div id="btn-touch-use" class="touch-btn">PICK</div>
+      <div id="btn-touch-sprint" class="touch-btn">RUN</div>
+    </div>
+
+    <!-- Main Menu Overlay -->
+    <div id="main-menu" class="overlay">
+      <div class="title-box">
+        <h1>speCOL</h1>
+        <p>2D Battle Royale Survival</p>
+      </div>
+      <div class="menu-buttons">
+        <button id="btn-play" class="btn">Play Game</button>
+        <button id="btn-how-to" class="btn btn-secondary">How to Play</button>
+        <button id="btn-settings" class="btn btn-secondary">Settings</button>
+      </div>
+    </div>
+
+    <!-- How to Play Modal -->
+    <div id="how-to-modal" class="overlay hidden">
+      <div class="modal-card">
+        <h2>How to Play</h2>
+        <p>Parachute onto the island, scavenge for weapons, armor, and healing kits, and eliminate all enemies to be the last survivor standing!</p>
+        <ul>
+          <li><strong>Movement:</strong> WASD or Arrow Keys (Shift to Sprint)</li>
+          <li><strong>Aim & Fire:</strong> Mouse pointer to aim, Left Click to shoot</li>
+          <li><strong>Switch Weapons:</strong> Keys 1, 2, 3 or Mouse Scroll</li>
+          <li><strong>Interact / Pickup:</strong> Key E or F</li>
+          <li><strong>Reload:</strong> Key R</li>
+          <li><strong>Safe Zone:</strong> Stay inside the blue circle! The zone shrinks over time. Outside players take constant damage.</li>
+        </ul>
+        <button id="btn-close-how-to" class="btn btn-secondary" style="width: 100%; margin-top: 10px;">Back to Menu</button>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="overlay hidden">
+      <div class="modal-card">
+        <h2>Settings</h2>
+        <div style="margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <span>Sound Effects</span>
+          <button id="btn-toggle-sound" class="btn btn-secondary" style="padding: 8px 16px;">Mute Sound</button>
+        </div>
+        <button id="btn-close-settings" class="btn btn-secondary" style="width: 100%;">Back to Menu</button>
+      </div>
+    </div>
+
+    <!-- Game Over / Victory Overlay -->
+    <div id="end-modal" class="overlay hidden">
+      <div class="modal-card" id="end-screen">
+        <div id="end-title" class="victory-title">VICTORY!</div>
+        <div id="end-subtitle" style="font-size: 1.2rem; color: #8b949e; margin-bottom: 15px;">Winner Winner Chicken Dinner!</div>
+        <div id="end-stats">
+          Placement: <span id="stat-rank">#1</span><br/>
+          Eliminations: <span id="stat-kills">0</span><br/>
+          Damage Dealt: <span id="stat-damage">0</span><br/>
+          Survival Time: <span id="stat-time">00:00</span>
+        </div>
+        <button id="btn-restart" class="btn" style="width: 100%;">Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       speCOL - 2D Battle Royale Shooter Engine
+       ========================================================================== */
+
+    // --- SOUND SYNTHESIZER (Web Audio API) ---
+    class SoundEngine {
+      constructor() {
+        this.ctx = null;
+        this.muted = false;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            this.ctx = new AudioContext();
+          }
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playGunshot(type) {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+
+        if (type === 'sniper') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(120, now);
+          osc.frequency.exponentialRampToValueAtTime(20, now + 0.3);
+          gain.gain.setValueAtTime(0.5, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        } else if (type === 'shotgun') {
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(180, now);
+          osc.frequency.exponentialRampToValueAtTime(30, now + 0.2);
+          gain.gain.setValueAtTime(0.4, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } else {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(300, now);
+          osc.frequency.exponentialRampToValueAtTime(40, now + 0.12);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        }
+      }
+
+      playHit() {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(800, now);
+        osc.frequency.exponentialRampToValueAtTime(200, now + 0.05);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      }
+
+      playPickup() {
+        if (this.muted || !this.ctx) return;
+        const now = this.ctx.currentTime;
+        const osc = this.ctx.createOscillator();
+        const gain = this.ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.setValueAtTime(880, now + 0.08);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.16);
+        osc.connect(gain);
+        gain.connect(this.ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.16);
+      }
+
+      playVictory() {
+        if (this.muted || !this.ctx) return;
+        const notes = [261.63, 329.63, 392.00, 523.25];
+        notes.forEach((freq, i) => {
+          const now = this.ctx.currentTime + i * 0.12;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        });
+      }
+
+      playDefeat() {
+        if (this.muted || !this.ctx) return;
+        const notes = [300, 250, 200, 150];
+        notes.forEach((freq, i) => {
+          const now = this.ctx.currentTime + i * 0.15;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(freq, now);
+          gain.gain.setValueAtTime(0.3, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.3);
+        });
+      }
+    }
+
+    const audio = new SoundEngine();
+
+    // --- GAME CONSTANTS & WEAPON DEFINITIONS ---
+    const MAP_SIZE = 3600;
+    const BOT_COUNT = 12;
+
+    const WEAPONS = {
+      p9: {
+        id: 'p9',
+        name: 'P9 Sidearm',
+        type: 'pistol',
+        damage: 22,
+        fireRate: 250, // ms between shots
+        clipSize: 15,
+        reloadTime: 1200,
+        bulletSpeed: 18,
+        spread: 0.05,
+        range: 600,
+        color: '#aaaaaa'
+      },
+      smg: {
+        id: 'smg',
+        name: 'Falcon SMG',
+        type: 'smg',
+        damage: 16,
+        fireRate: 90,
+        clipSize: 30,
+        reloadTime: 1500,
+        bulletSpeed: 20,
+        spread: 0.12,
+        range: 700,
+        color: '#3498db'
+      },
+      shotgun: {
+        id: 'shotgun',
+        name: 'Ridge Shotgun',
+        type: 'shotgun',
+        damage: 14, // per pellet
+        pellets: 7,
+        fireRate: 750,
+        clipSize: 6,
+        reloadTime: 2200,
+        bulletSpeed: 16,
+        spread: 0.22,
+        range: 450,
+        color: '#e67e22'
+      },
+      rifle: {
+        id: 'rifle',
+        name: 'Apex Rifle',
+        type: 'rifle',
+        damage: 32,
+        fireRate: 150,
+        clipSize: 25,
+        reloadTime: 1800,
+        bulletSpeed: 24,
+        spread: 0.04,
+        range: 900,
+        color: '#2ecc71'
+      },
+      sniper: {
+        id: 'sniper',
+        name: 'Vulture Sniper',
+        type: 'sniper',
+        damage: 85,
+        fireRate: 1200,
+        clipSize: 5,
+        reloadTime: 2500,
+        bulletSpeed: 32,
+        spread: 0.01,
+        range: 1400,
+        color: '#9b59b6'
+      }
+    };
+
+    const LOOT_TYPES = {
+      WEAPON: 'weapon',
+      AMMO: 'ammo',
+      MEDKIT: 'medkit',
+      BANDAGE: 'bandage',
+      SHIELD: 'shield',
+      ARMOR: 'armor'
+    };
+
+    // --- GAME STATE VARIABLES ---
+    let canvas, ctx, minimapCanvas, minimapCtx;
+    let gameLoopReq = null;
+    let isPlaying = false;
+    let gameStartTime = 0;
+
+    let keys = {};
+    let mouse = { x: 0, y: 0, worldX: 0, worldY: 0, isDown: false };
+    let isMobile = false;
+
+    // Mobile Joystick State
+    let touchJoystick = { active: false, startX: 0, startY: 0, moveX: 0, moveY: 0, dx: 0, dy: 0 };
+
+    let player;
+    let bots = [];
+    let bullets = [];
+    let lootItems = [];
+    let particles = [];
+    let buildings = [];
+    let obstacles = [];
+    let locations = [];
+
+    // Safe Zone State
+    let safeZone = {
+      x: MAP_SIZE / 2,
+      y: MAP_SIZE / 2,
+      currentRadius: MAP_SIZE * 0.7,
+      targetRadius: MAP_SIZE * 0.7,
+      targetX: MAP_SIZE / 2,
+      targetY: MAP_SIZE / 2,
+      stage: 0,
+      timer: 90, // seconds until next shrink
+      shrinking: false,
+      shrinkDuration: 30, // seconds duration
+      damagePerSec: 3
+    };
+
+    // --- GENERATE WORLD TERRAIN & BUILDINGS ---
+    function generateWorld() {
+      buildings = [];
+      obstacles = [];
+      locations = [
+        { name: "Outpost Alpha", x: 600, y: 600, w: 400, h: 400 },
+        { name: "Ridge Factory", x: 2600, y: 700, w: 500, h: 400 },
+        { name: "Echo Port", x: 700, y: 2700, w: 450, h: 450 },
+        { name: "Bunker 7", x: 2700, y: 2700, w: 400, h: 400 },
+        { name: "Central Complex", x: 1800, y: 1800, w: 600, h: 600 },
+        { name: "Sunset Pines", x: 1800, y: 600, w: 400, h: 350 },
+        { name: "Wasteland Depot", x: 600, y: 1800, w: 350, h: 400 }
+      ];
+
+      locations.forEach(loc => {
+        // Main building shell
+        buildings.push({
+          x: loc.x + 50,
+          y: loc.y + 50,
+          w: loc.w - 100,
+          h: loc.h - 100,
+          color: '#34495e',
+          door: { x: loc.x + loc.w / 2 - 30, y: loc.y + loc.h - 100, w: 60 }
+        });
+
+        // Add internal obstacles / crates inside or nearby
+        obstacles.push({
+          x: loc.x + 80,
+          y: loc.y + 80,
+          w: 50,
+          h: 50,
+          type: 'crate',
+          color: '#d35400'
+        });
+        obstacles.push({
+          x: loc.x + loc.w - 130,
+          y: loc.y + 80,
+          w: 50,
+          h: 50,
+          type: 'crate',
+          color: '#d35400'
+        });
+      });
+
+      // Scatter random rocks and trees
+      for (let i = 0; i < 180; i++) {
+        const rx = Math.random() * (MAP_SIZE - 200) + 100;
+        const ry = Math.random() * (MAP_SIZE - 200) + 100;
+        // Avoid spawning inside buildings
+        const insideBuilding = buildings.some(b => rx >= b.x - 40 && rx <= b.x + b.w + 40 && ry >= b.y - 40 && ry <= b.y + b.h + 40);
+        if (!insideBuilding) {
+          if (i % 2 === 0) {
+            obstacles.push({ x: rx, y: ry, radius: 25 + Math.random() * 15, type: 'tree', color: '#1e8449' });
+          } else {
+            obstacles.push({ x: rx, y: ry, radius: 18 + Math.random() * 12, type: 'rock', color: '#7f8c8d' });
+          }
+        }
+      }
+    }
+
+    // --- LOOT SPANNING ---
+    function spawnLoot() {
+      lootItems = [];
+      const weaponKeys = ['p9', 'smg', 'shotgun', 'rifle', 'sniper'];
+
+      // Spawn loot concentrated in named locations
+      locations.forEach(loc => {
+        for (let i = 0; i < 8; i++) {
+          const lx = loc.x + 60 + Math.random() * (loc.w - 120);
+          const ly = loc.y + 60 + Math.random() * (loc.h - 120);
+          const rand = Math.random();
+          let item = {};
+
+          if (rand < 0.45) {
+            const wKey = weaponKeys[Math.floor(Math.random() * weaponKeys.length)];
+            item = { type: LOOT_TYPES.WEAPON, weapon: WEAPONS[wKey], x: lx, y: ly, label: WEAPONS[wKey].name };
+          } else if (rand < 0.65) {
+            item = { type: LOOT_TYPES.AMMO, amount: 30, x: lx, y: ly, label: 'Ammo Pack (+30)' };
+          } else if (rand < 0.80) {
+            item = { type: LOOT_TYPES.BANDAGE, amount: 25, x: lx, y: ly, label: 'Bandage (+25 HP)' };
+          } else if (rand < 0.90) {
+            item = { type: LOOT_TYPES.MEDKIT, amount: 75, x: lx, y: ly, label: 'Med-Kit (+75 HP)' };
+          } else {
+            item = { type: LOOT_TYPES.SHIELD, amount: 50, x: lx, y: ly, label: 'Shield Potion (+50 Armor)' };
+          }
+          lootItems.push(item);
+        }
+      });
+
+      // Scatter extra loot in wilderness
+      for (let i = 0; i < 50; i++) {
+        const lx = Math.random() * (MAP_SIZE - 200) + 100;
+        const ly = Math.random() * (MAP_SIZE - 200) + 100;
+        const wKey = weaponKeys[Math.floor(Math.random() * weaponKeys.length)];
+        lootItems.push({ type: LOOT_TYPES.WEAPON, weapon: WEAPONS[wKey], x: lx, y: ly, label: WEAPONS[wKey].name });
+      }
+    }
+
+    // --- PLAYER CLASS ---
+    class Player {
+      constructor(x, y, isBot = false, name = "Player") {
+        this.x = x;
+        this.y = y;
+        this.radius = 18;
+        this.isBot = isBot;
+        this.name = name;
+
+        this.hp = 100;
+        this.maxHp = 100;
+        this.armor = 0;
+        this.maxArmor = 100;
+        this.stamina = 100;
+        this.maxStamina = 100;
+
+        this.speed = 3.8;
+        this.angle = 0;
+
+        // Inventory
+        this.weapons = [ { ...WEAPONS.p9, ammo: WEAPONS.p9.clipSize, reserve: 90 }, null, null ];
+        this.activeSlot = 0;
+
+        this.lastShotTime = 0;
+        this.isReloading = false;
+        this.reloadStartTime = 0;
+
+        this.kills = 0;
+        this.damageDealt = 0;
+        this.isDead = false;
+
+        // AI Bot properties
+        if (this.isBot) {
+          this.targetX = x + (Math.random() - 0.5) * 400;
+          this.targetY = y + (Math.random() - 0.5) * 400;
+          this.aiState = 'wander'; // 'wander', 'loot', 'combat', 'flee_zone'
+          this.targetEnemy = null;
+          this.changeStateTime = 0;
+        }
+      }
+
+      get activeWeapon() {
+        return this.weapons[this.activeSlot];
+      }
+
+      update(deltaTime) {
+        if (this.isDead) return;
+
+        // Check reloading
+        if (this.isReloading) {
+          const w = this.activeWeapon;
+          if (w && Date.now() - this.reloadStartTime >= w.reloadTime) {
+            const needed = w.clipSize - w.ammo;
+            const take = Math.min(needed, w.reserve);
+            w.ammo += take;
+            if (w.reserve !== Infinity) w.reserve -= take;
+            this.isReloading = false;
+          }
+        }
+
+        if (!this.isBot) {
+          this.handleHumanInput(deltaTime);
+        } else {
+          this.handleBotAI(deltaTime);
+        }
+
+        // Clamp to map limits
+        this.x = Math.max(this.radius, Math.min(MAP_SIZE - this.radius, this.x));
+        this.y = Math.max(this.radius, Math.min(MAP_SIZE - this.radius, this.y));
+
+        // Safe zone damage check
+        const distFromZoneCenter = Math.hypot(this.x - safeZone.x, this.y - safeZone.y);
+        if (distFromZoneCenter > safeZone.currentRadius) {
+          this.takeDamage(safeZone.damagePerSec * (deltaTime / 1000), null, 'zone');
+        }
+      }
+
+      handleHumanInput(deltaTime) {
+        let moveX = 0;
+        let moveY = 0;
+
+        if (keys['w'] || keys['W'] || keys['ArrowUp']) moveY -= 1;
+        if (keys['s'] || keys['S'] || keys['ArrowDown']) moveY += 1;
+        if (keys['a'] || keys['A'] || keys['ArrowLeft']) moveX -= 1;
+        if (keys['d'] || keys['D'] || keys['ArrowRight']) moveX += 1;
+
+        // Touch Joystick integration
+        if (touchJoystick.active) {
+          moveX = touchJoystick.dx;
+          moveY = touchJoystick.dy;
+        }
+
+        let isSprinting = (keys['Shift'] || keys['sprintTouch']) && (moveX !== 0 || moveY !== 0) && this.stamina > 5;
+        let currentSpeed = isSprinting ? this.speed * 1.55 : this.speed;
+
+        if (isSprinting) {
+          this.stamina = Math.max(0, this.stamina - 25 * (deltaTime / 1000));
+        } else {
+          this.stamina = Math.min(this.maxStamina, this.stamina + 15 * (deltaTime / 1000));
+        }
+
+        if (moveX !== 0 || moveY !== 0) {
+          const mag = Math.hypot(moveX, moveY);
+          const dx = (moveX / mag) * currentSpeed;
+          const dy = (moveY / mag) * currentSpeed;
+
+          this.moveWithCollision(dx, dy);
+        }
+
+        // Aim angle
+        if (!touchJoystick.active) {
+          this.angle = Math.atan2(mouse.worldY - this.y, mouse.worldX - this.x);
+        } else if (moveX !== 0 || moveY !== 0) {
+          this.angle = Math.atan2(moveY, moveX);
+        }
+
+        // Shooting
+        if ((mouse.isDown || keys['fireTouch']) && !this.isReloading) {
+          this.shoot();
+        }
+      }
+
+      handleBotAI(deltaTime) {
+        const now = Date.now();
+
+        // Check if bot is outside safe zone -> prioritize running into zone
+        const distToZoneCenter = Math.hypot(this.x - safeZone.x, this.y - safeZone.y);
+        if (distToZoneCenter > safeZone.currentRadius - 100) {
+          this.aiState = 'flee_zone';
+        } else if (this.aiState === 'flee_zone' && distToZoneCenter < safeZone.currentRadius - 200) {
+          this.aiState = 'wander';
+        }
+
+        // Find closest enemy (Player or other Bots)
+        let closestEnemy = null;
+        let minDist = 650;
+
+        const allCombatants = [player, ...bots.filter(b => b !== this && !b.isDead)];
+        allCombatants.forEach(target => {
+          if (target && !target.isDead) {
+            const d = Math.hypot(target.x - this.x, target.y - this.y);
+            if (d < minDist) {
+              minDist = d;
+              closestEnemy = target;
+            }
+          }
+        });
+
+        if (closestEnemy && this.aiState !== 'flee_zone') {
+          this.aiState = 'combat';
+          this.targetEnemy = closestEnemy;
+        }
+
+        // State behavior
+        if (this.aiState === 'flee_zone') {
+          const angleToZone = Math.atan2(safeZone.y - this.y, safeZone.x - this.x);
+          this.angle = angleToZone;
+          this.moveWithCollision(Math.cos(angleToZone) * this.speed * 1.3, Math.sin(angleToZone) * this.speed * 1.3);
+        } else if (this.aiState === 'combat' && this.targetEnemy) {
+          this.angle = Math.atan2(this.targetEnemy.y - this.y, this.targetEnemy.x - this.x);
+          // Move towards/strafe around enemy
+          if (minDist > 250) {
+            this.moveWithCollision(Math.cos(this.angle) * this.speed, Math.sin(this.angle) * this.speed);
+          } else if (minDist < 120) {
+            this.moveWithCollision(-Math.cos(this.angle) * this.speed, -Math.sin(this.angle) * this.speed);
+          }
+          // Shoot
+          this.shoot();
+        } else {
+          // Wander or seek loot
+          if (now > this.changeStateTime) {
+            this.targetX = this.x + (Math.random() - 0.5) * 500;
+            this.targetY = this.y + (Math.random() - 0.5) * 500;
+            this.changeStateTime = now + 3000 + Math.random() * 3000;
+          }
+
+          const angleToTarget = Math.atan2(this.targetY - this.y, this.targetX - this.x);
+          this.angle = angleToTarget;
+          if (Math.hypot(this.targetX - this.x, this.targetY - this.y) > 20) {
+            this.moveWithCollision(Math.cos(angleToTarget) * (this.speed * 0.8), Math.sin(angleToTarget) * (this.speed * 0.8));
+          }
+
+          // Auto pickup nearby loot for bots
+          lootItems.forEach((item, idx) => {
+            if (Math.hypot(item.x - this.x, item.y - this.y) < 40) {
+              if (item.type === LOOT_TYPES.WEAPON && this.weapons.some(w => w === null)) {
+                const emptyIdx = this.weapons.findIndex(w => w === null);
+                this.weapons[emptyIdx] = { ...item.weapon, ammo: item.weapon.clipSize, reserve: 60 };
+                this.activeSlot = emptyIdx;
+                lootItems.splice(idx, 1);
+              } else if (item.type === LOOT_TYPES.ARMOR) {
+                this.armor = Math.min(100, this.armor + 50);
+                lootItems.splice(idx, 1);
+              }
+            }
+          });
+        }
+      }
+
+      moveWithCollision(dx, dy) {
+        let newX = this.x + dx;
+        let newY = this.y + dy;
+
+        // Wall & obstacle collision check
+        let collideX = false;
+        let collideY = false;
+
+        // Buildings (Walls)
+        buildings.forEach(b => {
+          // Check horizontal door gap
+          const inDoorX = newX >= b.door.x && newX <= b.door.x + b.door.w;
+          const nearDoorY = Math.abs(newY - b.door.y) < 30;
+
+          if (newX + this.radius > b.x && newX - this.radius < b.x + b.w &&
+              this.y + this.radius > b.y && this.y - this.radius < b.y + b.h) {
+            if (!(inDoorX && nearDoorY)) collideX = true;
+          }
+          if (this.x + this.radius > b.x && this.x - this.radius < b.x + b.w &&
+              newY + this.radius > b.y && newY - this.radius < b.y + b.h) {
+            if (!(inDoorX && nearDoorY)) collideY = true;
+          }
+        });
+
+        // Circular & Rect obstacles
+        obstacles.forEach(obs => {
+          if (obs.radius) {
+            const dist = Math.hypot(newX - obs.x, newY - obs.y);
+            if (dist < this.radius + obs.radius) {
+              collideX = true;
+              collideY = true;
+            }
+          } else if (obs.w) {
+            if (newX + this.radius > obs.x && newX - this.radius < obs.x + obs.w &&
+                newY + this.radius > obs.y && newY - this.radius < obs.y + obs.h) {
+              collideX = true;
+              collideY = true;
+            }
+          }
+        });
+
+        if (!collideX) this.x = newX;
+        if (!collideY) this.y = newY;
+      }
+
+      shoot() {
+        const weapon = this.activeWeapon;
+        if (!weapon) return;
+
+        const now = Date.now();
+        if (now - this.lastShotTime < weapon.fireRate) return;
+
+        if (weapon.ammo <= 0) {
+          this.reload();
+          return;
+        }
+
+        this.lastShotTime = now;
+        weapon.ammo--;
+
+        audio.playGunshot(weapon.type);
+
+        const pelletCount = weapon.type === 'shotgun' ? weapon.pellets : 1;
+
+        for (let i = 0; i < pelletCount; i++) {
+          const spreadAngle = this.angle + (Math.random() - 0.5) * weapon.spread;
+          bullets.push({
+            x: this.x + Math.cos(this.angle) * 25,
+            y: this.y + Math.sin(this.angle) * 25,
+            vx: Math.cos(spreadAngle) * weapon.bulletSpeed,
+            vy: Math.sin(spreadAngle) * weapon.bulletSpeed,
+            damage: weapon.damage,
+            range: weapon.range,
+            traveled: 0,
+            owner: this,
+            color: weapon.color
+          });
+        }
+      }
+
+      reload() {
+        const weapon = this.activeWeapon;
+        if (!weapon || this.isReloading) return;
+        if (weapon.ammo >= weapon.clipSize || weapon.reserve <= 0) return;
+
+        this.isReloading = true;
+        this.reloadStartTime = Date.now();
+      }
+
+      takeDamage(amount, attacker = null, source = 'bullet') {
+        if (this.isDead) return;
+
+        // Armor absorbs 60% of damage
+        if (this.armor > 0 && source !== 'zone') {
+          const armorAbsorb = amount * 0.6;
+          if (this.armor >= armorAbsorb) {
+            this.armor -= armorAbsorb;
+            amount -= armorAbsorb;
+          } else {
+            amount -= this.armor;
+            this.armor = 0;
+          }
+        }
+
+        this.hp -= amount;
+
+        if (attacker) {
+          attacker.damageDealt += Math.round(amount);
+        }
+
+        // Spawn hit blood particle
+        for (let i = 0; i < 4; i++) {
+          particles.push({
+            x: this.x,
+            y: this.y,
+            vx: (Math.random() - 0.5) * 4,
+            vy: (Math.random() - 0.5) * 4,
+            life: 1,
+            color: '#e53935',
+            radius: 3 + Math.random() * 2
+          });
+        }
+
+        if (this.hp <= 0) {
+          this.hp = 0;
+          this.isDead = true;
+          this.onEliminated(attacker);
+        }
+      }
+
+      onEliminated(killer) {
+        if (killer) {
+          killer.kills++;
+          addKillfeedMsg(`${killer.name} eliminated ${this.name} with ${killer.activeWeapon ? killer.activeWeapon.name : 'fists'}`);
+        } else {
+          addKillfeedMsg(`${this.name} died to the zone`);
+        }
+
+        // Drop active weapon and loot items
+        if (this.activeWeapon) {
+          lootItems.push({
+            type: LOOT_TYPES.WEAPON,
+            weapon: { ...this.activeWeapon },
+            x: this.x,
+            y: this.y,
+            label: this.activeWeapon.name
+          });
+        }
+
+        // Check Victory / Defeat conditions
+        checkGameStatus();
+      }
+
+      draw(ctx, camera) {
+        if (this.isDead) return;
+
+        const screenX = this.x - camera.x;
+        const screenY = this.y - camera.y;
+
+        ctx.save();
+        ctx.translate(screenX, screenY);
+        ctx.rotate(this.angle);
+
+        // Draw Player Body / Hands / Gun
+        ctx.fillStyle = this.isBot ? '#e74c3c' : '#2ecc71';
+        ctx.beginPath();
+        ctx.arc(0, 0, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#1b2631';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+
+        // Hands & Weapon
+        ctx.fillStyle = '#f1c40f';
+        ctx.beginPath();
+        ctx.arc(this.radius * 0.8, -10, 5, 0, Math.PI * 2);
+        ctx.arc(this.radius * 0.8, 10, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Gun barrel
+        ctx.fillStyle = '#2c3e50';
+        ctx.fillRect(this.radius * 0.5, -3, 16, 6);
+
+        ctx.restore();
+
+        // Draw Player Nameplate & Mini Health Bar
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(this.name, screenX, screenY - this.radius - 12);
+
+        // Overhead health bar for bots / enemies
+        if (this.isBot) {
+          const barW = 32;
+          const barH = 4;
+          ctx.fillStyle = 'rgba(0,0,0,0.5)';
+          ctx.fillRect(screenX - barW / 2, screenY - this.radius - 8, barW, barH);
+          ctx.fillStyle = '#e53935';
+          ctx.fillRect(screenX - barW / 2, screenY - this.radius - 8, barW * (this.hp / this.maxHp), barH);
+        }
+      }
+    }
+
+    // --- BULLETS & PARTICLES UPDATE ---
+    function updateBullets(deltaTime) {
+      for (let i = bullets.length - 1; i >= 0; i--) {
+        const b = bullets[i];
+        b.x += b.vx;
+        b.y += b.vy;
+        b.traveled += Math.hypot(b.vx, b.vy);
+
+        // Check building wall collision
+        let hitWall = false;
+        buildings.forEach(wall => {
+          if (b.x >= wall.x && b.x <= wall.x + wall.w && b.y >= wall.y && b.y <= wall.y + wall.h) {
+            // Check if shot through door gap
+            const inDoor = b.x >= wall.door.x && b.x <= wall.door.x + wall.door.w && Math.abs(b.y - wall.door.y) < 30;
+            if (!inDoor) hitWall = true;
+          }
+        });
+
+        // Check obstacle collision
+        obstacles.forEach(obs => {
+          if (obs.radius && Math.hypot(b.x - obs.x, b.y - obs.y) < obs.radius) hitWall = true;
+          else if (obs.w && b.x >= obs.x && b.x <= obs.x + obs.w && b.y >= obs.y && b.y <= obs.y + obs.h) hitWall = true;
+        });
+
+        if (hitWall || b.traveled >= b.range || b.x < 0 || b.x > MAP_SIZE || b.y < 0 || b.y > MAP_SIZE) {
+          bullets.splice(i, 1);
+          continue;
+        }
+
+        // Combatant hit detection
+        const combatants = [player, ...bots];
+        for (let target of combatants) {
+          if (target && !target.isDead && target !== b.owner) {
+            if (Math.hypot(b.x - target.x, b.y - target.y) < target.radius + 4) {
+              target.takeDamage(b.damage, b.owner, 'bullet');
+              if (b.owner === player) audio.playHit();
+              bullets.splice(i, 1);
+              break;
+            }
+          }
+        }
+      }
+    }
+
+    function updateParticles(deltaTime) {
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= deltaTime / 600;
+        if (p.life <= 0) particles.splice(i, 1);
+      }
+    }
+
+    // --- SAFE ZONE MECHANICS ---
+    function updateSafeZone(deltaTime) {
+      if (!safeZone.shrinking) {
+        safeZone.timer -= deltaTime / 1000;
+        if (safeZone.timer <= 0) {
+          safeZone.shrinking = true;
+          safeZone.timer = safeZone.shrinkDuration;
+          safeZone.stage++;
+
+          // Set next smaller zone radius & new center target
+          safeZone.targetRadius = Math.max(150, safeZone.currentRadius * 0.55);
+          const maxOffset = safeZone.currentRadius - safeZone.targetRadius;
+          const angle = Math.random() * Math.PI * 2;
+          const dist = Math.random() * maxOffset;
+          safeZone.targetX = safeZone.x + Math.cos(angle) * dist;
+          safeZone.targetY = safeZone.y + Math.sin(angle) * dist;
+
+          // Increase zone damage over time
+          safeZone.damagePerSec += 2;
+        }
+      } else {
+        // Smoothly interpolate circle radius and position during shrink stage
+        const shrinkRate = (deltaTime / 1000) / safeZone.shrinkDuration;
+        safeZone.currentRadius += (safeZone.targetRadius - safeZone.currentRadius) * shrinkRate * 3;
+        safeZone.x += (safeZone.targetX - safeZone.x) * shrinkRate * 3;
+        safeZone.y += (safeZone.targetY - safeZone.y) * shrinkRate * 3;
+
+        safeZone.timer -= deltaTime / 1000;
+        if (safeZone.timer <= 0) {
+          safeZone.shrinking = false;
+          safeZone.timer = 60; // Next countdown hold
+        }
+      }
+    }
+
+    // --- KILLFEED MESSAGES ---
+    function addKillfeedMsg(msg) {
+      const feed = document.getElementById('killfeed');
+      const div = document.createElement('div');
+      div.className = 'kill-msg';
+      div.innerText = msg;
+      feed.prepend(div);
+
+      setTimeout(() => {
+        if (div.parentNode) div.parentNode.removeChild(div);
+      }, 5000);
+    }
+
+    // --- INTERACTION & LOOT PICKUP ---
+    function handleLootInteraction() {
+      let closestItem = null;
+      let minDist = 50;
+
+      lootItems.forEach((item, idx) => {
+        const d = Math.hypot(item.x - player.x, item.y - player.y);
+        if (d < minDist) {
+          minDist = d;
+          closestItem = { item, idx };
+        }
+      });
+
+      const promptEl = document.getElementById('action-prompt');
+
+      if (closestItem) {
+        const { item, idx } = closestItem;
+        promptEl.style.display = 'block';
+        promptEl.innerText = `Press 'E' to pickup ${item.label}`;
+
+        if (keys['e'] || keys['E'] || keys['f'] || keys['F'] || keys['useTouch']) {
+          keys['e'] = keys['E'] = keys['f'] = keys['F'] = keys['useTouch'] = false;
+          audio.playPickup();
+
+          if (item.type === LOOT_TYPES.WEAPON) {
+            // Find empty weapon slot or swap active slot
+            const emptySlot = player.weapons.findIndex(w => w === null);
+            if (emptySlot !== -1) {
+              player.weapons[emptySlot] = { ...item.weapon, ammo: item.weapon.clipSize, reserve: 60 };
+              player.activeSlot = emptySlot;
+            } else {
+              // Swap active weapon
+              player.weapons[player.activeSlot] = { ...item.weapon, ammo: item.weapon.clipSize, reserve: 60 };
+            }
+          } else if (item.type === LOOT_TYPES.AMMO) {
+            if (player.activeWeapon) player.activeWeapon.reserve += item.amount;
+          } else if (item.type === LOOT_TYPES.BANDAGE || item.type === LOOT_TYPES.MEDKIT) {
+            player.hp = Math.min(player.maxHp, player.hp + item.amount);
+          } else if (item.type === LOOT_TYPES.SHIELD || item.type === LOOT_TYPES.ARMOR) {
+            player.armor = Math.min(player.maxArmor, player.armor + (item.amount || 50));
+          }
+
+          lootItems.splice(idx, 1);
+          promptEl.style.display = 'none';
+        }
+      } else {
+        promptEl.style.display = 'none';
+      }
+    }
+
+    // --- CAMERA ENGINE ---
+    function getCameraOffset() {
+      return {
+        x: player.x - canvas.width / 2,
+        y: player.y - canvas.height / 2
+      };
+    }
+
+    // --- RENDERING ROUTINES ---
+    function render() {
+      const camera = getCameraOffset();
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // 1. Terrain Grass Base
+      ctx.fillStyle = '#233912';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 2. Draw Map Terrain Grid & Named Locations
+      ctx.save();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+      ctx.lineWidth = 1;
+      const startX = -camera.x % 100;
+      const startY = -camera.y % 100;
+
+      for (let x = startX; x < canvas.width; x += 100) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+      }
+      for (let y = startY; y < canvas.height; y += 100) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // Location Names & Ground Markings
+      locations.forEach(loc => {
+        const sx = loc.x - camera.x;
+        const sy = loc.y - camera.y;
+
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(sx, sy, loc.w, loc.h);
+
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+        ctx.font = '900 18px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(loc.name.toUpperCase(), sx + loc.w / 2, sy + 30);
+      });
+
+      // 3. Draw Buildings and Obstacles
+      buildings.forEach(b => {
+        const sx = b.x - camera.x;
+        const sy = b.y - camera.y;
+
+        ctx.fillStyle = b.color;
+        ctx.fillRect(sx, sy, b.w, b.h);
+        ctx.strokeStyle = '#1b2631';
+        ctx.lineWidth = 4;
+        ctx.strokeRect(sx, sy, b.w, b.h);
+
+        // Door gap
+        const doorSx = b.door.x - camera.x;
+        const doorSy = b.door.y - camera.y;
+        ctx.fillStyle = '#233912';
+        ctx.fillRect(doorSx, doorSy - 5, b.door.w, 15);
+      });
+
+      obstacles.forEach(obs => {
+        const sx = obs.x - camera.x;
+        const sy = obs.y - camera.y;
+
+        ctx.fillStyle = obs.color;
+        if (obs.radius) {
+          ctx.beginPath();
+          ctx.arc(sx, sy, obs.radius, 0, Math.PI * 2);
+          ctx.fill();
+        } else if (obs.w) {
+          ctx.fillRect(sx, sy, obs.w, obs.h);
+        }
+      });
+
+      // 4. Draw Loot Drops
+      lootItems.forEach(item => {
+        const sx = item.x - camera.x;
+        const sy = item.y - camera.y;
+
+        // Glow ring
+        ctx.fillStyle = item.type === LOOT_TYPES.WEAPON ? 'rgba(52, 152, 219, 0.4)' : 'rgba(46, 204, 113, 0.4)';
+        ctx.beginPath();
+        ctx.arc(sx, sy, 12, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = item.type === LOOT_TYPES.WEAPON ? '#3498db' : '#2ecc71';
+        ctx.beginPath();
+        ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // 5. Draw Safe Zone Boundary
+      const zoneSx = safeZone.x - camera.x;
+      const zoneSy = safeZone.y - camera.y;
+
+      ctx.strokeStyle = 'rgba(52, 152, 219, 0.8)';
+      ctx.lineWidth = 6;
+      ctx.beginPath();
+      ctx.arc(zoneSx, zoneSy, safeZone.currentRadius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Outer Danger Tint
+      ctx.fillStyle = 'rgba(52, 152, 219, 0.08)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // 6. Draw Bullets & Particles
+      bullets.forEach(b => {
+        const bsx = b.x - camera.x;
+        const bsy = b.y - camera.y;
+        ctx.fillStyle = b.color || '#f1c40f';
+        ctx.beginPath();
+        ctx.arc(bsx, bsy, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      particles.forEach(p => {
+        const psx = p.x - camera.x;
+        const psy = p.y - camera.y;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.beginPath();
+        ctx.arc(psx, psy, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = 1.0;
+      });
+
+      // 7. Draw Bots & Player
+      bots.forEach(b => b.draw(ctx, camera));
+      if (player) player.draw(ctx, camera);
+
+      ctx.restore();
+
+      // 8. Render HUD & Minimap
+      renderHUD();
+      renderMinimap();
+    }
+
+    function renderHUD() {
+      // Vitals
+      document.getElementById('health-bar').style.width = `${(player.hp / player.maxHp) * 100}%`;
+      document.getElementById('armor-bar').style.width = `${(player.armor / player.maxArmor) * 100}%`;
+      document.getElementById('stamina-bar').style.width = `${(player.stamina / player.maxStamina) * 100}%`;
+
+      // Active player & kill counts
+      const aliveCount = [player, ...bots].filter(p => !p.isDead).length;
+      document.getElementById('hud-alive').innerText = aliveCount;
+      document.getElementById('hud-kills').innerText = player.kills;
+
+      // Timer format
+      const mins = Math.floor(Math.max(0, safeZone.timer) / 60);
+      const secs = Math.floor(Math.max(0, safeZone.timer) % 60);
+      document.getElementById('hud-zone-timer').innerText = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      document.getElementById('hud-zone-label').innerText = safeZone.shrinking ? 'Zone Shrinking!' : 'Next Shrink';
+
+      // Inventory & Ammo UI
+      for (let i = 0; i < 3; i++) {
+        const slotEl = document.getElementById(`slot-${i+1}`);
+        const slotNameEl = document.getElementById(`slot-${i+1}-name`);
+        const w = player.weapons[i];
+
+        if (i === player.activeSlot) slotEl.classList.add('active');
+        else slotEl.classList.remove('active');
+
+        slotNameEl.innerText = w ? w.name : 'Empty';
+      }
+
+      const activeW = player.activeWeapon;
+      if (activeW) {
+        document.getElementById('ammo-clip').innerText = player.isReloading ? '...' : activeW.ammo;
+        document.getElementById('ammo-reserve').innerText = activeW.reserve === Infinity ? '∞' : activeW.reserve;
+      } else {
+        document.getElementById('ammo-clip').innerText = '0';
+        document.getElementById('ammo-reserve').innerText = '0';
+      }
+    }
+
+    function renderMinimap() {
+      minimapCtx.clearRect(0, 0, minimapCanvas.width, minimapCanvas.height);
+      const scale = minimapCanvas.width / MAP_SIZE;
+
+      // Map Background
+      minimapCtx.fillStyle = '#1b2631';
+      minimapCtx.fillRect(0, 0, minimapCanvas.width, minimapCanvas.height);
+
+      // Safe Zone Circle
+      minimapCtx.strokeStyle = '#3498db';
+      minimapCtx.lineWidth = 1.5;
+      minimapCtx.beginPath();
+      minimapCtx.arc(safeZone.x * scale, safeZone.y * scale, safeZone.currentRadius * scale, 0, Math.PI * 2);
+      minimapCtx.stroke();
+
+      // Target Safe Zone Circle (if shrinking)
+      if (safeZone.shrinking) {
+        minimapCtx.strokeStyle = '#f1c40f';
+        minimapCtx.beginPath();
+        minimapCtx.arc(safeZone.targetX * scale, safeZone.targetY * scale, safeZone.targetRadius * scale, 0, Math.PI * 2);
+        minimapCtx.stroke();
+      }
+
+      // Bots Dot
+      minimapCtx.fillStyle = '#e74c3c';
+      bots.forEach(b => {
+        if (!b.isDead) {
+          minimapCtx.fillRect(b.x * scale - 1, b.y * scale - 1, 3, 3);
+        }
+      });
+
+      // Player Dot
+      if (player && !player.isDead) {
+        minimapCtx.fillStyle = '#2ecc71';
+        minimapCtx.beginPath();
+        minimapCtx.arc(player.x * scale, player.y * scale, 3, 0, Math.PI * 2);
+        minimapCtx.fill();
+      }
+    }
+
+    // --- GAME STATUS CHECK (VICTORY / DEFEAT) ---
+    function checkGameStatus() {
+      const aliveList = [player, ...bots].filter(p => !p.isDead);
+
+      if (player.isDead) {
+        audio.playDefeat();
+        showEndScreen(false, aliveList.length + 1);
+      } else if (aliveList.length === 1 && aliveList[0] === player) {
+        audio.playVictory();
+        showEndScreen(true, 1);
+      }
+    }
+
+    function showEndScreen(isVictory, rank) {
+      isPlaying = false;
+      const endModal = document.getElementById('end-modal');
+      const endTitle = document.getElementById('end-title');
+      const endSubtitle = document.getElementById('end-subtitle');
+
+      if (isVictory) {
+        endTitle.className = 'victory-title';
+        endTitle.innerText = 'VICTORY!';
+        endSubtitle.innerText = 'Winner Winner Chicken Dinner!';
+      } else {
+        endTitle.className = 'defeat-title';
+        endTitle.innerText = 'ELIMINATED';
+        endSubtitle.innerText = 'Better luck next time!';
+      }
+
+      const elapsedSecs = Math.floor((Date.now() - gameStartTime) / 1000);
+      const m = Math.floor(elapsedSecs / 60);
+      const s = elapsedSecs % 60;
+
+      document.getElementById('stat-rank').innerText = `#${rank}`;
+      document.getElementById('stat-kills').innerText = player.kills;
+      document.getElementById('stat-damage').innerText = player.damageDealt;
+      document.getElementById('stat-time').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+      document.getElementById('hud').classList.add('hidden');
+      endModal.classList.remove('hidden');
+    }
+
+    // --- MAIN LOOP ---
+    let lastTime = 0;
+    function gameLoop(timestamp) {
+      if (!isPlaying) return;
+
+      const deltaTime = Math.min(100, timestamp - lastTime || 16.6);
+      lastTime = timestamp;
+
+      // Update Game Entities
+      player.update(deltaTime);
+      bots.forEach(b => b.update(deltaTime));
+      updateBullets(deltaTime);
+      updateParticles(deltaTime);
+      updateSafeZone(deltaTime);
+      handleLootInteraction();
+
+      // Render Frame
+      render();
+
+      gameLoopReq = requestAnimationFrame(gameLoop);
+    }
+
+    // --- INITIALIZE & START GAME ---
+    function initGame() {
+      audio.init();
+
+      generateWorld();
+      spawnLoot();
+
+      // Spawn Player at map center location
+      player = new Player(MAP_SIZE / 2 + (Math.random() - 0.5) * 200, MAP_SIZE / 2 + (Math.random() - 0.5) * 200, false, "You");
+
+      // Spawn Bots scattered across the map
+      bots = [];
+      for (let i = 1; i <= BOT_COUNT; i++) {
+        const bx = Math.random() * (MAP_SIZE - 400) + 200;
+        const by = Math.random() * (MAP_SIZE - 400) + 200;
+        bots.push(new Player(bx, by, true, `Bot_${i}`));
+      }
+
+      // Reset Safe Zone
+      safeZone = {
+        x: MAP_SIZE / 2,
+        y: MAP_SIZE / 2,
+        currentRadius: MAP_SIZE * 0.45,
+        targetRadius: MAP_SIZE * 0.45,
+        targetX: MAP_SIZE / 2,
+        targetY: MAP_SIZE / 2,
+        stage: 0,
+        timer: 60,
+        shrinking: false,
+        shrinkDuration: 25,
+        damagePerSec: 2
+      };
+
+      document.getElementById('killfeed').innerHTML = '';
+      document.getElementById('main-menu').classList.add('hidden');
+      document.getElementById('end-modal').classList.add('hidden');
+      document.getElementById('hud').classList.remove('hidden');
+
+      isPlaying = true;
+      gameStartTime = Date.now();
+      lastTime = performance.now();
+      gameLoopReq = requestAnimationFrame(gameLoop);
+    }
+
+    // --- EVENT LISTENERS & CONTROL SETUP ---
+    window.addEventListener('DOMContentLoaded', () => {
+      canvas = document.getElementById('gameCanvas');
+      ctx = canvas.getContext('2d');
+      minimapCanvas = document.getElementById('minimapCanvas');
+      minimapCtx = minimapCanvas.getContext('2d');
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+
+      // Keyboard Listeners
+      window.addEventListener('keydown', e => {
+        keys[e.key] = true;
+
+        if (e.key === '1') player.activeSlot = 0;
+        if (e.key === '2' && player.weapons[1]) player.activeSlot = 1;
+        if (e.key === '3' && player.weapons[2]) player.activeSlot = 2;
+        if (e.key === 'r' || e.key === 'R') player.reload();
+      });
+
+      window.addEventListener('keyup', e => {
+        keys[e.key] = false;
+      });
+
+      // Mouse Aim & Shoot Listeners
+      window.addEventListener('mousemove', e => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+
+        if (player) {
+          const camera = getCameraOffset();
+          mouse.worldX = mouse.x + camera.x;
+          mouse.worldY = mouse.y + camera.y;
+        }
+      });
+
+      window.addEventListener('mousedown', e => {
+        if (e.button === 0) mouse.isDown = true;
+      });
+
+      window.addEventListener('mouseup', e => {
+        if (e.button === 0) mouse.isDown = false;
+      });
+
+      window.addEventListener('wheel', e => {
+        if (!player) return;
+        if (e.deltaY > 0) {
+          player.activeSlot = (player.activeSlot + 1) % player.weapons.filter(w => w !== null).length;
+        } else {
+          player.activeSlot = (player.activeSlot - 1 + player.weapons.filter(w => w !== null).length) % player.weapons.filter(w => w !== null).length;
+        }
+      });
+
+      // UI Button Listeners
+      document.getElementById('btn-play').addEventListener('click', initGame);
+      document.getElementById('btn-restart').addEventListener('click', initGame);
+
+      document.getElementById('btn-how-to').addEventListener('click', () => {
+        document.getElementById('how-to-modal').classList.remove('hidden');
+      });
+      document.getElementById('btn-close-how-to').addEventListener('click', () => {
+        document.getElementById('how-to-modal').classList.add('hidden');
+      });
+
+      document.getElementById('btn-settings').addEventListener('click', () => {
+        document.getElementById('settings-modal').classList.remove('hidden');
+      });
+      document.getElementById('btn-close-settings').addEventListener('click', () => {
+        document.getElementById('settings-modal').classList.add('hidden');
+      });
+
+      const soundBtn = document.getElementById('btn-toggle-sound');
+      soundBtn.addEventListener('click', () => {
+        audio.muted = !audio.muted;
+        soundBtn.innerText = audio.muted ? 'Unmute Sound' : 'Mute Sound';
+      });
+
+      // Detect Mobile Touch Device & Bind Virtual Touch Joystick
+      if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+        isMobile = true;
+        document.body.classList.add('touch-enabled');
+        document.getElementById('joystick-zone').style.display = 'block';
+        document.querySelectorAll('.touch-btn').forEach(btn => btn.style.display = 'flex');
+
+        const joystickZone = document.getElementById('joystick-zone');
+        const joystickKnob = document.getElementById('joystick-knob');
+
+        joystickZone.addEventListener('touchstart', e => {
+          e.preventDefault();
+          const touch = e.touches[0];
+          const rect = joystickZone.getBoundingClientRect();
+          touchJoystick.active = true;
+          touchJoystick.startX = rect.left + rect.width / 2;
+          touchJoystick.startY = rect.top + rect.height / 2;
+        });
+
+        joystickZone.addEventListener('touchmove', e => {
+          if (!touchJoystick.active) return;
+          e.preventDefault();
+          const touch = e.touches[0];
+          const dx = touch.clientX - touchJoystick.startX;
+          const dy = touch.clientY - touchJoystick.startY;
+          const dist = Math.hypot(dx, dy);
+          const maxDist = 40;
+
+          const angle = Math.atan2(dy, dx);
+          const clampedDist = Math.min(dist, maxDist);
+
+          touchJoystick.dx = Math.cos(angle) * (clampedDist / maxDist);
+          touchJoystick.dy = Math.sin(angle) * (clampedDist / maxDist);
+
+          joystickKnob.style.transform = `translate(${Math.cos(angle) * clampedDist}px, ${Math.sin(angle) * clampedDist}px)`;
+        });
+
+        const resetJoystick = () => {
+          touchJoystick.active = false;
+          touchJoystick.dx = 0;
+          touchJoystick.dy = 0;
+          joystickKnob.style.transform = 'translate(0px, 0px)';
+        };
+
+        joystickZone.addEventListener('touchend', resetJoystick);
+        joystickZone.addEventListener('touchcancel', resetJoystick);
+
+        // Touch buttons
+        const bindTouchBtn = (id, keyName) => {
+          const btn = document.getElementById(id);
+          btn.addEventListener('touchstart', e => { e.preventDefault(); keys[keyName] = true; });
+          btn.addEventListener('touchend', e => { e.preventDefault(); keys[keyName] = false; });
+        };
+
+        bindTouchBtn('btn-touch-fire', 'fireTouch');
+        bindTouchBtn('btn-touch-reload', 'r');
+        bindTouchBtn('btn-touch-use', 'useTouch');
+        bindTouchBtn('btn-touch-sprint', 'sprintTouch');
+      }
+    });
+  </script>
+</body>
+</html>
