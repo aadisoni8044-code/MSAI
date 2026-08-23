@@ -1,0 +1,6 @@
+{
+  "name": "Speedy Arrow",
+  "description": "Neon geometry wave runner game featuring an upgraded Shape Shop with customizable animated skins, 100 biome levels, endless mode, and tournament racing.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
