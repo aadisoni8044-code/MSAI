@@ -1,0 +1,4 @@
+node_modules/
+*.log
+test_engine.spec.mjs
+run_verification.mjs
