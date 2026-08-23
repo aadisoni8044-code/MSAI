@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Speedy Arrow | Developed by Speedy Games</title>
+    <!-- Meta Tags for SEO & branding -->
+    <meta name="description"
+        content="Speedy Arrow - Neon Geometry Wave Runner Game, Developed by Speedy Games. Play 100 levels across 5 biomes, endless survival, drone races, and customize skins!">
+    <meta property="og:title" content="Speedy Arrow | Developed by Speedy Games">
+    <meta property="og:description"
+        content="Speedy Arrow - Neon Geometry Wave Runner Game, Developed by Speedy Games. Play 100 levels across 5 biomes, endless survival, drone races, and customize skins!">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="game-container">
+        <!-- Main HTML5 Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Transparent gameplay input overlay -->
+        <div id="input-overlay" class="hidden"></div>
+
+        <!-- MAIN MENU SCREEN OVERLAY -->
+        <div id="main-menu-screen" class="screen">
+
+            <!-- Header widgets row containing Profile and Coin balances -->
+            <div class="menu-header-row">
+                <!-- Mini Profile details -->
+                <div class="glass-panel profile-card-mini" onclick="window.navigateToProfileScreen()">
+                    <div class="profile-avatar">👤</div>
+                    <div class="profile-info-mini">
+                        <span id="header-username" class="profile-name-mini">SpeedRider</span>
+                        <span id="header-rating" class="profile-rating-mini">RATING: 1000</span>
+                        <span id="header-uid" class="profile-rating-mini"
+                            style="color: var(--neon-gold); font-size: 11px; margin-top: 1px;">UID: --------</span>
+                    </div>
+                </div>
+
+                <!-- Custom Daily currency balances & streaks widgets -->
+                <div class="economy-widgets">
+                    <div class="glass-panel widget-item streak"
+                        onclick="document.getElementById('daily-rewards-modal').classList.add('active')"
+                        title="Daily Login Streak">
+                        <span>🔥</span> <span class="streak-days-val">1</span> Days
+                    </div>
+                    <div class="glass-panel widget-item coins"
+                        onclick="window.navigateToShopScreen()"
+                        title="Speedy Coins Balance">
+                        <span>🪙</span> <span class="plo-coins-val">100</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Central Title logo branding -->
+            <div class="title-container" style="margin-top: 25px; margin-bottom: 15px;">
+                <h1 class="title-logo">Speedy<span> Arrow</span></h1>
+                <div class="subtitle">Neon Geometry Wave Runner</div>
+            </div>
+
+            <!-- Main Menu Buttons Row -->
+            <div class="main-buttons-container" style="display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 320px; margin: 20px auto; z-index: 10;">
+                <button id="menu-start-btn" class="settings-btn" style="border-color: var(--neon-cyan); padding: 15px; font-size: 17px; width: 100%; letter-spacing: 2px; box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);" onclick="window.openGameModes()">
+                    <span>🎮</span> START GAME
+                </button>
+                <button id="menu-shop-btn-main" class="settings-btn" style="border-color: rgba(0, 243, 255, 0.5); padding: 15px; font-size: 17px; width: 100%; letter-spacing: 2px;" onclick="window.navigateToShopScreen()">
+                    <span>🛒</span> SKIN SHOP
+                </button>
+                <button id="menu-leaderboard-btn-main" class="settings-btn" style="border-color: var(--neon-gold); padding: 15px; font-size: 17px; width: 100%; letter-spacing: 2px;" onclick="window.navigateToLeaderboardScreen()">
+                    <span>🏆</span> LEADERBOARD
+                </button>
+                <button id="menu-settings-btn" class="settings-btn" style="border-color: var(--neon-pink); padding: 15px; font-size: 17px; width: 100%; letter-spacing: 2px;" onclick="window.openSettingsOverlay()">
+                    <span>⚙️</span> SETTINGS
+                </button>
+            </div>
+
+            <!-- Social link icons -->
+            <div class="menu-footer-row" style="margin-top: auto;">
+                <div class="social-links" style="margin: auto; display: flex; gap: 14px; justify-content: center; z-index: 10;">
+                    <a href="https://github.com/aadisoni8044-code" target="_blank" rel="noopener noreferrer"
+                        class="social-btn github-btn" title="GitHub">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/in/aadi-soni-a9ba35394/" target="_blank" rel="noopener noreferrer"
+                        class="social-btn linkedin-btn" title="LinkedIn">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                    <a href="https://www.instagram.com/aadisoni8044/" target="_blank" rel="noopener noreferrer"
+                        class="social-btn instagram-btn" title="Instagram">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259 0 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                        </svg>
+                    </a>
+                    <a href="https://x.com/soni_aadi70883" target="_blank" rel="noopener noreferrer"
+                        class="social-btn x-btn" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                    <a href="https://www.youtube.com/@codingskillzero" target="_blank" rel="noopener noreferrer"
+                        class="social-btn youtube-btn" title="YouTube">
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.108C19.52 3.5 12 3.5 12 3.5s-7.52 0-9.388.555A3.003 3.003 0 0 0 .502 6.163C0 8.07 0 12 0 12s0 3.93.502 5.837a3.003 3.003 0 0 0 2.11 2.108C4.48 20.5 12 20.5 12 20.5s7.52 0 9.388-.555a3.003 3.003 0 0 0 2.11-2.108C24 15.93 24 12 24 12s0-3.93-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SPA: GAME MODES SCREEN -->
+        <div id="game-modes-screen" class="screen hidden">
+            <button class="back-btn" onclick="openMainMenu()">← MENU</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo" style="font-size: 38px; margin-bottom: 2px;">Game Modes</h2>
+                <div class="subtitle">Select your run type</div>
+            </div>
+
+            <!-- Game Mode Cards Container -->
+            <div class="cards-container">
+                <!-- Classic Level select mode -->
+                <div class="glass-panel mode-card classic-card" onclick="openLevelSelect()">
+                    <div class="mode-icon">🏆</div>
+                    <div class="mode-title">Classic</div>
+                    <div class="mode-desc">Survive 100 hand-crafted campaign levels divided across 5 unique visual biomes.</div>
+                </div>
+
+                <!-- Endless survival mode -->
+                <div class="glass-panel mode-card endless-card" onclick="launchEndlessMode()">
+                    <div class="mode-icon">⚡</div>
+                    <div class="mode-title">Endless</div>
+                    <div class="mode-desc">Procedurally generated infinite course. Speed, obstacles, and rewards scale up.</div>
+                    <div id="endless-high-score-v2" class="best-score-tag">Best Survival: 0m</div>
+                </div>
+
+                <!-- Live Tournament AI competition mode -->
+                <div class="glass-panel mode-card race-card" onclick="launchRaceMode()">
+                    <div class="mode-icon">🏁</div>
+                    <div class="mode-title">Race</div>
+                    <div class="mode-desc">Real-time drone tournament against 4 AI geometry pilot competitors.</div>
+                    <div id="race-wins-v2" class="best-score-tag">Championship Wins: 0</div>
+                </div>
+            </div>
+            <div></div>
+        </div>
+
+        <!-- BIOME PAGED LEVEL SELECTION OVERLAY -->
+        <div id="level-select-screen" class="screen hidden">
+            <button class="back-btn" onclick="window.openGameModes()">← MODES</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo" style="font-size: 36px; margin-bottom: 2px;">Level Selection</h2>
+                <div class="subtitle">100 Biome Challenges (20 Maps per Biome)</div>
+            </div>
+
+            <!-- Paged Biome Categories Tabs -->
+            <div class="biomes-nav">
+                <div class="biome-tab active" data-biome="forest" onclick="selectBiome('forest')">🌳 FOREST (1-20)</div>
+                <div class="biome-tab" data-biome="haunted" onclick="selectBiome('haunted')">🔮 HAUNTED (21-40)</div>
+                <div class="biome-tab" data-biome="space" onclick="selectBiome('space')">🚀 SPACE (41-60)</div>
+                <div class="biome-tab" data-biome="water" onclick="selectBiome('water')">🌊 WATER (61-80)</div>
+                <div class="biome-tab" data-biome="ancient" onclick="selectBiome('ancient')">🏛️ ANCIENT (81-100)</div>
+            </div>
+
+            <!-- 100 level matrix container -->
+            <div id="level-grid-v2" class="level-grid">
+                <!-- Dynamically loaded levels by ui.js -->
+            </div>
+
+            <div></div>
+        </div>
+
+        <!-- SPA: SHOP SCREEN -->
+        <div id="shop-screen" class="screen hidden">
+            <button class="back-btn" onclick="openMainMenu()">← MENU</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo"
+                    style="font-size: 38px; margin-bottom: 2px; color: var(--neon-cyan); text-shadow: var(--cyan-glow);">
+                    SHAPE & SKIN STORE</h2>
+                <div class="subtitle">Collect Playable Geometry Characters, Skins & Glowing Trails</div>
+            </div>
+
+            <div style="width: 100%; max-width: 880px; margin: auto; display: flex; flex-direction: column; gap: 10px; z-index: 12;">
+                <!-- Large coin balance display -->
+                <div class="shop-balance" style="font-size: 16px; margin-bottom: 4px;">
+                    Your Balance: 🪙 <span class="plo-coins-val">100</span> Speedy Coins
+                </div>
+
+                <!-- Category Tabs -->
+                <div class="shop-tabs" style="margin-bottom: 10px;">
+                    <button class="shop-tab active" data-tab="all" onclick="switchShopTab('all')">🌐 ALL ITEMS</button>
+                    <button class="shop-tab" data-tab="shapes" onclick="switchShopTab('shapes')">🔺 SHAPES</button>
+                    <button class="shop-tab" data-tab="special" onclick="switchShopTab('special')">✨ SPECIAL</button>
+                    <button class="shop-tab" data-tab="rare" onclick="switchShopTab('rare')">💎 RARE</button>
+                    <button class="shop-tab" data-tab="legendary" onclick="switchShopTab('legendary')">🔥 LEGENDARY</button>
+                    <button class="shop-tab" data-tab="skins" onclick="switchShopTab('skins')">🎨 SKINS & TRAILS</button>
+                </div>
+
+                <!-- Custom shapes & skins catalog grid layout -->
+                <div id="shop-skins-grid" class="skins-grid" style="margin: 0; max-height: 54vh; overflow-y: auto; padding: 6px;">
+                    <!-- Loaded dynamically by ui.js -->
+                </div>
+            </div>
+
+            <div></div>
+        </div>
+
+        <!-- SPA: PLAYER PROFILE SCREEN -->
+        <div id="profile-screen" class="screen hidden">
+            <button class="back-btn" onclick="openMainMenu()">← MENU</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo" style="font-size: 38px; margin-bottom: 2px;">Player Profile</h2>
+                <div class="subtitle">Pilot Statistics & Customization</div>
+            </div>
+
+            <div style="width: 100%; max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 12px; z-index: 12; max-height: 68vh; overflow-y: auto; padding-right: 6px;">
+                <!-- Large Profile Card -->
+                <div class="profile-header-card">
+                    <div style="position: relative; width: 64px; height: 64px;">
+                        <div class="profile-avatar-large" onclick="document.getElementById('avatarUpload').click()"
+                            style="cursor: pointer; width: 100%; height: 100%;" title="Click to upload picture">👤</div>
+                        <div style="position: absolute; bottom: -2px; right: -2px; background: var(--neon-cyan); border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid var(--neon-dark); font-size: 11px;"
+                            onclick="document.getElementById('avatarUpload').click()" title="Change Photo">📷</div>
+                    </div>
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;"
+                        onchange="window.uploadProfilePicture(this)">
+                    <div class="profile-title-details">
+                        <div class="profile-username-input-wrapper">
+                            <input type="text" id="profile-username-val" class="profile-username-input"
+                                value="SpeedRider" onchange="updateProfileUsername(this.value)">
+                            <span>✏️</span>
+                        </div>
+                        <div class="country-badge-wrapper">
+                            <span>Region:</span>
+                            <select id="profile-country-val" class="country-select"
+                                onchange="updateProfileCountry(this.value)">
+                                <option value="USA">🇺🇸 USA</option>
+                                <option value="IND">🇮🇳 IND</option>
+                                <option value="GBR">🇬🇧 GBR</option>
+                                <option value="JPN">🇯🇵 JPN</option>
+                                <option value="DEU">🇩🇪 DEU</option>
+                                <option value="CAN">🇨🇦 CAN</option>
+                                <option value="FRA">🇫🇷 FRA</option>
+                            </select>
+                        </div>
+                        <div id="profile-uid-display"
+                            style="font-family: 'Orbitron', sans-serif; font-size: 12px; color: var(--neon-gold); font-weight: bold; margin-top: 4px; text-align: left;">
+                            UID: --------</div>
+                    </div>
+                </div>
+
+                <!-- Custom Bio -->
+                <div style="text-align: left; width: 100%;">
+                    <div style="font-size: 12px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 4px; text-transform: uppercase;">
+                        About Pilot / Bio</div>
+                    <textarea id="profile-bio-val" placeholder="Write something about your racing style..."
+                        style="width: 100%; height: 50px; background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 243, 255, 0.25); border-radius: 8px; color: #fff; padding: 8px; font-family: inherit; font-size: 14px; resize: none; outline: none;"
+                        onchange="window.updateProfileBio(this.value)"></textarea>
+                </div>
+
+                <!-- Career Statistics -->
+                <div class="modal-stats" style="margin: 4px 0;">
+                    <div class="stat-line">
+                        <span>Championship ELO Rating</span>
+                        <span id="profile-rating-display" class="val" style="color: var(--neon-cyan); font-weight: 900;">1000</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Campaign Completion</span>
+                        <span id="profile-completed-display" class="val">0 / 100</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Flawless 1st Try Runs</span>
+                        <span id="profile-perfects-display" class="val" style="color: var(--neon-gold);">0</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Total Crashes Recorded</span>
+                        <span id="profile-crashes-display" class="val" style="color: var(--neon-pink);">0</span>
+                    </div>
+                </div>
+
+                <!-- Developer Branding Card -->
+                <div class="dev-branding-card">
+                    <div class="dev-title">DEVELOPED BY SPEEDY GAMES</div>
+                    <div class="dev-subtitle">Neon Geometry Wave Runner</div>
+                </div>
+            </div>
+
+            <div></div>
+        </div>
+
+        <!-- SPA: LEADERBOARD SCREEN -->
+        <div id="leaderboard-screen" class="screen hidden">
+            <button class="back-btn" onclick="openMainMenu()">← MENU</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo" style="font-size: 38px; margin-bottom: 2px; color: var(--neon-gold); text-shadow: var(--gold-glow);">Global Leaderboard</h2>
+                <div class="subtitle">Top Ranked Wave Pilots & Survival Legends</div>
+            </div>
+
+            <div style="width: 100%; max-width: 650px; margin: auto; display: flex; flex-direction: column; gap: 8px; z-index: 12;">
+                <div id="leaderboard-screen-list" style="max-height: 56vh; overflow-y: auto; padding-right: 4px;">
+                    <!-- Dynamically populated by ui.js -->
+                </div>
+            </div>
+
+            <div></div>
+        </div>
+
+        <!-- SPA: SEARCH RIDERS SCREEN -->
+        <div id="search-screen" class="screen hidden">
+            <button class="back-btn" onclick="openMainMenu()">← MENU</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo" style="font-size: 38px; margin-bottom: 2px;">Rider Search</h2>
+                <div class="subtitle">Query pilots by 8-Digit UID or Username</div>
+            </div>
+
+            <div style="width: 100%; max-width: 580px; display: flex; flex-direction: column; gap: 14px; margin: auto; z-index: 12;">
+                <div style="display: flex; gap: 8px; width: 100%;">
+                    <input type="text" id="social-search-input" placeholder="Enter 8-Digit Player UID..."
+                        style="flex-grow: 1; background: rgba(0,0,0,0.4); border: 2px solid rgba(0, 243, 255, 0.3); border-radius: 8px; color: #fff; padding: 12px; font-size: 16px; font-family: 'Orbitron', sans-serif; outline: none; text-align: center; letter-spacing: 2px;">
+                    <button class="settings-btn"
+                        onclick="window.searchPlayersByUID(document.getElementById('social-search-input').value)"
+                        style="border-color: var(--neon-cyan); padding: 12px 20px; font-size: 15px;">SEARCH</button>
+                </div>
+
+                <div id="social-search-results" class="glass-panel"
+                    style="border-color: rgba(0, 243, 255, 0.2); padding: 20px; text-align: center; min-height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 12px;">
+                    <div style="color: #a4c4c1; font-size: 14px;">Enter an 8-digit Player ID above to search...</div>
+                </div>
+            </div>
+
+            <div></div>
+        </div>
+
+        <!-- SPA: PUBLIC PLAYER PROFILE SCREEN -->
+        <div id="public-profile-screen" class="screen hidden">
+            <button class="back-btn" onclick="window.navigateToSearchScreen()">← SEARCH</button>
+
+            <div class="title-container" style="margin-top: 10px; margin-bottom: 5px;">
+                <h2 class="title-logo"
+                    style="font-size: 38px; margin-bottom: 2px; color: var(--neon-pink); text-shadow: var(--pink-glow);">
+                    Rider Profile</h2>
+                <div class="subtitle">Public Pilot Record</div>
+            </div>
+
+            <div style="width: 100%; max-width: 520px; margin: auto; display: flex; flex-direction: column; gap: 14px; z-index: 12;">
+                <div class="profile-header-card" style="border-color: rgba(255, 0, 127, 0.3); background: rgba(255, 0, 127, 0.05);">
+                    <div id="public-profile-avatar" class="profile-avatar-large">👤</div>
+                    <div class="profile-title-details">
+                        <div id="public-profile-username"
+                            style="font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: bold; color: #fff; text-shadow: var(--pink-glow);">
+                            WaveRunner</div>
+                        <div id="public-profile-uid-display"
+                            style="font-family: 'Orbitron', sans-serif; font-size: 12px; color: var(--neon-gold); margin-top: 4px;">
+                            UID: --------</div>
+                    </div>
+                </div>
+
+                <div id="public-profile-bio"
+                    style="background: rgba(0,0,0,0.4); border: 1px solid rgba(255, 0, 127, 0.2); border-radius: 8px; padding: 12px; font-size: 14px; color: #a4c4c1; text-align: left; min-height: 48px;">
+                    No bio description provided.
+                </div>
+
+                <div class="modal-stats" style="margin: 0; border-color: rgba(255, 0, 127, 0.2);">
+                    <div class="stat-line">
+                        <span>ELO Skill Rating</span>
+                        <span id="public-profile-rating" class="val" style="color: var(--neon-pink);">1000</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Best High Score</span>
+                        <span id="public-profile-highscore" class="val">0m</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Followers</span>
+                        <span id="public-profile-followers" class="val" style="color: var(--neon-pink);">0</span>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <button id="public-follow-btn" class="modal-btn primary"
+                        style="background: var(--neon-pink); color: #fff; box-shadow: 0 4px 15px rgba(255,0,127,0.3); flex: 1;"
+                        onclick="window.toggleFollowPublicUser()">FOLLOW</button>
+                    <button id="public-challenge-btn" class="modal-btn secondary" style="flex: 1;"
+                        onclick="window.challengePublicUser()">CHALLENGE</button>
+                </div>
+            </div>
+
+            <div></div>
+        </div>
+
+        <!-- HUD IN-GAME OVERLAY -->
+        <div id="hud">
+            <div class="hud-top">
+                <button class="hud-btn pause-btn" onclick="pauseGame()" title="Pause (Esc / P)">⏸</button>
+
+                <!-- Central level progress indicators -->
+                <div class="hud-center-info">
+                    <div id="hud-level-text" class="hud-level-indicator">Level 1 - FOREST</div>
+                    <div class="progress-container">
+                        <div id="hud-progress-bar" class="progress-bar"></div>
+                        <div id="hud-progress-text" class="progress-text">0%</div>
+                    </div>
+                </div>
+
+                <!-- Practice mode toggle -->
+                <div class="practice-toggle-box">
+                    <input type="checkbox" id="practice-mode-chk" onchange="togglePracticeMode(this.checked)">
+                    <label for="practice-mode-chk" class="practice-checkbox-custom"></label>
+                    <label for="practice-mode-chk" class="practice-label">PRACTICE</label>
+                </div>
+            </div>
+
+            <div class="hud-top" style="justify-content: space-between; align-items: flex-end; width: 100%;">
+                <!-- Real-time bot race leaderboard -->
+                <div id="race-leaderboard" class="hud-leaderboard">
+                    <div class="leaderboard-title">Race Positions</div>
+                    <div id="leaderboard-list"></div>
+                </div>
+
+                <!-- Practice checkpoint buttons -->
+                <div id="practice-controls" class="hud-practice-controls" style="visibility: hidden;">
+                    <button class="hud-btn practice-action-btn place" onclick="placeCheckpoint()" title="Key Z or C">
+                        🟢 PLACE CHECKPOINT
+                    </button>
+                    <button class="hud-btn practice-action-btn clear" onclick="clearCheckpoints()" title="Key X">
+                        🔴 CLEAR CHECKPOINTS
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAUSE MODAL -->
+        <div id="pause-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-cyan); box-shadow: 0 10px 40px rgba(0, 243, 255, 0.25);">
+                <h2 class="modal-title" style="color: var(--neon-cyan); text-shadow: var(--cyan-glow);">PAUSED</h2>
+                <div class="modal-stats">
+                    <div class="stat-line">
+                        <span>Current Progress</span>
+                        <span id="pause-progress-val" class="val">0%</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Game Mode</span>
+                        <span id="pause-mode-val" class="val">CLASSIC</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" onclick="resumeGame()">RESUME (ESC)</button>
+                    <button class="modal-btn secondary" onclick="restartLevel()">RESTART (R)</button>
+                    <button class="modal-btn secondary" onclick="quitToMenu()">QUIT TO MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME OVER MODAL -->
+        <div id="gameover-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-pink); box-shadow: 0 10px 40px rgba(255, 0, 127, 0.25);">
+                <h2 class="modal-title fail">CRASHED</h2>
+                <div class="modal-stats">
+                    <div class="stat-line">
+                        <span>Final Progress</span>
+                        <span id="fail-progress-val" class="val">0%</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Current Level</span>
+                        <span id="fail-score-val" class="val">Level 1</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" style="background: var(--neon-pink); color: #fff; box-shadow: 0 4px 15px rgba(255, 0, 127, 0.3);"
+                        onclick="restartLevel()">RETRY RUN (SPACE / R)</button>
+                    <button class="modal-btn secondary" onclick="quitToMenu()">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEVEL COMPLETE / VICTORY MODAL -->
+        <div id="win-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-cyan); box-shadow: 0 10px 40px rgba(0, 243, 255, 0.25);">
+                <h2 class="modal-title win">CLEARED!</h2>
+                <div class="modal-stats">
+                    <div class="stat-line">
+                        <span>Completed Level</span>
+                        <span id="win-mode-val" class="val">Level 1</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Attempts</span>
+                        <span id="win-attempts-val" class="val">1</span>
+                    </div>
+                    <div class="stat-line" style="color: var(--neon-gold);">
+                        <span>Level Reward</span>
+                        <span class="val">🪙 +100 Speedy Coins</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button id="win-next-btn" class="modal-btn primary" onclick="nextLevel()">NEXT MAP</button>
+                    <button class="modal-btn secondary" onclick="quitToMenu()">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAILY LOGIN STREAK REWARDS POPUP -->
+        <div id="daily-rewards-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-gold); max-width: 440px;">
+                <h2 class="modal-title" style="color: var(--neon-gold); text-shadow: var(--gold-glow);">DAILY STREAK</h2>
+                <div class="modal-subtitle">Consecutive daily login bonus awarded!</div>
+
+                <div style="font-size: 17px; margin-bottom: 10px; color: #fff;">
+                    Active streak: <span id="reward-popup-streak"
+                        style="color: var(--neon-pink); font-size: 26px; font-weight: 900;">1</span> Days!
+                </div>
+                <div style="font-size: 15px; color: var(--neon-green); font-weight: 700; margin-bottom: 16px;">
+                    Earned +<span id="reward-popup-coins">50</span> Speedy Coins!
+                </div>
+
+                <div class="daily-rewards-container">
+                    <div id="reward-day-1" class="reward-day-box claimed">
+                        <span class="reward-day-title">Day 1</span>
+                        <span class="reward-amount">🪙50</span>
+                        <span class="reward-status-icon">✓</span>
+                    </div>
+                    <div id="reward-day-2" class="reward-day-box">
+                        <span class="reward-day-title">Day 2</span>
+                        <span class="reward-amount">🪙100</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                    <div id="reward-day-3" class="reward-day-box">
+                        <span class="reward-day-title">Day 3</span>
+                        <span class="reward-amount">🪙150</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                    <div id="reward-day-4" class="reward-day-box">
+                        <span class="reward-day-title">Day 4</span>
+                        <span class="reward-amount">🪙200</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                    <div id="reward-day-5" class="reward-day-box">
+                        <span class="reward-day-title">Day 5</span>
+                        <span class="reward-amount">🪙250</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                </div>
+
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" style="background: var(--neon-gold); color: #020606;"
+                        onclick="document.getElementById('daily-rewards-modal').classList.remove('active')">COLLECT REWARD</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS OVERLAY -->
+        <div id="settings-overlay" class="modal-overlay" style="z-index: 100;">
+            <div class="modal-content settings-content" style="border-color: var(--neon-cyan); max-width: 480px; position: relative;">
+                <button class="modal-close-btn" onclick="window.closeSettingsOverlay()" style="position: absolute; top: 15px; right: 15px; background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer;">&times;</button>
+                <h2 class="modal-title" style="color: var(--neon-cyan); text-shadow: var(--cyan-glow); font-size: 28px; margin-bottom: 18px;">SETTINGS</h2>
+
+                <div style="margin-bottom: 18px; width: 100%; text-align: left;">
+                    <div style="font-size: 12px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Search Rider by 8-Digit UID</div>
+                    <div style="display: flex; gap: 8px; width: 100%;">
+                        <input type="text" id="settings-search-input" placeholder="Enter 8-Digit UID..."
+                            style="flex-grow: 1; background: rgba(0,0,0,0.4); border: 1.5px solid rgba(0, 243, 255, 0.3); border-radius: 8px; color: #fff; padding: 8px; font-size: 14px; font-family: 'Orbitron', sans-serif; outline: none; text-align: center;">
+                        <button class="settings-btn"
+                            onclick="window.searchPlayersByUID(document.getElementById('settings-search-input').value)"
+                            style="border-color: var(--neon-cyan); padding: 8px 16px; font-size: 13px;">SEARCH</button>
+                    </div>
+                    <div id="settings-search-results" class="glass-panel"
+                        style="border-color: rgba(0, 243, 255, 0.15); padding: 10px; text-align: center; min-height: 50px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-radius: 8px; margin-top: 8px; background: rgba(0, 0, 0, 0.2); font-size: 12px; color: #a4c4c1;">
+                        Enter an 8-digit Player ID above to search...
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 16px; width: 100%; text-align: left;">
+                    <div style="font-size: 12px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Audio</div>
+                    <button id="settings-audio-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; padding: 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleAudioInSettings()">
+                        <span>🔊</span> AUDIO: ON
+                    </button>
+                </div>
+
+                <div style="margin-bottom: 16px; width: 100%; text-align: left;">
+                    <div style="font-size: 12px; color: var(--neon-cyan); font-weight: bold; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 1px;">Display</div>
+                    <button id="settings-fullscreen-toggle" class="modal-btn" style="width: 100%; border: 1.5px solid var(--neon-cyan); background: rgba(0, 243, 255, 0.05); color: #fff; padding: 10px; font-family: 'Orbitron', sans-serif; cursor: pointer; border-radius: 8px;" onclick="window.toggleFullscreenInSettings()">
+                        <span>🖥️</span> TOGGLE FULLSCREEN
+                    </button>
+                </div>
+
+                <!-- Navigation Quick links -->
+                <div style="width: 100%; display: flex; gap: 8px; margin-bottom: 12px;">
+                    <button class="settings-btn" style="flex: 1; border-color: rgba(176, 38, 255, 0.4); padding: 10px; font-size: 12px;" onclick="window.navigateToProfileScreen(); window.closeSettingsOverlay();">
+                        <span>👤</span> PROFILE
+                    </button>
+                    <button class="settings-btn" style="flex: 1; border-color: rgba(255, 170, 0, 0.4); padding: 10px; font-size: 12px;" onclick="window.navigateToLeaderboardScreen(); window.closeSettingsOverlay();">
+                        <span>🏆</span> LEADERBOARD
+                    </button>
+                </div>
+
+                <button class="modal-btn secondary" style="font-size: 12px; padding: 8px; border-color: rgba(255, 0, 80, 0.3); color: #ff6688;" onclick="window.resetAllGameData()">
+                    <span>⚠️</span> RESET ALL SAVE DATA
+                </button>
+            </div>
+        </div>
+
+        <!-- TOAST NOTIFICATION CONTAINER -->
+        <div id="toast-container" style="position: absolute; top: 16px; right: 16px; display: flex; flex-direction: column; gap: 8px; z-index: 9999; pointer-events: none;"></div>
+
+    </div>
+
+    <!-- Core Game Scripts -->
+    <script src="ui.js"></script>
+    <script src="game-engine.js"></script>
+    <script src="main.js"></script>
+    <script type="module" src="google.js"></script>
+
+    <!-- Register PWA Service Worker for offline play -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js', { scope: './' })
+                    .then((reg) => console.log('[Service Worker] Registered:', reg.scope))
+                    .catch((err) => console.log('[Service Worker] Registration skipped:', err));
+            });
+        }
+    </script>
+</body>
+
+</html>

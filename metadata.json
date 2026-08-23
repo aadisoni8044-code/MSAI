@@ -1,0 +1,6 @@
+{
+  "name": "Speedy Arrow",
+  "description": "Speedy Arrow - Neon Geometry Wave Runner with 100 biome levels, endless survival, real-time drone races, customizable skins and trails.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

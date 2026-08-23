@@ -1,0 +1,22 @@
+{
+  "short_name": "SpeedyArrow",
+  "name": "Speedy Arrow - Neon Geometry Wave Runner",
+  "description": "Speedy Arrow - Neon Geometry Wave Runner Game with 100 levels, endless survival, drone races, and customizable skins.",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020606",
+  "theme_color": "#020606",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
