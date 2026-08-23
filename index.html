@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSstudio - Graphic Design & Visual Content Creator</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700&family=Oswald:wght@500;700&family=Pacifico&family=Playfair+Display:wght@600;700&family=Poppins:wght@400;500;600;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header class="top-navbar">
+      <div class="nav-left">
+        <div class="app-logo">
+          <i class="fa-solid fa-wand-magic-sparkles logo-icon"></i>
+          <span class="logo-text">MSstudio</span>
+        </div>
+        <div class="divider"></div>
+        <div class="canvas-title-wrapper">
+          <input type="text" id="canvas-title-input" class="canvas-title-input" value="Untitled Project" placeholder="Name your project..." title="Click to edit project name">
+          <i class="fa-solid fa-pen title-edit-icon"></i>
+        </div>
+      </div>
+
+      <div class="nav-center">
+        <div class="action-group" role="group" aria-label="History actions">
+          <button id="btn-undo" class="icon-btn" title="Undo (Ctrl+Z)" disabled>
+            <i class="fa-solid fa-rotate-left"></i>
+          </button>
+          <button id="btn-redo" class="icon-btn" title="Redo (Ctrl+Y)" disabled>
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+        <div class="divider"></div>
+        <button id="btn-clear-all" class="btn btn-outline-danger" title="Clear Canvas">
+          <i class="fa-solid fa-trash-can"></i>
+          <span>Clear All</span>
+        </button>
+      </div>
+
+      <div class="nav-right">
+        <!-- Theme Toggle -->
+        <button id="btn-theme-toggle" class="icon-btn theme-toggle" title="Toggle Theme (Dark/Light)">
+          <i class="fa-solid fa-moon dark-icon"></i>
+          <i class="fa-solid fa-sun light-icon"></i>
+        </button>
+
+        <div class="divider"></div>
+
+        <!-- Export Dropdown -->
+        <div class="export-dropdown-wrapper">
+          <button id="btn-export-menu" class="btn btn-primary">
+            <i class="fa-solid fa-download"></i>
+            <span>Export</span>
+            <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+          </button>
+          <div id="export-dropdown" class="dropdown-menu hidden">
+            <button id="export-png" class="dropdown-item">
+              <i class="fa-regular fa-image text-png"></i>
+              <div class="item-info">
+                <span class="item-title">PNG Image</span>
+                <span class="item-desc">High quality with transparency</span>
+              </div>
+            </button>
+            <button id="export-jpg" class="dropdown-item">
+              <i class="fa-solid fa-file-image text-jpg"></i>
+              <div class="item-info">
+                <span class="item-title">JPG Image</span>
+                <span class="item-desc">Optimized file size</span>
+              </div>
+            </button>
+            <button id="export-pdf" class="dropdown-item">
+              <i class="fa-solid fa-file-pdf text-pdf"></i>
+              <div class="item-info">
+                <span class="item-title">PDF Document</span>
+                <span class="item-desc">Best for printing & sharing</span>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN STUDIO WORKSPACE -->
+    <div class="studio-body">
+
+      <!-- LEFT ICON SIDEBAR -->
+      <aside class="icon-sidebar">
+        <button class="sidebar-tab active" data-tab="templates" title="Templates">
+          <i class="fa-solid fa-table-cells-large"></i>
+          <span>Templates</span>
+        </button>
+        <button class="sidebar-tab" data-tab="text" title="Text">
+          <i class="fa-solid fa-font"></i>
+          <span>Text</span>
+        </button>
+        <button class="sidebar-tab" data-tab="elements" title="Elements & Shapes">
+          <i class="fa-solid fa-icons"></i>
+          <span>Elements</span>
+        </button>
+        <button class="sidebar-tab" data-tab="uploads" title="Uploads">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+          <span>Uploads</span>
+        </button>
+        <button class="sidebar-tab" data-tab="layers" title="Layers">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Layers</span>
+        </button>
+        <button class="sidebar-tab" data-tab="settings" title="Canvas Settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Canvas</span>
+        </button>
+      </aside>
+
+      <!-- LEFT DYNAMIC DRAWER PANEL -->
+      <aside class="drawer-panel" id="drawer-panel">
+        <div class="drawer-header">
+          <h3 id="drawer-title">Templates</h3>
+          <button id="btn-close-drawer" class="icon-btn sm" title="Collapse panel">
+            <i class="fa-solid fa-chevron-left"></i>
+          </button>
+        </div>
+
+        <div class="drawer-content">
+
+          <!-- TEMPLATES PANEL -->
+          <div class="panel-section active" id="panel-templates">
+            <p class="section-desc">Choose a pre-designed template to kickstart your creation:</p>
+            <div class="templates-grid">
+              <div class="template-card" data-template="quote">
+                <div class="template-preview quote-prev">
+                  <span>"Inspiration"</span>
+                </div>
+                <div class="template-name">Inspirational Quote</div>
+              </div>
+              <div class="template-card" data-template="social">
+                <div class="template-preview social-prev">
+                  <span>SALE 50%</span>
+                </div>
+                <div class="template-name">Social Promo</div>
+              </div>
+              <div class="template-card" data-template="badge">
+                <div class="template-preview badge-prev">
+                  <span>CREATIVE</span>
+                </div>
+                <div class="template-name">Minimalist Badge</div>
+              </div>
+              <div class="template-card" data-template="gradient">
+                <div class="template-preview gradient-prev">
+                  <span>MODERN</span>
+                </div>
+                <div class="template-name">Vibrant Gradient</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TEXT PANEL -->
+          <div class="panel-section" id="panel-text">
+            <div class="action-list">
+              <button class="add-text-btn heading-btn" id="btn-add-heading">
+                <span class="btn-preview h1">Add a heading</span>
+              </button>
+              <button class="add-text-btn subheading-btn" id="btn-add-subheading">
+                <span class="btn-preview h2">Add a subheading</span>
+              </button>
+              <button class="add-text-btn body-btn" id="btn-add-body">
+                <span class="btn-preview body">Add a little bit of body text</span>
+              </button>
+            </div>
+
+            <div class="panel-divider"></div>
+            <h4 class="panel-subtitle">Text Styles & Presets</h4>
+            <div class="text-presets-grid">
+              <button class="preset-card font-playfair" data-preset="glow">GLOW MAG</button>
+              <button class="preset-card font-caveat" data-preset="handwriting">Handcrafted</button>
+              <button class="preset-card font-oswald" data-preset="bold-headline">NEON NIGHTS</button>
+              <button class="preset-card font-pacifico" data-preset="playful">Sweet Summer</button>
+            </div>
+          </div>
+
+          <!-- ELEMENTS / SHAPES PANEL -->
+          <div class="panel-section" id="panel-elements">
+            <h4 class="panel-subtitle">Basic Shapes</h4>
+            <div class="shapes-grid">
+              <button class="shape-btn" data-shape="rectangle" title="Rectangle">
+                <i class="fa-regular fa-square"></i>
+                <span>Rectangle</span>
+              </button>
+              <button class="shape-btn" data-shape="circle" title="Circle">
+                <i class="fa-regular fa-circle"></i>
+                <span>Circle</span>
+              </button>
+              <button class="shape-btn" data-shape="triangle" title="Triangle">
+                <i class="fa-solid fa-play fa-rotate-270"></i>
+                <span>Triangle</span>
+              </button>
+              <button class="shape-btn" data-shape="star" title="Star">
+                <i class="fa-regular fa-star"></i>
+                <span>Star</span>
+              </button>
+              <button class="shape-btn" data-shape="line" title="Line">
+                <i class="fa-solid fa-minus"></i>
+                <span>Line</span>
+              </button>
+              <button class="shape-btn" data-shape="arrow" title="Arrow">
+                <i class="fa-solid fa-arrow-right"></i>
+                <span>Arrow</span>
+              </button>
+            </div>
+
+            <div class="panel-divider"></div>
+            <h4 class="panel-subtitle">Decorative Badges & Stickers</h4>
+            <div class="elements-presets-grid">
+              <button class="element-preset-card" data-element="badge-circle">
+                <i class="fa-solid fa-certificate"></i> Badge
+              </button>
+              <button class="element-preset-card" data-element="heart">
+                <i class="fa-solid fa-heart text-danger"></i> Heart
+              </button>
+              <button class="element-preset-card" data-element="cloud">
+                <i class="fa-solid fa-cloud"></i> Cloud
+              </button>
+              <button class="element-preset-card" data-element="lightning">
+                <i class="fa-solid fa-bolt text-warning"></i> Lightning
+              </button>
+            </div>
+          </div>
+
+          <!-- UPLOADS PANEL -->
+          <div class="panel-section" id="panel-uploads">
+            <div class="upload-dropzone" id="upload-dropzone">
+              <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+              <p class="upload-text"><strong>Drag & Drop images here</strong> or click to browse</p>
+              <p class="upload-hint">Supports PNG, JPG, WEBP, SVG</p>
+              <input type="file" id="file-input" accept="image/*" multiple hidden>
+            </div>
+
+            <div class="panel-divider"></div>
+            <h4 class="panel-subtitle">Uploaded Assets</h4>
+            <div class="uploads-gallery" id="uploads-gallery">
+              <p class="empty-gallery-msg">No uploaded images yet. Upload an image above to use in your project!</p>
+            </div>
+          </div>
+
+          <!-- LAYERS PANEL -->
+          <div class="panel-section" id="panel-layers">
+            <div class="layers-header-actions">
+              <span class="layers-count" id="layers-count">0 Objects</span>
+              <div class="layers-order-btns">
+                <button class="icon-btn sm" id="btn-layer-up" title="Bring Forward">
+                  <i class="fa-solid fa-angle-up"></i>
+                </button>
+                <button class="icon-btn sm" id="btn-layer-down" title="Send Backward">
+                  <i class="fa-solid fa-angle-down"></i>
+                </button>
+                <button class="icon-btn sm" id="btn-layer-top" title="Bring to Front">
+                  <i class="fa-solid fa-angles-up"></i>
+                </button>
+                <button class="icon-btn sm" id="btn-layer-bottom" title="Send to Back">
+                  <i class="fa-solid fa-angles-down"></i>
+                </button>
+              </div>
+            </div>
+            <div class="panel-divider"></div>
+            <ul id="layers-list" class="layers-list">
+              <li class="empty-layers-msg">Canvas is empty. Add elements to view layers.</li>
+            </ul>
+          </div>
+
+          <!-- CANVAS SETTINGS PANEL -->
+          <div class="panel-section" id="panel-settings">
+            <h4 class="panel-subtitle">Canvas Presets</h4>
+            <div class="preset-sizes-grid">
+              <button class="preset-size-btn active" data-width="1080" data-height="1080">
+                <i class="fa-regular fa-square"></i>
+                <div class="size-info">
+                  <span class="size-name">Instagram Post</span>
+                  <span class="size-dim">1080 x 1080 px</span>
+                </div>
+              </button>
+              <button class="preset-size-btn" data-width="1080" data-height="1920">
+                <i class="fa-solid fa-mobile-screen"></i>
+                <div class="size-info">
+                  <span class="size-name">Story / Reel</span>
+                  <span class="size-dim">1080 x 1920 px</span>
+                </div>
+              </button>
+              <button class="preset-size-btn" data-width="1280" data-height="720">
+                <i class="fa-solid fa-desktop"></i>
+                <div class="size-info">
+                  <span class="size-name">YouTube Thumbnail</span>
+                  <span class="size-dim">1280 x 720 px</span>
+                </div>
+              </button>
+              <button class="preset-size-btn" data-width="1200" data-height="630">
+                <i class="fa-solid fa-share-nodes"></i>
+                <div class="size-info">
+                  <span class="size-name">Facebook / Banner</span>
+                  <span class="size-dim">1200 x 630 px</span>
+                </div>
+              </button>
+            </div>
+
+            <div class="panel-divider"></div>
+            <h4 class="panel-subtitle">Custom Dimensions</h4>
+            <div class="custom-dimensions-form">
+              <div class="dimension-input-group">
+                <label for="canvas-width-input">Width (px)</label>
+                <input type="number" id="canvas-width-input" value="1080" min="100" max="4000">
+              </div>
+              <span class="dim-separator">×</span>
+              <div class="dimension-input-group">
+                <label for="canvas-height-input">Height (px)</label>
+                <input type="number" id="canvas-height-input" value="1080" min="100" max="4000">
+              </div>
+              <button id="btn-apply-dimensions" class="btn btn-secondary btn-full">Resize Canvas</button>
+            </div>
+
+            <div class="panel-divider"></div>
+            <h4 class="panel-subtitle">Background Color</h4>
+            <div class="color-picker-row">
+              <div class="color-presets">
+                <button class="color-swatch active" style="background-color: #ffffff;" data-color="#ffffff" title="White"></button>
+                <button class="color-swatch" style="background-color: #f8fafc;" data-color="#f8fafc" title="Light Gray"></button>
+                <button class="color-swatch" style="background-color: #0f172a;" data-color="#0f172a" title="Dark Slate"></button>
+                <button class="color-swatch" style="background-color: #fee2e2;" data-color="#fee2e2" title="Pastel Red"></button>
+                <button class="color-swatch" style="background-color: #fef3c7;" data-color="#fef3c7" title="Pastel Yellow"></button>
+                <button class="color-swatch" style="background-color: #dcfce7;" data-color="#dcfce7" title="Pastel Green"></button>
+                <button class="color-swatch" style="background-color: #e0e7ff;" data-color="#e0e7ff" title="Pastel Indigo"></button>
+                <button class="color-swatch" style="background-color: #f3e8ff;" data-color="#f3e8ff" title="Pastel Purple"></button>
+              </div>
+              <div class="custom-color-picker">
+                <input type="color" id="bg-color-picker" value="#ffffff" title="Choose custom background color">
+                <span>Custom</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- CANVAS WORKSPACE & TOP CONTEXTUAL TOOLBAR CONTAINER -->
+      <main class="workspace-area">
+
+        <!-- TOP CONTEXTUAL OBJECT TOOLBAR -->
+        <div id="contextual-toolbar" class="contextual-toolbar">
+          <div class="toolbar-placeholder">
+            <i class="fa-solid fa-arrow-pointer"></i>
+            <span>Select an object on the canvas to customize its properties</span>
+          </div>
+
+          <!-- TEXT CONTROLS GROUP -->
+          <div id="toolbar-text-group" class="toolbar-group hidden">
+            <!-- Font Family -->
+            <div class="tool-item">
+              <label for="font-family-select" class="tool-label">Font</label>
+              <select id="font-family-select" class="select-input">
+                <option value="Inter">Inter</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Poppins">Poppins</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="Playfair Display">Playfair Display</option>
+                <option value="Caveat">Caveat</option>
+                <option value="Pacifico">Pacifico</option>
+                <option value="Oswald">Oswald</option>
+              </select>
+            </div>
+
+            <!-- Font Size -->
+            <div class="tool-item">
+              <label for="font-size-input" class="tool-label">Size</label>
+              <input type="number" id="font-size-input" class="number-input" value="40" min="8" max="300">
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Text Formatting (Bold, Italic, Underline) -->
+            <div class="tool-group-buttons">
+              <button id="btn-text-bold" class="icon-btn tool-btn" title="Bold">
+                <i class="fa-solid fa-bold"></i>
+              </button>
+              <button id="btn-text-italic" class="icon-btn tool-btn" title="Italic">
+                <i class="fa-solid fa-italic"></i>
+              </button>
+              <button id="btn-text-underline" class="icon-btn tool-btn" title="Underline">
+                <i class="fa-solid fa-underline"></i>
+              </button>
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Alignment -->
+            <div class="tool-group-buttons">
+              <button id="btn-align-left" class="icon-btn tool-btn" title="Align Left">
+                <i class="fa-solid fa-align-left"></i>
+              </button>
+
+              <button id="btn-align-center" class="icon-btn tool-btn" title="Align Center">
+                <i class="fa-solid fa-align-center"></i>
+              </button>
+              <button id="btn-align-right" class="icon-btn tool-btn" title="Align Right">
+                <i class="fa-solid fa-align-right"></i>
+              </button>
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Text Color -->
+            <div class="tool-item">
+              <label class="tool-label">Color</label>
+              <input type="color" id="text-color-picker" class="color-picker-input" value="#000000" title="Text Color">
+            </div>
+          </div>
+
+          <!-- SHAPE & GENERAL OBJECT CONTROLS GROUP -->
+          <div id="toolbar-shape-group" class="toolbar-group hidden">
+            <!-- Fill Color -->
+            <div class="tool-item">
+              <label class="tool-label">Fill</label>
+              <input type="color" id="shape-fill-picker" class="color-picker-input" value="#6366f1" title="Fill Color">
+            </div>
+
+            <!-- Stroke Color -->
+            <div class="tool-item">
+              <label class="tool-label">Border</label>
+              <input type="color" id="shape-stroke-picker" class="color-picker-input" value="#000000" title="Border Color">
+            </div>
+
+            <!-- Stroke Width -->
+            <div class="tool-item">
+              <label for="shape-stroke-width" class="tool-label">Border Width</label>
+              <input type="range" id="shape-stroke-width" min="0" max="20" value="0" class="range-input">
+              <span id="stroke-width-val" class="range-val">0px</span>
+            </div>
+
+            <div class="tool-divider"></div>
+          </div>
+
+          <!-- COMMON OBJECT ACTIONS GROUP (OPACITY, DUPLICATE, DELETE, LOCK) -->
+          <div id="toolbar-common-group" class="toolbar-group hidden">
+            <!-- Opacity -->
+            <div class="tool-item">
+              <label for="object-opacity" class="tool-label">Opacity</label>
+              <input type="range" id="object-opacity" min="0" max="1" step="0.05" value="1" class="range-input">
+              <span id="opacity-val" class="range-val">100%</span>
+            </div>
+
+            <div class="tool-divider"></div>
+
+            <!-- Object Actions -->
+            <div class="tool-group-buttons">
+              <button id="btn-duplicate-obj" class="icon-btn tool-btn" title="Duplicate Object">
+                <i class="fa-regular fa-copy"></i>
+              </button>
+              <button id="btn-lock-obj" class="icon-btn tool-btn" title="Lock Object">
+                <i class="fa-solid fa-lock"></i>
+              </button>
+              <button id="btn-delete-obj" class="icon-btn tool-btn btn-danger-icon" title="Delete Selected">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CENTER CANVAS CONTAINER -->
+        <div class="canvas-viewport-wrapper" id="canvas-viewport">
+          <div class="canvas-shadow-container" id="canvas-shadow-container">
+            <canvas id="main-canvas"></canvas>
+          </div>
+        </div>
+
+        <!-- CANVAS ZOOM & VIEW CONTROLS -->
+        <div class="zoom-controls-bar">
+          <button id="btn-zoom-out" class="icon-btn sm" title="Zoom Out">
+            <i class="fa-solid fa-minus"></i>
+          </button>
+          <span id="zoom-percentage" class="zoom-text">100%</span>
+          <button id="btn-zoom-in" class="icon-btn sm" title="Zoom In">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+          <div class="tool-divider sm"></div>
+          <button id="btn-zoom-reset" class="btn btn-xs btn-outline" title="Reset Zoom to 100%">100%</button>
+          <button id="btn-zoom-fit" class="btn btn-xs btn-outline" title="Fit Canvas to Viewport">Fit</button>
+        </div>
+
+      </main>
+
+    </div>
+  </div>
+
+  <!-- CDN LIBRARIES -->
+  <!-- Fabric.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  <!-- jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <!-- App JS Modules -->
+  <script src="js/panels.js"></script>
+  <script src="js/toolbar.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
