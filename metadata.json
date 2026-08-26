@@ -1,0 +1,6 @@
+{
+  "name": "Speedy Arrow",
+  "description": "A high-octane neon geometry wave runner game featuring 100 biome levels, endless survival mode, AI bot races, vehicle skin customizations, and local/cloud profile progression.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
