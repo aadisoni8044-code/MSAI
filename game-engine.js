@@ -32,6 +32,9 @@ let currentHorizontalOffset = 180;
 // Timing
 let lastTime = 0;
 let deltaTime = 0;
+let physicsAccumulator = 0;
+let gameTime = 0;
+const FIXED_TIMESTEP = 1 / 120; // 120Hz deterministic physics substeps (8.33ms)
 
 // Inputs
 const inputs = {
@@ -269,11 +272,19 @@ function initInputListeners() {
             updateInputActiveState();
         };
 
-        ['mousedown', 'mousemove', 'mouseup', 'mouseleave', 'touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(evt => {
+        ['touchstart', 'touchmove', 'touchend', 'touchcancel'].forEach(evt => {
             overlay.addEventListener(evt, (e) => {
                 e.preventDefault();
                 handlePointer(e);
             }, { passive: false });
+        });
+
+        ['mousedown', 'mousemove', 'mouseup', 'mouseleave'].forEach(evt => {
+            overlay.addEventListener(evt, (e) => {
+                if (e.pointerType === 'touch') return;
+                e.preventDefault();
+                handlePointer(e);
+            });
         });
     }
 }
@@ -345,6 +356,8 @@ function setGameState(newState) {
     if (newState === STATE_PLAYING) {
         if (hud) hud.classList.add('active');
         if (overlay) overlay.classList.remove('hidden');
+        lastTime = performance.now();
+        physicsAccumulator = 0;
         startSynthMusic();
     } else {
         stopSynthMusic();
@@ -392,6 +405,7 @@ window.launchRaceMode = launchRaceMode;
 
 // --- GAMEPLAY INITIALIZATION & COURSE GENERATOR ---
 function initGameElements() {
+    gameTime = 0;
     targetHorizontalOffset = 180;
     currentHorizontalOffset = 180;
 
@@ -745,7 +759,7 @@ function updatePlayerPhysics(dt) {
     }
 
     const lerpAcc = activeBiome === 'water' ? 10.0 : 16.0;
-    player.vy += (player.targetVy - player.vy) * lerpAcc * dt;
+    player.vy = player.targetVy + (player.vy - player.targetVy) * Math.exp(-lerpAcc * dt);
     player.y += player.vy * dt;
 
     const borderTop = 40;
@@ -766,10 +780,9 @@ function updatePlayerPhysics(dt) {
     const backX = player.x + Math.cos(backAngle) * (player.width / 2);
     const backY = player.y + Math.sin(backAngle) * (player.width / 2);
 
-    player.trail.push({ x: backX, y: backY, time: Date.now() });
+    player.trail.push({ x: backX, y: backY, time: gameTime });
 
-    const now = Date.now();
-    player.trail = player.trail.filter(pt => now - pt.time < 800);
+    player.trail = player.trail.filter(pt => gameTime - pt.time < 0.8);
 
     if (Math.random() < 0.45) {
         createSpark(backX, backY, -player.vy * 0.25, skin);
@@ -868,7 +881,7 @@ function respawnAtPracticeCheckpoint() {
 }
 
 function updateCamera(dt) {
-    currentHorizontalOffset += (targetHorizontalOffset - currentHorizontalOffset) * 6 * dt;
+    currentHorizontalOffset = targetHorizontalOffset + (currentHorizontalOffset - targetHorizontalOffset) * Math.exp(-6 * dt);
     camera.x = player.x - currentHorizontalOffset;
 
     camera.targetY = player.y - VIRTUAL_HEIGHT / 2;
@@ -876,7 +889,7 @@ function updateCamera(dt) {
     if (camera.targetY < -limit) camera.targetY = -limit;
     if (camera.targetY > limit) camera.targetY = limit;
 
-    camera.y += (camera.targetY - camera.y) * 8 * dt;
+    camera.y = camera.targetY + (camera.y - camera.targetY) * Math.exp(-8 * dt);
 }
 
 // --- COLLISIONS ---
@@ -1128,7 +1141,7 @@ function initRaceCompetitors() {
             color: colors[i],
             baseSpeed: 380 + Math.random() * 25,
             isDead: false,
-            lastDecisionTime: 0,
+            lastDecisionTime: gameTime,
             decisionInterval: 0.12 + Math.random() * 0.1,
             trail: [],
             targetVy: 390
@@ -1138,19 +1151,18 @@ function initRaceCompetitors() {
 
 function updateBots(dt) {
     if (currentGameMode !== 'race') return;
-    const now = Date.now();
 
     for (const bot of bots) {
         if (bot.isDead) continue;
 
         bot.x += bot.baseSpeed * dt;
 
-        if (now - bot.lastDecisionTime > bot.decisionInterval * 1000) {
-            bot.lastDecisionTime = now;
+        if (gameTime - bot.lastDecisionTime > bot.decisionInterval) {
+            bot.lastDecisionTime = gameTime;
             makeAIBotDecision(bot);
         }
 
-        bot.vy += (bot.targetVy - bot.vy) * 14 * dt;
+        bot.vy = bot.targetVy + (bot.vy - bot.targetVy) * Math.exp(-14 * dt);
         bot.y += bot.vy * dt;
 
         const borderTop = 40;
@@ -1165,8 +1177,8 @@ function updateBots(dt) {
         }
 
         bot.angle = Math.atan2(bot.vy, bot.baseSpeed) * 0.8;
-        bot.trail.push({ x: bot.x, y: bot.y, time: now });
-        bot.trail = bot.trail.filter(pt => now - pt.time < 500);
+        bot.trail.push({ x: bot.x, y: bot.y, time: gameTime });
+        bot.trail = bot.trail.filter(pt => gameTime - pt.time < 0.5);
 
         checkBotCollisions(bot);
     }
@@ -1522,6 +1534,8 @@ function resumeGame() {
     if (currentGameState !== STATE_PAUSED) return;
     hideAllModals();
     currentGameState = STATE_PLAYING;
+    lastTime = performance.now();
+    physicsAccumulator = 0;
     startSynthMusic();
 }
 window.resumeGame = resumeGame;
@@ -1553,12 +1567,21 @@ window.nextLevel = nextLevel;
 // --- MAIN LOOP ---
 function gameLoop(time) {
     if (!lastTime) lastTime = time;
-    deltaTime = (time - lastTime) / 1000;
+    let frameTime = (time - lastTime) / 1000;
     lastTime = time;
 
-    if (deltaTime > 0.1) deltaTime = 0.1;
+    if (frameTime > 0.1) frameTime = 0.1;
 
-    update(deltaTime);
+    if (currentGameState === STATE_PLAYING) {
+        physicsAccumulator += frameTime;
+        while (physicsAccumulator >= FIXED_TIMESTEP) {
+            update(FIXED_TIMESTEP);
+            physicsAccumulator -= FIXED_TIMESTEP;
+        }
+    } else {
+        physicsAccumulator = 0;
+    }
+
     render();
 
     requestAnimationFrame(gameLoop);
@@ -1567,6 +1590,7 @@ function gameLoop(time) {
 function update(dt) {
     if (currentGameState !== STATE_PLAYING) return;
 
+    gameTime += dt;
     updatePlayerPhysics(dt);
     updateBots(dt);
     updateLevelAndCollisions();
@@ -1757,8 +1781,8 @@ function drawPlayerTrail(ctx, skin) {
         for (let i = 1; i < player.trail.length; i++) {
             const pt1 = player.trail[i - 1];
             const pt2 = player.trail[i];
-            const age = Date.now() - pt2.time;
-            const opacity = Math.max(0, 1 - age / 800);
+            const age = gameTime - pt2.time;
+            const opacity = Math.max(0, 1 - age / 0.8);
             const hue = (i * 14) % 360;
             ctx.strokeStyle = `hsla(${hue}, 100%, 55%, ${opacity * 0.85})`;
             ctx.beginPath();
@@ -1771,8 +1795,8 @@ function drawPlayerTrail(ctx, skin) {
         for (let i = 1; i < player.trail.length; i++) {
             const pt1 = player.trail[i - 1];
             const pt2 = player.trail[i];
-            const age = Date.now() - pt2.time;
-            const opacity = Math.max(0, 1 - age / 800);
+            const age = gameTime - pt2.time;
+            const opacity = Math.max(0, 1 - age / 0.8);
             ctx.strokeStyle = skin.trailColor;
             ctx.globalAlpha = opacity * 0.85;
             ctx.beginPath();
@@ -1813,8 +1837,8 @@ function drawBots(ctx) {
             for (let i = 1; i < bot.trail.length; i++) {
                 const pt1 = bot.trail[i - 1];
                 const pt2 = bot.trail[i];
-                const age = Date.now() - pt2.time;
-                const opacity = Math.max(0, 1 - age / 500);
+                const age = gameTime - pt2.time;
+                const opacity = Math.max(0, 1 - age / 0.5);
                 ctx.strokeStyle = bot.color;
                 ctx.globalAlpha = opacity * 0.75;
                 ctx.beginPath();
