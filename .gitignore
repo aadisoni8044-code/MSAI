@@ -1,0 +1,15 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyInstaller / Build artifacts
+build/
+dist/
+*.spec.bak
+
+# PyTest cache
+.pytest_cache/
+
+# User settings cache override
+.pycodestudio/

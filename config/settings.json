@@ -1,0 +1,16 @@
+{
+    "theme": "dark",
+    "font_family": "Consolas",
+    "font_size": 13,
+    "tab_size": 4,
+    "use_spaces": true,
+    "word_wrap": false,
+    "auto_save": false,
+    "auto_save_delay": 5,
+    "show_minimap": true,
+    "show_line_numbers": true,
+    "show_folding": true,
+    "highlight_current_line": true,
+    "recent_files": [],
+    "recent_folders": []
+}

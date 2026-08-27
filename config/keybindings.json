@@ -1,0 +1,15 @@
+{
+    "save_file": "Ctrl+S",
+    "open_file": "Ctrl+O",
+    "open_folder": "Ctrl+K",
+    "new_file": "Ctrl+N",
+    "close_tab": "Ctrl+W",
+    "find": "Ctrl+F",
+    "find_in_files": "Ctrl+Shift+F",
+    "command_palette": "Ctrl+Shift+P",
+    "quick_open": "Ctrl+P",
+    "toggle_comment": "Ctrl+/",
+    "run_file": "F5",
+    "toggle_terminal": "Ctrl+`",
+    "toggle_sidebar": "Ctrl+B"
+}
