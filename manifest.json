@@ -1,0 +1,21 @@
+{
+  "short_name": "MSAI",
+  "name": "MSAI — Intelligent AI Assistant",
+  "icons": [
+    {
+      "src": "assets/icons/icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "assets/icons/icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "background_color": "#0d0f12",
+  "theme_color": "#181a20",
+  "display": "standalone",
+  "orientation": "any"
+}
