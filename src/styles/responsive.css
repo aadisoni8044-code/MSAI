@@ -1,0 +1,77 @@
+/* Mobile & Responsive Rules for MSAI */
+
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+
+  /* Overlay for mobile drawer */
+  .sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 45;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 80% !important;
+    max-width: 300px;
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0) !important;
+  }
+
+  .sidebar.collapsed {
+    transform: translateX(-100%) !important;
+  }
+
+  .main-chat-container {
+    width: 100% !important;
+  }
+
+  .chat-suggestions-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .message-wrapper {
+    max-width: 92% !important;
+  }
+
+  .prompt-input-container {
+    padding: 10px 12px 14px 12px !important;
+  }
+
+  .header-right .server-status-badge {
+    display: none;
+  }
+}
+
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-hover);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}

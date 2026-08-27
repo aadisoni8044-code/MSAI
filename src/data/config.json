@@ -1,0 +1,56 @@
+{
+  "appName": "MSAI",
+  "version": "1.0.0",
+  "models": [
+    {
+      "id": "MSAI Flash",
+      "name": "MSAI Flash",
+      "description": "Fast and lightweight model ideal for quick answers, coding, and general assistance.",
+      "badge": "Default",
+      "provider": "Google Gemini 2.5 Flash"
+    },
+    {
+      "id": "MSAI Pro",
+      "name": "MSAI Pro",
+      "description": "Advanced reasoning model designed for complex analysis, deep code tasks, and detailed writing.",
+      "badge": "Pro",
+      "provider": "Google Gemini 2.5 Pro"
+    }
+  ],
+  "defaultSettings": {
+    "theme": "dark",
+    "language": "en",
+    "enterToSend": true,
+    "clearHistoryOnExit": false,
+    "model": "MSAI Flash",
+    "temperature": 0.7,
+    "systemPrompt": "You are MSAI, an intelligent, helpful, and concise AI assistant built by MSAI."
+  },
+  "promptSuggestions": [
+    {
+      "id": "code",
+      "label": "</> Code",
+      "prompt": "Write a TypeScript function to recursively flatten a deeply nested array with proper type definitions."
+    },
+    {
+      "id": "write",
+      "label": "✏️ Write",
+      "prompt": "Draft a professional response to a product update announcement email."
+    },
+    {
+      "id": "learn",
+      "label": "🎓 Learn",
+      "prompt": "Explain Quantum Computing key concepts in simple terms with an analogy."
+    },
+    {
+      "id": "lifestuff",
+      "label": "💡 Life stuff",
+      "prompt": "Give me a 3-day meal plan and workout routine for a busy software developer."
+    },
+    {
+      "id": "msai_choice",
+      "label": "🔮 MSAI's choice",
+      "prompt": "Surprise me with a fascinating visual thought experiment in science or mathematics."
+    }
+  ]
+}
