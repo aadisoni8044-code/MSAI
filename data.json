@@ -1,0 +1,63 @@
+{
+  "appName": "MSAI",
+  "appTitle": "MSAI — Intelligent AI Assistant",
+  "version": "1.0.0",
+  "description": "Next-generation AI chat application with real-time assistance, code generation, and content creation.",
+  "models": [
+    {
+      "id": "gemini-2.0-flash",
+      "name": "MSAI Flash",
+      "badge": "Fast",
+      "description": "Lightning-fast responses for daily tasks, coding, and quick answers."
+    },
+    {
+      "id": "gemini-1.5-pro",
+      "name": "MSAI Pro",
+      "badge": "Pro",
+      "description": "Advanced reasoning and deep analytical capabilities for complex problems."
+    }
+  ],
+  "quickPills": [
+    {
+      "id": "code",
+      "icon": "</>",
+      "label": "Code",
+      "prompt": "Write a clean JavaScript function that demonstrates async/await with robust error handling."
+    },
+    {
+      "id": "write",
+      "icon": "✏️",
+      "label": "Write",
+      "prompt": "Draft an engaging project announcement email highlighting key features and benefits."
+    },
+    {
+      "id": "learn",
+      "icon": "🎓",
+      "label": "Learn",
+      "prompt": "Explain how neural networks process information using an intuitive analogy."
+    },
+    {
+      "id": "life",
+      "icon": "💡",
+      "label": "Life stuff",
+      "prompt": "Give me 5 actionable productivity techniques for managing daily work items."
+    },
+    {
+      "id": "choice",
+      "icon": "🧙",
+      "label": "MSAI's choice",
+      "prompt": "Surprise me with a fascinating concept from quantum computing or creative technology!"
+    }
+  ],
+  "suggestions": [
+    "Explain artificial intelligence in simple terms",
+    "Write a responsive HTML/CSS layout",
+    "How do I optimize database queries?",
+    "Generate a weekly study schedule for machine learning"
+  ],
+  "fallbackResponses": {
+    "welcome": "Hello! I am MSAI, your intelligent AI assistant. How can I assist you today?",
+    "code": "Here is an example JavaScript async function with error handling:\n\n```javascript\nasync function fetchData(url) {\n  try {\n    const response = await fetch(url);\n    if (!response.ok) {\n      throw new Error(`HTTP error! status: ${response.status}`);\n    }\n    const data = await response.json();\n    return data;\n  } catch (error) {\n    console.error('Fetch error:', error);\n    throw error;\n  }\n}\n```\n\nYou can use this pattern to safely perform network requests.",
+    "general": "I'm MSAI! I can help you write code, brainstorm ideas, draft content, or answer questions. Let me know what you'd like to explore!"
+  }
+}

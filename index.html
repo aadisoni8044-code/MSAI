@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>MSAI — Intelligent AI Assistant</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0d0f12">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-dark">
+  <div class="app-container" id="appContainer">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <!-- Top Brand Section -->
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-logo">M</div>
+          <span class="brand-name">MSAI</span>
+        </div>
+        <div class="sidebar-actions">
+          <button class="icon-btn search-trigger-btn" id="sidebarSearchBtn" title="Search Chats (Ctrl+K)" aria-label="Search Chats">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </button>
+          <button class="icon-btn collapse-btn" id="toggleSidebarBtn" title="Toggle Sidebar" aria-label="Toggle Sidebar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- New Chat Button -->
+      <div class="sidebar-new-chat">
+        <button class="btn btn-new-chat" id="newChatBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>New</span>
+        </button>
+      </div>
+
+      <!-- Main Sidebar Navigation -->
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item active" data-nav="chats">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Projects</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="artifacts">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          <span>Artifacts</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="code">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          <span>Code</span>
+        </a>
+        <a href="#" class="nav-item" data-nav="customize">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>Customize</span>
+        </a>
+      </nav>
+
+      <!-- History / Conversations Section -->
+      <div class="sidebar-section">
+        <div class="section-title-row">
+          <span class="section-title">CHATS AND TASKS</span>
+          <span class="badge" id="chatCountBadge">0</span>
+        </div>
+        <div class="search-input-wrapper">
+          <input type="text" id="chatSearchInput" class="chat-search-input" placeholder="Search conversations...">
+        </div>
+        <div class="conversations-list" id="conversationsList">
+          <!-- Conversation list items rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- Bottom User / Footer Section -->
+      <div class="sidebar-footer">
+        <button class="footer-btn" id="designBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+          <span>Design</span>
+        </button>
+        <button class="footer-btn" id="openSettingsBtn" title="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Header Navigation Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open Sidebar">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="model-select-wrapper">
+            <select id="modelSelector" class="model-select" aria-label="Select AI Model">
+              <option value="gemini-2.0-flash">MSAI Flash</option>
+              <option value="gemini-1.5-pro">MSAI Pro</option>
+            </select>
+            <svg class="select-chevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <div class="server-status-pill offline" id="serverStatusBadge">
+            <span class="status-dot"></span>
+            <span class="status-text" id="statusText">Server Offline</span>
+          </div>
+          <button class="icon-btn" id="shortcutsModalBtn" title="Keyboard Shortcuts" aria-label="Keyboard Shortcuts">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M8 16h8"/></svg>
+          </button>
+          <button class="icon-btn" id="headerSettingsBtn" title="Settings" aria-label="Settings">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- Chat Viewport -->
+      <div class="chat-viewport" id="chatViewport">
+        <!-- Welcome View (Shown when conversation is empty) -->
+        <div class="welcome-container" id="welcomeContainer">
+          <h1 class="welcome-title">MSAI</h1>
+          <p class="welcome-subtitle">Your intelligent AI assistant</p>
+          <div class="suggestion-pills-row" id="suggestionPills">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Active Messages View -->
+        <div class="messages-container" id="messagesContainer">
+          <!-- Messages will be injected here -->
+        </div>
+      </div>
+
+      <!-- Bottom Chat Input Bar -->
+      <div class="input-section">
+        <div class="input-container">
+          <div class="input-field-wrapper">
+            <textarea id="chatInput" class="chat-input" placeholder="How can I help you today?" rows="1"></textarea>
+          </div>
+
+          <div class="input-toolbar">
+            <div class="toolbar-left">
+              <button class="tool-btn icon-only" id="attachmentBtn" title="Attach file" aria-label="Attach File">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </button>
+              <div class="mode-pill-toggle">
+                <button class="mode-btn active" data-mode="chat">Chat</button>
+                <button class="mode-btn" data-mode="cowork">Cowork</button>
+              </div>
+            </div>
+
+            <div class="toolbar-right">
+              <button class="tool-btn icon-only" id="voiceBtn" title="Voice Input" aria-label="Voice Input">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              </button>
+              <button class="send-btn" id="sendBtn" title="Send Message (Enter)" aria-label="Send Message" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="input-footer-legend">
+          <span>PRESS ENTER TO SEND</span>
+          <span>SHIFT + ENTER FOR NEW LINE</span>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2>MSAI Settings</h2>
+        <button class="close-modal-btn" data-close="settingsModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="setting-group">
+          <label>Theme</label>
+          <div class="theme-switch-row">
+            <button class="theme-option-btn active" data-theme="dark">Dark</button>
+            <button class="theme-option-btn" data-theme="light">Light</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label for="apiKeyInput">Google Gemini API Key (Optional)</label>
+          <input type="password" id="apiKeyInput" class="form-control" placeholder="YOUR_GOOGLE_API_KEY">
+          <small class="form-hint">Leave blank to use server-configured backend proxy or offline mode.</small>
+        </div>
+
+        <div class="setting-group">
+          <label for="defaultModelSelect">Default Model</label>
+          <select id="defaultModelSelect" class="form-control">
+            <option value="gemini-2.0-flash">MSAI Flash (Recommended)</option>
+            <option value="gemini-1.5-pro">MSAI Pro</option>
+          </select>
+        </div>
+
+        <div class="setting-group">
+          <label>Chat Data Management</label>
+          <button class="btn btn-danger" id="clearAllChatsBtn">Clear All Conversations</button>
+        </div>
+
+        <div class="setting-group about-box">
+          <h3>About MSAI</h3>
+          <p>Version: 1.0.0</p>
+          <p>Next-generation intelligent assistant powered by Google AI technology.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="settingsModal">Cancel</button>
+        <button class="btn btn-primary" id="saveSettingsBtn">Save Settings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Shortcuts Modal -->
+  <div class="modal-backdrop" id="shortcutsModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h2>Keyboard Shortcuts</h2>
+        <button class="close-modal-btn" data-close="shortcutsModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="shortcut-list">
+          <div class="shortcut-item"><kbd>Enter</kbd> <span>Send Message</span></div>
+          <div class="shortcut-item"><kbd>Shift</kbd> + <kbd>Enter</kbd> <span>New Line</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd> + <kbd>K</kbd> <span>Focus Search</span></div>
+          <div class="shortcut-item"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>O</kbd> <span>New Chat</span></div>
+          <div class="shortcut-item"><kbd>Esc</kbd> <span>Close Modals</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <input type="file" id="hiddenFileInput" style="display: none;" accept="image/*,.txt,.json,.md,.js,.css,.html">
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
