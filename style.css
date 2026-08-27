@@ -703,11 +703,11 @@ canvas#gameCanvas {
     color: var(--text-primary);
 }
 
-.biome-tab.active[data-biome="forest"] { border-color: var(--neon-green); color: var(--neon-green); box-shadow: var(--green-glow); }
-.biome-tab.active[data-biome="haunted"] { border-color: var(--neon-purple); color: var(--neon-purple); box-shadow: var(--purple-glow); }
-.biome-tab.active[data-biome="space"] { border-color: var(--neon-cyan); color: var(--neon-cyan); box-shadow: var(--cyan-glow); }
-.biome-tab.active[data-biome="water"] { border-color: var(--neon-pink); color: var(--neon-pink); box-shadow: var(--pink-glow); }
-.biome-tab.active[data-biome="ancient"] { border-color: var(--neon-gold); color: var(--neon-gold); box-shadow: var(--gold-glow); }
+.biome-tab.active[data-biome="forest"] { border-color: #a855f7; color: #a855f7; box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+.biome-tab.active[data-biome="haunted"] { border-color: #c084fc; color: #c084fc; box-shadow: 0 0 15px rgba(192, 132, 252, 0.4); }
+.biome-tab.active[data-biome="space"] { border-color: #818cf8; color: #818cf8; box-shadow: 0 0 15px rgba(129, 140, 248, 0.4); }
+.biome-tab.active[data-biome="water"] { border-color: #d946ef; color: #d946ef; box-shadow: 0 0 15px rgba(217, 70, 239, 0.4); }
+.biome-tab.active[data-biome="ancient"] { border-color: #fbbf24; color: #fbbf24; box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
 
 /* Levels Grid Layout */
 .level-grid {
@@ -1201,61 +1201,82 @@ canvas#gameCanvas {
     transform: translateY(-1px);
 }
 
-/* Shop styles */
+/* Shop screen dark purple gaming theme */
+#shop-screen {
+    background: radial-gradient(circle at center, #1e0e38 0%, #0c051a 100%);
+}
+
+#shop-screen .title-logo {
+    color: #ffffff;
+    text-shadow: 0 0 25px rgba(168, 85, 247, 0.5);
+}
+
+#shop-screen .title-logo span {
+    color: #c084fc;
+    text-shadow: 0 0 25px rgba(192, 132, 252, 0.6);
+}
+
 .shop-balance {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 800;
-    color: var(--neon-gold);
+    color: #fbbf24;
     font-family: var(--font-mono);
     margin-bottom: 8px;
     letter-spacing: 0.5px;
+    background: rgba(15, 9, 32, 0.7);
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    display: inline-block;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .shop-tabs {
     display: flex;
     justify-content: center;
-    gap: 8px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
 }
 
 .shop-tab {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 4px;
-    color: var(--text-muted);
+    background: #160c2c;
+    border: 1px solid rgba(168, 85, 247, 0.3);
+    border-radius: 6px;
+    color: #a78bfa;
     font-weight: 700;
-    font-size: 11px;
+    font-size: 12px;
     letter-spacing: 1px;
-    padding: 8px 16px;
+    padding: 10px 20px;
     cursor: pointer;
     transition: all 0.2s ease;
     font-family: var(--font-mono);
 }
 
 .shop-tab:hover {
-    color: var(--text-primary);
-    border-color: var(--border-strong);
+    color: #ffffff;
+    border-color: #c084fc;
+    background: #231342;
 }
 
 .shop-tab.active {
-    color: #fff;
-    background: var(--bg-elevated);
-    border-color: var(--neon-cyan);
-    box-shadow: var(--cyan-glow);
+    color: #ffffff;
+    background: #3b156b;
+    border-color: #a855f7;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
 }
 
 .skins-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 10px;
+    gap: 12px;
     margin: 10px 0;
     width: 100%;
 }
 
 .skin-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: 4px;
+    background: #150b28;
+    border: 1px solid rgba(168, 85, 247, 0.25);
+    border-radius: 6px;
     padding: 14px;
     text-align: center;
     cursor: pointer;
@@ -1264,25 +1285,28 @@ canvas#gameCanvas {
 }
 
 .skin-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--border-strong);
+    transform: translateY(-3px);
+    border-color: #a855f7;
+    box-shadow: 0 8px 24px rgba(168, 85, 247, 0.25);
+    background: #1e1038;
 }
 
 .skin-card.selected {
-    border-color: var(--neon-cyan);
-    background: var(--bg-elevated);
-    box-shadow: 0 0 15px rgba(34, 211, 238, 0.25);
+    border-color: #c084fc;
+    background: #2a154e;
+    box-shadow: 0 0 20px rgba(192, 132, 252, 0.35);
 }
 
 .skin-card.locked {
-    opacity: 0.65;
+    opacity: 0.7;
+    background: #100720;
 }
 
 .card-lock-icon {
     position: absolute;
     top: 8px;
     right: 8px;
-    font-size: 12px;
+    font-size: 14px;
 }
 
 .skin-preview-canvas-holder {
@@ -1292,43 +1316,46 @@ canvas#gameCanvas {
     display: flex;
     align-items: center;
     justify-content: center;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 4px;
+    border: 1px solid rgba(168, 85, 247, 0.2);
 }
 
 .skin-name {
     font-family: var(--font-display);
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     margin-bottom: 6px;
-    color: var(--text-primary);
+    color: #ffffff;
     letter-spacing: 0.5px;
 }
 
 .skin-status {
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 3px;
+    padding: 4px 10px;
+    border-radius: 4px;
     display: inline-block;
     letter-spacing: 0.5px;
     font-family: var(--font-mono);
 }
 
 .skin-status.locked {
-    background: rgba(251, 191, 36, 0.12);
-    border: 1px solid var(--neon-gold);
-    color: var(--neon-gold);
+    background: rgba(251, 191, 36, 0.15);
+    border: 1px solid #fbbf24;
+    color: #fbbf24;
 }
 
 .skin-status.unlocked {
-    background: rgba(34, 211, 238, 0.12);
-    border: 1px solid var(--neon-cyan);
-    color: var(--neon-cyan);
+    background: rgba(168, 85, 247, 0.15);
+    border: 1px solid #c084fc;
+    color: #c084fc;
 }
 
 .skin-status.equipped {
-    background: rgba(16, 185, 129, 0.12);
-    border: 1px solid var(--neon-green);
-    color: var(--neon-green);
+    background: rgba(16, 185, 129, 0.15);
+    border: 1px solid #10b981;
+    color: #10b981;
 }
 
 /* Daily rewards */

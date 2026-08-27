@@ -318,18 +318,71 @@ function initAudioContext() {
     }
 }
 
-// --- BIOME DETERMINATION ---
-function getBiomeForLevel(lvl) {
+// --- LEVEL THEME & PROGRESSION SYSTEM (100 LEVELS) ---
+function getLevelTheme(lvl) {
     if (currentGameMode !== 'classic') {
-        return window.UI_STATE ? window.UI_STATE.activeBiome : 'forest';
+        return {
+            name: 'ENDLESS SURVIVAL',
+            color: '#a855f7',
+            bgGlow: 'rgba(168, 85, 247, 0.08)',
+            boundColor: 'rgba(168, 85, 247, 0.65)',
+            particleColor: '#c084fc'
+        };
     }
-    if (lvl <= 20) return 'forest';
-    if (lvl <= 40) return 'haunted';
-    if (lvl <= 60) return 'space';
-    if (lvl <= 80) return 'water';
-    return 'ancient';
+
+    const level = Math.max(1, Math.min(100, lvl));
+
+    if (level <= 10) {
+        return {
+            name: `COSMIC PURPLE (${level}/100)`,
+            color: '#a855f7',
+            bgGlow: 'rgba(168, 85, 247, 0.10)',
+            boundColor: 'rgba(168, 85, 247, 0.65)',
+            particleColor: '#c084fc'
+        };
+    } else if (level <= 25) {
+        return {
+            name: `AMETHYST VIOLET (${level}/100)`,
+            color: '#c084fc',
+            bgGlow: 'rgba(192, 132, 252, 0.10)',
+            boundColor: 'rgba(192, 132, 252, 0.65)',
+            particleColor: '#a855f7'
+        };
+    } else if (level <= 50) {
+        return {
+            name: `ROYAL INDIGO (${level}/100)`,
+            color: '#818cf8',
+            bgGlow: 'rgba(129, 140, 248, 0.10)',
+            boundColor: 'rgba(129, 140, 248, 0.65)',
+            particleColor: '#a855f7'
+        };
+    } else if (level <= 75) {
+        return {
+            name: `ELECTRIC NEON (${level}/100)`,
+            color: '#d946ef',
+            bgGlow: 'rgba(217, 70, 239, 0.10)',
+            boundColor: 'rgba(217, 70, 239, 0.65)',
+            particleColor: '#c084fc'
+        };
+    } else if (level <= 99) {
+        return {
+            name: `CYBER VIOLET (${level}/100)`,
+            color: '#38bdf8',
+            bgGlow: 'rgba(56, 189, 248, 0.10)',
+            boundColor: 'rgba(168, 85, 247, 0.70)',
+            particleColor: '#a855f7'
+        };
+    } else {
+        return {
+            name: `ENDGAME MAXIMUM (100/100)`,
+            color: '#fbbf24',
+            bgGlow: 'rgba(251, 191, 36, 0.14)',
+            boundColor: 'rgba(251, 191, 36, 0.85)',
+            particleColor: '#fbbf24'
+        };
+    }
 }
-window.getBiomeForLevel = getBiomeForLevel;
+window.getLevelTheme = getLevelTheme;
 
 // --- STATE COORDINATOR ---
 function setGameState(newState) {
@@ -419,16 +472,17 @@ function initGameElements() {
     player.particles = [];
     player.speedMultiplier = 1.0;
 
-    player.baseSpeed = 390 + (currentLevel * 1.8);
-
-    const activeBiome = getBiomeForLevel(currentLevel);
-    if (activeBiome === 'water') {
-        player.baseSpeed *= 0.88;
-    }
+    player.baseSpeed = 380 + ((currentLevel - 1) * 2.2);
 
     camera.x = 0;
     camera.y = 0;
     camera.targetY = 0;
+
+    const theme = getLevelTheme(currentLevel);
+    const lvlText = document.getElementById('hud-level-text');
+    if (lvlText) {
+        lvlText.innerText = `LEVEL ${currentLevel} - ${theme.name}`;
+    }
 
     generateCourseObstacles();
     initRaceCompetitors();
@@ -449,18 +503,11 @@ function generateCourseObstacles() {
     obstacles = [];
     levelProgress = 0;
 
-    const biome = getBiomeForLevel(currentLevel);
-    const biomeColors = {
-        forest: 'rgba(0, 255, 102, 0.85)',
-        haunted: 'rgba(176, 38, 255, 0.85)',
-        space: 'rgba(0, 243, 255, 0.85)',
-        water: 'rgba(255, 0, 127, 0.85)',
-        ancient: 'rgba(255, 170, 0, 0.85)'
-    };
-    const obsColor = biomeColors[biome] || 'rgba(0, 243, 255, 0.85)';
+    const theme = getLevelTheme(currentLevel);
+    const obsColor = theme.color;
 
     if (currentGameMode === 'classic' || currentGameMode === 'race') {
-        levelLength = 4500 + (currentLevel * 80);
+        levelLength = 4200 + ((currentLevel - 1) * 85);
 
         obstacles.push({
             type: 'gate',
@@ -479,15 +526,16 @@ function generateCourseObstacles() {
             return randVal - Math.floor(randVal);
         };
 
-        const difficulty = currentLevel / 100;
-        const gapSpacing = Math.max(160, 310 - (difficulty * 110));
+        const difficulty = (currentLevel - 1) / 99;
+        const gapSpacing = Math.max(150, 340 - (difficulty * 170));
+        const minGap = Math.max(130, 240 - (difficulty * 95));
 
         while (cursorX < levelLength - 700) {
             const roll = pseudoRand();
 
             if (roll < 0.32) {
                 const isCeiling = pseudoRand() < 0.5;
-                const spikeCount = Math.floor(pseudoRand() * 3) + 1 + Math.floor(difficulty * 2);
+                const spikeCount = currentLevel === 1 ? 1 : Math.floor(pseudoRand() * 3) + 1 + Math.floor(difficulty * 2);
                 const spacing = 42;
 
                 for (let i = 0; i < spikeCount; i++) {
@@ -505,7 +553,6 @@ function generateCourseObstacles() {
 
             } else if (roll < 0.68) {
                 const gapY = 190 + pseudoRand() * 200;
-                const minGap = Math.max(135, 235 - (difficulty * 85));
 
                 obstacles.push({
                     type: 'block',
@@ -578,27 +625,19 @@ function generateCourseObstacles() {
         }
     } else {
         levelLength = 99999999;
-        generateEndlessBuffer(0, 35000, biome);
+        generateEndlessBuffer(0, 35000, theme);
     }
 }
 
-function generateEndlessBuffer(startX, length, biome) {
+function generateEndlessBuffer(startX, length, theme) {
     let cursorX = Math.max(startX, 600);
     const endX = startX + length;
-
-    const colors = {
-        forest: 'rgba(0, 255, 102, 0.85)',
-        haunted: 'rgba(176, 38, 255, 0.85)',
-        space: 'rgba(0, 243, 255, 0.85)',
-        water: 'rgba(255, 0, 127, 0.85)',
-        ancient: 'rgba(255, 170, 0, 0.85)'
-    };
-    const obsColor = colors[biome] || 'rgba(0, 243, 255, 0.85)';
+    const obsColor = theme ? theme.color : '#a855f7';
 
     while (cursorX < endX) {
         const roll = Math.random();
         const distScale = Math.min(1.0, cursorX / 30000);
-        const gapSpacing = Math.max(160, 290 - (distScale * 100));
+        const gapSpacing = Math.max(150, 290 - (distScale * 110));
 
         if (roll < 0.3) {
             const isCeiling = Math.random() < 0.5;
@@ -620,7 +659,7 @@ function generateEndlessBuffer(startX, length, biome) {
 
         } else if (roll < 0.65) {
             const gapY = 190 + Math.random() * 200;
-            const minGap = Math.max(140, 220 - (distScale * 75));
+            const minGap = Math.max(135, 220 - (distScale * 80));
 
             obstacles.push({
                 type: 'block',
@@ -662,53 +701,34 @@ function generateEndlessBuffer(startX, length, biome) {
 // --- AMBIENT DECORATIONS ---
 function initAmbientDecorations() {
     biomeAmbientParticles = [];
-    const count = 30;
-    const biome = getBiomeForLevel(currentLevel);
+    const count = 35;
+    const theme = getLevelTheme(currentLevel);
 
     for (let i = 0; i < count; i++) {
-        biomeAmbientParticles.push(createAmbientParticle(Math.random() * VIRTUAL_WIDTH, biome));
+        biomeAmbientParticles.push(createAmbientParticle(Math.random() * VIRTUAL_WIDTH, theme));
     }
 }
 
-function createAmbientParticle(forceX = null, biome = 'forest') {
+function createAmbientParticle(forceX = null, theme = null) {
+    if (!theme) theme = getLevelTheme(currentLevel);
     const pX = forceX !== null ? forceX : camera.x + VIRTUAL_WIDTH + Math.random() * 100;
     const pY = 40 + Math.random() * (VIRTUAL_HEIGHT - 80);
 
-    const p = {
+    return {
         x: pX,
         y: pY,
         vx: -80 - Math.random() * 40,
         vy: (Math.random() - 0.5) * 30,
-        size: 3 + Math.random() * 5,
-        color: '#00ff66',
+        size: 2.5 + Math.random() * 4.5,
+        color: theme.particleColor || '#c084fc',
         alpha: 0.15 + Math.random() * 0.35,
-        type: biome,
         angle: Math.random() * Math.PI,
         spinSpeed: (Math.random() - 0.5) * 1.5
     };
-
-    if (biome === 'forest') {
-        p.color = Math.random() < 0.5 ? '#00ff66' : '#88ff00';
-    } else if (biome === 'haunted') {
-        p.color = 'rgba(176, 38, 255, 0.3)';
-        p.size = 18 + Math.random() * 20;
-    } else if (biome === 'space') {
-        p.color = Math.random() < 0.5 ? '#00f3ff' : '#ffffff';
-        p.size = 1.5 + Math.random() * 2.5;
-        p.vx = -20 - Math.random() * 20;
-    } else if (biome === 'water') {
-        p.color = 'rgba(255, 255, 255, 0.4)';
-        p.vy = -30 - Math.random() * 30;
-    } else if (biome === 'ancient') {
-        p.color = '#ffaa00';
-        p.size = 3 + Math.random() * 3;
-    }
-
-    return p;
 }
 
 function updateAmbientParticles(dt) {
-    const biome = getBiomeForLevel(currentLevel);
+    const theme = getLevelTheme(currentLevel);
 
     for (let i = biomeAmbientParticles.length - 1; i >= 0; i--) {
         const p = biomeAmbientParticles[i];
@@ -718,7 +738,7 @@ function updateAmbientParticles(dt) {
 
         if (p.x < camera.x - 100) {
             biomeAmbientParticles.splice(i, 1);
-            biomeAmbientParticles.push(createAmbientParticle(null, biome));
+            biomeAmbientParticles.push(createAmbientParticle(null, theme));
         }
     }
 }
@@ -902,12 +922,13 @@ function updateLevelAndCollisions() {
         const currentDist = player.x - startX;
         levelProgress = Math.max(0, Math.min(100, (currentDist / totalDist) * 100));
 
+        const theme = getLevelTheme(currentLevel);
         const bar = document.getElementById('hud-progress-bar');
         const text = document.getElementById('hud-progress-text');
         const lvl = document.getElementById('hud-level-text');
         if (bar) bar.style.width = `${levelProgress}%`;
         if (text) text.innerText = `${Math.floor(levelProgress)}%`;
-        if (lvl) lvl.innerText = `Level ${currentLevel} - ${getBiomeForLevel(currentLevel).toUpperCase()}`;
+        if (lvl) lvl.innerText = `LEVEL ${currentLevel} - ${theme.name}`;
 
         if (player.x >= levelLength - 700) {
             triggerLevelCleared();
@@ -930,7 +951,7 @@ function updateLevelAndCollisions() {
 
         const lastObsX = obstacles.length > 0 ? obstacles[obstacles.length - 1].x : player.x;
         if (lastObsX < player.x + 3000) {
-            generateEndlessBuffer(lastObsX + 250, 10000, window.UI_STATE ? window.UI_STATE.activeBiome : 'forest');
+            generateEndlessBuffer(lastObsX + 250, 10000, getLevelTheme(currentLevel));
         }
 
         if (mDist > 0 && mDist % 20 === 0) {
@@ -1632,15 +1653,8 @@ function render() {
     ctx.save();
     ctx.translate(-camera.x, -camera.y);
 
-    const biome = getBiomeForLevel(currentLevel);
-    const borderColors = {
-        forest: 'rgba(0, 255, 102, 0.4)',
-        haunted: 'rgba(176, 38, 255, 0.4)',
-        space: 'rgba(0, 243, 255, 0.4)',
-        water: 'rgba(255, 0, 127, 0.4)',
-        ancient: 'rgba(255, 170, 0, 0.4)'
-    };
-    const boundCol = borderColors[biome] || 'rgba(0, 243, 255, 0.4)';
+    const theme = getLevelTheme(currentLevel);
+    const boundCol = theme.boundColor || 'rgba(168, 85, 247, 0.65)';
 
     ctx.strokeStyle = boundCol;
     ctx.lineWidth = 4;
@@ -1885,34 +1899,9 @@ function drawAmbientDecorations(ctx) {
 }
 
 function drawBiomeWeatherGlow(ctx) {
-    const biome = getBiomeForLevel(currentLevel);
+    const theme = getLevelTheme(currentLevel);
     ctx.save();
-
-    if (biome === 'forest') {
-        const grad = ctx.createLinearGradient(0, 0, 0, VIRTUAL_HEIGHT);
-        grad.addColorStop(0, 'rgba(0, 255, 102, 0.04)');
-        grad.addColorStop(1, 'transparent');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-    } else if (biome === 'haunted') {
-        const grad = ctx.createRadialGradient(VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, 200, VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 2, VIRTUAL_WIDTH / 2 + 200);
-        grad.addColorStop(0, 'transparent');
-        grad.addColorStop(1, 'rgba(176, 38, 255, 0.12)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-    } else if (biome === 'space') {
-        ctx.fillStyle = 'rgba(0, 243, 255, 0.02)';
-        ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-    } else if (biome === 'water') {
-        const grad = ctx.createLinearGradient(0, 0, 0, VIRTUAL_HEIGHT);
-        grad.addColorStop(0, 'rgba(0, 59, 255, 0.08)');
-        grad.addColorStop(1, 'rgba(0, 243, 255, 0.12)');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-    } else if (biome === 'ancient') {
-        ctx.fillStyle = 'rgba(255, 170, 0, 0.03)';
-        ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
-    }
-
+    ctx.fillStyle = theme.bgGlow;
+    ctx.fillRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
     ctx.restore();
 }
