@@ -1,0 +1,6 @@
+{
+  "name": "MSAI",
+  "description": "Modern full-featured AI Assistant web application with multimodal chat, speech input, code highlighting, markdown rendering, and customizable workspace.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

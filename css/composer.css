@@ -1,0 +1,309 @@
+/**
+ * MSAI - Composer Input Box Styles
+ */
+
+/* Composer Container */
+.composer-dock {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 20px 20px 20px;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 15;
+  background: linear-gradient(to top, var(--bg-app) 75%, transparent);
+}
+
+.composer-container {
+  width: 100%;
+  max-width: var(--composer-max-width);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 18px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: auto;
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.composer-container:focus-within {
+  border-color: rgba(99, 102, 241, 0.5);
+  background-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 20px 45px -10px rgba(79, 70, 229, 0.22);
+}
+
+.composer-container.drag-active {
+  border-color: var(--accent-primary);
+  background-color: rgba(79, 70, 229, 0.1);
+}
+
+.composer-hints-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 8px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: rgba(255, 255, 255, 0.25);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+/* Attachments Previews in Composer */
+.composer-attachments-preview {
+  display: none;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.attachment-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px 4px 4px;
+  background: var(--bg-sidebar);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  max-width: 200px;
+}
+
+.attachment-thumb {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.attachment-file-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-text);
+  background: var(--accent-soft);
+  border-radius: var(--radius-sm);
+}
+
+.attachment-meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.attachment-name {
+  font-size: 11.5px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.attachment-size {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.attachment-remove-btn {
+  color: var(--text-muted);
+  padding: 2px;
+  border-radius: var(--radius-full);
+}
+
+.attachment-remove-btn:hover {
+  color: var(--danger);
+}
+
+/* Main Textarea Area */
+.composer-input-row {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+}
+
+.composer-textarea {
+  width: 100%;
+  min-height: 48px;
+  max-height: 220px;
+  resize: none;
+  padding: 6px 4px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  overflow-y: auto;
+}
+
+.composer-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Bottom Controls Row in Composer */
+.composer-bottom-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.composer-left-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Attachment '+' Button */
+.composer-attach-btn {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  background-color: var(--bg-sidebar-hover);
+  transition: all var(--transition-fast);
+}
+
+.composer-attach-btn:hover {
+  background-color: var(--bg-sidebar-active);
+  color: var(--text-primary);
+}
+
+/* Mode Pills (Matching Screenshot: Chat / Cowork) */
+.mode-toggle-group {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-sidebar-hover);
+  padding: 2px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-subtle);
+}
+
+.mode-toggle-pill {
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: all var(--transition-fast);
+}
+
+.mode-toggle-pill.active {
+  background-color: var(--bg-card);
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.composer-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.token-counter-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-right: 4px;
+}
+
+/* Composer Model Badge */
+.composer-model-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  border-radius: var(--radius-full);
+  background-color: transparent;
+  transition: all var(--transition-fast);
+}
+
+.composer-model-pill:hover {
+  background-color: var(--bg-sidebar-hover);
+  color: var(--text-primary);
+}
+
+.composer-model-badge-sub {
+  font-size: 10.5px;
+  color: var(--text-muted);
+}
+
+/* Voice Mic Button */
+.composer-mic-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  transition: all var(--transition-fast);
+}
+
+.composer-mic-btn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.composer-mic-btn.listening {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* Send & Stop Buttons */
+.composer-send-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.3);
+  transition: all var(--transition-fast);
+}
+
+.composer-send-btn.active {
+  background-color: var(--accent-primary);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+  cursor: pointer;
+}
+
+.composer-send-btn.active:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.composer-stop-btn {
+  display: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background-color: var(--danger);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.35);
+  transition: all var(--transition-fast);
+}
+
+.composer-stop-btn:hover {
+  transform: translateY(-1px);
+}
