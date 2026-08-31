@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Speedy Arrow | Developed by Speedy Games</title>
+    <meta name="description" content="Speedy Arrow - High-octane Neon Geometry Wave Runner Game, Developed by Speedy Games.">
+    <meta property="og:title" content="Speedy Arrow | Developed by Speedy Games">
+    <meta property="og:description" content="Speedy Arrow - High-octane Neon Geometry Wave Runner Game, Developed by Speedy Games.">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="game-container">
+        <!-- Main HTML5 Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Transparent gameplay input overlay -->
+        <div id="input-overlay" class="hidden"></div>
+
+        <!-- MAIN MENU SCREEN -->
+        <div id="main-menu-screen" class="screen">
+            <!-- System Telemetry Bar (Geometric Balance) -->
+            <div class="system-telemetry-bar">
+                <div class="telemetry-left">
+                    <span class="telemetry-dot"></span>
+                    <span class="telemetry-tag">ENGINE v2.4.0 // GEOMETRIC_BALANCE // STABLE</span>
+                </div>
+                <div class="telemetry-right">
+                    <span class="telemetry-stat">SYS_OPTIMIZATION <strong class="telemetry-val">99.4%</strong></span>
+                    <span class="telemetry-stat">STATUS <strong class="telemetry-val ready">READY</strong></span>
+                </div>
+            </div>
+
+            <!-- Header widgets row -->
+            <div class="menu-header-row">
+                <div class="glass-panel profile-card-mini" onclick="window.navigateToProfileScreen()">
+                    <div class="profile-avatar">👤</div>
+                    <div class="profile-info-mini">
+                        <span id="header-username" class="profile-name-mini">Rider_01</span>
+                        <span id="header-rating" class="profile-rating-mini">RATING: 1000</span>
+                        <span id="header-uid" class="profile-rating-mini" style="color: var(--neon-gold); font-size: 10px;">UID: --------</span>
+                    </div>
+                </div>
+
+                <div class="economy-widgets">
+                    <div class="glass-panel widget-item streak" onclick="document.getElementById('daily-rewards-modal').classList.add('active')">
+                        <span>🔥</span> <span class="streak-days-val">1</span> Days
+                    </div>
+                    <div class="glass-panel widget-item coins" onclick="window.navigateToShopScreen()">
+                        <span>🪙</span> <span class="plo-coins-val">50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Title Logo -->
+            <div class="title-container">
+                <div class="title-eyebrow font-mono">// PROJECT_POLISH / NEON-STRIKE</div>
+                <h1 class="title-logo">Speedy<span> Arrow</span></h1>
+                <div class="subtitle">Neon Geometry Wave Runner</div>
+            </div>
+
+            <!-- Main Menu Buttons -->
+            <div class="main-buttons-container">
+                <button id="menu-start-btn" class="menu-action-btn primary" onclick="window.openGameModes()">
+                    <span>🎮</span> START GAME
+                </button>
+                <button id="menu-shop-btn" class="menu-action-btn shop" onclick="window.navigateToShopScreen()">
+                    <span>🛒</span> SKIN SHOP
+                </button>
+                <button id="menu-settings-btn" class="menu-action-btn settings" onclick="window.openSettingsOverlay()">
+                    <span>⚙️</span> SETTINGS
+                </button>
+            </div>
+
+            <!-- Footer Social Links -->
+            <div class="menu-footer-row">
+                <div class="footer-telemetry font-mono">// ADDR: 0x7FFD2A8B49E2 // SPEEDY_GAMES</div>
+                <div class="social-links">
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="GitHub">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+                        </svg>
+                    </a>
+                    <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="LinkedIn">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
+                        </svg>
+                    </a>
+                    <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-btn" title="X (Twitter)">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME MODES SCREEN -->
+        <div id="game-modes-screen" class="screen hidden">
+            <button class="back-btn" onclick="window.openMainMenu()">← MENU</button>
+
+            <div class="title-container">
+                <h2 class="title-logo" style="font-size: 42px;">Game Modes</h2>
+                <div class="subtitle">Select your run type</div>
+            </div>
+
+            <div class="cards-container">
+                <div class="glass-panel mode-card classic-card" onclick="window.openLevelSelect()">
+                    <div class="mode-icon">🏆</div>
+                    <div class="mode-title">Classic</div>
+                    <div class="mode-desc">Survive through 100 thematic levels divided across 5 unique visual biomes.</div>
+                </div>
+
+                <div class="glass-panel mode-card endless-card" onclick="window.launchEndlessMode()">
+                    <div class="mode-icon">⚡</div>
+                    <div class="mode-title">Endless</div>
+                    <div class="mode-desc">Dynamic procedurally generated course. Speed and density increase infinitely as you fly.</div>
+                    <div id="endless-high-score-v2" class="best-score-tag">Earn Coins as You Fly</div>
+                </div>
+
+                <div class="glass-panel mode-card race-card" onclick="window.launchRaceMode()">
+                    <div class="mode-icon">🏁</div>
+                    <div class="mode-title">Race</div>
+                    <div class="mode-desc">Face off in real-time speedways against 4 smart geometry drone competitors.</div>
+                    <div id="race-wins-v2" class="best-score-tag">Championship Tournament</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEVEL SELECTION SCREEN (100 LEVELS ACROSS 5 BIOMES) -->
+        <div id="level-select-screen" class="screen hidden">
+            <button class="back-btn" onclick="window.openMainMenu()">← MENU</button>
+
+            <div class="title-container">
+                <h2 class="title-logo" style="font-size: 38px;">Level Selection</h2>
+                <div class="subtitle">100 Biome Campaigns</div>
+            </div>
+
+            <div class="biomes-nav">
+                <div class="biome-tab active" data-biome="forest" onclick="window.selectBiome('forest')">💜 COSMIC (1-20)</div>
+                <div class="biome-tab" data-biome="haunted" onclick="window.selectBiome('haunted')">🔮 AMETHYST (21-40)</div>
+                <div class="biome-tab" data-biome="space" onclick="window.selectBiome('space')">💙 INDIGO (41-60)</div>
+                <div class="biome-tab" data-biome="water" onclick="window.selectBiome('water')">⚡ ELECTRIC (61-80)</div>
+                <div class="biome-tab" data-biome="ancient" onclick="window.selectBiome('ancient')">👑 ENDGAME (81-100)</div>
+            </div>
+
+            <div id="level-grid-v2" class="level-grid"></div>
+        </div>
+
+        <!-- HUD IN-GAME OVERLAY -->
+        <div id="hud">
+            <div class="hud-top">
+                <button class="hud-btn pause-btn" onclick="window.pauseGame()">⏸</button>
+
+                <div class="hud-center-info">
+                    <div id="hud-level-text" class="hud-level-indicator">LEVEL 1 - COSMIC PURPLE (1/100)</div>
+                    <div class="progress-container">
+                        <div id="hud-progress-bar" class="progress-bar"></div>
+                        <div id="hud-progress-text" class="progress-text">0%</div>
+                    </div>
+                </div>
+
+                <div class="practice-toggle-box">
+                    <input type="checkbox" id="practice-mode-chk" onchange="window.togglePracticeMode(this.checked)">
+                    <label for="practice-mode-chk" class="practice-checkbox-custom"></label>
+                    <label for="practice-mode-chk" class="practice-label">PRACTICE</label>
+                </div>
+            </div>
+
+            <div class="hud-top" style="justify-content: space-between; align-items: flex-end; width: 100%;">
+                <div id="race-leaderboard" class="hud-leaderboard">
+                    <div class="leaderboard-title">Race Leaderboard</div>
+                    <div id="leaderboard-list"></div>
+                </div>
+
+                <div id="practice-controls" class="hud-practice-controls" style="visibility: hidden;">
+                    <button class="hud-btn practice-action-btn place" onclick="window.placeCheckpoint()">
+                        🟢 CHECKPOINT
+                    </button>
+                    <button class="hud-btn practice-action-btn clear" onclick="window.clearCheckpoints()">
+                        🔴 CLEAR
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAUSE MODAL -->
+        <div id="pause-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-cyan);">
+                <h2 class="modal-title" style="color: var(--neon-cyan); text-shadow: var(--cyan-glow);">PAUSED</h2>
+                <div class="modal-stats">
+                    <div class="stat-line">
+                        <span>Current Progress</span>
+                        <span id="pause-progress-val" class="val">0%</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Game Mode</span>
+                        <span id="pause-mode-val" class="val">CLASSIC</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" style="background: var(--neon-cyan); color: #010404;" onclick="window.resumeGame()">RESUME</button>
+                    <button class="modal-btn secondary" onclick="window.restartLevel()">RESTART</button>
+                    <button class="modal-btn secondary" onclick="window.quitToMenu()">QUIT TO MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- GAME OVER CRASHED MODAL -->
+        <div id="gameover-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-pink);">
+                <h2 class="modal-title fail">CRASHED</h2>
+                <div class="modal-stats">
+                    <div class="stat-line">
+                        <span>Final Progress</span>
+                        <span id="fail-progress-val" class="val">0%</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Score Rank</span>
+                        <span id="fail-score-val" class="val">0m</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button class="modal-btn primary" style="background: var(--neon-pink); color: #fff;" onclick="window.restartLevel()">RETRY RUN</button>
+                    <button class="modal-btn secondary" onclick="window.quitToMenu()">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEVEL COMPLETE / VICTORY MODAL -->
+        <div id="win-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-cyan);">
+                <h2 class="modal-title win">CLEARED</h2>
+                <div class="modal-stats">
+                    <div class="stat-line">
+                        <span>Completed Level</span>
+                        <span id="win-mode-val" class="val">Level 1</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Attempts</span>
+                        <span id="win-attempts-val" class="val">1</span>
+                    </div>
+                    <div class="stat-line" style="color: var(--neon-gold);">
+                        <span>Reward</span>
+                        <span class="val">🪙 +100 Speedy Coins</span>
+                    </div>
+                </div>
+                <div class="modal-buttons">
+                    <button id="win-next-btn" class="modal-btn primary" style="background: var(--neon-cyan); color: #010404;" onclick="window.nextLevel()">NEXT MAP</button>
+                    <button class="modal-btn secondary" onclick="window.quitToMenu()">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SKIN SHOP SCREEN -->
+        <div id="shop-screen" class="screen hidden">
+            <button class="back-btn" onclick="window.openMainMenu()">← MENU</button>
+
+            <div class="title-container">
+                <h2 class="title-logo" style="font-size: 38px;">Skin Shop</h2>
+                <div class="subtitle">Customize Your Vehicle & Wave Trails</div>
+            </div>
+
+            <div style="width: 100%; max-width: 800px; margin: auto; display: flex; flex-direction: column; gap: 8px; z-index: 12; overflow-y: auto; max-height: 70vh;">
+                <div class="shop-balance">
+                    Balance: 🪙 <span class="plo-coins-val">0</span> Speedy Coins
+                </div>
+
+                <div class="shop-tabs">
+                    <button class="shop-tab active" data-tab="skins" onclick="window.switchShopTab('skins')">✨ SKINS</button>
+                    <button class="shop-tab" data-tab="trails" onclick="window.switchShopTab('trails')">💫 TRAILS</button>
+                    <button class="shop-tab" data-tab="colors" onclick="window.switchShopTab('colors')">🌈 COLORS</button>
+                </div>
+
+                <div id="shop-skins-grid" class="skins-grid"></div>
+            </div>
+        </div>
+
+        <!-- PLAYER PROFILE SCREEN -->
+        <div id="profile-screen" class="screen hidden">
+            <button class="back-btn" onclick="window.openMainMenu()">← MENU</button>
+
+            <div class="title-container">
+                <h2 class="title-logo" style="font-size: 38px;">Player Profile</h2>
+                <div class="subtitle">Personal Statistics & ELO Skill Rating</div>
+            </div>
+
+            <div style="width: 100%; max-width: 600px; margin: auto; display: flex; flex-direction: column; gap: 12px; z-index: 12; overflow-y: auto; max-height: 70vh; padding-right: 5px;">
+                <div class="glass-panel" style="display: flex; align-items: center; gap: 18px; padding: 18px; text-align: left;">
+                    <div style="position: relative; width: 68px; height: 68px; flex-shrink: 0;">
+                        <div class="profile-avatar-large" onclick="document.getElementById('avatarUpload').click()" style="cursor: pointer; width: 100%; height: 100%; font-size: 28px;" title="Click to upload avatar">👤</div>
+                    </div>
+                    <input type="file" id="avatarUpload" accept="image/*" style="display: none;" onchange="window.uploadProfilePicture(this)">
+
+                    <div style="display: flex; flex-direction: column; gap: 4px; flex-grow: 1;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <input type="text" id="profile-username-val" value="Rider_01" onchange="window.updateProfileUsername(this.value)" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(0, 243, 255, 0.4); border-radius: 6px; color: #fff; font-family: 'Orbitron', sans-serif; font-size: 16px; font-weight: bold; padding: 4px 8px; width: 160px;">
+                            <span style="font-size: 14px;">✏️</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #a4c4c1;">
+                            <span>Region:</span>
+                            <select id="profile-country-val" onchange="window.updateProfileCountry(this.value)" style="background: #030a09; border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
+                                <option value="USA">🇺🇸 USA</option>
+                                <option value="IND">🇮🇳 IND</option>
+                                <option value="GBR">🇬🇧 GBR</option>
+                                <option value="JPN">🇯🇵 JPN</option>
+                                <option value="DEU">🇩🇪 DEU</option>
+                            </select>
+                        </div>
+                        <div id="profile-uid-display" style="font-family: 'Orbitron', sans-serif; font-size: 12px; color: var(--neon-gold); font-weight: bold;">UID: --------</div>
+                    </div>
+                </div>
+
+                <div class="modal-stats" style="margin: 0;">
+                    <div class="stat-line">
+                        <span>Championship ELO Skill Rating</span>
+                        <span id="profile-rating-display" class="val" style="color: var(--neon-cyan);">1000</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Campaign Completion</span>
+                        <span id="profile-completed-display" class="val">0 / 100</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Perfect Flawless Runs</span>
+                        <span id="profile-perfects-display" class="val" style="color: var(--neon-gold);">0</span>
+                    </div>
+                    <div class="stat-line">
+                        <span>Total Crashes Recorded</span>
+                        <span id="profile-crashes-display" class="val" style="color: var(--neon-pink);">0</span>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="padding: 12px; font-size: 12px; color: #a4c4c1; text-align: center;">
+                    Speedy Arrow • Developed by Speedy Games
+                </div>
+            </div>
+        </div>
+
+        <!-- SEARCH SCREEN -->
+        <div id="search-screen" class="screen hidden">
+            <button class="back-btn" onclick="window.openMainMenu()">← MENU</button>
+
+            <div class="title-container">
+                <h2 class="title-logo" style="font-size: 38px;">Rider Search</h2>
+                <div class="subtitle">Query Players by 8-Digit UID</div>
+            </div>
+
+            <div style="width: 100%; max-width: 550px; display: flex; flex-direction: column; gap: 14px; margin: auto; z-index: 12;">
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="social-search-input" placeholder="Enter 8-Digit Player ID..." style="flex-grow: 1; background: rgba(0,0,0,0.5); border: 1.5px solid rgba(0, 243, 255, 0.4); border-radius: 8px; color: #fff; padding: 10px 14px; font-size: 15px; font-family: 'Orbitron', sans-serif; outline: none; text-align: center; letter-spacing: 1.5px;">
+                    <button class="settings-btn" onclick="window.searchPlayersByUID(document.getElementById('social-search-input').value)" style="border-color: var(--neon-cyan);">SEARCH</button>
+                </div>
+                <div id="social-search-results" class="glass-panel" style="padding: 18px; text-align: center; min-height: 90px; display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 13px; color: #a4c4c1;">
+                    Enter an 8-digit Player ID above to search...
+                </div>
+            </div>
+        </div>
+
+        <!-- SETTINGS OVERLAY -->
+        <div id="settings-overlay" class="modal-overlay">
+            <div class="modal-content settings-content">
+                <button class="modal-close-btn" onclick="window.closeSettingsOverlay()">&times;</button>
+                <h2 class="modal-title" style="color: var(--neon-cyan); text-shadow: var(--cyan-glow); font-size: 28px; margin-bottom: 16px;">SETTINGS</h2>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">Sound Settings</div>
+                    <button id="settings-audio-toggle" class="settings-btn" style="width: 100%; padding: 12px;" onclick="window.toggleAudioInSettings()">
+                        <span>🔊</span> AUDIO: ON
+                    </button>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">Display Mode</div>
+                    <button id="settings-fullscreen-toggle" class="settings-btn" style="width: 100%; padding: 12px;" onclick="window.toggleFullscreenInSettings()">
+                        <span>🖥️</span> TOGGLE FULLSCREEN
+                    </button>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">Controls Reference</div>
+                    <div style="font-size: 13px; color: #a4c4c1; line-height: 1.6; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+                        <div>• <strong>Hold Space / W / Up / Touch</strong>: Wave Flies Upward</div>
+                        <div>• <strong>Release</strong>: Wave Dives Downward</div>
+                        <div>• <strong>A / D or Left / Right</strong>: Steer Horizontal Offset</div>
+                        <div>• <strong>Escape</strong>: Pause / Resume</div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <div class="settings-section-title">Data Management</div>
+                    <button class="settings-btn" style="width: 100%; border-color: rgba(255, 0, 127, 0.4); color: var(--neon-pink);" onclick="window.resetGameProgress()">
+                        <span>🗑️</span> RESET GAME DATA
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- DAILY REWARDS POPUP MODAL -->
+        <div id="daily-rewards-modal" class="modal-overlay">
+            <div class="modal-content" style="border-color: var(--neon-gold); max-width: 440px;">
+                <h2 class="modal-title" style="color: var(--neon-gold); text-shadow: var(--gold-glow); font-size: 28px;">DAILY STREAK</h2>
+                <div class="modal-subtitle">Consecutive Daily Login Bonuses</div>
+
+                <div style="font-size: 16px; margin-bottom: 10px; color: #fff;">
+                    Active Streak: <span id="reward-popup-streak" style="color: var(--neon-pink); font-size: 24px; font-weight: 900; font-family: 'Orbitron', sans-serif;">1</span> Days!
+                </div>
+                <div style="font-size: 14px; color: var(--neon-green); font-weight: 700; margin-bottom: 16px;">
+                    Bonus: +<span id="reward-popup-coins">50</span> Speedy Coins!
+                </div>
+
+                <div class="daily-rewards-container">
+                    <div id="reward-day-1" class="reward-day-box claimed">
+                        <span class="reward-day-title">Day 1</span>
+                        <span class="reward-amount">🪙50</span>
+                        <span class="reward-status-icon">✓</span>
+                    </div>
+                    <div id="reward-day-2" class="reward-day-box">
+                        <span class="reward-day-title">Day 2</span>
+                        <span class="reward-amount">🪙100</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                    <div id="reward-day-3" class="reward-day-box">
+                        <span class="reward-day-title">Day 3</span>
+                        <span class="reward-amount">🪙150</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                    <div id="reward-day-4" class="reward-day-box">
+                        <span class="reward-day-title">Day 4</span>
+                        <span class="reward-amount">🪙200</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                    <div id="reward-day-5" class="reward-day-box">
+                        <span class="reward-day-title">Day 5</span>
+                        <span class="reward-amount">🪙250</span>
+                        <span class="reward-status-icon">○</span>
+                    </div>
+                </div>
+
+                <div class="modal-buttons" style="margin-top: 16px;">
+                    <button class="modal-btn primary" style="background: var(--neon-gold); color: #010404;" onclick="document.getElementById('daily-rewards-modal').classList.remove('active')">
+                        COLLECT
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST NOTIFICATION CONTAINER -->
+        <div id="toast-container"></div>
+    </div>
+
+    <!-- Core Game Scripts -->
+    <script type="module" src="ui.js"></script>
+    <script type="module" src="game-engine.js"></script>
+    <script type="module" src="main.js"></script>
+    <script type="module" src="google.js"></script>
+
+</body>
+
+</html>
