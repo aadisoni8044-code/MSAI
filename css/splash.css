@@ -1,0 +1,118 @@
+/* Full screen splash container */
+#splash-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background-color: #0d0e12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#splash-screen.fade-out {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  padding: 20px;
+  max-width: 90vw;
+}
+
+/* MSAI Logo - Main Visual Focus, VERY LARGE */
+.splash-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.85);
+  animation: splashMsaiIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
+}
+
+.splash-logo-img {
+  max-width: min(420px, 80vw);
+  max-height: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 35px var(--accent-glow));
+}
+
+/* Fallback text logo if image fails */
+.splash-msai-text {
+  font-size: clamp(3rem, 10vw, 5.5rem);
+  font-weight: 800;
+  letter-spacing: 2px;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, var(--accent-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px var(--accent-glow);
+}
+
+/* Nvisov - Smaller, positioned subtly below MSAI */
+.splash-sub-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: splashNvisovIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.0s forwards;
+}
+
+.splash-nvisov-img {
+  max-width: min(160px, 45vw);
+  max-height: 48px;
+  object-fit: contain;
+  opacity: 0.9;
+}
+
+.splash-nvisov-text {
+  font-size: clamp(1rem, 3.5vw, 1.4rem);
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 1.5px;
+}
+
+@keyframes splashMsaiIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes splashNvisovIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 0.85;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash-logo-container,
+  .splash-sub-container {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
+  #splash-screen {
+    transition-duration: 0.1s !important;
+  }
+}

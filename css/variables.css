@@ -1,0 +1,158 @@
+:root {
+  /* Default Accent Palette (Blue) */
+  --accent-color: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-active: #1d4ed8;
+  --accent-soft: rgba(59, 130, 246, 0.15);
+  --accent-glow: rgba(59, 130, 246, 0.35);
+  --accent-text: #ffffff;
+
+  /* Typography */
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-mono: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Radii */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Elevation Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 20px var(--accent-glow);
+}
+
+/* 10 Accent Colors Map */
+[data-accent="blue"] {
+  --accent-color: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-active: #1d4ed8;
+  --accent-soft: rgba(59, 130, 246, 0.15);
+  --accent-glow: rgba(59, 130, 246, 0.35);
+}
+
+[data-accent="purple"] {
+  --accent-color: #8b5cf6;
+  --accent-hover: #7c3aed;
+  --accent-active: #6d28d9;
+  --accent-soft: rgba(139, 92, 246, 0.15);
+  --accent-glow: rgba(139, 92, 246, 0.35);
+}
+
+[data-accent="cyan"] {
+  --accent-color: #06b6d4;
+  --accent-hover: #0891b2;
+  --accent-active: #0e7490;
+  --accent-soft: rgba(6, 182, 212, 0.15);
+  --accent-glow: rgba(6, 182, 212, 0.35);
+}
+
+[data-accent="green"] {
+  --accent-color: #10b981;
+  --accent-hover: #059669;
+  --accent-active: #047857;
+  --accent-soft: rgba(16, 185, 129, 0.15);
+  --accent-glow: rgba(16, 185, 129, 0.35);
+}
+
+[data-accent="orange"] {
+  --accent-color: #f97316;
+  --accent-hover: #ea580c;
+  --accent-active: #c2410c;
+  --accent-soft: rgba(249, 115, 22, 0.15);
+  --accent-glow: rgba(249, 115, 22, 0.35);
+}
+
+[data-accent="pink"] {
+  --accent-color: #ec4899;
+  --accent-hover: #db2777;
+  --accent-active: #be185d;
+  --accent-soft: rgba(236, 72, 153, 0.15);
+  --accent-glow: rgba(236, 72, 153, 0.35);
+}
+
+[data-accent="red"] {
+  --accent-color: #ef4444;
+  --accent-hover: #dc2626;
+  --accent-active: #b91c1c;
+  --accent-soft: rgba(239, 68, 68, 0.15);
+  --accent-glow: rgba(239, 68, 68, 0.35);
+}
+
+[data-accent="gold"] {
+  --accent-color: #eab308;
+  --accent-hover: #ca8a04;
+  --accent-active: #a16207;
+  --accent-soft: rgba(234, 179, 8, 0.15);
+  --accent-glow: rgba(234, 179, 8, 0.35);
+}
+
+[data-accent="indigo"] {
+  --accent-color: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-active: #4338ca;
+  --accent-soft: rgba(99, 102, 241, 0.15);
+  --accent-glow: rgba(99, 102, 241, 0.35);
+}
+
+[data-accent="teal"] {
+  --accent-color: #14b8a6;
+  --accent-hover: #0d9488;
+  --accent-active: #0f766e;
+  --accent-soft: rgba(20, 184, 166, 0.15);
+  --accent-glow: rgba(20, 184, 166, 0.35);
+}
+
+/* Dark Theme (Default) */
+[data-theme="dark"], html {
+  --bg-primary: #0f1015;
+  --bg-secondary: #171922;
+  --bg-tertiary: #202430;
+  --bg-hover: #292d3e;
+  --bg-active: #32374c;
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --border-color: #272a38;
+  --border-subtle: #1e212d;
+
+  --card-bg: #151720;
+  --input-bg: #1a1d28;
+  --input-border: #2e3346;
+
+  --sidebar-bg: #11131b;
+  --navbar-bg: rgba(15, 16, 21, 0.85);
+}
+
+/* Light Theme */
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: #f1f5f9;
+  --bg-hover: #e2e8f0;
+  --bg-active: #cbd5e1;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+
+  --border-color: #e2e8f0;
+  --border-subtle: #f1f5f9;
+
+  --card-bg: #ffffff;
+  --input-bg: #f8fafc;
+  --input-border: #cbd5e1;
+
+  --sidebar-bg: #f1f5f9;
+  --navbar-bg: rgba(248, 250, 252, 0.85);
+}

@@ -1,0 +1,106 @@
+{
+  "app": {
+    "name": "MSAI",
+    "company": "Nvisov",
+    "tagline": "अगली पीढ़ी का AI सहायक"
+  },
+  "nav": {
+    "newChat": "नई बातचीत",
+    "chats": "बातचीत और कार्य",
+    "projects": "प्रोजेक्ट्स",
+    "artifacts": "आर्टिफैक्ट्स",
+    "code": "कोड",
+    "customize": "कस्टमाइज़ करें",
+    "promptLibrary": "प्रॉम्प्ट लाइब्रेरी",
+    "promptBuilder": "प्रॉम्प्ट बिल्डर",
+    "savedPrompts": "सहेजे गए प्रॉम्प्ट",
+    "settings": "सेटिंग्स",
+    "design": "डिज़ाइन",
+    "search": "खोजें...",
+    "youtube": "यूट्यूब",
+    "watchNvisov": "Nvisov देखें / फॉलो करें"
+  },
+  "status": {
+    "serverOnline": "सर्वर ऑनलाइन",
+    "serverOffline": "सर्वर ऑफलाइन",
+    "connected": "कनेक्टेड",
+    "disconnected": "डिसकनेक्टेड"
+  },
+  "hero": {
+    "greeting": "आज मैं आपकी क्या सहायता कर सकता हूँ?",
+    "chips": {
+      "code": "कोड",
+      "write": "लिखें",
+      "learn": "सीखें",
+      "life": "दैनिक कार्य",
+      "choice": "MSAI की पसंद"
+    }
+  },
+  "composer": {
+    "placeholder": "MSAI को संदेश भेजें...",
+    "send": "भेजें",
+    "stop": "रोकें",
+    "modeChat": "चैट",
+    "modeCowork": "सह-कार्य",
+    "hint": "भेजने के लिए ENTER दबाएं | नई लाइन के लिए SHIFT + ENTER",
+    "enhance": "प्रॉम्प्ट सुधारें"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "general": "सामान्य",
+    "appearance": "रंग-रूप",
+    "language": "भाषा",
+    "apiConfig": "API कॉन्फ़िगरेशन",
+    "about": "MSAI के बारे में",
+    "theme": "थीम",
+    "themeDark": "डार्क",
+    "themeLight": "लाइट",
+    "themeSystem": "सिस्टम",
+    "accentColor": "मुख्य रंग",
+    "selectLanguage": "भाषा चुनें",
+    "apiKeyLabel": "गूगल AI API कुंजी",
+    "apiKeyPlaceholder": "गूगल AI कुंजी दर्ज करें",
+    "testConnection": "कनेक्शन जांचें",
+    "saveSettings": "सेटिंग्स सहेजें",
+    "clearHistory": "इतिहास साफ़ करें",
+    "youtubeLink": "आधिकारिक यूट्यूब चैनल"
+  },
+  "prompts": {
+    "libraryTitle": "प्रॉम्प्ट लाइब्रेरी",
+    "builderTitle": "प्रॉम्प्ट बिल्डर",
+    "goal": "लक्ष्य",
+    "role": "भूमिका",
+    "context": "संदर्भ",
+    "task": "कार्य",
+    "constraints": "सीमाएं",
+    "tone": "शैली",
+    "outputFormat": "आउटपुट प्रारूप",
+    "examples": "उदाहरण",
+    "generatePrompt": "प्रॉम्प्ट बनाएं",
+    "improvePrompt": "प्रॉम्प्ट सुधारें",
+    "usePrompt": "उपयोग करें",
+    "savePrompt": "सहेजें",
+    "copy": "कॉपी करें"
+  },
+  "colors": {
+    "blue": "नीला",
+    "purple": "बैंगनी",
+    "cyan": "स्यान",
+    "green": "हरा",
+    "orange": "नारंगी",
+    "pink": "गुलाबी",
+    "red": "लाल",
+    "gold": "सुनहरा",
+    "indigo": "इंडिगो",
+    "teal": "टील"
+  },
+  "messages": {
+    "copied": "क्लिपबोर्ड पर कॉपी किया गया!",
+    "saved": "सफलतापूर्वक सहेजा गया!",
+    "deleted": "बातचीत हटाई गई।",
+    "cleared": "इतिहास साफ़ किया गया।",
+    "settingsSaved": "सेटिंग्स सहेजी गईं।",
+    "apiSuccess": "API कनेक्शन सफल!",
+    "apiError": "API कनेक्शन विफल। ऑफलाइन मोड चालू है।"
+  }
+}

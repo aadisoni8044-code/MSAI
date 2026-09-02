@@ -1,0 +1,16 @@
+{
+  "name": "MSAI",
+  "short_name": "MSAI",
+  "description": "Next-Gen AI Assistant by Nvisov",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1015",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "assets/branding/msai-logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

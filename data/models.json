@@ -1,0 +1,20 @@
+{
+  "models": [
+    {
+      "id": "msai-flash",
+      "name": "MSAI Flash",
+      "tagline": "Fast & intelligent for daily tasks",
+      "geminiModel": "gemini-2.5-flash",
+      "speed": "Ultra Fast",
+      "capabilities": ["General Chat", "Coding", "Quick Answers", "Summarization"]
+    },
+    {
+      "id": "msai-pro",
+      "name": "MSAI Pro",
+      "tagline": "Advanced reasoning & deep creative work",
+      "geminiModel": "gemini-2.5-pro",
+      "speed": "Deep Reasoning",
+      "capabilities": ["Complex Code", "Data Analysis", "Creative Writing", "Deep Problem Solving"]
+    }
+  ]
+}
