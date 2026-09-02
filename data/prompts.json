@@ -1,0 +1,74 @@
+{
+  "prompts": [
+    {
+      "id": "p1",
+      "title": "Code Refactoring Expert",
+      "category": "coding",
+      "description": "Refactor code for performance, readability, and modern best practices.",
+      "template": "Act as a senior software architect. Review and refactor the following code snippet to improve performance, maintainability, and security. Explain key changes clearly:\n\n```[language]\n[insert code]\n```"
+    },
+    {
+      "id": "p2",
+      "title": "Bug Hunter & Debugger",
+      "category": "coding",
+      "description": "Identify edge cases, bugs, and potential race conditions in your code.",
+      "template": "Analyze this code snippet for potential bugs, logical errors, memory leaks, or race conditions. Provide step-by-step diagnostic reasoning and corrected code:\n\n```[language]\n[insert code]\n```"
+    },
+    {
+      "id": "p3",
+      "title": "Executive Business Strategy",
+      "category": "business",
+      "description": "Formulate a SWOT analysis and actionable growth plan.",
+      "template": "Act as a top management consultant. Perform a detailed SWOT analysis and strategic growth plan for a business operating in the [industry] sector targeting [target market]."
+    },
+    {
+      "id": "p4",
+      "title": "High-Converting Ad Copy",
+      "category": "marketing",
+      "description": "Write persuasive ad copy using the AIDA framework.",
+      "template": "Draft 3 variations of high-converting ad copy for [product/service]. Apply the AIDA (Attention, Interest, Desire, Action) framework and include a strong call-to-action."
+    },
+    {
+      "id": "p5",
+      "title": "Interactive Study Tutor",
+      "category": "education",
+      "description": "Break down complex academic concepts into simple analogies.",
+      "template": "Explain [complex topic] as if I am a college student. Use simple analogies, real-world examples, and end with 3 review questions to test my understanding."
+    },
+    {
+      "id": "p6",
+      "title": "SEO Article Outliner",
+      "category": "writing",
+      "description": "Generate comprehensive long-form content outlines with target keywords.",
+      "template": "Create a comprehensive SEO-optimized article outline for '[topic]'. Include target subheadings (H1, H2, H3), bullet points for key concepts, and suggested internal linking opportunities."
+    },
+    {
+      "id": "p7",
+      "title": "Daily Focus & Sprint Planner",
+      "category": "productivity",
+      "description": "Organize daily tasks into Eisenhower Matrix priority quadrants.",
+      "template": "I have the following tasks for today: [list tasks]. Organize them into the Eisenhower Matrix (Urgent/Important) and draft a time-blocked daily schedule."
+    },
+    {
+      "id": "p8",
+      "title": "Academic Literature Summarizer",
+      "category": "research",
+      "description": "Extract core findings, methodology, and limitations from research abstracts.",
+      "template": "Summarize the key findings, research methodology, data sets, and potential limitations from the following academic paper context:\n\n[insert text/abstract]"
+    },
+    {
+      "id": "p9",
+      "title": "Worldbuilding & Lore Generator",
+      "category": "creative",
+      "description": "Create immersive worldbuilding elements for fantasy or sci-fi storytelling.",
+      "template": "Design a unique sci-fi/fantasy faction or city with distinct cultural norms, technological level, economic foundations, and key historical conflicts."
+    },
+    {
+      "id": "p10",
+      "title": "Viral Thread Creator",
+      "category": "social-media",
+      "description": "Craft engaging 7-part social media threads.",
+      "template": "Write a viral 7-post thread explaining [key concept or case study]. Start with an irresistible hook, provide actionable takeaways in the body, and conclude with an engaging question."
+    }
+  ]
+}

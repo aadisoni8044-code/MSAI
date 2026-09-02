@@ -1,0 +1,11 @@
+{
+  "appName": "MSAI",
+  "company": "Nvisov",
+  "youtubeUrl": "https://www.youtube.com/@nvisov",
+  "defaultLanguage": "en",
+  "defaultTheme": "dark",
+  "defaultAccentColor": "blue",
+  "splashDurationMs": 4000,
+  "apiEndpoint": "/api/chat",
+  "version": "1.0.0"
+}

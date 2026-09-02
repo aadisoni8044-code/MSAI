@@ -1,0 +1,106 @@
+{
+  "app": {
+    "name": "MSAI",
+    "company": "Nvisov",
+    "tagline": "পরবর্তী প্রজন্মের AI সহকারী"
+  },
+  "nav": {
+    "newChat": "নতুন চ্যাট",
+    "chats": "চ্যাট এবং কাজ",
+    "projects": "প্রকল্প",
+    "artifacts": "আর্টিফ্যাক্টস",
+    "code": "কোড",
+    "customize": "কাস্টমাইজ করুন",
+    "promptLibrary": "প্রম্পট লাইব্রেরি",
+    "promptBuilder": "প্রম্পট বিল্ডার",
+    "savedPrompts": "সংরক্ষিত প্রম্পট",
+    "settings": "সেটিংস",
+    "design": "ডিজাইন",
+    "search": "অনুসন্ধান করুন...",
+    "youtube": "ইউটিউব",
+    "watchNvisov": "Nvisov দেখুন / ফলো করুন"
+  },
+  "status": {
+    "serverOnline": "সার্ভার অনলাইন",
+    "serverOffline": "সার্ভার অফলাইন",
+    "connected": "সংযুক্ত",
+    "disconnected": "বিচ্ছিন্ন"
+  },
+  "hero": {
+    "greeting": "আজ আমি আপনাকে কীভাবে সাহায্য করতে পারি?",
+    "chips": {
+      "code": "কোড",
+      "write": "লিখুন",
+      "learn": "শিখুন",
+      "life": "দৈনন্দিন কাজ",
+      "choice": "MSAI এর পছন্দ"
+    }
+  },
+  "composer": {
+    "placeholder": "MSAI কে বার্তা পাঠান...",
+    "send": "পাঠান",
+    "stop": "থামুন",
+    "modeChat": "চ্যাট",
+    "modeCowork": "সহ-কাজ",
+    "hint": "পাঠাতে ENTER চাপুন | নতুন লাইনের জন্য SHIFT + ENTER",
+    "enhance": "প্রম্পট উন্নত করুন"
+  },
+  "settings": {
+    "title": "সেটিংস",
+    "general": "সাধারণ",
+    "appearance": "চেহারা",
+    "language": "ভাষা",
+    "apiConfig": "API কনফিগারেশন",
+    "about": "MSAI সম্পর্কে",
+    "theme": "থিম",
+    "themeDark": "ডার্ক",
+    "themeLight": "লাইট",
+    "themeSystem": "সিস্টেম",
+    "accentColor": "মূল রঙ",
+    "selectLanguage": "ভাষা নির্বাচন করুন",
+    "apiKeyLabel": "গুগল AI API কী",
+    "apiKeyPlaceholder": "গুগল AI কী লিখুন",
+    "testConnection": "সংযোগ পরীক্ষা করুন",
+    "saveSettings": "সেটিংস সংরক্ষণ করুন",
+    "clearHistory": "ইতিহাস মুছুন",
+    "youtubeLink": "অফিসিয়াল ইউটিউব চ্যানেল"
+  },
+  "prompts": {
+    "libraryTitle": "প্রম্পট লাইব্রেরি",
+    "builderTitle": "প্রম্পট বিল্ডার",
+    "goal": "লক্ষ্য",
+    "role": "ভূমিকা",
+    "context": "প্রসঙ্গ",
+    "task": "কাজ",
+    "constraints": "সীমাবদ্ধতা",
+    "tone": "টোন",
+    "outputFormat": "আউটপুট ফরম্যাট",
+    "examples": "উদাহরণ",
+    "generatePrompt": "প্রম্পট তৈরি করুন",
+    "improvePrompt": "প্রম্পট উন্নত করুন",
+    "usePrompt": "ব্যবহার করুন",
+    "savePrompt": "সংরক্ষণ করুন",
+    "copy": "কপি করুন"
+  },
+  "colors": {
+    "blue": "নীল",
+    "purple": "বেগুনি",
+    "cyan": "সায়ান",
+    "green": "সবুজ",
+    "orange": "কমলা",
+    "pink": "গোলাপি",
+    "red": "লাল",
+    "gold": "সোনালী",
+    "indigo": "ইন্ডিগো",
+    "teal": "টিল"
+  },
+  "messages": {
+    "copied": "ক্লিপবোর্ডে কপি করা হয়েছে!",
+    "saved": "সফলভাবে সংরক্ষিত হয়েছে!",
+    "deleted": "চ্যাট মুছে ফেলা হয়েছে।",
+    "cleared": "ইতিহাস মুছে ফেলা হয়েছে।",
+    "settingsSaved": "সেটিংস সংরক্ষিত হয়েছে।",
+    "apiSuccess": "API সংযোগ সফল হয়েছে!",
+    "apiError": "API সংযোগ ব্যর্থ হয়েছে। অফলাইন মোড সক্রিয়।"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "categories": [
+    { "id": "coding", "name": "Coding", "icon": "code-slash" },
+    { "id": "business", "name": "Business", "icon": "briefcase" },
+    { "id": "marketing", "name": "Marketing", "icon": "megaphone" },
+    { "id": "education", "name": "Education", "icon": "mortarboard" },
+    { "id": "writing", "name": "Writing", "icon": "pencil-square" },
+    { "id": "productivity", "name": "Productivity", "icon": "lightning-charge" },
+    { "id": "research", "name": "Research", "icon": "journal-text" },
+    { "id": "creative", "name": "Creative", "icon": "palette" },
+    { "id": "social-media", "name": "Social Media", "icon": "share" },
+    { "id": "general", "name": "General", "icon": "grid" }
+  ]
+}

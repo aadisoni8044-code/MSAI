@@ -1,0 +1,106 @@
+{
+  "app": {
+    "name": "MSAI",
+    "company": "Nvisov",
+    "tagline": "Next-Gen AI Assistant"
+  },
+  "nav": {
+    "newChat": "New Chat",
+    "chats": "Chats & Tasks",
+    "projects": "Projects",
+    "artifacts": "Artifacts",
+    "code": "Code",
+    "customize": "Customize",
+    "promptLibrary": "Prompt Library",
+    "promptBuilder": "Prompt Builder",
+    "savedPrompts": "Saved Prompts",
+    "settings": "Settings",
+    "design": "Design",
+    "search": "Search chats & prompts...",
+    "youtube": "YouTube",
+    "watchNvisov": "Watch / Follow Nvisov"
+  },
+  "status": {
+    "serverOnline": "Server Online",
+    "serverOffline": "Server Offline",
+    "connected": "Connected",
+    "disconnected": "Disconnected"
+  },
+  "hero": {
+    "greeting": "How can I help you today?",
+    "chips": {
+      "code": "Code",
+      "write": "Write",
+      "learn": "Learn",
+      "life": "Life stuff",
+      "choice": "MSAI's choice"
+    }
+  },
+  "composer": {
+    "placeholder": "Message MSAI...",
+    "send": "Send",
+    "stop": "Stop",
+    "modeChat": "Chat",
+    "modeCowork": "Cowork",
+    "hint": "PRESS ENTER TO SEND | SHIFT + ENTER FOR NEW LINE",
+    "enhance": "Enhance prompt"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "appearance": "Appearance",
+    "language": "Language",
+    "apiConfig": "API & Key Configuration",
+    "about": "About MSAI",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "themeSystem": "System",
+    "accentColor": "Accent Color",
+    "selectLanguage": "Select Language",
+    "apiKeyLabel": "Google AI API Key",
+    "apiKeyPlaceholder": "Enter Google AI (Gemini) API Key",
+    "testConnection": "Test Connection",
+    "saveSettings": "Save Settings",
+    "clearHistory": "Clear Chat History",
+    "youtubeLink": "Official YouTube Channel"
+  },
+  "prompts": {
+    "libraryTitle": "Prompt Library",
+    "builderTitle": "Prompt Builder",
+    "goal": "Goal",
+    "role": "Role",
+    "context": "Context",
+    "task": "Task",
+    "constraints": "Constraints",
+    "tone": "Tone",
+    "outputFormat": "Output Format",
+    "examples": "Examples",
+    "generatePrompt": "Generate Prompt",
+    "improvePrompt": "Improve Prompt",
+    "usePrompt": "Use Prompt",
+    "savePrompt": "Save Prompt",
+    "copy": "Copy Prompt"
+  },
+  "colors": {
+    "blue": "Blue",
+    "purple": "Purple",
+    "cyan": "Cyan",
+    "green": "Green",
+    "orange": "Orange",
+    "pink": "Pink",
+    "red": "Red",
+    "gold": "Gold",
+    "indigo": "Indigo",
+    "teal": "Teal"
+  },
+  "messages": {
+    "copied": "Copied to clipboard!",
+    "saved": "Saved successfully!",
+    "deleted": "Chat deleted.",
+    "cleared": "History cleared.",
+    "settingsSaved": "Settings saved.",
+    "apiSuccess": "API connection successful!",
+    "apiError": "API connection failed. Operating in offline mode."
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "app": {
+    "name": "MSAI",
+    "company": "Nvisov",
+    "tagline": "Asistente de IA de Próxima Generación"
+  },
+  "nav": {
+    "newChat": "Nuevo Chat",
+    "chats": "Chats y Tareas",
+    "projects": "Proyectos",
+    "artifacts": "Artefactos",
+    "code": "Código",
+    "customize": "Personalizar",
+    "promptLibrary": "Biblioteca de Prompts",
+    "promptBuilder": "Creador de Prompts",
+    "savedPrompts": "Prompts Guardados",
+    "settings": "Configuración",
+    "design": "Diseño",
+    "search": "Buscar chats...",
+    "youtube": "YouTube",
+    "watchNvisov": "Ver / Seguir a Nvisov"
+  },
+  "status": {
+    "serverOnline": "Servidor En Línea",
+    "serverOffline": "Servidor Fuera de Línea",
+    "connected": "Conectado",
+    "disconnected": "Desconectado"
+  },
+  "hero": {
+    "greeting": "¿Cómo puedo ayudarte hoy?",
+    "chips": {
+      "code": "Código",
+      "write": "Escribir",
+      "learn": "Aprender",
+      "life": "Estilo de vida",
+      "choice": "Selección MSAI"
+    }
+  },
+  "composer": {
+    "placeholder": "Enviar mensaje a MSAI...",
+    "send": "Enviar",
+    "stop": "Detener",
+    "modeChat": "Chat",
+    "modeCowork": "Co-trabajar",
+    "hint": "PRESIONA ENTER PARA ENVIAR | SHIFT + ENTER PARA NUEVA LÍNEA",
+    "enhance": "Mejorar prompt"
+  },
+  "settings": {
+    "title": "Configuración",
+    "general": "General",
+    "appearance": "Apariencia",
+    "language": "Idioma",
+    "apiConfig": "Configuración API",
+    "about": "Acerca de MSAI",
+    "theme": "Tema",
+    "themeDark": "Oscuro",
+    "themeLight": "Claro",
+    "themeSystem": "Sistema",
+    "accentColor": "Color de Acento",
+    "selectLanguage": "Seleccionar Idioma",
+    "apiKeyLabel": "Clave API de Google AI",
+    "apiKeyPlaceholder": "Ingrese clave API Google AI",
+    "testConnection": "Probar Conexión",
+    "saveSettings": "Guardar Ajustes",
+    "clearHistory": "Borrar Historial",
+    "youtubeLink": "Canal Oficial de YouTube"
+  },
+  "prompts": {
+    "libraryTitle": "Biblioteca de Prompts",
+    "builderTitle": "Creador de Prompts",
+    "goal": "Objetivo",
+    "role": "Rol",
+    "context": "Contexto",
+    "task": "Tarea",
+    "constraints": "Restricciones",
+    "tone": "Tono",
+    "outputFormat": "Formato de Salida",
+    "examples": "Ejemplos",
+    "generatePrompt": "Generar Prompt",
+    "improvePrompt": "Mejorar Prompt",
+    "usePrompt": "Usar Prompt",
+    "savePrompt": "Guardar",
+    "copy": "Copiar"
+  },
+  "colors": {
+    "blue": "Azul",
+    "purple": "Púrpura",
+    "cyan": "Cian",
+    "green": "Verde",
+    "orange": "Naranja",
+    "pink": "Rosa",
+    "red": "Rojo",
+    "gold": "Dorado",
+    "indigo": "Índigo",
+    "teal": "Verde azulado"
+  },
+  "messages": {
+    "copied": "¡Copiado al portapapeles!",
+    "saved": "¡Guardado con éxito!",
+    "deleted": "Chat eliminado.",
+    "cleared": "Historial borrado.",
+    "settingsSaved": "Configuración guardada.",
+    "apiSuccess": "¡Conexión API exitosa!",
+    "apiError": "Error de conexión API. Modo fuera de línea activo."
+  }
+}

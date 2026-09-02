@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="blue">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSAI — AI Assistant</title>
+  <meta name="description" content="MSAI - Commercial Quality Responsive AI Assistant by Nvisov">
+
+  <!-- CSS Design System -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/splash.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/navbar.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/messages.css">
+  <link rel="stylesheet" href="css/composer.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/prompts.css">
+  <link rel="stylesheet" href="css/search.css">
+  <link rel="stylesheet" href="css/modal.css">
+  <link rel="stylesheet" href="css/toast.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+  <!-- STARTUP / SPLASH SCREEN (EXACTLY 4 SECONDS) -->
+  <div id="splash-screen" role="dialog" aria-label="Startup Screen">
+    <div class="splash-content">
+      <div class="splash-logo-container">
+        <img src="assets/branding/msai-logo.png" alt="MSAI Logo" class="splash-logo-img" onerror="this.style.display='none'; document.getElementById('splash-msai-fallback').style.display='block';">
+        <span id="splash-msai-fallback" class="splash-msai-text" style="display:none;">MSAI</span>
+      </div>
+      <div class="splash-sub-container">
+        <img src="assets/branding/nvisov-logo.png" alt="Nvisov Logo" class="splash-nvisov-img" onerror="this.style.display='none'; document.getElementById('splash-nvisov-fallback').style.display='inline';">
+        <span id="splash-nvisov-fallback" class="splash-nvisov-text">Nvisov</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APPLICATION ROOT -->
+  <div id="app-root" style="opacity: 0; pointer-events: none;">
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar">
+      <div>
+        <div class="sidebar-header">
+          <a href="#" class="brand-link" id="brand-link">
+            <img src="assets/branding/msai-logo.png" alt="MSAI" class="brand-logo-img" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%233b82f6\'><rect width=\'24\' height=\'24\' rx=\'6\'/><text x=\'12\' y=\'16\' fill=\'white\' font-size=\'12\' font-weight=\'bold\' text-anchor=\'middle\'>M</text></svg>'">
+            <span>MSAI</span>
+          </a>
+          <button id="btn-toggle-search" class="btn-icon" title="Search (Ctrl+K)" aria-label="Search">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          </button>
+        </div>
+
+        <button id="btn-new-chat" class="btn-new-chat" aria-label="New Chat">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14m-7-7h14"/></svg>
+          <span data-i18n="nav.newChat">New</span>
+        </button>
+
+        <nav class="sidebar-nav-section">
+          <div class="nav-item" id="nav-projects">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V7M3 7l9 6 9-6"/></svg>
+            <span data-i18n="nav.projects">Projects</span>
+          </div>
+          <div class="nav-item" id="nav-artifacts">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <span data-i18n="nav.artifacts">Artifacts</span>
+          </div>
+          <div class="nav-item" id="nav-prompt-library">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            <span data-i18n="nav.promptLibrary">Prompt Library</span>
+          </div>
+          <div class="nav-item" id="nav-prompt-builder">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 010 4m-6 8a2 2 0 100-4m0 4a2 2 0 010-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 010-4m0 4v2m0-6V4"/></svg>
+            <span data-i18n="nav.promptBuilder">Prompt Builder</span>
+          </div>
+        </nav>
+      </div>
+
+      <!-- CHAT HISTORY LIST -->
+      <div class="chat-history-section">
+        <div class="history-title">
+          <span data-i18n="nav.chats">CHATS AND TASKS</span>
+          <span id="chat-count-badge">0</span>
+        </div>
+        <div id="chat-history-list" class="chat-history-list">
+          <!-- Dynamic chat items -->
+        </div>
+      </div>
+
+      <!-- SIDEBAR FOOTER -->
+      <div class="sidebar-footer">
+        <a href="https://www.youtube.com/@nvisov" target="_blank" rel="noopener noreferrer" id="youtube-link-sidebar" class="youtube-banner">
+          <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+          <div>
+            <div>Nvisov YouTube</div>
+            <div style="font-size: 0.7rem; opacity: 0.8;" data-i18n="nav.watchNvisov">Watch / Follow Nvisov</div>
+          </div>
+        </a>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <button id="btn-design" class="btn-secondary" style="font-size: 0.8rem; padding: 6px 12px;" data-i18n="nav.design">Design</button>
+          <button id="btn-open-settings" class="btn-icon" title="Settings" aria-label="Settings">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN VIEW AREA -->
+    <main class="main-wrapper">
+
+      <!-- NAVBAR -->
+      <header class="navbar">
+        <div class="navbar-left">
+          <button id="btn-sidebar-toggle" class="btn-icon" aria-label="Toggle Sidebar">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </button>
+        </div>
+
+        <div class="model-selector" id="model-selector-btn" role="button" aria-haspopup="true">
+          <span id="current-model-name">MSAI Flash</span>
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+        </div>
+
+        <div class="navbar-right">
+          <div id="status-badge" class="status-badge">
+            <span class="status-dot"></span>
+            <span id="status-text" data-i18n="status.serverOffline">Server Offline</span>
+          </div>
+          <button id="btn-top-settings" class="btn-icon" title="Settings">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- CHAT CONVERSATION VIEW -->
+      <div id="chat-container" class="chat-container">
+        <!-- Hero state displayed when chat is empty -->
+        <div id="chat-hero" class="chat-hero">
+          <h1 class="hero-title">MSAI</h1>
+          <div class="hero-chips">
+            <button class="chip-btn" data-prompt="Write a clean Python script to demonstrate async IO.">&lt;/&gt; <span data-i18n="hero.chips.code">Code</span></button>
+            <button class="chip-btn" data-prompt="Draft a executive summary for a tech startup launch.">✏️ <span data-i18n="hero.chips.write">Write</span></button>
+            <button class="chip-btn" data-prompt="Explain quantum computing principles using simple analogies.">🎓 <span data-i18n="hero.chips.learn">Learn</span></button>
+            <button class="chip-btn" data-prompt="Help me organize a productive weekly meal plan and schedule.">💡 <span data-i18n="hero.chips.life">Life stuff</span></button>
+            <button class="chip-btn" data-prompt="Surprise me with a unique creative idea for a web app!">🔮 <span data-i18n="hero.chips.choice">MSAI's choice</span></button>
+          </div>
+        </div>
+
+        <div id="messages-list" class="messages-list">
+          <!-- Dynamic conversation messages -->
+        </div>
+      </div>
+
+      <!-- MESSAGE COMPOSER -->
+      <div class="composer-container">
+        <div class="composer-box">
+          <textarea id="composer-input" class="composer-textarea" rows="1" data-i18n-placeholder="composer.placeholder" placeholder="Message MSAI..."></textarea>
+
+          <div class="composer-toolbar">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button id="btn-attach" class="btn-icon" title="Attach file" aria-label="Attach File">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+              </button>
+
+              <div class="composer-modes">
+                <button class="mode-btn active" id="mode-chat-btn" data-i18n="composer.modeChat">Chat</button>
+                <button class="mode-btn" id="mode-cowork-btn" data-i18n="composer.modeCowork">Cowork</button>
+              </div>
+            </div>
+
+            <div class="composer-controls">
+              <button id="btn-voice" class="btn-icon" title="Voice Input" aria-label="Voice Input">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/></svg>
+              </button>
+              <button id="btn-send" class="btn-primary btn-icon" title="Send message" aria-label="Send Message">
+                <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="composer-hint" data-i18n="composer.hint">PRESS ENTER TO SEND | SHIFT + ENTER FOR NEW LINE</div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODALS SYSTEM CONTAINER -->
+  <div id="modal-container"></div>
+
+  <!-- TOAST NOTIFICATIONS CONTAINER -->
+  <div id="toast-container"></div>
+
+  <!-- APPLICATION SCRIPTS -->
+  <script src="js/storage.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/security.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/notifications.js"></script>
+  <script src="js/modals.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/language.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/markdown.js"></script>
+  <script src="js/messages.js"></script>
+  <script src="js/chat.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/composer.js"></script>
+  <script src="js/prompts.js"></script>
+  <script src="js/prompt-builder.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/splash.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>
