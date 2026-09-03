@@ -1,0 +1,30 @@
+[
+  {
+    "id": "write",
+    "title": "Write something",
+    "icon": "✏️",
+    "description": "Write an engaging blog post about modern AI applications",
+    "prompt": "Write an engaging and informative article about how modern AI tools enhance productivity in creative work."
+  },
+  {
+    "id": "explain",
+    "title": "Explain a topic",
+    "icon": "💡",
+    "description": "Explain quantum computing in simple terms",
+    "prompt": "Explain quantum computing in simple terms as if I were a high school student."
+  },
+  {
+    "id": "code",
+    "title": "Help me code",
+    "icon": "💻",
+    "description": "Write a JavaScript function to filter an array of objects",
+    "prompt": "Write a clean JavaScript ES6+ function to filter an array of objects by multiple key-value pairs with comments and examples."
+  },
+  {
+    "id": "brainstorm",
+    "title": "Brainstorm ideas",
+    "icon": "🚀",
+    "description": "5 startup ideas combining AI and web development",
+    "prompt": "Brainstorm 5 innovative tech startup ideas combining artificial intelligence and web development in 2026."
+  }
+]

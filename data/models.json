@@ -1,0 +1,20 @@
+[
+  {
+    "id": "gemini-1.5-flash",
+    "name": "MSAI Flash",
+    "description": "Fast and versatile performance for everyday assistant tasks.",
+    "badge": "Default",
+    "context_window": "1M tokens",
+    "speed": "Fast",
+    "reasoning": "Standard"
+  },
+  {
+    "id": "gemini-1.5-pro",
+    "name": "MSAI Pro",
+    "description": "Advanced reasoning and complex problem solving capabilities.",
+    "badge": "Pro",
+    "context_window": "2M tokens",
+    "speed": "Medium",
+    "reasoning": "High"
+  }
+]
