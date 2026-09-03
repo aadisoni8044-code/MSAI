@@ -1,0 +1,17 @@
+{
+  "app": {
+    "name": "MSAI",
+    "version": "1.0.0",
+    "author": "Nvisov",
+    "supported_languages": ["en", "hi", "bn", "es"],
+    "default_language": "en",
+    "default_theme": "dark",
+    "storage_prefix": "msai_"
+  },
+  "api": {
+    "default_model": "gemini-1.5-flash",
+    "timeout_ms": 30000,
+    "max_retries": 3,
+    "base_url": "https://generativelanguage.googleapis.com/v1beta/models"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "theme": "dark",
+  "accent": "blue",
+  "language": "en",
+  "model": "gemini-1.5-flash",
+  "temperature": 0.7,
+  "enter_to_send": true,
+  "auto_scroll": true,
+  "save_history": true,
+  "sidebar_collapsed": false
+}

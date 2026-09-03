@@ -1,0 +1,68 @@
+.settings-layout {
+  display: flex;
+  gap: 1.5rem;
+  min-height: 380px;
+}
+
+.settings-sidebar {
+  width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-right: 1px solid var(--border-subtle);
+  padding-right: 1rem;
+}
+
+.settings-tab {
+  padding: 0.625rem 0.875rem;
+  border-radius: var(--radius-md);
+  text-align: left;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.settings-tab:hover, .settings-tab.active {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.settings-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.setting-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.setting-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.setting-control {
+  width: 100%;
+  padding: 0.625rem 0.875rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.setting-control:focus {
+  border-color: var(--accent-color);
+}
+
+.setting-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

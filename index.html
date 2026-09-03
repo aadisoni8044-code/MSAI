@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="blue">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSAI — Next-Gen AI Assistant</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+
+  <!-- CSS Stylesheets (16 files) -->
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/messages.css">
+  <link rel="stylesheet" href="css/composer.css">
+  <link rel="stylesheet" href="css/buttons.css">
+  <link rel="stylesheet" href="css/modals.css">
+  <link rel="stylesheet" href="css/settings.css">
+  <link rel="stylesheet" href="css/search.css">
+  <link rel="stylesheet" href="css/notifications.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Sidebar Overlay for Mobile -->
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+    <!-- Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <img src="assets/logo.svg" alt="MSAI Logo" class="brand-icon">
+          <span>MSAI</span>
+        </div>
+        <button class="btn-icon" id="btn-toggle-sidebar" title="Collapse Sidebar">◀</button>
+      </div>
+      <div class="sidebar-actions">
+        <button class="btn-new-chat" id="btn-new-chat">
+          <span data-i18n="new_chat">New Chat</span>
+          <span>+</span>
+        </button>
+        <button class="search-trigger" id="btn-search-trigger">
+          <span>🔍</span>
+          <span data-i18n="search_placeholder">Search conversations...</span>
+        </button>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="pinned_chats">Pinned Chats</div>
+          <div class="chat-list" id="pinned-chat-list"></div>
+        </div>
+        <div class="nav-section">
+          <div class="nav-section-title" data-i18n="recent_chats">Recent Chats</div>
+          <div class="chat-list" id="recent-chat-list"></div>
+        </div>
+      </div>
+      <div class="sidebar-footer">
+        <div class="user-profile">
+          <img src="assets/avatar-user.svg" class="user-avatar" alt="User">
+          <div class="user-info">
+            <span class="user-name">User</span>
+            <span class="user-status">Pro Plan</span>
+          </div>
+        </div>
+        <button class="btn-icon" id="btn-settings" title="Settings">⚙️</button>
+      </div>
+    </aside>
+
+    <!-- Main Chat Container -->
+    <main class="main-container">
+      <header class="app-header">
+        <div class="header-left">
+          <button class="btn-icon" id="btn-mobile-menu" style="display:none;">☰</button>
+          <span style="font-weight:700;" id="current-chat-header-title">MSAI Chat</span>
+        </div>
+        <div class="header-right">
+          <div class="model-selector" id="model-selector-btn">
+            <span id="header-model-name">MSAI Flash</span>
+            <span class="model-badge">Default</span>
+          </div>
+        </div>
+      </header>
+
+      <div class="chat-container">
+        <!-- Chat Messages -->
+        <div class="chat-messages" id="chat-messages">
+          <!-- Empty State rendering handled dynamically by ChatEngine -->
+        </div>
+
+        <!-- Chat Composer -->
+        <div class="composer-container">
+          <div class="composer-box">
+            <textarea id="composer-textarea" class="composer-textarea" rows="1" data-i18n-placeholder="composer_placeholder" placeholder="Message MSAI..."></textarea>
+            <div class="composer-toolbar">
+              <div class="composer-tools"></div>
+              <button id="btn-send" class="btn-send" title="Send message">➔</button>
+            </div>
+          </div>
+          <div class="composer-disclaimer" data-i18n="disclaimer">MSAI may display inaccurate info, including about people, so double-check its responses.</div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="modal-search">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" data-i18n="search_placeholder">Search conversations...</h2>
+          <button class="btn-icon btn-close-modal">✕</button>
+        </div>
+        <div class="modal-body search-container">
+          <div class="search-input-box">
+            <span>🔍</span>
+            <input type="text" id="search-input" placeholder="Type to search title or messages..." autofocus>
+          </div>
+          <div class="search-results-list" id="search-results-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="modal-settings">
+      <div class="modal-card">
+        <div class="modal-header">
+          <h2 class="modal-title" data-i18n="settings">Settings</h2>
+          <button class="btn-icon btn-close-modal">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-layout">
+            <div class="settings-sidebar">
+              <button class="settings-tab active" data-tab="tab-general" data-i18n="general">General</button>
+              <button class="settings-tab" data-tab="tab-ai" data-i18n="ai_settings">AI Settings</button>
+              <button class="settings-tab" data-tab="tab-data" data-i18n="data_settings">Data & Privacy</button>
+              <button class="settings-tab" data-tab="tab-about" data-i18n="about">About</button>
+            </div>
+            <div class="settings-content">
+              <!-- General Tab -->
+              <div class="tab-panel active" id="tab-general">
+                <div class="setting-group">
+                  <label class="setting-label" data-i18n="language">Language</label>
+                  <select id="setting-language" class="setting-control">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी (Hindi)</option>
+                    <option value="bn">বাংলা (Bengali)</option>
+                    <option value="es">Español (Spanish)</option>
+                  </select>
+                </div>
+                <div class="setting-group">
+                  <label class="setting-label" data-i18n="theme">Theme</label>
+                  <select id="setting-theme" class="setting-control">
+                    <option value="dark" data-i18n="theme_dark">Dark</option>
+                    <option value="light" data-i18n="theme_light">Light</option>
+                    <option value="system" data-i18n="theme_system">System</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- AI Tab -->
+              <div class="tab-panel" id="tab-ai" style="display:none;">
+                <div class="setting-group">
+                  <label class="setting-label" data-i18n="ai_model">AI Model</label>
+                  <select id="setting-model" class="setting-control">
+                    <option value="gemini-1.5-flash">MSAI Flash (Fast)</option>
+                    <option value="gemini-1.5-pro">MSAI Pro (Advanced)</option>
+                  </select>
+                </div>
+                <div class="setting-group">
+                  <label class="setting-label">Google AI Studio API Key</label>
+                  <input type="password" id="setting-api-key" class="setting-control" placeholder="AIzaSy...">
+                </div>
+              </div>
+
+              <!-- Data Tab -->
+              <div class="tab-panel" id="tab-data" style="display:none;">
+                <div class="setting-group">
+                  <button class="btn btn-secondary" id="btn-export-data" data-i18n="export_data">Export Conversations (JSON)</button>
+                </div>
+                <div class="setting-group">
+                  <button class="btn btn-secondary" id="btn-import-trigger" data-i18n="import_data">Import Conversations (JSON)</button>
+                  <input type="file" id="file-import" accept=".json" style="display:none;">
+                </div>
+                <div class="setting-group">
+                  <button class="btn btn-danger" id="btn-clear-all-trigger" data-i18n="clear_all">Clear All Conversations</button>
+                </div>
+              </div>
+
+              <!-- About Tab -->
+              <div class="tab-panel" id="tab-about" style="display:none;">
+                <div style="display:flex; flex-direction:column; gap:0.5rem; text-align:center;">
+                  <img src="assets/logo.svg" style="width:48px; height:48px; margin:0 auto;" alt="MSAI">
+                  <h3 style="font-weight:700;">MSAI Web Application</h3>
+                  <p style="font-size:0.875rem; color:var(--text-muted);" data-i18n="version">Version 1.0.0</p>
+                  <p style="font-size:0.85rem; color:var(--text-secondary);" data-i18n="app_tagline">Next-Gen AI Assistant by Nvisov</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Confirm Clear Modal -->
+    <div class="modal-overlay" id="modal-clear-confirm">
+      <div class="modal-card" style="max-width:400px;">
+        <div class="modal-header">
+          <h2 class="modal-title" data-i18n="clear_confirm_title">Clear All Conversations?</h2>
+          <button class="btn-icon btn-close-modal">✕</button>
+        </div>
+        <div class="modal-body">
+          <p data-i18n="clear_confirm_text">This action cannot be undone. All your chat history will be permanently deleted.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary btn-close-modal" data-i18n="cancel">Cancel</button>
+          <button class="btn btn-danger" id="btn-confirm-clear" data-i18n="clear_all">Clear All</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Application Entrypoint -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
