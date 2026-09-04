@@ -1,0 +1,137 @@
+.composer-wrapper {
+  width: 100%;
+  max-width: var(--composer-max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4) var(--space-4);
+  position: relative;
+  z-index: 10;
+}
+
+.composer-card {
+  background-color: var(--color-bg-surface);
+  backdrop-filter: blur(20px) saturate(var(--glass-saturate));
+  -webkit-backdrop-filter: blur(20px) saturate(var(--glass-saturate));
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  box-shadow: var(--shadow-glass);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background-color var(--transition-fast);
+}
+
+.composer-card:focus-within {
+  border-color: rgba(99, 102, 241, 0.45);
+  background-color: var(--color-bg-input-focus);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(99, 102, 241, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+.composer-textarea {
+  width: 100%;
+  max-height: 200px;
+  min-height: 38px;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  font-family: inherit;
+  padding: 0;
+}
+
+.composer-textarea::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.composer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: var(--space-1);
+}
+
+.composer-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Chat / Cowork Mode Pills */
+.mode-toggle-group {
+  display: flex;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--radius-full);
+  padding: 2px;
+  border: 1px solid var(--color-border-subtle);
+}
+
+.mode-toggle-btn {
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.mode-toggle-btn.active {
+  background-color: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  color: var(--color-text-primary);
+  font-weight: 600;
+}
+
+.composer-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.btn-composer-send {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--color-bg-elevated);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+  transition: all var(--transition-fast);
+}
+
+.btn-composer-send.active {
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+}
+
+.btn-composer-send.active:hover {
+  background-color: var(--color-primary-hover);
+  transform: scale(1.04);
+}
+
+.btn-composer-stop {
+  background-color: var(--color-error);
+  color: #fff;
+  cursor: pointer;
+}
+
+.composer-footer-hint {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-top: var(--space-2);
+  user-select: none;
+}

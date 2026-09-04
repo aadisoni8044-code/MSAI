@@ -1,0 +1,6 @@
+{
+  "name": "MSAI",
+  "description": "A complete, polished ChatGPT-style AI chat web application powered by Google AI Studio Gemini API with multi-language support, dark/light themes, and conversation management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
