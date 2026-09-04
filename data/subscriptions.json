@@ -1,0 +1,51 @@
+[
+  {
+    "id": "free",
+    "name": "Free",
+    "description": "All time MSAI",
+    "price": "0",
+    "currency": "₹",
+    "billingPeriod": "",
+    "buttonText": "Use MSAI for free",
+    "features": [
+      "Basic MSAI access",
+      "Standard responses",
+      "Conversation history",
+      "Basic personalization"
+    ]
+  },
+  {
+    "id": "pro",
+    "name": "Pro",
+    "description": "All time MSAI",
+    "price": "299",
+    "currency": "₹",
+    "billingPeriod": "/ month",
+    "buttonText": "Choose Pro",
+    "features": [
+      "Everything in Free",
+      "Higher usage limits",
+      "Faster responses",
+      "Advanced AI access",
+      "Priority availability",
+      "Extended conversations"
+    ]
+  },
+  {
+    "id": "max",
+    "name": "Max",
+    "description": "All time MSAI",
+    "price": "999",
+    "currency": "₹",
+    "billingPeriod": "/ month",
+    "buttonText": "Choose Max",
+    "features": [
+      "Everything in Pro",
+      "Highest usage limits",
+      "Maximum priority",
+      "Advanced capabilities",
+      "Extended context",
+      "Premium MSAI experience"
+    ]
+  }
+]

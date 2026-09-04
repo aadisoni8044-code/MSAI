@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>MSAI</title>
+    <meta name="description" content="A complete, polished ChatGPT-style AI chat web application powered by Google AI Studio Gemini API with multi-language support, dark/light themes, and conversation management." />
+    <meta property="og:title" content="MSAI" />
+    <meta property="og:description" content="A complete, polished ChatGPT-style AI chat web application powered by Google AI Studio Gemini API with multi-language support, dark/light themes, and conversation management." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+
+    <!-- Modular CSS Architecture -->
+    <link rel="stylesheet" href="/css/variables.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/layout.css" />
+    <link rel="stylesheet" href="/css/sidebar.css" />
+    <link rel="stylesheet" href="/css/header.css" />
+    <link rel="stylesheet" href="/css/chat.css" />
+    <link rel="stylesheet" href="/css/messages.css" />
+    <link rel="stylesheet" href="/css/composer.css" />
+    <link rel="stylesheet" href="/css/buttons.css" />
+    <link rel="stylesheet" href="/css/modals.css" />
+    <link rel="stylesheet" href="/css/settings.css" />
+    <link rel="stylesheet" href="/css/search.css" />
+    <link rel="stylesheet" href="/css/notifications.css" />
+    <link rel="stylesheet" href="/css/animations.css" />
+    <link rel="stylesheet" href="/css/responsive.css" />
+    <link rel="stylesheet" href="/css/subscriptions.css" />
+  </head>
+  <body>
+    <div id="app" class="app-layout">
+      <!-- Mobile Sidebar Overlay -->
+      <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+      <!-- Left Sidebar -->
+      <aside id="sidebar" class="sidebar" aria-label="Conversation History and Navigation">
+        <div class="sidebar-header">
+          <a href="#" class="sidebar-brand">
+            <span class="brand-icon">M</span>
+            <span>MSAI</span>
+          </a>
+          <div class="sidebar-actions">
+            <button id="btnSearchSidebar" class="btn-icon" data-open-search title="Search chats (Ctrl+K)" aria-label="Search chats">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </button>
+            <button id="btnToggleSidebar" class="btn-icon" title="Toggle sidebar" aria-label="Toggle sidebar">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="9" y1="3" x2="9" y2="21"></line>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="sidebar-new-chat-wrapper">
+          <button id="btnNewChat" class="btn-new-chat">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span data-i18n="sidebar.newChat">New</span>
+          </button>
+        </div>
+
+        <!-- Functional Nav Items -->
+        <div class="sidebar-nav-list">
+          <div class="sidebar-nav-item" id="navProjects">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+            </svg>
+            <span data-i18n="sidebar.projects">Projects</span>
+          </div>
+          <div class="sidebar-nav-item" id="navArtifacts">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            <span data-i18n="sidebar.artifacts">Artifacts</span>
+          </div>
+          <div class="sidebar-nav-item" id="navCode">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            <span data-i18n="sidebar.code">Code</span>
+          </div>
+          <div class="sidebar-nav-item" id="navSubscriptions">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M2 4l3 12h14l3-12-6 7-4-5-4 5-6-7z"></path>
+              <circle cx="12" cy="19" r="1.5"></circle>
+            </svg>
+            <span data-i18n="subscriptions.menu">Subscriptions</span>
+          </div>
+          <div class="sidebar-nav-item" id="navCustomize" data-open-settings>
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span data-i18n="sidebar.customize">Customize</span>
+          </div>
+        </div>
+
+        <div class="sidebar-section-header">
+          <span data-i18n="sidebar.chatsAndTasks">CHATS AND TASKS</span>
+          <span id="sidebarChatCount" class="sidebar-count-badge">0</span>
+        </div>
+
+        <!-- Conversation History List -->
+        <div id="sidebarConversations" class="sidebar-conversations"></div>
+
+        <!-- Sidebar Footer Profile & Settings -->
+        <div class="sidebar-footer">
+          <div class="sidebar-profile" title="Current Workspace">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Design</span>
+          </div>
+          <button id="btnSettingsSidebar" class="btn-icon" data-open-settings title="Settings" aria-label="Settings">
+            <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main Chat Area -->
+      <main class="main-content">
+        <!-- Top Sticky Header -->
+        <header class="top-header">
+          <div class="header-left">
+            <button id="btnHeaderMobileSidebar" class="btn-icon mobile-only" title="Open Menu" aria-label="Open Menu">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
+            </button>
+          </div>
+
+          <div class="header-center">
+            <button id="btnHeaderModel" class="model-selector-btn" aria-haspopup="true" aria-expanded="false">
+              <span id="modelSelectorText" data-i18n="header.model">MSAI Flash</span>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+
+            <!-- Model Dropdown -->
+            <div id="headerModelDropdown" class="model-dropdown-menu" role="menu">
+              <div class="model-option active" data-model="gemini-3.8-flash">
+                <span class="model-option-name">MSAI Flash (3.8)</span>
+                <span class="model-option-desc">Next-gen intelligence & ultra-fast speed</span>
+              </div>
+              <div class="model-option" data-model="gemini-2.5-flash">
+                <span class="model-option-name">MSAI Standard Flash</span>
+                <span class="model-option-desc">Fast & versatile everyday chat</span>
+              </div>
+              <div class="model-option" data-model="gemini-3.1-flash-lite">
+                <span class="model-option-name">MSAI Flash Lite</span>
+                <span class="model-option-desc">Lowest latency & high throughput</span>
+              </div>
+              <div class="model-option" data-model="gemini-2.5-pro">
+                <span class="model-option-name">MSAI Pro</span>
+                <span class="model-option-desc">Complex reasoning & deep logic</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="header-right">
+            <div id="serverStatusBadge" class="status-badge online">
+              <span class="status-dot"></span>
+              <span data-i18n="header.serverOnline">Connected</span>
+            </div>
+            <button id="btnKeyboardShortcuts" class="btn-icon" title="Keyboard Shortcuts" aria-label="Keyboard Shortcuts">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="4" width="20" height="16" rx="2" ry="2"></rect>
+                <line x1="6" y1="8" x2="6.01" y2="8"></line>
+                <line x1="10" y1="8" x2="10.01" y2="8"></line>
+                <line x1="14" y1="8" x2="14.01" y2="8"></line>
+                <line x1="18" y1="8" x2="18.01" y2="8"></line>
+                <line x1="6" y1="12" x2="6.01" y2="12"></line>
+                <line x1="18" y1="12" x2="18.01" y2="12"></line>
+                <line x1="10" y1="16" x2="14" y2="16"></line>
+              </svg>
+            </button>
+            <button id="btnSettingsHeader" class="btn-icon" data-open-settings title="Settings" aria-label="Settings">
+              <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Main Chat Messages & Scroll Area -->
+        <div id="chatContainer" class="chat-container">
+          <div class="chat-inner-wrapper">
+            <!-- Empty Chat Screen / Welcome State -->
+            <div id="chatWelcome" class="chat-welcome">
+              <h1 class="welcome-logo-large" data-i18n="welcome.title">MSAI</h1>
+              <div class="welcome-suggestions">
+                <button class="suggestion-pill" data-prompt="Write a clean, responsive web component in modern vanilla JavaScript and CSS that creates an interactive glowing countdown timer.">
+                  <span class="suggestion-pill-icon">&lt;/&gt;</span>
+                  <span data-i18n="welcome.promptCode">Code</span>
+                </button>
+                <button class="suggestion-pill" data-prompt="Draft a persuasive, friendly introduction email for an innovative AI tech product launch to early beta testers.">
+                  <span class="suggestion-pill-icon">✏️</span>
+                  <span data-i18n="welcome.promptWrite">Write</span>
+                </button>
+                <button class="suggestion-pill" data-prompt="Explain how large language models and attention mechanisms work conceptually using an intuitive metaphor.">
+                  <span class="suggestion-pill-icon">🎓</span>
+                  <span data-i18n="welcome.promptLearn">Learn</span>
+                </button>
+                <button class="suggestion-pill" data-prompt="Give me a high-protein 3-day meal plan with simple recipes that take under 25 minutes to cook.">
+                  <span class="suggestion-pill-icon">💡</span>
+                  <span data-i18n="welcome.promptLife">Life stuff</span>
+                </button>
+                <button class="suggestion-pill" data-prompt="Imagine what personal computing and human-AI collaboration will look like in the year 2035.">
+                  <span class="suggestion-pill-icon">✨</span>
+                  <span data-i18n="welcome.promptChoice">MSAI's choice</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Messages List -->
+            <div id="messagesList" class="messages-list"></div>
+          </div>
+        </div>
+
+        <!-- Bottom Chat Composer -->
+        <div id="composerWrapper" class="composer-wrapper">
+          <div class="composer-card">
+            <textarea
+              id="composerTextarea"
+              class="composer-textarea"
+              rows="1"
+              data-i18n-placeholder="composer.placeholder"
+              placeholder="How can I help you today?"
+              aria-label="Message input"
+            ></textarea>
+
+            <div class="composer-toolbar">
+              <div class="composer-toolbar-left">
+                <button id="btnComposerAttach" class="btn-icon" data-i18n-title="composer.attach" title="Attach file" aria-label="Attach file">
+                  <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                </button>
+                <div class="mode-toggle-group">
+                  <button class="mode-toggle-btn active" data-i18n="composer.chatMode">Chat</button>
+                  <button class="mode-toggle-btn" data-i18n="composer.coworkMode">Cowork</button>
+                </div>
+              </div>
+
+              <div class="composer-toolbar-right">
+                <button id="btnComposerVoice" class="btn-icon" data-i18n-title="composer.voice" title="Voice input" aria-label="Voice input">
+                  <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="22"></line>
+                  </svg>
+                </button>
+                <button id="btnComposerSend" class="btn-composer-send" data-i18n-title="composer.send" title="Send message" aria-label="Send message">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                    <polyline points="5 12 12 5 19 12"></polyline>
+                  </svg>
+                </button>
+                <button id="btnComposerStop" class="btn-composer-send btn-composer-stop hidden" data-i18n-title="composer.stop" title="Stop generating" aria-label="Stop generating">
+                  <rect x="6" y="6" width="12" height="12" fill="currentColor"></rect>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="composer-footer-hint" data-i18n="composer.shortcutHint">
+            PRESS ENTER TO SEND &nbsp;&nbsp; SHIFT + ENTER FOR NEW LINE
+          </div>
+        </div>
+
+        <!-- Subscriptions View (SPA Screen) -->
+        <div id="subscriptionsView" class="subscriptions-view hidden" aria-label="Subscriptions Page">
+          <div class="subscriptions-nav-bar">
+            <button id="btnBackToChat" class="btn-back-chat" aria-label="Back to MSAI">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              <span data-i18n="subscriptions.backToChat">Back to MSAI</span>
+            </button>
+          </div>
+
+          <div class="subscriptions-header">
+            <h1 class="subscriptions-title" data-i18n="subscriptions.title">Plans that grow with you</h1>
+            <div class="subscriptions-selector-wrapper">
+              <button class="subscriptions-toggle-btn" data-i18n="subscriptions.individual">Individual</button>
+            </div>
+          </div>
+
+          <!-- 3 Subscription Cards Grid -->
+          <div id="subscriptionsGrid" class="subscriptions-grid"></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Upgrade Subscription Confirmation Modal -->
+    <div id="subscriptionModal" class="subscription-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="subscriptionModalTitle">
+      <div class="subscription-modal-card">
+        <div class="subscription-modal-header">
+          <h2 id="subscriptionModalTitle" class="subscription-modal-title">Upgrade</h2>
+          <button id="btnCloseSubModal" class="btn-close-modal" aria-label="Close modal">&times;</button>
+        </div>
+        <div class="subscription-modal-body">
+          <div class="modal-plan-details">
+            <div class="modal-detail-row">
+              <span class="modal-detail-label" data-i18n="subscriptions.planLabel">Plan</span>
+              <span id="subModalPlanName" class="modal-detail-value">-</span>
+            </div>
+            <div class="modal-detail-row">
+              <span class="modal-detail-label" data-i18n="subscriptions.priceLabel">Price</span>
+              <span id="subModalPrice" class="modal-detail-value">-</span>
+            </div>
+          </div>
+          <div id="subModalFeatureSummary" class="modal-features-summary"></div>
+        </div>
+        <div class="subscription-modal-footer">
+          <button id="btnSubModalContinue" class="modal-btn-continue" data-i18n="subscriptions.continue">Continue</button>
+          <button id="btnSubModalCancel" class="modal-btn-cancel" data-i18n="subscriptions.cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="settingsModalTitle">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 id="settingsModalTitle" class="modal-title" data-i18n="settings.title">Settings</h2>
+          <button class="btn-icon" data-modal-close="settingsModal" aria-label="Close settings">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-container">
+            <!-- Sidebar Navigation Tabs -->
+            <nav class="settings-nav" aria-label="Settings Categories">
+              <button class="settings-tab-btn active" data-tab="general" data-i18n="settings.general">General</button>
+              <button class="settings-tab-btn" data-tab="ai" data-i18n="settings.ai">AI Backend</button>
+              <button class="settings-tab-btn" data-tab="chat" data-i18n="settings.chat">Chat Preferences</button>
+              <button class="settings-tab-btn" data-tab="data" data-i18n="settings.data">Data & Privacy</button>
+              <button class="settings-tab-btn" data-tab="about" data-i18n="settings.about">About</button>
+            </nav>
+
+            <!-- Panels -->
+            <div class="settings-content-panel">
+              <!-- General -->
+              <div id="settings-sec-general" class="settings-section active">
+                <div class="settings-field">
+                  <label for="settingsLanguage" class="settings-label" data-i18n="settings.language">Language</label>
+                  <select id="settingsLanguage" class="settings-select">
+                    <option value="en">English</option>
+                    <option value="hi">हिन्दी (Hindi)</option>
+                    <option value="bn">বাংলা (Bengali)</option>
+                    <option value="es">Español (Spanish)</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="settingsTheme" class="settings-label" data-i18n="settings.theme">Theme</label>
+                  <select id="settingsTheme" class="settings-select">
+                    <option value="dark" data-i18n="settings.themeDark">Dark</option>
+                    <option value="light" data-i18n="settings.themeLight">Light</option>
+                    <option value="system" data-i18n="settings.themeSystem">System</option>
+                  </select>
+                </div>
+                <div class="settings-field-row">
+                  <div>
+                    <div class="settings-label" data-i18n="settings.animations">Interface Animations</div>
+                    <div class="settings-help">Enable smooth micro-transitions and typing effects</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="settingsAnimations" checked />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="settings-field" style="margin-top: 16px;">
+                  <button id="btnSettingsOpenSubscriptions" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M2 4l3 12h14l3-12-6 7-4-5-4 5-6-7z"></path>
+                      <circle cx="12" cy="19" r="1.5"></circle>
+                    </svg>
+                    <span data-i18n="subscriptions.menu">Subscriptions</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- AI Backend -->
+              <div id="settings-sec-ai" class="settings-section">
+                <div class="settings-field">
+                  <label for="settingsModel" class="settings-label" data-i18n="settings.model">AI Model</label>
+                  <select id="settingsModel" class="settings-select">
+                    <option value="gemini-3.8-flash">MSAI Flash (gemini-3.8-flash) [Recommended]</option>
+                    <option value="gemini-2.5-flash">MSAI Standard Flash (gemini-2.5-flash)</option>
+                    <option value="gemini-3.1-flash-lite">MSAI Flash Lite (gemini-3.1-flash-lite)</option>
+                    <option value="gemini-2.5-pro">MSAI Pro (gemini-2.5-pro)</option>
+                  </select>
+                </div>
+                <div class="settings-field">
+                  <label for="settingsApiKey" class="settings-label" data-i18n="settings.apiKey">Google AI Studio API Key</label>
+                  <input
+                    type="password"
+                    id="settingsApiKey"
+                    class="settings-input"
+                    placeholder="Enter your Gemini API key (optional if server proxy is active)"
+                  />
+                  <div class="settings-help" data-i18n="settings.apiKeyHelp">
+                    Stored securely in your browser's localStorage. Never sent to any third party.
+                  </div>
+                </div>
+                <div class="settings-field">
+                  <div class="settings-field-row">
+                    <label for="settingsTemperature" class="settings-label" data-i18n="settings.temperature">Temperature / Creativity</label>
+                    <span id="settingsTempValue" class="settings-label">0.7</span>
+                  </div>
+                  <input type="range" id="settingsTemperature" class="settings-range" min="0" max="2" step="0.1" value="0.7" />
+                </div>
+              </div>
+
+              <!-- Chat Preferences -->
+              <div id="settings-sec-chat" class="settings-section">
+                <div class="settings-field-row">
+                  <div>
+                    <div class="settings-label" data-i18n="settings.enterToSend">Press Enter to send</div>
+                    <div class="settings-help">When unchecked, use the send button or Shift+Enter</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="settingsEnterToSend" checked />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="settings-field-row">
+                  <div>
+                    <div class="settings-label" data-i18n="settings.autoScroll">Auto-scroll on new messages</div>
+                    <div class="settings-help">Automatically scroll to the bottom during conversation updates</div>
+                  </div>
+                  <label class="switch">
+                    <input type="checkbox" id="settingsAutoScroll" checked />
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Data & Privacy -->
+              <div id="settings-sec-data" class="settings-section">
+                <div class="settings-field">
+                  <div class="settings-label" data-i18n="settings.exportData">Export Conversations</div>
+                  <div class="settings-help">Download all your chat history as a JSON backup file.</div>
+                  <button id="btnExportData" class="btn btn-secondary" style="margin-top: 8px;" data-i18n="settings.exportBtn">Download JSON</button>
+                </div>
+                <div class="settings-field">
+                  <div class="settings-label" data-i18n="settings.importData">Import Conversations</div>
+                  <div class="settings-help">Restore conversations from a previous MSAI JSON export.</div>
+                  <input type="file" id="fileImportInput" accept=".json" class="hidden" />
+                  <button id="btnImportData" class="btn btn-secondary" style="margin-top: 8px;" data-i18n="settings.importBtn">Upload JSON</button>
+                </div>
+                <div class="settings-field" style="margin-top: 8px;">
+                  <div class="settings-label" data-i18n="settings.clearData">Clear All Conversations</div>
+                  <div class="settings-help">Permanently delete all stored chats from this browser.</div>
+                  <button id="btnClearData" class="btn btn-danger" style="margin-top: 8px;" data-i18n="settings.clearBtn">Clear All</button>
+                </div>
+              </div>
+
+              <!-- About -->
+              <div id="settings-sec-about" class="settings-section">
+                <div class="about-card">
+                  <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="brand-icon">M</div>
+                    <div>
+                      <h3 style="font-weight: 700; font-size: 18px;">MSAI</h3>
+                      <p style="font-size: 13px; color: var(--color-text-secondary);">Version 1.0.0</p>
+                    </div>
+                  </div>
+                  <p style="font-size: 14px; color: var(--color-text-secondary); margin-top: 8px;">
+                    Complete production-style AI chat web application powered by Google AI Studio Gemini API with multi-language internationalization, responsive architecture, and local conversation persistence.
+                  </p>
+                  <div style="font-size: 12px; color: var(--color-text-muted); margin-top: 8px;">
+                    Stack: HTML5 · CSS3 · Vanilla JavaScript · JSON · Google AI Studio Gemini API
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-modal-close="settingsModal" data-i18n="settings.close">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="searchModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="searchModalTitle">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 id="searchModalTitle" class="modal-title">Search Conversations</h2>
+          <button class="btn-icon" data-modal-close="searchModal" aria-label="Close search">&times;</button>
+        </div>
+        <div class="modal-body search-modal-body">
+          <div class="search-input-wrapper">
+            <svg class="search-input-icon icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input
+              type="text"
+              id="conversationSearchInput"
+              class="search-input"
+              placeholder="Search by title or message content..."
+              aria-label="Search conversations"
+            />
+          </div>
+          <div id="searchResultsList" class="search-results-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Guide Modal -->
+    <div id="shortcutsModal" class="modal-backdrop" role="dialog" aria-modal="true">
+      <div class="modal-dialog">
+        <div class="modal-header">
+          <h2 class="modal-title">Keyboard Shortcuts</h2>
+          <button class="btn-icon" data-modal-close="shortcutsModal" aria-label="Close shortcuts">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div class="settings-field-row">
+              <span>Send Message</span>
+              <kbd style="background: var(--color-bg-elevated); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--color-border-subtle); font-family: monospace;">Enter</kbd>
+            </div>
+            <div class="settings-field-row">
+              <span>New line in message</span>
+              <kbd style="background: var(--color-bg-elevated); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--color-border-subtle); font-family: monospace;">Shift + Enter</kbd>
+            </div>
+            <div class="settings-field-row">
+              <span>Search Conversations</span>
+              <kbd style="background: var(--color-bg-elevated); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--color-border-subtle); font-family: monospace;">Ctrl / Cmd + K</kbd>
+            </div>
+            <div class="settings-field-row">
+              <span>New Chat</span>
+              <kbd style="background: var(--color-bg-elevated); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--color-border-subtle); font-family: monospace;">Alt + N</kbd>
+            </div>
+            <div class="settings-field-row">
+              <span>Close Active Modal</span>
+              <kbd style="background: var(--color-bg-elevated); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--color-border-subtle); font-family: monospace;">Escape</kbd>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-modal-close="shortcutsModal">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- Application Script Bootstrap -->
+    <script type="module" src="/js/app.js"></script>
+  </body>
+</html>

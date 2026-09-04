@@ -1,0 +1,146 @@
+{
+  "app": {
+    "name": "MSAI",
+    "tagline": "उन्नत एआई सहायक",
+    "version": "1.0.0"
+  },
+  "sidebar": {
+    "newChat": "नया चैट",
+    "search": "बातचीत खोजें...",
+    "projects": "प्रोजेक्ट्स",
+    "artifacts": "आर्टिफैक्ट्स",
+    "code": "कोड",
+    "subscriptions": "सब्सक्रिप्शन",
+    "customize": "कस्टमाइज़",
+    "chatsAndTasks": "चैट और कार्य",
+    "pinned": "पिन किए गए",
+    "recent": "हाल की बातचीत",
+    "noChats": "अभी कोई बातचीत नहीं है",
+    "noChatsSub": "शुरू करने के लिए नया चैट बनाएं",
+    "rename": "नाम बदलें",
+    "delete": "हटाएं",
+    "pin": "बातचीत पिन करें",
+    "unpin": "पिन हटाएं",
+    "collapse": "साइडबार समेटें",
+    "expand": "साइडबार खोलें"
+  },
+  "header": {
+    "model": "MSAI फ़्लैश",
+    "serverOnline": "जुड़ा हुआ",
+    "serverOffline": "तैयार",
+    "shortcuts": "कीबोर्ड शॉर्टकट",
+    "settings": "सेटिंग्स"
+  },
+  "welcome": {
+    "title": "MSAI",
+    "subtitle": "आज मैं आपकी क्या सहायता कर सकता हूँ?",
+    "promptCode": "कोड",
+    "promptWrite": "लिखें",
+    "promptLearn": "सीखें",
+    "promptLife": "जीवन और सलाह",
+    "promptChoice": "MSAI पसंद"
+  },
+  "composer": {
+    "placeholder": "आज मैं आपकी क्या सहायता कर सकता हूँ?",
+    "chatMode": "चैट",
+    "coworkMode": "को-वर्क",
+    "attach": "फ़ाइल जोड़ें",
+    "voice": "ध्वनि इनपुट",
+    "send": "संदेश भेजें",
+    "stop": "रोकें",
+    "shortcutHint": "भेजने के लिए ENTER दबाएं   नई लाइन के लिए SHIFT + ENTER"
+  },
+  "message": {
+    "you": "आप",
+    "assistant": "MSAI",
+    "copy": "कॉपी करें",
+    "copied": "कॉपी हो गया!",
+    "regenerate": "पुनः उत्पन्न करें",
+    "retry": "पुनः प्रयास करें",
+    "edit": "संपादित करें",
+    "delete": "हटाएं",
+    "like": "अच्छा उत्तर",
+    "dislike": "खराब उत्तर",
+    "share": "साझा करें",
+    "save": "सहेजें और भेजें",
+    "cancel": "रद्द करें",
+    "typing": "MSAI सोच रहा है..."
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "general": "सामान्य",
+    "ai": "एआई बैकएंड",
+    "chat": "चैट प्राथमिकताएं",
+    "data": "डेटा और गोपनीयता",
+    "about": "परिचय",
+    "language": "भाषा",
+    "theme": "थीम",
+    "themeDark": "डार्क",
+    "themeLight": "लाइट",
+    "themeSystem": "सिस्टम",
+    "animations": "एनीमेशन",
+    "model": "एआई मॉडल",
+    "apiKey": "Google AI Studio API कुंजी",
+    "apiKeyPlaceholder": "अपनी जेमिनी API कुंजी दर्ज करें",
+    "apiKeyHelp": "सुरक्षित रूप से आपके ब्राउज़र के localStorage में संग्रहीत।",
+    "temperature": "तापमान / रचनात्मकता",
+    "enterToSend": "भेजने के लिए Enter दबाएं",
+    "autoScroll": "नए संदेशों पर ऑटो-स्क्रॉल",
+    "saveHistory": "चैट इतिहास सहेजें",
+    "exportData": "बातचीत निर्यात करें",
+    "exportBtn": "JSON डाउनलोड करें",
+    "importData": "बातचीत आयात करें",
+    "importBtn": "JSON अपलोड करें",
+    "clearData": "सभी बातचीत साफ़ करें",
+    "clearBtn": "सभी हटाएं",
+    "clearConfirm": "क्या आप वाकई सभी बातचीत हटाना चाहते हैं? इसे वापस नहीं लाया जा सकता।",
+    "close": "बंद करें"
+  },
+  "subscriptions": {
+    "menu": "सब्सक्रिप्शन",
+    "title": "आपके साथ बढ़ने वाले प्लान",
+    "individual": "इंडिविजुअल",
+    "currentPlan": "वर्तमान प्लान",
+    "backToChat": "MSAI पर वापस जाएं",
+    "showFeatures": "सभी फीचर्स दिखाएं",
+    "hideFeatures": "फीचर्स छिपाएं",
+    "upgradeModalTitle": "MSAI {plan} में अपग्रेड करें",
+    "planLabel": "प्लान",
+    "priceLabel": "मूल्य",
+    "continue": "जारी रखें",
+    "cancel": "रद्द करें",
+    "freeCurrentNotice": "आप वर्तमान में MSAI फ्री प्लान का उपयोग कर रहे हैं।",
+    "upgradeStarted": "अपग्रेड प्रक्रिया शुरू हुई।",
+    "plans": {
+      "free": {
+        "name": "फ्री",
+        "desc": "हमेशा के लिए MSAI",
+        "btn": "फ्री में उपयोग करें"
+      },
+      "pro": {
+        "name": "प्रो",
+        "desc": "हमेशा के लिए MSAI",
+        "btn": "प्रो चुनें"
+      },
+      "max": {
+        "name": "मैक्स",
+        "desc": "हमेशा के लिए MSAI",
+        "btn": "मैक्स चुनें"
+      }
+    }
+  },
+  "notifications": {
+    "copied": "क्लिपबोर्ड पर कॉपी किया गया",
+    "deleted": "बातचीत हटा दी गई",
+    "renamed": "बातचीत का नाम बदला गया",
+    "pinned": "बातचीत पिन की गई",
+    "unpinned": "पिन हटा दी गई",
+    "saved": "सेटिंग्स सफलतापूर्वक सहेजी गईं",
+    "cleared": "सभी बातचीत का डेटा साफ़ किया गया",
+    "imported": "बातचीत सफलतापूर्वक आयात की गईं",
+    "exported": "बातचीत सफलतापूर्वक निर्यात की गईं",
+    "apiError": "एआई API से संपर्क करने में विफल",
+    "networkError": "नेटवर्क त्रुटि। कृपया अपना कनेक्शन जांचें।",
+    "keyMissing": "कृपया api.js या सेटिंग्स में Google AI Studio API कुंजी प्रदान करें।"
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "app": {
+    "name": "MSAI",
+    "tagline": "উন্নত এআই সহকারী",
+    "version": "1.0.0"
+  },
+  "sidebar": {
+    "newChat": "নতুন চ্যাট",
+    "search": "কথোপকথন খুঁজুন...",
+    "projects": "প্রকল্প",
+    "artifacts": "আর্টিফ্যাক্ট",
+    "code": "কোড",
+    "subscriptions": "সাবস্ক্রিপশন",
+    "customize": "কাস্টমাইজ",
+    "chatsAndTasks": "চ্যাট এবং কাজ",
+    "pinned": "পিন করা",
+    "recent": "সাম্প্রতিক চ্যাট",
+    "noChats": "এখনও কোনো কথোপকথন নেই",
+    "noChatsSub": "শুরু করতে নতুন চ্যাট তৈরি করুন",
+    "rename": "নাম পরিবর্তন",
+    "delete": "মুছুন",
+    "pin": "পিন করুন",
+    "unpin": "আনপিন করুন",
+    "collapse": "সাইডবার লুকান",
+    "expand": "সাইডবার দেখান"
+  },
+  "header": {
+    "model": "MSAI ফ্ল্যাশ",
+    "serverOnline": "সংযুক্ত",
+    "serverOffline": "প্রস্তুত",
+    "shortcuts": "কীবোর্ড শর্টকাট",
+    "settings": "সেটিংস"
+  },
+  "welcome": {
+    "title": "MSAI",
+    "subtitle": "আজ আপনাকে কীভাবে সাহায্য করতে পারি?",
+    "promptCode": "কোড",
+    "promptWrite": "লিখুন",
+    "promptLearn": "শিখুন",
+    "promptLife": "জীবন ও পরামর্শ",
+    "promptChoice": "MSAI পছন্দ"
+  },
+  "composer": {
+    "placeholder": "আজ আপনাকে কীভাবে সাহায্য করতে পারি?",
+    "chatMode": "চ্যাট",
+    "coworkMode": "কো-ওয়ার্ক",
+    "attach": "ফাইল সংযুক্ত করুন",
+    "voice": "ভয়েস ইনপুট",
+    "send": "বার্তা পাঠান",
+    "stop": "থামুন",
+    "shortcutHint": "পাঠাতে ENTER চাপুন   নতুন লাইনের জন্য SHIFT + ENTER"
+  },
+  "message": {
+    "you": "আপনি",
+    "assistant": "MSAI",
+    "copy": "কপি",
+    "copied": "কপি করা হয়েছে!",
+    "regenerate": "পুনরায় তৈরি করুন",
+    "retry": "আবার চেষ্টা করুন",
+    "edit": "সম্পাদনা",
+    "delete": "মুছুন",
+    "like": "ভালো উত্তর",
+    "dislike": "খারাপ উত্তর",
+    "share": "শেয়ার করুন",
+    "save": "সংরক্ষণ করুন",
+    "cancel": "বাতিল",
+    "typing": "MSAI চিন্তা করছে..."
+  },
+  "settings": {
+    "title": "সেটিংস",
+    "general": "সাধারণ",
+    "ai": "এআই ব্যাকএন্ড",
+    "chat": "চ্যাট পছন্দসমূহ",
+    "data": "উপাত্ত ও গোপনীয়তা",
+    "about": "পরিচিতি",
+    "language": "ভাষা",
+    "theme": "থিম",
+    "themeDark": "ডার্ক",
+    "themeLight": "লাইট",
+    "themeSystem": "সিস্টেম",
+    "animations": "অ্যানিমেশন",
+    "model": "এআই মডেল",
+    "apiKey": "Google AI Studio API কী",
+    "apiKeyPlaceholder": "আপনার জেমিনি API কী লিখুন",
+    "apiKeyHelp": "আপনার ব্রাউজারের localStorage-এ নিরাপদে সংরক্ষিত।",
+    "temperature": "তাপমাত্রা / সৃজনশীলতা",
+    "enterToSend": "পাঠাতে Enter চাপুন",
+    "autoScroll": "নতুন বার্তায় স্বয়ংক্রিয় স্ক্রোল",
+    "saveHistory": "চ্যাট ইতিহাস সংরক্ষণ করুন",
+    "exportData": "কথোপকথন রপ্তানি করুন",
+    "exportBtn": "JSON ডাউনলোড",
+    "importData": "কথোপকথন আমদানি করুন",
+    "importBtn": "JSON আপলোড",
+    "clearData": "সমস্ত কথোপকথন মুছুন",
+    "clearBtn": "সব মুছুন",
+    "clearConfirm": "আপনি কি নিশ্চিত যে সমস্ত কথোপকথন মুছে ফেলতে চান?",
+    "close": "বন্ধ করুন"
+  },
+  "subscriptions": {
+    "menu": "সাবস্ক্রিপশন",
+    "title": "আপনার সাথে বাড়তে থাকা প্ল্যানসমূহ",
+    "individual": "ইন্ডিভিজুয়াল",
+    "currentPlan": "বর্তমান প্ল্যান",
+    "backToChat": "MSAI-তে ফিরে যান",
+    "showFeatures": "সমস্ত ফিচার দেখান",
+    "hideFeatures": "ফিচার লুকান",
+    "upgradeModalTitle": "MSAI {plan}-এ আপগ্রেড করুন",
+    "planLabel": "প্ল্যান",
+    "priceLabel": "মূল্য",
+    "continue": "চালিয়ে যান",
+    "cancel": "বাতিল",
+    "freeCurrentNotice": "আপনি বর্তমানে MSAI ফ্রি প্ল্যান ব্যবহার করছেন।",
+    "upgradeStarted": "আপগ্রেড প্রক্রিয়া শুরু হয়েছে।",
+    "plans": {
+      "free": {
+        "name": "ফ্রি",
+        "desc": "সব সময়ের জন্য MSAI",
+        "btn": "বিনামূল্যে ব্যবহার করুন"
+      },
+      "pro": {
+        "name": "প্রো",
+        "desc": "সব সময়ের জন্য MSAI",
+        "btn": "প্রো বাছুন"
+      },
+      "max": {
+        "name": "ম্যাক্স",
+        "desc": "সব সময়ের জন্য MSAI",
+        "btn": "ম্যাক্স বাছুন"
+      }
+    }
+  },
+  "notifications": {
+    "copied": "ক্লিপবোর্ডে কপি করা হয়েছে",
+    "deleted": "কথোপকথন মুছে ফেলা হয়েছে",
+    "renamed": "কথোপকথনের নাম পরিবর্তন করা হয়েছে",
+    "pinned": "কথোপকথন পিন করা হয়েছে",
+    "unpinned": "পিন সরানো হয়েছে",
+    "saved": "সেটিংস সফলভাবে সংরক্ষিত হয়েছে",
+    "cleared": "সমস্ত চ্যাট ডেটা মুছে ফেলা হয়েছে",
+    "imported": "কথোপকথন সফলভাবে আমদানি করা হয়েছে",
+    "exported": "কথোপকথন সফলভাবে রপ্তানি করা হয়েছে",
+    "apiError": "এআই API-এর সাথে যোগাযোগ করতে ব্যর্থ",
+    "networkError": "নেটওয়ার্ক ত্রুটি। আপনার সংযোগ পরীক্ষা করুন।",
+    "keyMissing": "অনুগ্রহ করে api.js বা সেটিংসে Google AI Studio API কী প্রদান করুন।"
+  }
+}

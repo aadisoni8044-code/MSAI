@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" fill="none">
+  <defs>
+    <linearGradient id="msaiGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#4338CA" />
+    </linearGradient>
+  </defs>
+  <!-- M Icon Badge -->
+  <rect x="2" y="4" width="40" height="40" rx="11" fill="url(#msaiGrad)" />
+  <path d="M13 32V16L22 25.5L31 16V32H27.5V21.5L22 27.5L16.5 21.5V32H13Z" fill="#FFFFFF" />
+  <!-- Brand Name -->
+  <text x="52" y="32" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="700" fill="currentColor" letter-spacing="-0.5">MSAI</text>
+</svg>
