@@ -123,7 +123,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   max-width: 1100px;
-  margin: 0 auto 40px auto;
+  margin: 0 auto 30px auto;
   width: 100%;
   align-items: start;
 }
@@ -306,6 +306,17 @@
   color: var(--msai-text);
   flex-shrink: 0;
   margin-top: 2px;
+}
+
+/* Footer */
+.subscriptions-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--msai-muted);
+  opacity: 0.75;
+  margin-top: auto;
+  padding: 20px 0 10px 0;
+  letter-spacing: 0.02em;
 }
 
 /* Confirmation Upgrade Modal */

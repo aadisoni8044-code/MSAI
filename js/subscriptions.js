@@ -1,7 +1,7 @@
 /**
  * MSAI Subscriptions Controller
  * Manages subscription plans rendering, localStorage state, feature expand/collapse,
- * confirmation modal lifecycle, and SPA view switching.
+ * and SPA view switching.
  */
 import { storage } from './storage.js';
 import { notifications } from './notifications.js';
@@ -14,14 +14,11 @@ class SubscriptionsController {
     this.currentPlan = 'free';
     this.viewContainer = null;
     this.gridContainer = null;
-    this.modalBackdrop = null;
-    this.selectedPlanForUpgrade = null;
   }
 
   async init() {
     this.viewContainer = document.getElementById('subscriptionsView');
     this.gridContainer = document.getElementById('subscriptionsGrid');
-    this.modalBackdrop = document.getElementById('subscriptionModal');
 
     // Load active plan from localStorage
     this.currentPlan = storage.get('msai_subscription_plan', storage.get('msai_selected_plan', 'free'));
@@ -55,42 +52,6 @@ class SubscriptionsController {
     if (btnBack) {
       btnBack.addEventListener('click', () => this.closeSubscriptionsView());
     }
-
-    // Modal Close buttons
-    const btnCloseModal = document.getElementById('btnCloseSubModal');
-    const btnCancelModal = document.getElementById('btnSubModalCancel');
-    if (btnCloseModal) {
-      btnCloseModal.addEventListener('click', () => this.closeModal());
-    }
-    if (btnCancelModal) {
-      btnCancelModal.addEventListener('click', () => this.closeModal());
-    }
-
-    // Modal Continue button
-    const btnContinueModal = document.getElementById('btnSubModalContinue');
-    if (btnContinueModal) {
-      btnContinueModal.addEventListener('click', () => {
-        if (this.selectedPlanForUpgrade) {
-          this.executePaymentProviderHook(this.selectedPlanForUpgrade);
-        }
-      });
-    }
-
-    // Close modal on click outside backdrop
-    if (this.modalBackdrop) {
-      this.modalBackdrop.addEventListener('click', (e) => {
-        if (e.target === this.modalBackdrop) {
-          this.closeModal();
-        }
-      });
-    }
-
-    // ESC key closes modal
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.modalBackdrop && this.modalBackdrop.classList.contains('open')) {
-        this.closeModal();
-      }
-    });
 
     // Handle i18n changes
     window.addEventListener('language:changed', () => this.renderPlans());
@@ -154,15 +115,13 @@ class SubscriptionsController {
       // Localized name & description & CTA button
       const planName = i18n.get(`subscriptions.plans.${plan.id}.name`, plan.name);
       const planDesc = i18n.get(`subscriptions.plans.${plan.id}.desc`, plan.description);
+      const displayPrice = i18n.get(`subscriptions.plans.${plan.id}.price`, plan.price);
       const defaultBtnText = plan.buttonText;
       const ctaText = i18n.get(`subscriptions.plans.${plan.id}.btn`, defaultBtnText);
 
       const card = document.createElement('div');
       card.className = `subscription-card ${isCurrent ? 'current-plan-card' : ''}`;
       card.dataset.planId = plan.id;
-
-      // Price formatting
-      const displayPrice = plan.price === "0" ? `${plan.currency}0` : `${plan.currency}${plan.price}`;
 
       const currentBadgeHtml = isCurrent ? `
         <span class="current-plan-badge" data-i18n="subscriptions.currentPlan">
@@ -188,10 +147,9 @@ class SubscriptionsController {
 
         <div class="plan-price-wrapper">
           <span class="plan-price">${escapeHtml(displayPrice)}</span>
-          <span class="plan-billing-period">${escapeHtml(plan.billingPeriod)}</span>
         </div>
 
-        <button class="plan-cta-btn ${isCurrent && plan.id === 'free' ? 'disabled-btn' : ''}" data-action="choose-plan">
+        <button class="plan-cta-btn ${isCurrent ? 'disabled-btn' : ''}" data-action="choose-plan">
           ${escapeHtml(ctaText)}
         </button>
 
@@ -237,95 +195,18 @@ class SubscriptionsController {
   }
 
   handlePlanSelection(planId) {
+    this.setCurrentPlan(planId);
+
+    let toastMsg = '';
     if (planId === 'free') {
-      if (this.currentPlan === 'free') {
-        notifications.info(i18n.get('subscriptions.freeCurrentNotice', 'You are currently using the MSAI Free plan.'));
-      } else {
-        // Downgrade or switch to free
-        this.setCurrentPlan('free');
-        notifications.success('Switched to MSAI Free plan.');
-      }
-      return;
+      toastMsg = i18n.get('subscriptions.toasts.free', 'Free MSAI plan selected.');
+    } else if (planId === 'pro') {
+      toastMsg = i18n.get('subscriptions.toasts.pro', 'MSAI Pro selected — currently free.');
+    } else if (planId === 'max') {
+      toastMsg = i18n.get('subscriptions.toasts.max', 'MSAI Max selected — currently free.');
     }
 
-    // Pro or Max Upgrade
-    this.startSubscription(planId);
-  }
-
-  startSubscription(planId) {
-    const plan = this.plansData.find(p => p.id === planId);
-    if (!plan) return;
-
-    this.selectedPlanForUpgrade = plan;
-
-    // Populate Modal
-    const modalTitle = document.getElementById('subscriptionModalTitle');
-    const modalPlanName = document.getElementById('subModalPlanName');
-    const modalPrice = document.getElementById('subModalPrice');
-    const modalFeatureSummary = document.getElementById('subModalFeatureSummary');
-
-    const localizedTitle = i18n.get('subscriptions.upgradeModalTitle', `Upgrade to MSAI ${plan.name}`).replace('{plan}', plan.name);
-    if (modalTitle) modalTitle.textContent = localizedTitle;
-    if (modalPlanName) modalPlanName.textContent = plan.name;
-    if (modalPrice) modalPrice.textContent = `${plan.currency}${plan.price} ${plan.billingPeriod}`;
-
-    if (modalFeatureSummary) {
-      modalFeatureSummary.innerHTML = `
-        <div style="font-weight: 600; color: var(--msai-text); margin-bottom: 6px;">Includes:</div>
-        <ul style="padding-left: 18px; margin: 0;">
-          ${plan.features.map(f => `<li>${escapeHtml(f)}</li>`).join('')}
-        </ul>
-      `;
-    }
-
-    this.openModal();
-  }
-
-  openModal() {
-    if (this.modalBackdrop) {
-      this.modalBackdrop.classList.add('open');
-    }
-  }
-
-  closeModal() {
-    if (this.modalBackdrop) {
-      this.modalBackdrop.classList.remove('open');
-    }
-    this.selectedPlanForUpgrade = null;
-  }
-
-  /**
-   * Clearly defined extension point for integration with actual payment gateways (Stripe, Razorpay, etc.)
-   * Does NOT claim payment succeeded unless verified by payment provider.
-   */
-  executePaymentProviderHook(plan) {
-    this.closeModal();
-
-    // Log integration hook
-    console.log(`[Payment Integration Hook] Initializing gateway checkout for plan: ${plan.id}`);
-
-    // Trigger explicit upgrade process notification without mock payment success claim
-    notifications.info(i18n.get('subscriptions.upgradeStarted', 'Upgrade process started.'));
-
-    /*
-     * REAL PAYMENT GATEWAY CONNECTION POINT:
-     * e.g., Razorpay / Stripe Checkout initialization:
-     *
-     * const options = {
-     *   key: "YOUR_PAYMENT_KEY",
-     *   amount: plan.price * 100,
-     *   currency: "INR",
-     *   name: "MSAI",
-     *   description: `Upgrade to ${plan.name}`,
-     *   handler: function (response) {
-     *     // Verify payment signature on backend server before setting current plan:
-     *     subscriptionsController.setCurrentPlan(plan.id);
-     *     notifications.success(`Successfully upgraded to MSAI ${plan.name}!`);
-     *   }
-     * };
-     * const rzp = new Razorpay(options);
-     * rzp.open();
-     */
+    notifications.success(toastMsg);
   }
 }
 

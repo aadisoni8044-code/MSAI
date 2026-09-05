@@ -104,28 +104,30 @@
     "backToChat": "MSAI पर वापस जाएं",
     "showFeatures": "सभी फीचर्स दिखाएं",
     "hideFeatures": "फीचर्स छिपाएं",
-    "upgradeModalTitle": "MSAI {plan} में अपग्रेड करें",
-    "planLabel": "प्लान",
-    "priceLabel": "मूल्य",
-    "continue": "जारी रखें",
-    "cancel": "रद्द करें",
-    "freeCurrentNotice": "आप वर्तमान में MSAI फ्री प्लान का उपयोग कर रहे हैं।",
-    "upgradeStarted": "अपग्रेड प्रक्रिया शुरू हुई।",
+    "footer": "Development by MSAI",
+    "toasts": {
+      "free": "फ्री MSAI प्लान चुना गया।",
+      "pro": "MSAI प्रो चुना गया — वर्तमान में फ्री।",
+      "max": "MSAI मैक्स चुना गया — वर्तमान में फ्री।"
+    },
     "plans": {
       "free": {
         "name": "फ्री",
         "desc": "हमेशा के लिए MSAI",
+        "price": "फ्री",
         "btn": "फ्री में उपयोग करें"
       },
       "pro": {
         "name": "प्रो",
         "desc": "हमेशा के लिए MSAI",
-        "btn": "प्रो चुनें"
+        "price": "फ्री",
+        "btn": "फ्री में उपयोग करें"
       },
       "max": {
         "name": "मैक्स",
         "desc": "हमेशा के लिए MSAI",
-        "btn": "मैक्स चुनें"
+        "price": "फ्री",
+        "btn": "फ्री में उपयोग करें"
       }
     }
   },

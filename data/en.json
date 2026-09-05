@@ -104,28 +104,30 @@
     "backToChat": "Back to MSAI",
     "showFeatures": "Show all features",
     "hideFeatures": "Hide features",
-    "upgradeModalTitle": "Upgrade to MSAI {plan}",
-    "planLabel": "Plan",
-    "priceLabel": "Price",
-    "continue": "Continue",
-    "cancel": "Cancel",
-    "freeCurrentNotice": "You are currently using the MSAI Free plan.",
-    "upgradeStarted": "Upgrade process started.",
+    "footer": "Development by MSAI",
+    "toasts": {
+      "free": "Free MSAI plan selected.",
+      "pro": "MSAI Pro selected — currently free.",
+      "max": "MSAI Max selected — currently free."
+    },
     "plans": {
       "free": {
         "name": "Free",
         "desc": "All time MSAI",
+        "price": "Free",
         "btn": "Use MSAI for free"
       },
       "pro": {
         "name": "Pro",
         "desc": "All time MSAI",
-        "btn": "Choose Pro"
+        "price": "Free",
+        "btn": "Use MSAI for free"
       },
       "max": {
         "name": "Max",
         "desc": "All time MSAI",
-        "btn": "Choose Max"
+        "price": "Free",
+        "btn": "Use MSAI for free"
       }
     }
   },
