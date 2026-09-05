@@ -104,6 +104,7 @@
     "backToChat": "Volver a MSAI",
     "showFeatures": "Mostrar todas las funciones",
     "hideFeatures": "Ocultar funciones",
+    "connectTitle": "Conéctate con MSAI",
     "footer": "Development by MSAI",
     "toasts": {
       "free": "Plan gratuito de MSAI seleccionado.",

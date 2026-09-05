@@ -308,6 +308,69 @@
   margin-top: 2px;
 }
 
+/* Social Links Section */
+.subscriptions-social-section {
+  max-width: 1100px;
+  margin: 20px auto 20px auto;
+  width: 100%;
+  text-align: center;
+}
+
+.subscriptions-social-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--msai-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.subscriptions-social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.social-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: var(--msai-card);
+  border: 1px solid var(--msai-border);
+  border-radius: 9999px;
+  color: var(--msai-text);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.social-link-btn:hover {
+  background-color: var(--msai-hover);
+  border-color: var(--msai-border-hover);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.social-link-btn:active {
+  transform: translateY(0);
+}
+
+.social-link-btn svg {
+  flex-shrink: 0;
+  color: var(--msai-muted);
+  transition: color 0.2s ease;
+}
+
+.social-link-btn:hover svg {
+  color: #ffffff;
+}
+
 /* Footer */
 .subscriptions-footer {
   text-align: center;
@@ -500,6 +563,15 @@
     font-size: 2rem;
   }
 
+  .subscriptions-social-links {
+    gap: 8px;
+  }
+
+  .social-link-btn {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+
   .subscription-modal-card {
     padding: 20px;
   }
@@ -511,6 +583,7 @@
   .subscription-card,
   .features-container,
   .chevron-icon,
+  .social-link-btn,
   .subscription-modal-backdrop,
   .subscription-modal-card {
     transition: none !important;
