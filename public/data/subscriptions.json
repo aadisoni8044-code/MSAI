@@ -1,0 +1,51 @@
+[
+  {
+    "id": "free",
+    "name": "Free",
+    "description": "All time MSAI",
+    "price": "Free",
+    "currency": "",
+    "billingPeriod": "",
+    "buttonText": "Use MSAI for free",
+    "features": [
+      "MSAI AI chat",
+      "Basic conversations",
+      "Conversation history",
+      "Four language interface",
+      "Dark mode",
+      "Local chat storage"
+    ]
+  },
+  {
+    "id": "pro",
+    "name": "Pro",
+    "description": "All time MSAI",
+    "price": "Free",
+    "currency": "",
+    "billingPeriod": "",
+    "buttonText": "Use MSAI for free",
+    "features": [
+      "Everything in Free",
+      "Longer conversations",
+      "Higher usage limits",
+      "Advanced chat controls",
+      "Priority experience"
+    ]
+  },
+  {
+    "id": "max",
+    "name": "Max",
+    "description": "All time MSAI",
+    "price": "Free",
+    "currency": "",
+    "billingPeriod": "",
+    "buttonText": "Use MSAI for free",
+    "features": [
+      "Everything in Pro",
+      "Maximum available usage",
+      "Advanced AI experience",
+      "Extended conversations",
+      "Premium interface features"
+    ]
+  }
+]
