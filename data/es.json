@@ -1,0 +1,149 @@
+{
+  "app": {
+    "name": "MSAI",
+    "tagline": "Asistente de IA Avanzado",
+    "version": "1.0.0"
+  },
+  "sidebar": {
+    "newChat": "Nuevo",
+    "search": "Buscar chats...",
+    "projects": "Proyectos",
+    "artifacts": "Artefactos",
+    "code": "Código",
+    "subscriptions": "Suscripciones",
+    "customize": "Personalizar",
+    "chatsAndTasks": "CHATS Y TAREAS",
+    "pinned": "Fijados",
+    "recent": "Recientes",
+    "noChats": "No hay conversaciones aún",
+    "noChatsSub": "Inicia un nuevo chat para comenzar",
+    "rename": "Renombrar",
+    "delete": "Eliminar",
+    "pin": "Fijar conversación",
+    "unpin": "Desfijar conversación",
+    "collapse": "Colapsar barra lateral",
+    "expand": "Expandir barra lateral"
+  },
+  "header": {
+    "model": "MSAI Flash",
+    "serverOnline": "Conectado",
+    "serverOffline": "Listo",
+    "shortcuts": "Atajos de teclado",
+    "settings": "Configuración"
+  },
+  "welcome": {
+    "title": "MSAI",
+    "subtitle": "¿Cómo puedo ayudarte hoy?",
+    "promptCode": "Código",
+    "promptWrite": "Escribir",
+    "promptLearn": "Aprender",
+    "promptLife": "Cosas diarias",
+    "promptChoice": "Elección de MSAI"
+  },
+  "composer": {
+    "placeholder": "¿Cómo puedo ayudarte hoy?",
+    "chatMode": "Chat",
+    "coworkMode": "Colaborar",
+    "attach": "Adjuntar archivo",
+    "voice": "Entrada de voz",
+    "send": "Enviar mensaje",
+    "stop": "Detener",
+    "shortcutHint": "PRESIONA ENTER PARA ENVIAR   SHIFT + ENTER PARA NUEVA LÍNEA"
+  },
+  "message": {
+    "you": "Tú",
+    "assistant": "MSAI",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "regenerate": "Regenerar",
+    "retry": "Reintentar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "like": "Buena respuesta",
+    "dislike": "Mala respuesta",
+    "share": "Compartir",
+    "save": "Guardar y Enviar",
+    "cancel": "Cancelar",
+    "typing": "MSAI está pensando..."
+  },
+  "settings": {
+    "title": "Configuración",
+    "general": "General",
+    "ai": "Motor de IA",
+    "chat": "Preferencias de Chat",
+    "data": "Datos y Privacidad",
+    "about": "Acerca de",
+    "language": "Idioma",
+    "theme": "Tema",
+    "themeDark": "Oscuro",
+    "themeLight": "Claro",
+    "themeSystem": "Sistema",
+    "animations": "Animaciones",
+    "model": "Modelo de IA",
+    "apiKey": "Clave API de Google AI Studio",
+    "apiKeyPlaceholder": "Ingresa tu clave de Gemini API",
+    "apiKeyHelp": "Guardada de forma segura en localStorage de tu navegador.",
+    "temperature": "Temperatura / Creatividad",
+    "enterToSend": "Presiona Enter para enviar",
+    "autoScroll": "Desplazamiento automático",
+    "saveHistory": "Guardar historial de chats",
+    "exportData": "Exportar Conversaciones",
+    "exportBtn": "Descargar JSON",
+    "importData": "Importar Conversaciones",
+    "importBtn": "Subir JSON",
+    "clearData": "Borrar Todas las Conversaciones",
+    "clearBtn": "Borrar Todo",
+    "clearConfirm": "¿Seguro que deseas eliminar todas las conversaciones? Esta acción no se puede deshacer.",
+    "close": "Cerrar"
+  },
+  "subscriptions": {
+    "menu": "Suscripciones",
+    "title": "Planes que crecen contigo",
+    "individual": "Individual",
+    "currentPlan": "Plan actual",
+    "backToChat": "Volver a MSAI",
+    "showFeatures": "Mostrar todas las funciones",
+    "hideFeatures": "Ocultar funciones",
+    "connectTitle": "Conéctate con MSAI",
+    "footer": "Development by MSAI",
+    "toasts": {
+      "free": "Plan gratuito de MSAI seleccionado.",
+      "pro": "MSAI Pro seleccionado — actualmente gratis.",
+      "max": "MSAI Max seleccionado — actualmente gratis."
+    },
+    "plans": {
+      "free": {
+        "name": "Gratis",
+        "desc": "MSAI para siempre",
+        "price": "Gratis",
+        "btn": "Usar MSAI gratis"
+      },
+      "pro": {
+        "name": "Pro",
+        "desc": "MSAI para siempre",
+        "price": "Gratis",
+        "btn": "Usar MSAI gratis"
+      },
+      "max": {
+        "name": "Max",
+        "desc": "MSAI para siempre",
+        "price": "Gratis",
+        "btn": "Usar MSAI gratis"
+      }
+    }
+  },
+  "notifications": {
+    "copied": "Copiado al portapapeles",
+    "deleted": "Conversación eliminada",
+    "renamed": "Conversación renombrada",
+    "pinned": "Conversación fijada",
+    "unpinned": "Conversación desfijada",
+    "saved": "Configuración guardada",
+    "cleared": "Todas las conversaciones han sido borradas",
+    "imported": "Conversaciones importadas con éxito",
+    "exported": "Conversaciones exportadas con éxito",
+    "apiError": "Error al comunicar con la API de IA",
+    "networkError": "Error de red. Por favor revisa tu conexión.",
+    "keyMissing": "Por favor proporciona tu clave de API de Google AI Studio en api.js o Configuración."
+  }
+}

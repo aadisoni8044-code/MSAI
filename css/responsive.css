@@ -1,0 +1,101 @@
+/* Responsive & Mobile Breakpoints */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 280px;
+    z-index: var(--z-sidebar);
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+  }
+
+  .main-content {
+    margin-left: 0 !important;
+    width: 100vw;
+  }
+
+  .chat-inner-wrapper {
+    padding: var(--space-3) var(--space-3) var(--space-4);
+  }
+
+  .composer-wrapper {
+    padding: 0 var(--space-3) var(--space-3);
+  }
+
+  .composer-card {
+    border-radius: var(--radius-lg);
+    padding: var(--space-2) var(--space-3);
+  }
+
+  .message-content-wrapper {
+    max-width: 92%;
+  }
+
+  .message-avatar {
+    width: 28px;
+    height: 28px;
+  }
+
+  .settings-container {
+    flex-direction: column;
+  }
+
+  .settings-nav {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: var(--space-2);
+    padding-right: 0;
+  }
+
+  .settings-content-panel {
+    padding-left: 0;
+    padding-top: var(--space-2);
+  }
+
+  .btn, .btn-icon {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-logo-large {
+    font-size: 2rem;
+  }
+
+  .suggestion-pill {
+    font-size: var(--font-size-xs);
+    padding: var(--space-1) var(--space-3);
+  }
+
+  .composer-footer-hint {
+    display: none;
+  }
+
+  .toast-container {
+    left: var(--space-4);
+    right: var(--space-4);
+    bottom: var(--space-4);
+    max-width: none;
+  }
+}

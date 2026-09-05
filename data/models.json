@@ -1,0 +1,34 @@
+[
+  {
+    "id": "gemini-3.8-flash",
+    "name": "MSAI Flash (3.8)",
+    "description": "Next-generation model. Ultra-fast, highly intelligent, versatile for everyday chat.",
+    "speed": "Ultra-fast",
+    "recommended": true,
+    "contextWindow": "1M tokens"
+  },
+  {
+    "id": "gemini-2.5-flash",
+    "name": "MSAI Standard Flash",
+    "description": "Reliable and responsive model for general conversation and lightweight reasoning.",
+    "speed": "Very Fast",
+    "recommended": false,
+    "contextWindow": "1M tokens"
+  },
+  {
+    "id": "gemini-3.1-flash-lite",
+    "name": "MSAI Flash Lite",
+    "description": "High-throughput, lowest-latency model for rapid exchanges.",
+    "speed": "Instant",
+    "recommended": false,
+    "contextWindow": "1M tokens"
+  },
+  {
+    "id": "gemini-2.5-pro",
+    "name": "MSAI Pro",
+    "description": "Advanced reasoning, deep logic, coding analysis, and complex problem-solving.",
+    "speed": "Balanced",
+    "recommended": false,
+    "contextWindow": "2M tokens"
+  }
+]

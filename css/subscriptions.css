@@ -1,0 +1,587 @@
+/* ==========================================================================
+   MSAI SUBSCRIPTIONS SCREEN STYLES
+   ========================================================================== */
+
+:root {
+  --msai-background: #09090b;
+  --msai-card: #121215;
+  --msai-border: rgba(255, 255, 255, 0.12);
+  --msai-border-hover: rgba(255, 255, 255, 0.22);
+  --msai-text: #f4f4f5;
+  --msai-muted: #a1a1aa;
+  --msai-button: #ffffff;
+  --msai-button-hover: #e4e4e7;
+  --msai-button-text: #09090b;
+  --msai-hover: rgba(255, 255, 255, 0.06);
+  --msai-badge-bg: rgba(255, 255, 255, 0.1);
+  --msai-badge-text: #e4e4e7;
+  --msai-card-radius: 18px;
+  --msai-btn-radius: 9999px;
+  --msai-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Base View Container */
+.subscriptions-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  min-height: 100%;
+  background-color: var(--msai-background);
+  color: var(--msai-text);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-top: max(20px, env(safe-area-inset-top));
+  padding-bottom: max(30px, env(safe-area-inset-bottom));
+  padding-left: max(20px, env(safe-area-inset-left));
+  padding-right: max(20px, env(safe-area-inset-right));
+  box-sizing: border-box;
+  z-index: 100;
+  position: relative;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.subscriptions-view.hidden {
+  display: none !important;
+}
+
+/* Header Section */
+.subscriptions-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 8px 0 24px 0;
+}
+
+.btn-back-chat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid var(--msai-border);
+  color: var(--msai-text);
+  padding: 8px 16px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-back-chat:hover {
+  background: var(--msai-hover);
+  border-color: var(--msai-border-hover);
+}
+
+.subscriptions-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 10px auto 36px auto;
+  padding: 0 16px;
+}
+
+.subscriptions-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  color: var(--msai-text);
+}
+
+.subscriptions-selector-wrapper {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--msai-border);
+  border-radius: 9999px;
+}
+
+.subscriptions-toggle-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: var(--msai-text);
+  padding: 8px 24px;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: default;
+  transition: all 0.2s ease;
+}
+
+/* Grid Layout for Cards */
+.subscriptions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto 30px auto;
+  width: 100%;
+  align-items: start;
+}
+
+/* Card Component */
+.subscription-card {
+  background-color: var(--msai-card);
+  border: 1px solid var(--msai-border);
+  border-radius: var(--msai-card-radius);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: var(--msai-shadow);
+}
+
+.subscription-card:hover {
+  border-color: var(--msai-border-hover);
+  transform: translateY(-2px);
+}
+
+.subscription-card.current-plan-card {
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+}
+
+.card-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.plan-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--msai-text);
+}
+
+.current-plan-badge {
+  display: inline-block;
+  background: var(--msai-badge-bg);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--msai-badge-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.plan-description {
+  font-size: 0.875rem;
+  color: var(--msai-muted);
+  margin-bottom: 20px;
+}
+
+.plan-price-wrapper {
+  margin-bottom: 24px;
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.plan-price {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--msai-text);
+  letter-spacing: -0.03em;
+}
+
+.plan-billing-period {
+  font-size: 0.875rem;
+  color: var(--msai-muted);
+  font-weight: 400;
+}
+
+/* CTA Button */
+.plan-cta-btn {
+  width: 100%;
+  padding: 12px 20px;
+  background-color: var(--msai-button);
+  color: var(--msai-button-text);
+  border: none;
+  border-radius: var(--msai-btn-radius);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.plan-cta-btn:hover {
+  background-color: var(--msai-button-hover);
+}
+
+.plan-cta-btn:active {
+  transform: scale(0.98);
+}
+
+.plan-cta-btn.disabled-btn {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: var(--msai-muted);
+  cursor: default;
+  pointer-events: none;
+}
+
+/* Expandable Features Row */
+.features-toggle-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--msai-border);
+  padding: 16px 0 4px 0;
+  color: var(--msai-text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.features-toggle-btn:hover {
+  color: #ffffff;
+}
+
+.chevron-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.features-toggle-btn[aria-expanded="true"] .chevron-icon {
+  transform: rotate(180deg);
+}
+
+/* Features List Container */
+.features-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+  opacity: 0;
+}
+
+.features-container.expanded {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 12px;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--msai-muted);
+  line-height: 1.4;
+}
+
+.feature-check-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--msai-text);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Social Links Section */
+.subscriptions-social-section {
+  max-width: 1100px;
+  margin: 20px auto 20px auto;
+  width: 100%;
+  text-align: center;
+}
+
+.subscriptions-social-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--msai-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.subscriptions-social-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.social-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background-color: var(--msai-card);
+  border: 1px solid var(--msai-border);
+  border-radius: 9999px;
+  color: var(--msai-text);
+  text-decoration: none;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.social-link-btn:hover {
+  background-color: var(--msai-hover);
+  border-color: var(--msai-border-hover);
+  color: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.social-link-btn:active {
+  transform: translateY(0);
+}
+
+.social-link-btn svg {
+  flex-shrink: 0;
+  color: var(--msai-muted);
+  transition: color 0.2s ease;
+}
+
+.social-link-btn:hover svg {
+  color: #ffffff;
+}
+
+/* Footer */
+.subscriptions-footer {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--msai-muted);
+  opacity: 0.75;
+  margin-top: auto;
+  padding: 20px 0 10px 0;
+  letter-spacing: 0.02em;
+}
+
+/* Confirmation Upgrade Modal */
+.subscription-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+  box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.subscription-modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.subscription-modal-card {
+  background: var(--msai-card);
+  border: 1px solid var(--msai-border);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 440px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.subscription-modal-backdrop.open .subscription-modal-card {
+  transform: scale(1);
+}
+
+.subscription-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.subscription-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--msai-text);
+  margin: 0;
+}
+
+.btn-close-modal {
+  background: transparent;
+  border: none;
+  color: var(--msai-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.btn-close-modal:hover {
+  color: var(--msai-text);
+}
+
+.subscription-modal-body {
+  margin-bottom: 24px;
+}
+
+.modal-plan-details {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--msai-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.modal-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.modal-detail-row:last-child {
+  margin-bottom: 0;
+}
+
+.modal-detail-label {
+  color: var(--msai-muted);
+}
+
+.modal-detail-value {
+  color: var(--msai-text);
+  font-weight: 600;
+}
+
+.modal-features-summary {
+  font-size: 0.85rem;
+  color: var(--msai-muted);
+  line-height: 1.5;
+}
+
+.subscription-modal-footer {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-btn-continue {
+  flex: 1;
+  padding: 12px 16px;
+  background-color: var(--msai-button);
+  color: var(--msai-button-text);
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal-btn-continue:hover {
+  background-color: var(--msai-button-hover);
+}
+
+.modal-btn-cancel {
+  flex: 1;
+  padding: 12px 16px;
+  background: transparent;
+  color: var(--msai-text);
+  border: 1px solid var(--msai-border);
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-btn-cancel:hover {
+  background: var(--msai-hover);
+  border-color: var(--msai-border-hover);
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 900px) {
+  .subscriptions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .subscriptions-view {
+    padding: 16px 16px 32px 16px;
+  }
+
+  .subscriptions-title {
+    font-size: 1.75rem;
+    margin-bottom: 20px;
+  }
+
+  .subscriptions-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .subscription-card {
+    padding: 24px 20px;
+  }
+
+  .plan-price {
+    font-size: 2rem;
+  }
+
+  .subscriptions-social-links {
+    gap: 8px;
+  }
+
+  .social-link-btn {
+    padding: 8px 14px;
+    font-size: 0.8rem;
+  }
+
+  .subscription-modal-card {
+    padding: 20px;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  .subscriptions-view,
+  .subscription-card,
+  .features-container,
+  .chevron-icon,
+  .social-link-btn,
+  .subscription-modal-backdrop,
+  .subscription-modal-card {
+    transition: none !important;
+  }
+}

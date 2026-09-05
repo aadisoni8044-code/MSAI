@@ -1,0 +1,11 @@
+{
+  "theme": "dark",
+  "language": "en",
+  "model": "gemini-3.8-flash",
+  "temperature": 0.7,
+  "enterToSend": true,
+  "autoScroll": true,
+  "saveHistory": true,
+  "animations": true,
+  "apiKey": ""
+}

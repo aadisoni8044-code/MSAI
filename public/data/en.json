@@ -1,0 +1,149 @@
+{
+  "app": {
+    "name": "MSAI",
+    "tagline": "Advanced AI Assistant",
+    "version": "1.0.0"
+  },
+  "sidebar": {
+    "newChat": "New",
+    "search": "Search chats...",
+    "projects": "Projects",
+    "artifacts": "Artifacts",
+    "code": "Code",
+    "subscriptions": "Subscriptions",
+    "customize": "Customize",
+    "chatsAndTasks": "CHATS AND TASKS",
+    "pinned": "Pinned",
+    "recent": "Recent",
+    "noChats": "No conversations yet",
+    "noChatsSub": "Start a new chat to begin",
+    "rename": "Rename",
+    "delete": "Delete",
+    "pin": "Pin conversation",
+    "unpin": "Unpin conversation",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  },
+  "header": {
+    "model": "MSAI Flash",
+    "serverOnline": "Connected",
+    "serverOffline": "API Ready",
+    "shortcuts": "Keyboard Shortcuts",
+    "settings": "Settings"
+  },
+  "welcome": {
+    "title": "MSAI",
+    "subtitle": "How can I help you today?",
+    "promptCode": "Code",
+    "promptWrite": "Write",
+    "promptLearn": "Learn",
+    "promptLife": "Life stuff",
+    "promptChoice": "MSAI's choice"
+  },
+  "composer": {
+    "placeholder": "How can I help you today?",
+    "chatMode": "Chat",
+    "coworkMode": "Cowork",
+    "attach": "Attach file",
+    "voice": "Voice input",
+    "send": "Send message",
+    "stop": "Stop generating",
+    "shortcutHint": "PRESS ENTER TO SEND   SHIFT + ENTER FOR NEW LINE"
+  },
+  "message": {
+    "you": "You",
+    "assistant": "MSAI",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "regenerate": "Regenerate",
+    "retry": "Retry",
+    "edit": "Edit",
+    "delete": "Delete",
+    "like": "Good response",
+    "dislike": "Bad response",
+    "share": "Share",
+    "save": "Save & Submit",
+    "cancel": "Cancel",
+    "typing": "MSAI is thinking..."
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "ai": "AI Backend",
+    "chat": "Chat Preferences",
+    "data": "Data & Privacy",
+    "about": "About",
+    "language": "Language",
+    "theme": "Theme",
+    "themeDark": "Dark",
+    "themeLight": "Light",
+    "themeSystem": "System",
+    "animations": "Interface Animations",
+    "model": "AI Model",
+    "apiKey": "Google AI Studio API Key",
+    "apiKeyPlaceholder": "Enter your Gemini API key (optional if using proxy)",
+    "apiKeyHelp": "Stored securely in your browser's localStorage. Never sent to any third party.",
+    "temperature": "Temperature / Creativity",
+    "enterToSend": "Press Enter to send",
+    "autoScroll": "Auto-scroll on new messages",
+    "saveHistory": "Save conversation history",
+    "exportData": "Export Conversations",
+    "exportBtn": "Download JSON",
+    "importData": "Import Conversations",
+    "importBtn": "Upload JSON",
+    "clearData": "Clear All Conversations",
+    "clearBtn": "Clear All",
+    "clearConfirm": "Are you sure you want to delete all conversations? This action cannot be undone.",
+    "close": "Close"
+  },
+  "subscriptions": {
+    "menu": "Subscriptions",
+    "title": "Plans that grow with you",
+    "individual": "Individual",
+    "currentPlan": "Current plan",
+    "backToChat": "Back to MSAI",
+    "showFeatures": "Show all features",
+    "hideFeatures": "Hide features",
+    "connectTitle": "Connect with MSAI",
+    "footer": "Development by MSAI",
+    "toasts": {
+      "free": "Free MSAI plan selected.",
+      "pro": "MSAI Pro selected — currently free.",
+      "max": "MSAI Max selected — currently free."
+    },
+    "plans": {
+      "free": {
+        "name": "Free",
+        "desc": "All time MSAI",
+        "price": "Free",
+        "btn": "Use MSAI for free"
+      },
+      "pro": {
+        "name": "Pro",
+        "desc": "All time MSAI",
+        "price": "Free",
+        "btn": "Use MSAI for free"
+      },
+      "max": {
+        "name": "Max",
+        "desc": "All time MSAI",
+        "price": "Free",
+        "btn": "Use MSAI for free"
+      }
+    }
+  },
+  "notifications": {
+    "copied": "Copied to clipboard",
+    "deleted": "Conversation deleted",
+    "renamed": "Conversation renamed",
+    "pinned": "Conversation pinned",
+    "unpinned": "Conversation unpinned",
+    "saved": "Settings saved successfully",
+    "cleared": "All conversation data cleared",
+    "imported": "Conversations imported successfully",
+    "exported": "Conversations exported successfully",
+    "apiError": "Failed to communicate with AI API",
+    "networkError": "Network error. Please check your connection.",
+    "keyMissing": "Please provide a Google AI Studio API key in api.js or Settings."
+  }
+}

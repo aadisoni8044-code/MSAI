@@ -1,0 +1,42 @@
+[
+  {
+    "id": "code",
+    "icon": "</>",
+    "labelKey": "welcome.promptCode",
+    "defaultLabel": "Code",
+    "title": "Write clean modern code",
+    "prompt": "Write a clean, responsive web component in modern vanilla JavaScript and CSS that creates an interactive glowing countdown timer."
+  },
+  {
+    "id": "write",
+    "icon": "✏️",
+    "labelKey": "welcome.promptWrite",
+    "defaultLabel": "Write",
+    "title": "Compose or refine writing",
+    "prompt": "Draft a persuasive, friendly introduction email for an innovative AI tech product launch to early beta testers."
+  },
+  {
+    "id": "learn",
+    "icon": "🎓",
+    "labelKey": "welcome.promptLearn",
+    "defaultLabel": "Learn",
+    "title": "Explain complex concepts",
+    "prompt": "Explain how large language models and attention mechanisms work conceptually using an intuitive metaphor."
+  },
+  {
+    "id": "life",
+    "icon": "💡",
+    "labelKey": "welcome.promptLife",
+    "defaultLabel": "Life stuff",
+    "title": "Brainstorm practical ideas",
+    "prompt": "Give me a high-protein 3-day meal plan with simple recipes that take under 25 minutes to cook."
+  },
+  {
+    "id": "choice",
+    "icon": "✨",
+    "labelKey": "welcome.promptChoice",
+    "defaultLabel": "MSAI's choice",
+    "title": "Explore creative thinking",
+    "prompt": "Imagine what personal computing and human-AI collaboration will look like in the year 2035."
+  }
+]
