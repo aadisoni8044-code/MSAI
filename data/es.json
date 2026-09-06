@@ -98,6 +98,17 @@
     "clearConfirm": "¿Seguro que deseas eliminar todas las conversaciones? Esta acción no se puede deshacer.",
     "close": "Cerrar"
   },
+  "codeEditor": {
+    "title": "MSAI Código",
+    "subtitle": "Playground de HTML • CSS • JavaScript",
+    "run": "EJECUTAR ▶",
+    "save": "Guardar",
+    "download": "Descargar",
+    "reset": "Restablecer",
+    "newProject": "+ Nuevo",
+    "preview": "Vista previa",
+    "console": "Consola"
+  },
   "subscriptions": {
     "menu": "Suscripciones",
     "title": "Planes que crecen contigo",

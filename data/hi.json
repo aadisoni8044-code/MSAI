@@ -98,6 +98,17 @@
     "clearConfirm": "क्या आप वाकई सभी बातचीत हटाना चाहते हैं? इसे वापस नहीं लाया जा सकता।",
     "close": "बंद करें"
   },
+  "codeEditor": {
+    "title": "MSAI कोड",
+    "subtitle": "HTML • CSS • JavaScript प्लेग्राउंड",
+    "run": "रन ▶",
+    "save": "सहेजें",
+    "download": "डाउनलोड",
+    "reset": "रीसेट",
+    "newProject": "+ नया",
+    "preview": "लाइव पूर्वावलोकन",
+    "console": "कंसोल लॉग"
+  },
   "subscriptions": {
     "menu": "सब्सक्रिप्शन",
     "title": "आपके साथ बढ़ने वाले प्लान",

@@ -98,6 +98,17 @@
     "clearConfirm": "আপনি কি নিশ্চিত যে সমস্ত কথোপকথন মুছে ফেলতে চান?",
     "close": "বন্ধ করুন"
   },
+  "codeEditor": {
+    "title": "MSAI কোড",
+    "subtitle": "HTML • CSS • JavaScript প্লেগ্রাউন্ড",
+    "run": "রান ▶",
+    "save": "সংরক্ষণ করুন",
+    "download": "ডাউনলোড",
+    "reset": "রিসেট",
+    "newProject": "+ নতুন",
+    "preview": "লাইভ পূর্বরূপ",
+    "console": "কনসোল লগ"
+  },
   "subscriptions": {
     "menu": "সাবস্ক্রিপশন",
     "title": "আপনার সাথে বাড়তে থাকা প্ল্যানসমূহ",

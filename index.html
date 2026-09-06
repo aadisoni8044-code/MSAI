@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="/css/animations.css" />
     <link rel="stylesheet" href="/css/responsive.css" />
     <link rel="stylesheet" href="/css/subscriptions.css" />
+    <link rel="stylesheet" href="/css/code-editor.css" />
   </head>
   <body>
     <div id="app" class="app-layout">
@@ -395,6 +396,146 @@
           <!-- Footer -->
           <div class="subscriptions-footer" data-i18n="subscriptions.footer">
             Development by MSAI
+          </div>
+        </div>
+
+        <!-- Code Editor View (SPA Screen) -->
+        <div id="codeEditorView" class="code-editor-view hidden" aria-label="MSAI Code Editor">
+          <!-- Top Header Toolbar -->
+          <div class="ce-header-nav">
+            <div class="ce-header-left">
+              <button id="btnBackFromCode" class="btn-ce-back" aria-label="Back to MSAI Chat">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <line x1="19" y1="12" x2="5" y2="12"></line>
+                  <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+                <span>Back to MSAI</span>
+              </button>
+              <div class="ce-title-box">
+                <div class="ce-title-row">
+                  <input type="text" id="ceProjectName" class="ce-project-name-input" value="My Website Project" title="Click to rename project" />
+                  <span id="ceSaveStatus" class="ce-save-status">Saved ✓</span>
+                </div>
+                <span class="ce-subtitle">HTML • CSS • JavaScript Playground</span>
+              </div>
+            </div>
+
+            <div class="ce-header-right">
+              <button id="btnCeReset" class="btn-ce-action btn-ce-secondary" title="Reset project to defaults">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                <span>Reset</span>
+              </button>
+              <button id="btnCeDownload" class="btn-ce-action btn-ce-secondary" title="Download project files">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                <span>Download</span>
+              </button>
+              <button id="btnCeSave" class="btn-ce-action btn-ce-save" title="Save Project">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                <span>Save</span>
+              </button>
+              <button id="btnCeRun" class="btn-ce-action btn-ce-run" title="Run Code (Ctrl+Enter)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                </svg>
+                <span>RUN ▶</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Main Workspace Split Area -->
+          <div class="ce-workspace">
+            <!-- Sidebar File Explorer -->
+            <div class="ce-sidebar-panel">
+              <div class="ce-file-section-header">
+                <span>Project Files</span>
+                <button id="btnCeNewProject" class="btn-ce-new-project" title="Create new project">+ New</button>
+              </div>
+              <div class="ce-file-item active" data-file="html">
+                <svg class="ce-file-icon" viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span>index.html</span>
+              </div>
+              <div class="ce-file-item" data-file="css">
+                <svg class="ce-file-icon" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span>style.css</span>
+              </div>
+              <div class="ce-file-item" data-file="js">
+                <svg class="ce-file-icon" viewBox="0 0 24 24" fill="none" stroke="#facc15" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                <span>script.js</span>
+              </div>
+            </div>
+
+            <!-- Main Split (Editor + Preview) -->
+            <div class="ce-main-split">
+              <!-- Left Editor Box -->
+              <div class="ce-editor-container">
+                <div class="ce-tabs-toolbar">
+                  <div class="ce-file-tabs">
+                    <button class="ce-tab active" data-tab="html">index.html</button>
+                    <button class="ce-tab" data-tab="css">style.css</button>
+                    <button class="ce-tab" data-tab="js">script.js</button>
+                  </div>
+                  <div class="ce-tab-controls">
+                    <button id="btnCeCopyCode" class="btn-ce-tool" title="Copy file code">Copy</button>
+                    <button id="btnCeClearCode" class="btn-ce-tool" title="Clear file code">Clear</button>
+                  </div>
+                </div>
+
+                <div class="ce-editor-wrapper">
+                  <div id="ceLineNumbers" class="ce-line-numbers">1</div>
+                  <div class="ce-textarea-box">
+                    <textarea id="ceTextarea" class="ce-textarea" spellcheck="false" placeholder="Write code here..."></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Preview Box -->
+              <div class="ce-preview-container">
+                <div class="ce-preview-header">
+                  <div class="ce-preview-title">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                    </svg>
+                    <span>Live Preview</span>
+                  </div>
+                  <div style="display: flex; gap: 8px;">
+                    <button id="btnCeRefreshPreview" class="btn-ce-tool" title="Refresh Preview">Refresh</button>
+                  </div>
+                </div>
+
+                <iframe id="cePreviewIframe" class="ce-preview-iframe" sandbox="allow-scripts" title="Preview Frame"></iframe>
+
+                <!-- Console Drawer -->
+                <div class="ce-console-drawer">
+                  <div class="ce-console-header">
+                    <span>Console Log</span>
+                    <button id="btnCeClearConsole" class="btn-ce-tool" title="Clear Console">Clear</button>
+                  </div>
+                  <div id="ceConsoleLogs" class="ce-console-logs">
+                    <div class="ce-log-entry info">✓ MSAI Code Playground initialized</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>

@@ -98,6 +98,17 @@
     "clearConfirm": "Are you sure you want to delete all conversations? This action cannot be undone.",
     "close": "Close"
   },
+  "codeEditor": {
+    "title": "MSAI Code",
+    "subtitle": "HTML • CSS • JavaScript Playground",
+    "run": "RUN ▶",
+    "save": "Save",
+    "download": "Download",
+    "reset": "Reset",
+    "newProject": "+ New",
+    "preview": "Live Preview",
+    "console": "Console Log"
+  },
   "subscriptions": {
     "menu": "Subscriptions",
     "title": "Plans that grow with you",

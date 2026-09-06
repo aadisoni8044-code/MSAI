@@ -1,0 +1,482 @@
+/* ==========================================================================
+   MSAI CODE EDITOR STYLESHEET
+   ========================================================================== */
+
+.code-editor-view {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1;
+  min-height: 100%;
+  background-color: var(--msai-background, #09090b);
+  color: var(--msai-text, #f4f4f5);
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+  z-index: 100;
+  position: relative;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.code-editor-view.hidden {
+  display: none !important;
+}
+
+/* Header Navbar */
+.ce-header-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background-color: rgba(18, 18, 21, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ce-header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.btn-ce-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #f4f4f5;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-ce-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.ce-title-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.ce-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ce-project-name-input {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 2px 6px;
+  outline: none;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.ce-project-name-input:hover,
+.ce-project-name-input:focus {
+  border-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.ce-subtitle {
+  font-size: 0.75rem;
+  color: #a1a1aa;
+}
+
+.ce-save-status {
+  font-size: 0.75rem;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+.ce-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-ce-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.btn-ce-run {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.3);
+}
+
+.btn-ce-run:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.btn-ce-save {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #f4f4f5;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.btn-ce-save:hover {
+  background-color: rgba(255, 255, 255, 0.18);
+}
+
+.btn-ce-secondary {
+  background-color: transparent;
+  color: #a1a1aa;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.btn-ce-secondary:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* Workspace Layout */
+.ce-workspace {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 70px);
+  height: calc(100dvh - 70px);
+  overflow: hidden;
+}
+
+/* Left File Explorer Panel */
+.ce-sidebar-panel {
+  width: 200px;
+  background-color: #121215;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+  padding: 12px 0;
+  flex-shrink: 0;
+}
+
+.ce-file-section-header {
+  padding: 8px 16px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #a1a1aa;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-ce-new-project {
+  background: transparent;
+  border: none;
+  color: #6366f1;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.btn-ce-new-project:hover {
+  text-decoration: underline;
+}
+
+.ce-file-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  color: #a1a1aa;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-left: 3px solid transparent;
+}
+
+.ce-file-item:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: #f4f4f5;
+}
+
+.ce-file-item.active {
+  background-color: rgba(99, 102, 241, 0.12);
+  color: #ffffff;
+  border-left-color: #6366f1;
+  font-weight: 600;
+}
+
+.ce-file-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+/* Split Main Container (Editor + Preview) */
+.ce-main-split {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* Editor Container */
+.ce-editor-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #0d0d10;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 300px;
+}
+
+.ce-tabs-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #16161a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0 12px;
+}
+
+.ce-file-tabs {
+  display: flex;
+  align-items: center;
+}
+
+.ce-tab {
+  padding: 10px 16px;
+  font-size: 0.825rem;
+  color: #a1a1aa;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.15s ease;
+}
+
+.ce-tab:hover {
+  color: #f4f4f5;
+}
+
+.ce-tab.active {
+  color: #ffffff;
+  border-bottom-color: #6366f1;
+  background-color: #0d0d10;
+  font-weight: 600;
+}
+
+.ce-tab-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-ce-tool {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  transition: all 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-ce-tool:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Code Editor Textarea & Line Numbers Wrappers */
+.ce-editor-wrapper {
+  flex: 1;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Fira Code', 'Consolas', 'Monaco', monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.ce-line-numbers {
+  padding: 12px 8px;
+  background-color: #111115;
+  color: #52525b;
+  text-align: right;
+  user-select: none;
+  min-width: 40px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.85rem;
+  box-sizing: border-box;
+}
+
+.ce-textarea-box {
+  flex: 1;
+  position: relative;
+  height: 100%;
+}
+
+.ce-textarea {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  color: #f4f4f5;
+  border: none;
+  outline: none;
+  padding: 12px 16px;
+  resize: none;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  box-sizing: border-box;
+  tab-size: 4;
+  white-space: pre;
+  overflow: auto;
+}
+
+/* Right Preview & Console Container */
+.ce-preview-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: #121215;
+  min-width: 300px;
+}
+
+.ce-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  background-color: #16161a;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.825rem;
+  font-weight: 600;
+}
+
+.ce-preview-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #f4f4f5;
+}
+
+.ce-preview-iframe {
+  flex: 1;
+  width: 100%;
+  border: none;
+  background-color: #ffffff;
+}
+
+/* Console Drawer */
+.ce-console-drawer {
+  height: 180px;
+  background-color: #09090b;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.ce-console-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background-color: #121215;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a1a1aa;
+}
+
+.ce-console-logs {
+  flex: 1;
+  padding: 8px 16px;
+  overflow-y: auto;
+  font-family: 'Fira Code', 'Consolas', monospace;
+  font-size: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ce-log-entry {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  word-break: break-all;
+}
+
+.ce-log-entry.info { color: #38bdf8; }
+.ce-log-entry.error { color: #f87171; }
+.ce-log-entry.warn { color: #fbbf24; }
+.ce-log-entry.log { color: #e4e4e7; }
+
+/* Responsive Adjustments */
+@media (max-width: 900px) {
+  .ce-sidebar-panel {
+    width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ce-workspace {
+    flex-direction: column;
+    height: auto;
+    overflow-y: auto;
+  }
+
+  .ce-sidebar-panel {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 6px 12px;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .ce-file-section-header {
+    display: none;
+  }
+
+  .ce-main-split {
+    flex-direction: column;
+  }
+
+  .ce-editor-container {
+    height: 400px;
+    min-width: 100%;
+  }
+
+  .ce-preview-container {
+    height: 400px;
+    min-width: 100%;
+  }
+}

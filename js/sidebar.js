@@ -7,6 +7,7 @@ import { notifications } from './notifications.js';
 import { i18n } from './language.js';
 import { escapeHtml } from './utils.js';
 import { subscriptionsController } from './subscriptions.js';
+import { codeEditorController } from './code-editor.js';
 
 class SidebarController {
   constructor() {
@@ -18,6 +19,7 @@ class SidebarController {
     this.btnToggleSidebar = null;
     this.btnSearchTrigger = null;
     this.navSubscriptions = null;
+    this.navCode = null;
   }
 
   init() {
@@ -28,6 +30,7 @@ class SidebarController {
     this.btnNewChat = document.getElementById('btnNewChat');
     this.btnToggleSidebar = document.getElementById('btnToggleSidebar');
     this.navSubscriptions = document.getElementById('navSubscriptions');
+    this.navCode = document.getElementById('navCode');
 
     this.setupEvents();
     this.render();
@@ -42,6 +45,14 @@ class SidebarController {
     if (this.btnNewChat) {
       this.btnNewChat.addEventListener('click', () => {
         conversations.create('New Chat');
+        this.closeMobileSidebar();
+      });
+    }
+
+    // Code Nav Item
+    if (this.navCode) {
+      this.navCode.addEventListener('click', () => {
+        codeEditorController.openCodeEditorView();
         this.closeMobileSidebar();
       });
     }
