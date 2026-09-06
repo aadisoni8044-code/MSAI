@@ -228,6 +228,18 @@
   color: var(--color-primary);
 }
 
+.msg-action-btn.action-speak.speaking-active {
+  color: #6366f1;
+  background-color: rgba(99, 102, 241, 0.15);
+  animation: speakingPulse 1.5s infinite ease-in-out;
+}
+
+@keyframes speakingPulse {
+  0% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.75; transform: scale(1.08); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
 /* Edit message form */
 .edit-message-box {
   width: 100%;

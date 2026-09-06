@@ -55,6 +55,8 @@
     "assistant": "MSAI",
     "copy": "Copy",
     "copied": "Copied!",
+    "speak": "Speaking",
+    "stop": "Stop",
     "regenerate": "Regenerate",
     "retry": "Retry",
     "edit": "Edit",

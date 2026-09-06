@@ -6,6 +6,7 @@ import { copyToClipboard, escapeHtml } from './utils.js';
 import { notifications } from './notifications.js';
 import { events } from './events.js';
 import { i18n } from './language.js';
+import { msaiSpeech } from './speech.js';
 
 export function createMessageElement(message, onAction) {
   const row = document.createElement('div');
@@ -59,6 +60,7 @@ function renderUserActions() {
 }
 
 function renderAssistantActions() {
+  const isSpeakSupported = msaiSpeech.isSupported();
   return `
     <button class="msg-action-btn action-copy" title="${i18n.get('message.copy', 'Copy')}">
       <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -66,6 +68,19 @@ function renderAssistantActions() {
         <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
       </svg>
     </button>
+    ${isSpeakSupported ? `
+    <button class="msg-action-btn action-speak" title="${i18n.get('message.speak', 'Speaking')}">
+      <svg class="icon-svg icon-speak-normal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+      </svg>
+      <svg class="icon-svg icon-speak-active hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+        <line x1="23" y1="9" x2="17" y2="15"></line>
+        <line x1="17" y1="9" x2="23" y2="15"></line>
+      </svg>
+    </button>
+    ` : ''}
     <button class="msg-action-btn action-regenerate" title="${i18n.get('message.regenerate', 'Regenerate')}">
       <svg class="icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <path d="M23 4v6h-6"></path>
@@ -101,6 +116,27 @@ function setupMessageActions(element, message, onAction) {
     copyBtn.addEventListener('click', async () => {
       const ok = await copyToClipboard(message.content);
       if (ok) notifications.success(i18n.get('notifications.copied', 'Copied to clipboard'));
+    });
+  }
+
+  // Speaking / Web Speech API TTS
+  const speakBtn = element.querySelector('.action-speak');
+  if (speakBtn) {
+    speakBtn.addEventListener('click', () => {
+      const bubble = element.querySelector('.message-bubble');
+      msaiSpeech.speakMessage(message.id, bubble || message.content, speakBtn, (isSpeaking) => {
+        const iconNormal = speakBtn.querySelector('.icon-speak-normal');
+        const iconActive = speakBtn.querySelector('.icon-speak-active');
+        if (isSpeaking) {
+          speakBtn.classList.add('speaking-active');
+          if (iconNormal) iconNormal.classList.add('hidden');
+          if (iconActive) iconActive.classList.remove('hidden');
+        } else {
+          speakBtn.classList.remove('speaking-active');
+          if (iconNormal) iconNormal.classList.remove('hidden');
+          if (iconActive) iconActive.classList.add('hidden');
+        }
+      });
     });
   }
 
