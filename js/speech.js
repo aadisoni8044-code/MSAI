@@ -7,9 +7,11 @@ class MSAISpeechManager {
   constructor() {
     this.synth = typeof window !== 'undefined' && 'speechSynthesis' in window ? window.speechSynthesis : null;
     this.currentMessageId = null;
-    this.currentUtterance = null;
     this.activeButton = null;
     this.voices = [];
+    this.utteranceQueue = [];
+    this.isSpeaking = false;
+    this.onStateChangeCallback = null;
 
     if (this.synth) {
       this.loadVoices();
@@ -53,39 +55,108 @@ class MSAISpeechManager {
   }
 
   /**
-   * Detect language or select the best available voice (Hindi, English, Gujarati, Marathi)
+   * Detect language code for a text segment
    */
-  getBestVoiceForText(text) {
+  detectLanguage(text) {
+    if (!text) return 'en';
+
+    // Devanagari script range (Hindi / Marathi)
+    if (/[\u0900-\u097F]/.test(text)) {
+      return 'hi';
+    }
+    // Bengali script range
+    if (/[\u0980-\u09FF]/.test(text)) {
+      return 'bn';
+    }
+    // Spanish characters check (ñ, á, é, í, ó, ú, ¿, ¡)
+    if (/[ñáéíóú¿¡]/i.test(text)) {
+      return 'es';
+    }
+
+    return 'en';
+  }
+
+  /**
+   * Find actual SpeechSynthesisVoice matching the target language code
+   */
+  getBestVoiceForLang(langCode) {
     if (!this.voices || this.voices.length === 0) {
       this.loadVoices();
     }
 
-    // Check Devanagari script range for Hindi/Marathi
-    const hasDevanagari = /[\u0900-\u097F]/.test(text);
-    // Check Gujarati script range
-    const hasGujarati = /[\u0A80-\u0AFF]/.test(text);
+    const targetMap = {
+      hi: ['hi-in', 'hi', 'mr-in', 'mr'],
+      bn: ['bn-in', 'bn-bd', 'bn'],
+      es: ['es-es', 'es-mx', 'es-us', 'es'],
+      en: ['en-in', 'en-us', 'en-gb', 'en']
+    };
 
-    let targetLangPrefix = 'en';
-    if (hasGujarati) {
-      targetLangPrefix = 'gu';
-    } else if (hasDevanagari) {
-      targetLangPrefix = 'hi';
+    const targetLocales = targetMap[langCode] || ['en-us', 'en'];
+
+    // 1. Try exact match
+    for (const loc of targetLocales) {
+      const match = this.voices.find(v => v.lang.toLowerCase().replace('_', '-') === loc);
+      if (match) return match;
     }
 
-    // Attempt exact match first
-    let matchingVoice = this.voices.find(v => v.lang.toLowerCase().startsWith(targetLangPrefix));
-
-    if (!matchingVoice && targetLangPrefix === 'hi') {
-      // Fallback for Marathi if 'mr' exists or stay with 'hi'
-      matchingVoice = this.voices.find(v => v.lang.toLowerCase().startsWith('mr'));
+    // 2. Try prefix match
+    for (const loc of targetLocales) {
+      const prefix = loc.split('-')[0];
+      const match = this.voices.find(v => v.lang.toLowerCase().startsWith(prefix));
+      if (match) return match;
     }
 
-    if (!matchingVoice) {
-      // Fallback to English or default voice
-      matchingVoice = this.voices.find(v => v.lang.toLowerCase().startsWith('en')) || this.voices[0];
+    // 3. Fallback to default or first available voice
+    return this.voices.find(v => v.default) || this.voices[0] || null;
+  }
+
+  /**
+   * Splits mixed text into language-homogenous segments
+   */
+  segmentMixedText(text) {
+    if (!text) return [];
+
+    // Split sentences or clause blocks
+    const clauses = text.match(/[^.!?।]+[.!?।]?/g) || [text];
+    const segments = [];
+
+    for (const clause of clauses) {
+      const trimmed = clause.trim();
+      if (!trimmed) continue;
+
+      const lang = this.detectLanguage(trimmed);
+
+      // Merge with previous segment if language matches
+      if (segments.length > 0 && segments[segments.length - 1].lang === lang) {
+        segments[segments.length - 1].text += ' ' + trimmed;
+      } else {
+        segments.push({ lang, text: trimmed });
+      }
     }
 
-    return { voice: matchingVoice, lang: targetLangPrefix };
+    return segments;
+  }
+
+  /**
+   * Chunks long text segments to prevent Web Speech API buffer timeout
+   */
+  chunkText(text, maxChars = 200) {
+    if (text.length <= maxChars) return [text];
+
+    const words = text.split(' ');
+    const chunks = [];
+    let current = '';
+
+    for (const word of words) {
+      if ((current + ' ' + word).length > maxChars) {
+        if (current) chunks.push(current.trim());
+        current = word;
+      } else {
+        current += (current ? ' ' : '') + word;
+      }
+    }
+    if (current) chunks.push(current.trim());
+    return chunks;
   }
 
   /**
@@ -97,77 +168,103 @@ class MSAISpeechManager {
       return false;
     }
 
-    // If currently speaking this exact message, stop it
-    if (this.currentMessageId === messageId && this.synth.speaking) {
+    // Toggle off if clicking the currently speaking message
+    if (this.currentMessageId === messageId && (this.synth.speaking || this.isSpeaking)) {
       this.stop();
       if (onStateChange) onStateChange(false);
       return false;
     }
 
-    // Stop any previous speech before starting a new message
+    // Stop previous speech
     this.stop();
 
     const cleanText = this.extractCleanText(textContent);
     if (!cleanText) return false;
 
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    const { voice, lang } = this.getBestVoiceForText(cleanText);
-
-    if (voice) {
-      utterance.voice = voice;
-    }
-    utterance.lang = lang === 'hi' ? 'hi-IN' : (lang === 'gu' ? 'gu-IN' : 'en-US');
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-
     this.currentMessageId = messageId;
-    this.currentUtterance = utterance;
     this.activeButton = buttonElement;
+    this.onStateChangeCallback = onStateChange;
+    this.utteranceQueue = [];
 
-    utterance.onstart = () => {
-      if (onStateChange) onStateChange(true);
-      if (buttonElement) {
-        buttonElement.classList.add('speaking-active');
-        buttonElement.setAttribute('title', 'Stop speaking');
+    const segments = this.segmentMixedText(cleanText);
+
+    for (const seg of segments) {
+      const chunks = this.chunkText(seg.text);
+      const voice = this.getBestVoiceForLang(seg.lang);
+      const langLocale = seg.lang === 'hi' ? 'hi-IN' : (seg.lang === 'bn' ? 'bn-IN' : (seg.lang === 'es' ? 'es-ES' : 'en-US'));
+
+      if (typeof window !== 'undefined' && window.location.hostname === 'localhost') {
+        console.log(`[MSAI Speech] Lang: ${seg.lang} | Voice: ${voice ? voice.name : 'Default'} (${voice ? voice.lang : langLocale})`);
       }
-    };
 
-    utterance.onend = () => {
-      this.resetCurrentState(onStateChange);
-    };
+      for (const chunkText of chunks) {
+        const utterance = new SpeechSynthesisUtterance(chunkText);
+        if (voice) utterance.voice = voice;
+        utterance.lang = voice ? voice.lang : langLocale;
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+        this.utteranceQueue.push(utterance);
+      }
+    }
 
-    utterance.onerror = (err) => {
-      console.error('Speech synthesis error:', err);
-      this.resetCurrentState(onStateChange);
-    };
+    if (this.utteranceQueue.length === 0) return false;
 
-    this.synth.speak(utterance);
+    this.isSpeaking = true;
+    if (this.onStateChangeCallback) this.onStateChangeCallback(true);
+    if (this.activeButton) {
+      this.activeButton.classList.add('speaking-active');
+      this.activeButton.setAttribute('title', 'Stop speaking');
+    }
+
+    this.playNextInQueue();
     return true;
   }
 
+  playNextInQueue() {
+    if (!this.isSpeaking || this.utteranceQueue.length === 0) {
+      this.resetCurrentState();
+      return;
+    }
+
+    const nextUtterance = this.utteranceQueue.shift();
+
+    nextUtterance.onend = () => {
+      this.playNextInQueue();
+    };
+
+    nextUtterance.onerror = (err) => {
+      console.error('[MSAI Speech] Error:', err);
+      this.playNextInQueue();
+    };
+
+    this.synth.speak(nextUtterance);
+  }
+
   stop() {
+    this.isSpeaking = false;
+    this.utteranceQueue = [];
     if (this.synth) {
       this.synth.cancel();
     }
-    if (this.activeButton) {
-      this.activeButton.classList.remove('speaking-active');
-      this.activeButton.setAttribute('title', 'Speaking');
-    }
-    this.currentMessageId = null;
-    this.currentUtterance = null;
-    this.activeButton = null;
+    this.resetCurrentState();
   }
 
-  resetCurrentState(onStateChange) {
+  resetCurrentState() {
     if (this.activeButton) {
       this.activeButton.classList.remove('speaking-active');
       this.activeButton.setAttribute('title', 'Speaking');
     }
+    if (this.isSpeaking && this.onStateChangeCallback) {
+      this.onStateChangeCallback(false);
+    }
+    this.isSpeaking = false;
     this.currentMessageId = null;
-    this.currentUtterance = null;
     this.activeButton = null;
-    if (onStateChange) onStateChange(false);
+    this.onStateChangeCallback = null;
   }
 }
 
 export const msaiSpeech = new MSAISpeechManager();
+if (typeof window !== 'undefined') {
+  window.MSAISpeech = msaiSpeech;
+}
