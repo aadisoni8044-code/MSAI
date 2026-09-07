@@ -169,13 +169,79 @@
 
 /* Left File Explorer Panel */
 .ce-sidebar-panel {
-  width: 200px;
+  width: 210px;
   background-color: #121215;
   border-right: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: column;
   padding: 12px 0;
   flex-shrink: 0;
+}
+
+.ce-project-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.ce-project-list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  color: #a1a1aa;
+  cursor: pointer;
+  border-radius: 6px;
+  margin: 0 8px;
+  transition: all 0.15s ease;
+}
+
+.ce-project-list-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.ce-project-list-item.active {
+  background-color: rgba(99, 102, 241, 0.15);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.ce-proj-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.ce-proj-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.ce-project-list-item:hover .ce-proj-actions {
+  opacity: 1;
+}
+
+.btn-proj-dup,
+.btn-proj-del {
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  cursor: pointer;
+  font-size: 0.75rem;
+  padding: 2px;
+}
+
+.btn-proj-del:hover {
+  color: #ef4444;
 }
 
 .ce-file-section-header {

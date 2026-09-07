@@ -1,14 +1,17 @@
 /**
  * MSAI Code Editor Controller
- * Pure Vanilla JS Web Playground supporting HTML, CSS, and JavaScript
+ * Multi-project Vanilla JS Web Playground supporting HTML, CSS, and JavaScript
  */
 
 import { storage } from './storage.js';
 import { notifications } from './notifications.js';
 import { copyToClipboard } from './utils.js';
 
-const DEFAULT_PROJECT = {
+const DEFAULT_PROJECT_TEMPLATE = {
+  id: 'proj_default',
   name: 'My Website Project',
+  createdAt: Date.now(),
+  updatedAt: Date.now(),
   html: `<!DOCTYPE html>
 <html>
 <head>
@@ -83,9 +86,9 @@ class CodeEditorController {
   constructor() {
     this.view = null;
     this.activeTab = 'html'; // 'html', 'css', 'js'
-    this.project = { ...DEFAULT_PROJECT };
+    this.projects = [];
+    this.activeProjectId = null;
     this.autoSaveTimer = null;
-    this.isSaved = true;
 
     // DOM Elements
     this.projectNameInput = null;
@@ -94,6 +97,7 @@ class CodeEditorController {
     this.lineNumbersEl = null;
     this.iframe = null;
     this.consoleLogsEl = null;
+    this.projectListEl = null;
   }
 
   init() {
@@ -104,9 +108,14 @@ class CodeEditorController {
     this.lineNumbersEl = document.getElementById('ceLineNumbers');
     this.iframe = document.getElementById('cePreviewIframe');
     this.consoleLogsEl = document.getElementById('ceConsoleLogs');
+    this.projectListEl = document.getElementById('ceProjectList');
 
-    this.loadProject();
+    this.loadProjects();
     this.setupEventListeners();
+  }
+
+  get activeProject() {
+    return this.projects.find(p => p.id === this.activeProjectId) || this.projects[0];
   }
 
   setupEventListeners() {
@@ -118,7 +127,7 @@ class CodeEditorController {
 
     // Tab switching
     document.querySelectorAll('.ce-tab, .ce-file-item').forEach(el => {
-      el.addEventListener('click', (e) => {
+      el.addEventListener('click', () => {
         const fileType = el.getAttribute('data-tab') || el.getAttribute('data-file');
         if (fileType) this.switchTab(fileType);
       });
@@ -127,7 +136,10 @@ class CodeEditorController {
     // Code input & Line numbers update
     if (this.textarea) {
       this.textarea.addEventListener('input', () => {
-        this.project[this.activeTab] = this.textarea.value;
+        if (this.activeProject) {
+          this.activeProject[this.activeTab] = this.textarea.value;
+          this.activeProject.updatedAt = Date.now();
+        }
         this.updateLineNumbers();
         this.markUnsaved();
         this.triggerAutoSave();
@@ -139,7 +151,7 @@ class CodeEditorController {
         }
       });
 
-      // Handle Tab key indentation
+      // Handle Tab key indentation & Ctrl+Enter to Run
       this.textarea.addEventListener('keydown', (e) => {
         if (e.key === 'Tab') {
           e.preventDefault();
@@ -147,13 +159,19 @@ class CodeEditorController {
           const end = this.textarea.selectionEnd;
           this.textarea.value = this.textarea.value.substring(0, start) + "    " + this.textarea.value.substring(end);
           this.textarea.selectionStart = this.textarea.selectionEnd = start + 4;
-          this.project[this.activeTab] = this.textarea.value;
+          if (this.activeProject) {
+            this.activeProject[this.activeTab] = this.textarea.value;
+            this.activeProject.updatedAt = Date.now();
+          }
           this.updateLineNumbers();
           this.markUnsaved();
           this.triggerAutoSave();
         } else if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
           e.preventDefault();
           this.runCode();
+        } else if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+          e.preventDefault();
+          this.saveProjects();
         }
       });
     }
@@ -161,9 +179,12 @@ class CodeEditorController {
     // Project Name change
     if (this.projectNameInput) {
       this.projectNameInput.addEventListener('input', () => {
-        this.project.name = this.projectNameInput.value.trim() || 'Untitled Project';
-        this.markUnsaved();
-        this.triggerAutoSave();
+        if (this.activeProject) {
+          this.activeProject.name = this.projectNameInput.value.trim() || 'Untitled Project';
+          this.renderProjectList();
+          this.markUnsaved();
+          this.triggerAutoSave();
+        }
       });
     }
 
@@ -172,7 +193,7 @@ class CodeEditorController {
     if (btnRun) btnRun.addEventListener('click', () => this.runCode());
 
     const btnSave = document.getElementById('btnCeSave');
-    if (btnSave) btnSave.addEventListener('click', () => this.saveProject());
+    if (btnSave) btnSave.addEventListener('click', () => this.saveProjects());
 
     const btnReset = document.getElementById('btnCeReset');
     if (btnReset) btnReset.addEventListener('click', () => this.resetProject());
@@ -216,12 +237,14 @@ class CodeEditorController {
 
     this.view.classList.remove('hidden');
     this.renderCurrentTab();
+    this.renderProjectList();
     this.runCode();
   }
 
   closeCodeEditorView() {
     if (!this.view) return;
 
+    this.saveProjects(true);
     this.view.classList.add('hidden');
     const mainChat = document.querySelector('.chat-container');
     const composer = document.querySelector('.composer-wrapper');
@@ -234,7 +257,6 @@ class CodeEditorController {
     if (!['html', 'css', 'js'].includes(tab)) return;
     this.activeTab = tab;
 
-    // Update UI tabs & sidebar items
     document.querySelectorAll('.ce-tab').forEach(t => {
       t.classList.toggle('active', t.getAttribute('data-tab') === tab);
     });
@@ -247,8 +269,11 @@ class CodeEditorController {
   }
 
   renderCurrentTab() {
-    if (!this.textarea) return;
-    this.textarea.value = this.project[this.activeTab] || '';
+    if (!this.textarea || !this.activeProject) return;
+    this.textarea.value = this.activeProject[this.activeTab] || '';
+    if (this.projectNameInput) {
+      this.projectNameInput.value = this.activeProject.name;
+    }
     this.updateLineNumbers();
   }
 
@@ -263,15 +288,14 @@ class CodeEditorController {
   }
 
   runCode() {
-    if (!this.iframe) return;
+    if (!this.iframe || !this.activeProject) return;
 
     this.clearConsole();
     this.logConsole('info', '✓ Compiling and running code preview...');
 
-    const html = this.project.html || '';
-    const css = `<style>\n${this.project.css || ''}\n</style>`;
+    const html = this.activeProject.html || '';
+    const css = `<style>\n${this.activeProject.css || ''}\n</style>`;
 
-    // Embedded console capture script
     const consoleCaptureScript = `
       <script>
         (function() {
@@ -307,7 +331,7 @@ class CodeEditorController {
       </script>
     `;
 
-    const js = `<script>\n${this.project.js || ''}\n</script>`;
+    const js = `<script>\n${this.activeProject.js || ''}\n</script>`;
 
     const combinedDoc = `
       <!DOCTYPE html>
@@ -343,7 +367,6 @@ class CodeEditorController {
   }
 
   markUnsaved() {
-    this.isSaved = false;
     if (this.saveStatusEl) {
       this.saveStatusEl.textContent = 'Unsaved •';
       this.saveStatusEl.style.color = '#f59e0b';
@@ -353,13 +376,13 @@ class CodeEditorController {
   triggerAutoSave() {
     if (this.autoSaveTimer) clearTimeout(this.autoSaveTimer);
     this.autoSaveTimer = setTimeout(() => {
-      this.saveProject(true);
+      this.saveProjects(true);
     }, 1500);
   }
 
-  saveProject(isSilent = false) {
-    storage.set('msai_code_project', this.project);
-    this.isSaved = true;
+  saveProjects(isSilent = false) {
+    storage.set('msai_code_projects', this.projects);
+    storage.set('msai_active_project_id', this.activeProjectId);
     if (this.saveStatusEl) {
       this.saveStatusEl.textContent = 'Saved ✓';
       this.saveStatusEl.style.color = '#10b981';
@@ -369,49 +392,152 @@ class CodeEditorController {
     }
   }
 
-  loadProject() {
-    const saved = storage.get('msai_code_project');
-    if (saved && saved.html !== undefined) {
-      this.project = { ...DEFAULT_PROJECT, ...saved };
+  loadProjects() {
+    const savedList = storage.get('msai_code_projects');
+    const savedActiveId = storage.get('msai_active_project_id');
+
+    if (Array.isArray(savedList) && savedList.length > 0) {
+      this.projects = savedList;
+      this.activeProjectId = savedActiveId && this.projects.some(p => p.id === savedActiveId)
+        ? savedActiveId
+        : this.projects[0].id;
     } else {
-      this.project = { ...DEFAULT_PROJECT };
+      // Migrate old single-project storage if present
+      const oldSingle = storage.get('msai_code_project');
+      if (oldSingle && oldSingle.html) {
+        const migrated = { ...DEFAULT_PROJECT_TEMPLATE, ...oldSingle, id: 'proj_' + Date.now() };
+        this.projects = [migrated];
+      } else {
+        this.projects = [JSON.parse(JSON.stringify(DEFAULT_PROJECT_TEMPLATE))];
+      }
+      this.activeProjectId = this.projects[0].id;
+      this.saveProjects(true);
     }
 
-    if (this.projectNameInput) {
-      this.projectNameInput.value = this.project.name || 'My Website Project';
+    this.renderCurrentTab();
+  }
+
+  renderProjectList() {
+    if (!this.projectListEl) return;
+    this.projectListEl.innerHTML = '';
+
+    this.projects.forEach(p => {
+      const item = document.createElement('div');
+      item.className = `ce-project-list-item ${p.id === this.activeProjectId ? 'active' : ''}`;
+      item.innerHTML = `
+        <span class="ce-proj-title">${p.name}</span>
+        <div class="ce-proj-actions">
+          <button class="btn-proj-dup" title="Duplicate Project">📋</button>
+          ${this.projects.length > 1 ? '<button class="btn-proj-del" title="Delete Project">&times;</button>' : ''}
+        </div>
+      `;
+
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.ce-proj-actions')) return;
+        this.switchProject(p.id);
+      });
+
+      const btnDup = item.querySelector('.btn-proj-dup');
+      if (btnDup) {
+        btnDup.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.duplicateProject(p.id);
+        });
+      }
+
+      const btnDel = item.querySelector('.btn-proj-del');
+      if (btnDel) {
+        btnDel.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.deleteProject(p.id);
+        });
+      }
+
+      this.projectListEl.appendChild(item);
+    });
+  }
+
+  switchProject(projectId) {
+    if (this.activeProjectId === projectId) return;
+    this.saveProjects(true);
+    this.activeProjectId = projectId;
+    this.renderCurrentTab();
+    this.renderProjectList();
+    this.runCode();
+  }
+
+  createNewProject() {
+    this.saveProjects(true);
+    const newProj = {
+      id: 'proj_' + Date.now(),
+      name: 'Project ' + (this.projects.length + 1),
+      createdAt: Date.now(),
+      updatedAt: Date.now(),
+      html: `<!DOCTYPE html>\n<html>\n<head>\n    <title>New Project</title>\n</head>\n<body>\n    <h1>Hello World</h1>\n</body>\n</html>`,
+      css: `body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; }`,
+      js: `console.log("New project initialized!");`
+    };
+
+    this.projects.push(newProj);
+    this.activeProjectId = newProj.id;
+    this.saveProjects(true);
+    this.renderCurrentTab();
+    this.renderProjectList();
+    this.runCode();
+    notifications.success('New coding project created!');
+  }
+
+  duplicateProject(projectId) {
+    const source = this.projects.find(p => p.id === projectId);
+    if (!source) return;
+
+    const dup = {
+      ...JSON.parse(JSON.stringify(source)),
+      id: 'proj_' + Date.now(),
+      name: `${source.name} (Copy)`,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    };
+
+    this.projects.push(dup);
+    this.activeProjectId = dup.id;
+    this.saveProjects(true);
+    this.renderCurrentTab();
+    this.renderProjectList();
+    this.runCode();
+    notifications.info('Project duplicated!');
+  }
+
+  deleteProject(projectId) {
+    if (this.projects.length <= 1) {
+      notifications.warn('Cannot delete the only remaining project.');
+      return;
+    }
+
+    if (confirm('Delete this coding project permanently?')) {
+      this.projects = this.projects.filter(p => p.id !== projectId);
+      if (this.activeProjectId === projectId) {
+        this.activeProjectId = this.projects[0].id;
+      }
+      this.saveProjects(true);
+      this.renderCurrentTab();
+      this.renderProjectList();
+      this.runCode();
+      notifications.info('Project deleted.');
     }
   }
 
   resetProject() {
-    if (confirm('Reset this project to the default code template? Any unsaved edits will be lost.')) {
-      this.project = JSON.parse(JSON.stringify(DEFAULT_PROJECT));
-      if (this.projectNameInput) this.projectNameInput.value = this.project.name;
-      this.renderCurrentTab();
-      this.saveProject();
+    if (confirm('Reset this project to its last saved state?')) {
+      this.loadProjects();
       this.runCode();
-      notifications.info('Project reset to default templates.');
-    }
-  }
-
-  createNewProject() {
-    if (confirm('Create a new project? Your current work will be saved.')) {
-      this.saveProject(true);
-      this.project = {
-        name: 'New Project ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        html: `<!DOCTYPE html>\n<html>\n<head>\n    <title>New Project</title>\n</head>\n<body>\n    <h1>Hello World</h1>\n</body>\n</html>`,
-        css: `body { font-family: sans-serif; padding: 20px; background: #111; color: #fff; }`,
-        js: `console.log("New project initialized!");`
-      };
-      if (this.projectNameInput) this.projectNameInput.value = this.project.name;
-      this.renderCurrentTab();
-      this.saveProject();
-      this.runCode();
-      notifications.success('New project created!');
+      notifications.info('Project restored to last saved state.');
     }
   }
 
   async copyCode() {
-    const text = this.project[this.activeTab] || '';
+    if (!this.activeProject) return;
+    const text = this.activeProject[this.activeTab] || '';
     const ok = await copyToClipboard(text);
     if (ok) {
       notifications.success(`Copied ${this.activeTab.toUpperCase()} code to clipboard`);
@@ -420,7 +546,9 @@ class CodeEditorController {
 
   clearCode() {
     if (confirm(`Clear all ${this.activeTab.toUpperCase()} code in this file?`)) {
-      this.project[this.activeTab] = '';
+      if (this.activeProject) {
+        this.activeProject[this.activeTab] = '';
+      }
       this.renderCurrentTab();
       this.markUnsaved();
       this.triggerAutoSave();
@@ -428,10 +556,11 @@ class CodeEditorController {
   }
 
   downloadProject() {
-    this.downloadFile('index.html', this.project.html, 'text/html');
-    setTimeout(() => this.downloadFile('style.css', this.project.css, 'text/css'), 200);
-    setTimeout(() => this.downloadFile('script.js', this.project.js, 'text/javascript'), 400);
-    notifications.success('Downloaded project files (index.html, style.css, script.js)');
+    if (!this.activeProject) return;
+    this.downloadFile('index.html', this.activeProject.html, 'text/html');
+    setTimeout(() => this.downloadFile('style.css', this.activeProject.css, 'text/css'), 200);
+    setTimeout(() => this.downloadFile('script.js', this.activeProject.js, 'text/javascript'), 400);
+    notifications.success('Exported project files (index.html, style.css, script.js)');
   }
 
   downloadFile(filename, content, type) {
