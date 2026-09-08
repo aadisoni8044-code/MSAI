@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">MSAI</string>
+    <string name="title_activity_main">MSAI</string>
+    <string name="package_name">com.msai.app</string>
+    <string name="custom_url_scheme">com.msai.app</string>
+</resources>

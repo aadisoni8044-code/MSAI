@@ -14,6 +14,7 @@ import { notifications } from './notifications.js';
 import { setupKeyboardShortcuts } from './keyboard.js';
 import { initializeAPI } from './api.js';
 import { subscriptionsController } from './subscriptions.js';
+import { setupAndroidBack } from './android-back.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // 1. Initialize Theme
@@ -51,6 +52,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 12. Initialize API readiness
   initializeAPI();
+
+  // 13. Setup Android hardware back button handler
+  setupAndroidBack();
 
   // Model Dropdown in Header
   setupHeaderModelDropdown();
