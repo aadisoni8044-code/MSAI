@@ -1,0 +1,54 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Android Studio
+captures/
+.externalNativeBuild
+.cxx/
+
+# Platform generated files
+android/
+ios/
+linux/
+macos/
+web/
+windows/
+
+# Node
+node_modules/
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+ephemeral/
+
+# Symbol files
+*.js.map
+*.js.deps
+
+# Coverage reports
+coverage/
+
+# Executables
+*.apk
+*.aab
+*.app
