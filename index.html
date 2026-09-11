@@ -1,0 +1,3337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuthMarket | Premium Login UI Marketplace & Code Library</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --primary-light: #e0e7ff;
+            --dark-nav: #131921;
+            --dark-subnav: #232f3e;
+            --accent-amber: #febd69;
+            --accent-amber-hover: #f3a847;
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --radius-sm: 6px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 28px rgba(0,0,0,0.12);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Navbar (Amazon Style) */
+        .navbar {
+            background-color: var(--dark-nav);
+            color: #ffffff;
+            padding: 12px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            flex-shrink: 0;
+        }
+
+        .brand-accent {
+            color: var(--accent-amber);
+        }
+
+        /* Search Bar */
+        .search-bar-container {
+            flex: 1;
+            max-width: 760px;
+            display: flex;
+            background: #ffffff;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: border-color 0.2s ease;
+        }
+
+        .search-bar-container:focus-within {
+            border-color: var(--accent-amber);
+        }
+
+        .category-select {
+            background: #f3f4f6;
+            border: none;
+            padding: 0 12px;
+            font-size: 13px;
+            color: #374151;
+            font-weight: 600;
+            cursor: pointer;
+            border-right: 1px solid var(--border-color);
+            outline: none;
+            height: 42px;
+        }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            padding: 0 16px;
+            font-size: 14px;
+            outline: none;
+            color: var(--text-dark);
+        }
+
+        .search-btn {
+            background: var(--accent-amber);
+            border: none;
+            width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--dark-nav);
+            transition: background 0.2s ease;
+        }
+
+        .search-btn:hover {
+            background: var(--accent-amber-hover);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .nav-action-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-action-btn:hover {
+            border-color: #ffffff;
+            background: rgba(255,255,255,0.1);
+        }
+
+        .badge {
+            background: var(--accent-amber);
+            color: var(--dark-nav);
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: 2px;
+        }
+
+        /* Sub Navigation Bar */
+        .subnav {
+            background: var(--dark-subnav);
+            color: #ffffff;
+            padding: 8px 24px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        .subnav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+        }
+
+        .subnav-item {
+            font-size: 13px;
+            font-weight: 500;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #d1d5db;
+            transition: all 0.2s ease;
+        }
+
+        .subnav-item:hover, .subnav-item.active {
+            color: #ffffff;
+            background: rgba(255,255,255,0.15);
+        }
+
+        /* Disclaimer Banner */
+        .disclaimer-banner {
+            background: #eff6ff;
+            border-bottom: 1px solid #bfdbfe;
+            padding: 10px 24px;
+        }
+
+        .disclaimer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+
+        .disclaimer-badge {
+            background: #2563eb;
+            color: white;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        /* Main Layout */
+        .main-layout {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 24px;
+            flex: 1;
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+            border-radius: var(--radius-lg);
+            padding: 36px 40px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .hero-text {
+            max-width: 650px;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #a5b4fc;
+            margin-bottom: 12px;
+        }
+
+        .hero-text h1 {
+            font-size: 32px;
+            font-weight: 800;
+            line-height: 1.25;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-text p {
+            font-size: 15px;
+            color: #c7d2fe;
+            line-height: 1.6;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 28px;
+            background: rgba(255,255,255,0.1);
+            padding: 20px 28px;
+            border-radius: var(--radius-md);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--accent-amber);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #e0e7ff;
+            font-weight: 500;
+        }
+
+        /* Content Body Layout */
+        .content-body {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 28px;
+        }
+
+        /* Sidebar Filters */
+        .filter-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            position: sticky;
+            top: 80px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .filter-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .clear-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .filter-group {
+            margin-bottom: 24px;
+        }
+
+        .filter-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 240px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #475569;
+            cursor: pointer;
+        }
+
+        .checkbox-item input {
+            accent-color: var(--primary);
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            outline: none;
+            background: #f8fafc;
+            color: var(--text-dark);
+        }
+
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .tag-pill {
+            font-size: 11px;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid #e2e8f0;
+            transition: all 0.2s ease;
+        }
+
+        .tag-pill:hover, .tag-pill.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Gallery Toolbar */
+        .gallery-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--bg-card);
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .results-count {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .results-count span {
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+
+        .sort-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .sort-select {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            outline: none;
+            background: #ffffff;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Designs Grid */
+        .designs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        /* Design Card */
+        .design-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .design-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            border-color: #cbd5e1;
+        }
+
+        .card-preview-wrap {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            background: #f1f5f9;
+            overflow: hidden;
+        }
+
+        .card-preview-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .design-card:hover .card-preview-wrap img {
+            transform: scale(1.03);
+        }
+
+        .card-fav-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: all 0.2s ease;
+            z-index: 2;
+        }
+
+        .card-fav-btn:hover {
+            transform: scale(1.1);
+            background: #ffffff;
+        }
+
+        .card-fav-btn.active {
+            color: #ef4444;
+        }
+
+        .card-content {
+            padding: 16px 20px 20px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .category-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .rating-wrap {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #d97706;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .card-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 16px;
+        }
+
+        .tag-item {
+            font-size: 11px;
+            color: var(--text-muted);
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .card-footer {
+            margin-top: auto;
+            display: flex;
+            gap: 10px;
+        }
+
+        .primary-btn {
+            flex: 1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            text-align: center;
+        }
+
+        .primary-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        .secondary-btn {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+
+        .secondary-btn:hover {
+            background: #e2e8f0;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border-color);
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 6px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .modal-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            position: relative;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .small-modal {
+            max-width: 500px;
+        }
+
+        .large-modal {
+            max-width: 1100px;
+            height: 85vh;
+        }
+
+        .modal-close-floating {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            transition: background 0.2s ease;
+        }
+
+        .modal-close-floating:hover {
+            background: #e2e8f0;
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-muted);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Detail Modal Layout */
+        .detail-modal-grid {
+            display: grid;
+            grid-template-columns: 46% 54%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .modal-preview-column {
+            background: #f1f5f9;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        .large-preview-wrap {
+            width: 100%;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            background: #fff;
+            margin-bottom: 20px;
+        }
+
+        .large-preview-wrap img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .fav-action-btn {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .fav-action-btn:hover {
+            background: #fee2e2;
+        }
+
+        .modal-info-column {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-meta-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .modal-rating-wrap {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: #d97706;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .modal-desc {
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        /* Workstation Tabs & Code */
+        .workstation-tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 16px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            color: var(--primary);
+        }
+
+        .tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+        }
+
+        .tab-contents {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tab-content {
+            display: none;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .tab-content.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .iframe-container {
+            width: 100%;
+            height: 100%;
+            min-height: 320px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            background: #ffffff;
+        }
+
+        .iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .code-wrapper {
+            position: relative;
+            height: 100%;
+            background: #0f172a;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            overflow: auto;
+        }
+
+        .copy-code-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            z-index: 5;
+        }
+
+        .copy-code-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        pre code {
+            font-family: 'Fira Code', monospace;
+            font-size: 13px;
+            color: #f8fafc;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* Recently Viewed List */
+        .recently-viewed-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .rv-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .rv-item:hover {
+            background: #f8fafc;
+        }
+
+        .rv-item img {
+            width: 60px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .rv-info h4 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .rv-info span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--dark-nav);
+            color: white;
+            padding: 12px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-nav);
+            color: #94a3b8;
+            padding: 40px 24px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .brand-footer {
+            color: white;
+            font-size: 20px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-col h4 {
+            color: white;
+            font-size: 15px;
+            margin-bottom: 14px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-col a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-col a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 20px auto 0;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .content-body {
+                grid-template-columns: 1fr;
+            }
+            .sidebar-filters {
+                display: none;
+            }
+            .detail-modal-grid {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+            }
+            .large-modal {
+                height: auto;
+                max-height: 90vh;
+            }
+            .modal-preview-column {
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-banner {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+                padding: 24px;
+            }
+            .hero-stats {
+                width: 100%;
+                justify-content: space-around;
+            }
+            .nav-container {
+                flex-wrap: wrap;
+            }
+            .search-bar-container {
+                order: 3;
+                width: 100%;
+                max-width: 100%;
+            }
+            .footer-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation Header (Amazon Marketplace Inspired) -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#" class="brand">
+                <span class="brand-logo">🔐</span>
+                <span class="brand-name">Auth<span class="brand-accent">Market</span></span>
+            </a>
+
+            <div class="search-bar-container">
+                <div class="category-dropdown-wrap">
+                    <select id="headerCategorySelect" class="category-select">
+                        <option value="All">All Categories</option>
+                        <option value="Gmail Inspired">Gmail Inspired</option>
+                        <option value="Minimal">Minimal</option>
+                        <option value="Modern">Modern</option>
+                        <option value="Dark Mode">Dark Mode</option>
+                        <option value="Glassmorphism">Glassmorphism</option>
+                        <option value="Mobile">Mobile</option>
+                        <option value="Desktop">Desktop</option>
+                        <option value="SaaS">SaaS</option>
+                        <option value="Signup">Signup</option>
+                        <option value="OTP">OTP</option>
+                        <option value="Forgot Password">Forgot Password</option>
+                    </select>
+                </div>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search login templates, e.g. 'Gmail', 'Glassmorphism', 'OTP'...">
+                <button id="searchBtn" class="search-btn" aria-label="Search">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                </button>
+            </div>
+
+            <div class="header-actions">
+                <button id="recentlyViewedBtn" class="nav-action-btn">
+                    <span class="btn-icon">🕒</span>
+                    <span class="btn-text">Recently Viewed</span>
+                </button>
+                <button id="favoritesNavBtn" class="nav-action-btn badge-btn">
+                    <span class="btn-icon">❤️</span>
+                    <span class="btn-text">Favorites</span>
+                    <span id="favBadge" class="badge">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sub Navigation Bar -->
+    <nav class="subnav">
+        <div class="subnav-container">
+            <div class="subnav-item active" data-category="All">All Login UIs</div>
+            <div class="subnav-item" data-category="Gmail Inspired">Gmail Inspired</div>
+            <div class="subnav-item" data-category="Minimal">Minimal</div>
+            <div class="subnav-item" data-category="Modern">Modern</div>
+            <div class="subnav-item" data-category="Dark Mode">Dark Mode</div>
+            <div class="subnav-item" data-category="Glassmorphism">Glassmorphism</div>
+            <div class="subnav-item" data-category="Mobile">Mobile</div>
+            <div class="subnav-item" data-category="Desktop">Desktop</div>
+            <div class="subnav-item" data-category="SaaS">SaaS</div>
+            <div class="subnav-item" data-category="OTP">OTP</div>
+            <div class="subnav-item" data-category="Forgot Password">Forgot Password</div>
+        </div>
+    </nav>
+
+    <!-- Disclaimer Banner -->
+    <div class="disclaimer-banner">
+        <div class="disclaimer-content">
+            <span class="disclaimer-badge">NOTICE</span>
+            <p>All Gmail and Google-inspired login designs in this marketplace are <strong>unofficial UI concept implementations</strong> for developer inspiration. This website does not capture, process, or store real user credentials, OTPs, or passwords.</p>
+        </div>
+    </div>
+
+    <!-- Main Content Layout -->
+    <main class="main-layout">
+        <!-- Hero Banner -->
+        <section class="hero-banner">
+            <div class="hero-text">
+                <span class="hero-tag">✨ Production Ready UI/UX Components</span>
+                <h1>Discover & Copy Premium Login UI Designs</h1>
+                <p>Browse Amazon-style login UI cards, inspect live demos, download preview PNGs, and grab ready-to-use HTML/CSS/JS code in seconds.</p>
+            </div>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number">20+</span>
+                    <span class="stat-label">UI Designs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Vanilla HTML/CSS/JS</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">Free</span>
+                    <span class="stat-label">Copy & Export</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-body">
+            <!-- Sidebar Filters -->
+            <aside class="sidebar-filters">
+                <div class="filter-card">
+                    <div class="filter-header">
+                        <h3>Filters</h3>
+                        <button id="clearFiltersBtn" class="clear-btn">Reset All</button>
+                    </div>
+
+                    <!-- Category Filter -->
+                    <div class="filter-group">
+                        <label class="filter-label">Categories</label>
+                        <div class="checkbox-list" id="categoryCheckboxes">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Minimum Rating Filter -->
+                    <div class="filter-group">
+                        <label class="filter-label">Minimum Rating</label>
+                        <select id="ratingFilter" class="filter-select">
+                            <option value="0">All Ratings</option>
+                            <option value="4.8">4.8 Stars & Up</option>
+                            <option value="4.5">4.5 Stars & Up</option>
+                            <option value="4.0">4.0 Stars & Up</option>
+                        </select>
+                    </div>
+
+                    <!-- Popular Tags -->
+                    <div class="filter-group">
+                        <label class="filter-label">Popular Tags</label>
+                        <div class="tag-cloud" id="tagCloud">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Gallery Main Area -->
+            <section class="gallery-container">
+                <div class="gallery-toolbar">
+                    <div class="results-count">
+                        Showing <span id="resultsCount">0</span> Login UI Designs
+                    </div>
+                    <div class="sort-controls">
+                        <label for="sortSelect">Sort By:</label>
+                        <select id="sortSelect" class="sort-select">
+                            <option value="featured">Featured / Popular</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="newest">Newest First</option>
+                            <option value="title">Name (A-Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Cards Grid -->
+                <div id="designsGrid" class="designs-grid">
+                    <!-- Populated dynamically via JS -->
+                </div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="empty-state hidden">
+                    <div class="empty-icon">🔍</div>
+                    <h3>No Login Designs Found</h3>
+                    <p>Try adjusting your search terms or filter selections.</p>
+                    <button id="resetSearchBtn" class="primary-btn">Reset Filters</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Recently Viewed Drawer / Modal -->
+    <div id="recentlyViewedModal" class="modal-overlay hidden">
+        <div class="modal-card small-modal">
+            <div class="modal-header">
+                <h3>🕒 Recently Viewed Designs</h3>
+                <button class="modal-close" id="closeRecentlyViewedBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="recentlyViewedList" class="recently-viewed-list">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Detail Modal (Marketplace Detail View) -->
+    <div id="detailModal" class="modal-overlay hidden">
+        <div class="modal-card large-modal">
+            <button id="closeDetailModalBtn" class="modal-close-floating" aria-label="Close Modal">&times;</button>
+
+            <div class="detail-modal-grid">
+                <!-- Left Column: Large PNG Preview -->
+                <div class="modal-preview-column">
+                    <div class="large-preview-wrap">
+                        <img id="modalPreviewImg" src="" alt="Login Design Preview">
+                    </div>
+                    <div class="preview-actions">
+                        <a id="downloadPngBtn" download="login-preview.png" href="" class="action-btn secondary-btn">
+                            <span>📥 Download PNG</span>
+                        </a>
+                        <button id="modalFavBtn" class="action-btn fav-action-btn">
+                            <span id="modalFavIcon">🤍</span> <span id="modalFavText">Add to Favorites</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Column: Details & Code Workstation -->
+                <div class="modal-info-column">
+                    <div class="modal-header-info">
+                        <div class="modal-meta-row">
+                            <span id="modalCategory" class="category-badge">Category</span>
+                            <div class="modal-rating-wrap">
+                                <span class="stars">★★★★★</span>
+                                <span id="modalRatingVal" class="rating-val">4.9</span>
+                            </div>
+                        </div>
+                        <h2 id="modalTitle" class="modal-title">Design Title</h2>
+                        <p id="modalDesc" class="modal-desc">Design description goes here.</p>
+                        <div id="modalTags" class="modal-tags">
+                            <!-- Tags populated dynamically -->
+                        </div>
+                    </div>
+
+                    <!-- Workstation Tabs -->
+                    <div class="workstation-tabs">
+                        <button class="tab-btn active" data-tab="live">Live Demo</button>
+                        <button class="tab-btn" data-tab="html">HTML</button>
+                        <button class="tab-btn" data-tab="css">CSS</button>
+                        <button class="tab-btn" data-tab="js">JavaScript</button>
+                    </div>
+
+                    <div class="tab-contents">
+                        <!-- Tab 1: Live Interactive Demo -->
+                        <div class="tab-content active" id="tab-live">
+                            <div class="iframe-container">
+                                <iframe id="demoIframe" title="Live Interactive Demo Sandbox"></iframe>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: HTML Code -->
+                        <div class="tab-content" id="tab-html">
+                            <div class="code-wrapper">
+                                <button class="copy-code-btn" data-target="htmlCodeBlock">Copy HTML</button>
+                                <pre><code id="htmlCodeBlock"></code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: CSS Code -->
+                        <div class="tab-content" id="tab-css">
+                            <div class="code-wrapper">
+                                <button class="copy-code-btn" data-target="cssCodeBlock">Copy CSS</button>
+                                <pre><code id="cssCodeBlock"></code></pre>
+                            </div>
+                        </div>
+
+                        <!-- Tab 4: JS Code -->
+                        <div class="tab-content" id="tab-js">
+                            <div class="code-wrapper">
+                                <button class="copy-code-btn" data-target="jsCodeBlock">Copy JavaScript</button>
+                                <pre><code id="jsCodeBlock"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast hidden">Copied to clipboard!</div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="brand-footer">
+                    <span>🔐</span> <strong>AuthMarket</strong>
+                </div>
+                <p>The ultimate UI inspiration marketplace and copy-paste code library for modern login experiences.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Popular Categories</h4>
+                <ul>
+                    <li><a href="#" class="footer-cat-link" data-cat="Gmail Inspired">Gmail Inspired Designs</a></li>
+                    <li><a href="#" class="footer-cat-link" data-cat="Glassmorphism">Glassmorphism Cards</a></li>
+                    <li><a href="#" class="footer-cat-link" data-cat="Dark Mode">Dark Mode Auth</a></li>
+                    <li><a href="#" class="footer-cat-link" data-cat="OTP">2FA & OTP Screens</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Safety & Compliance</h4>
+                <p style="font-size: 13px; color: #94a3b8; line-height: 1.5;">All Google/Gmail inspired components are independent open-source design mockups for presentation purposes only.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 AuthMarket. Built with Vanilla HTML, CSS & JS.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- DATA DATASET FOR ALL 20 DESIGNS (A to T) ---
+        const DESIGNS_DATA = [
+            {
+                id: "a",
+                title: "Gmail Classic Clean",
+                category: "Gmail Inspired",
+                tags: ["Gmail", "Google", "Clean", "Minimal", "Light"],
+                rating: 4.9,
+                previewImg: "assets/previews/a.png",
+                description: "Authentic Google & Gmail clean sign-in interface featuring Google Material design, subtle border-radius, crisp typography, and fluid step transitions.",
+                htmlCode: `<div class="gmail-classic-card">
+    <div class="gmail-header">
+        <svg class="google-logo" width="48" height="48" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        <h2>Sign in</h2>
+        <p>to continue to Gmail</p>
+    </div>
+    <form id="gmailLoginForm">
+        <div class="input-group">
+            <input type="email" id="emailInput" required placeholder="Email or phone">
+        </div>
+        <div class="actions-row">
+            <a href="#" class="link-btn">Forgot email?</a>
+            <button type="submit" class="next-btn">Next</button>
+        </div>
+    </form>
+    <div class="gmail-footer">
+        <a href="#" class="link-btn">Create account</a>
+    </div>
+</div>`,
+                cssCode: `body {
+    background: #f0f4f9;
+    font-family: 'Segoe UI', Roboto, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+.gmail-classic-card {
+    width: 420px;
+    padding: 40px;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.gmail-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+.gmail-header h2 {
+    font-size: 24px;
+    font-weight: 400;
+    color: #1f1f1f;
+    margin: 16px 0 8px;
+}
+.gmail-header p {
+    font-size: 14px;
+    color: #444746;
+    margin: 0;
+}
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid #0b57d0;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    outline: none;
+}
+.actions-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+}
+.link-btn {
+    color: #0b57d0;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: 500;
+}
+.next-btn {
+    background: #0b57d0;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+}
+.next-btn:hover {
+    background: #0842a0;
+}
+.gmail-footer {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #e1e3e1;
+}`,
+                jsCode: `document.getElementById('gmailLoginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Demo sign-in triggered successfully.');
+});`
+            },
+            {
+                id: "b",
+                title: "Gmail Material You",
+                category: "Gmail Inspired",
+                tags: ["Gmail", "Material 3", "Modern", "Google"],
+                rating: 4.8,
+                previewImg: "assets/previews/b.png",
+                description: "Material You (Material Design 3) Gmail Workspace sign-in card with pill buttons and soft rounded input fields.",
+                htmlCode: `<div class="material-card">
+    <div class="workspace-header">
+        <div class="logo-box">M</div>
+        <div>
+            <h3>Google Workspace</h3>
+            <span>Secure Login</span>
+        </div>
+    </div>
+    <h2>Welcome back</h2>
+    <p>Enter your workspace credentials</p>
+    <div class="input-field">
+        <label>Email address</label>
+        <input type="text" value="user@company.com">
+    </div>
+    <div class="input-field">
+        <label>Password</label>
+        <input type="password" value="••••••••••••">
+    </div>
+    <button class="m3-btn">Sign in to Workspace</button>
+</div>`,
+                cssCode: `body {
+    background: #e9f0f8;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+.material-card {
+    width: 440px;
+    padding: 44px;
+    background: #ffffff;
+    border-radius: 36px;
+    box-shadow: 0 10px 30px rgba(11,87,208,0.06);
+}
+.workspace-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+.logo-box {
+    width: 42px;
+    height: 42px;
+    background: #c2e7ff;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #001d35;
+}
+.input-field {
+    background: #f3f6fc;
+    border-radius: 16px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border: 1px solid #c4c7c5;
+}
+.input-field label {
+    display: block;
+    font-size: 11px;
+    color: #444746;
+}
+.input-field input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    outline: none;
+}
+.m3-btn {
+    width: 100%;
+    background: #0b57d0;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `console.log('Gmail Material You component ready');`
+            },
+            {
+                id: "c",
+                title: "Dark Obsidian Portal",
+                category: "Dark Mode",
+                tags: ["Dark Mode", "SaaS", "Developer", "Modern"],
+                rating: 4.9,
+                previewImg: "assets/previews/c.png",
+                description: "Sleek obsidian developer portal login card designed with modern slate colors and gradient highlights.",
+                htmlCode: `<div class="dark-card">
+    <div class="card-top">
+        <div class="brand-title">OBSIDIAN.IO</div>
+        <span class="version-badge">v2.4 Live</span>
+    </div>
+    <h3>Developer Portal</h3>
+    <p>Authenticate to access your API keys</p>
+    <div class="form-group">
+        <label>Email Address</label>
+        <input type="text" value="dev@obsidian.io">
+    </div>
+    <div class="form-group">
+        <label>Secret Key</label>
+        <input type="password" value="secretpass123">
+    </div>
+    <button class="dark-btn">Authorize Session</button>
+</div>`,
+                cssCode: `body {
+    background: #0f172a;
+    font-family: sans-serif;
+    color: #f8fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.dark-card {
+    width: 400px;
+    padding: 36px;
+    background: #1e293b;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+.brand-title {
+    font-size: 22px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #38bdf8, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.form-group {
+    margin-bottom: 16px;
+}
+.form-group label {
+    font-size: 12px;
+    color: #cbd5e1;
+    display: block;
+    margin-bottom: 6px;
+}
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #f8fafc;
+    box-sizing: border-box;
+}
+.dark-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #0284c7, #6366f1);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// Dark Obsidian portal auth script`
+            },
+            {
+                id: "d",
+                title: "Frosted Glassmorphism",
+                category: "Glassmorphism",
+                tags: ["Glassmorphism", "Modern", "Creative", "Blur"],
+                rating: 4.7,
+                previewImg: "assets/previews/d.png",
+                description: "Vibrant frosted glass login card with backdrop backdrop-filter blur and subtle gradient backdrop.",
+                htmlCode: `<div class="glass-card">
+    <div class="glass-header">
+        <div class="icon">✨</div>
+        <h2>Aura Glass</h2>
+        <p>Enter the crystal realm</p>
+    </div>
+    <input type="text" placeholder="Username" value="crystal_user">
+    <input type="password" placeholder="Password" value="••••••••">
+    <button class="glass-btn">Unlock Experience</button>
+</div>`,
+                cssCode: `body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.glass-card {
+    width: 400px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(16px);
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    color: #fff;
+}
+.glass-card input {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 12px;
+    color: #fff;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    outline: none;
+}
+.glass-btn {
+    width: 100%;
+    background: #ffffff;
+    color: #764ba2;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}`,
+                jsCode: `// Glassmorphism effect logic`
+            },
+            {
+                id: "e",
+                title: "Minimalist Line Art",
+                category: "Minimal",
+                tags: ["Minimal", "Line Art", "Clean", "Monochrome"],
+                rating: 4.8,
+                previewImg: "assets/previews/e.png",
+                description: "Monochrome minimal line-art login box crafted with high-contrast typography and underline inputs.",
+                htmlCode: `<div class="minimal-box">
+    <span class="subtext">Studio System</span>
+    <h2>Sign In.</h2>
+    <div class="field">
+        <label>Identity</label>
+        <input type="text" value="designer@studio.com">
+    </div>
+    <div class="field">
+        <label>Passcode</label>
+        <input type="password" value="password123">
+    </div>
+    <button class="minimal-btn">Continue &rarr;</button>
+</div>`,
+                cssCode: `body {
+    background: #fafafa;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.minimal-box {
+    width: 380px;
+    padding: 40px;
+    background: #ffffff;
+    border: 1px solid #111111;
+}
+.field {
+    margin-bottom: 24px;
+}
+.field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.field input {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 1px solid #111111;
+    font-size: 16px;
+    outline: none;
+    background: transparent;
+}
+.minimal-btn {
+    width: 100%;
+    background: #111111;
+    color: #ffffff;
+    border: none;
+    padding: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+}`,
+                jsCode: `// Minimalist line art form handling`
+            },
+            {
+                id: "f",
+                title: "Mobile First Quick-Auth",
+                category: "Mobile",
+                tags: ["Mobile", "SMS", "QuickAuth", "Minimal"],
+                rating: 4.6,
+                previewImg: "assets/previews/f.png",
+                description: "Mobile-optimized login modal layout with phone/email toggle tabs and SMS code dispatch button.",
+                htmlCode: `<div class="mobile-frame">
+    <div class="pill-notch"></div>
+    <div class="center-head">
+        <div class="icon">⚡</div>
+        <h3>QuickAuth App</h3>
+        <p>Mobile Verification</p>
+    </div>
+    <div class="tab-toggle">
+        <button class="active">Phone</button>
+        <button>Email</button>
+    </div>
+    <input type="text" value="+1 (555) 019-2834" class="mobile-input">
+    <button class="mobile-btn">Send SMS Code</button>
+</div>`,
+                cssCode: `body {
+    background: #f3f4f6;
+    font-family: -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.mobile-frame {
+    width: 320px;
+    padding: 24px;
+    background: #ffffff;
+    border-radius: 32px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+    border: 8px solid #000;
+}
+.pill-notch {
+    width: 80px;
+    height: 4px;
+    background: #e5e7eb;
+    border-radius: 2px;
+    margin: 0 auto 20px;
+}
+.tab-toggle {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    background: #f3f4f6;
+    padding: 4px;
+    border-radius: 10px;
+}
+.tab-toggle button {
+    flex: 1;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    background: transparent;
+    font-size: 12px;
+}
+.tab-toggle button.active {
+    background: #fff;
+    font-weight: 600;
+}
+.mobile-input {
+    width: 100%;
+    padding: 12px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+}
+.mobile-btn {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 600;
+}`,
+                jsCode: `// Mobile quick auth handler`
+            },
+            {
+                id: "g",
+                title: "SaaS Enterprise Dashboard Sign-In",
+                category: "SaaS",
+                tags: ["SaaS", "Desktop", "Enterprise", "Split Screen"],
+                rating: 4.9,
+                previewImg: "assets/previews/g.png",
+                description: "Two-column split desktop SaaS console sign-in card with brand hero banner on left.",
+                htmlCode: `<div class="saas-split-card">
+    <div class="saas-left">
+        <div class="brand">CloudPulse</div>
+        <h3>Enterprise Scale Analytics</h3>
+        <p>Manage deployments and team access securely.</p>
+    </div>
+    <div class="saas-right">
+        <h3>Sign In</h3>
+        <p>Enter your enterprise credentials</p>
+        <input type="text" value="admin@cloudpulse.io" class="saas-input">
+        <input type="password" value="••••••••" class="saas-input">
+        <button class="saas-btn">Sign In to Console</button>
+    </div>
+</div>`,
+                cssCode: `body {
+    background: #f8fafc;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.saas-split-card {
+    width: 580px;
+    display: flex;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+.saas-left {
+    width: 45%;
+    background: linear-gradient(135deg, #1e1b4b, #312e81);
+    padding: 32px;
+    color: #fff;
+}
+.saas-right {
+    width: 55%;
+    padding: 32px;
+}
+.saas-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+.saas-btn {
+    width: 100%;
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 600;
+}`,
+                jsCode: `// SaaS enterprise console login logic`
+            },
+            {
+                id: "h",
+                title: "Gmail Account Switcher & Auth",
+                category: "Gmail Inspired",
+                tags: ["Gmail", "Account Switcher", "Google", "Multi-account"],
+                rating: 4.8,
+                previewImg: "assets/previews/h.png",
+                description: "Multi-account chooser UI modeled after Google Account Switcher with active account profiles.",
+                htmlCode: `<div class="account-switcher-card">
+    <div class="head">
+        <h2>Choose an account</h2>
+        <p>to continue to Google Cloud</p>
+    </div>
+    <div class="account-list">
+        <div class="account-row active">
+            <div class="avatar bg-blue">A</div>
+            <div>
+                <div class="name">Alex Rivera</div>
+                <div class="email">alex.rivera@gmail.com</div>
+            </div>
+        </div>
+        <div class="account-row">
+            <div class="avatar bg-green">S</div>
+            <div>
+                <div class="name">Studio Design</div>
+                <div class="email">studio@company.com</div>
+            </div>
+        </div>
+    </div>
+    <button class="add-account-btn">+ Use another account</button>
+</div>`,
+                cssCode: `body {
+    background: #f0f4f9;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.account-switcher-card {
+    width: 420px;
+    padding: 36px;
+    background: #ffffff;
+    border-radius: 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+.account-list {
+    border: 1px solid #e1e3e1;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+.account-row {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e1e3e1;
+    cursor: pointer;
+}
+.avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+}
+.bg-blue { background: #0b57d0; }
+.bg-green { background: #12b886; }
+.add-account-btn {
+    width: 100%;
+    border: 1px dashed #0b57d0;
+    background: transparent;
+    color: #0b57d0;
+    padding: 12px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}`,
+                jsCode: `// Multi account selector logic`
+            },
+            {
+                id: "i",
+                title: "OTP Verification Shield",
+                category: "OTP",
+                tags: ["OTP", "2FA", "Security", "Verification"],
+                rating: 4.9,
+                previewImg: "assets/previews/i.png",
+                description: "6-digit OTP verification card with auto-tabbing input slots and resend countdown indicator.",
+                htmlCode: `<div class="otp-card">
+    <div class="shield-icon">🛡️</div>
+    <h2>Two-Factor Auth</h2>
+    <p>Enter the 6-digit verification code sent to your authenticator app.</p>
+    <div class="otp-inputs">
+        <input type="text" maxlength="1" value="8">
+        <input type="text" maxlength="1" value="4">
+        <input type="text" maxlength="1" value="9">
+        <input type="text" maxlength="1" value="1">
+        <input type="text" maxlength="1" value="">
+        <input type="text" maxlength="1" value="">
+    </div>
+    <button class="otp-btn">Verify Code</button>
+</div>`,
+                cssCode: `body {
+    background: #f1f5f9;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.otp-card {
+    width: 380px;
+    padding: 36px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    text-align: center;
+}
+.shield-icon {
+    width: 52px;
+    height: 52px;
+    background: #dbeafe;
+    color: #2563eb;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin: 0 auto 16px;
+}
+.otp-inputs {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+}
+.otp-inputs input {
+    width: 42px;
+    height: 48px;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    border: 2px solid #cbd5e1;
+    border-radius: 8px;
+}
+.otp-inputs input:focus {
+    border-color: #2563eb;
+    outline: none;
+}
+.otp-btn {
+    width: 100%;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 100px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// OTP input auto focus next handler`
+            },
+            {
+                id: "j",
+                title: "Forgot Password Recovery Flow",
+                category: "Forgot Password",
+                tags: ["Forgot Password", "Recovery", "Clean", "Minimal"],
+                rating: 4.7,
+                previewImg: "assets/previews/j.png",
+                description: "Password reset and account recovery workflow screen with email instructions trigger.",
+                htmlCode: `<div class="recovery-card">
+    <div class="key-icon">🔑</div>
+    <h2>Forgot Password?</h2>
+    <p>No worries! Enter your registered email address and we'll send password recovery instructions.</p>
+    <div class="form-group">
+        <label>Email address</label>
+        <input type="email" value="alex@example.com">
+    </div>
+    <button class="reset-btn">Reset Password</button>
+    <div class="back-link"><a href="#">&larr; Back to Log in</a></div>
+</div>`,
+                cssCode: `body {
+    background: #f8fafc;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.recovery-card {
+    width: 400px;
+    padding: 36px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e2e8f0;
+}
+.key-icon {
+    width: 48px;
+    height: 48px;
+    background: #fee2e2;
+    color: #dc2626;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+.reset-btn {
+    width: 100%;
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    margin-top: 16px;
+    cursor: pointer;
+}
+.back-link {
+    text-align: center;
+    margin-top: 20px;
+}
+.back-link a {
+    color: #64748b;
+    text-decoration: none;
+    font-size: 13px;
+}`,
+                jsCode: `// Forgot password submission logic`
+            },
+            {
+                id: "k",
+                title: "Modern Multi-Step Signup",
+                category: "Signup",
+                tags: ["Signup", "Multi-Step", "Form", "Modern"],
+                rating: 4.8,
+                previewImg: "assets/previews/k.png",
+                description: "Clean step-by-step registration flow card with progress indicator bar.",
+                htmlCode: `<div class="signup-card">
+    <div class="step-header">
+        <span class="step-num">STEP 2 OF 3</span>
+        <span class="step-title">Profile Info</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <h2>Create Your Account</h2>
+    <p>Tell us a bit about yourself</p>
+    <div class="row">
+        <input type="text" value="Alex">
+        <input type="text" value="Morgan">
+    </div>
+    <input type="text" value="@alexmorgan_dev" class="full-input">
+    <div class="step-actions">
+        <button class="back-btn">Back</button>
+        <button class="next-step-btn">Continue Step 3 &rarr;</button>
+    </div>
+</div>`,
+                cssCode: `body {
+    background: #f3f4f6;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.signup-card {
+    width: 440px;
+    padding: 36px;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+}
+.step-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 3px;
+    margin-bottom: 24px;
+}
+.progress-fill {
+    width: 66%;
+    height: 100%;
+    background: #4f46e5;
+}
+.row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+.row input, .full-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+.next-step-btn {
+    background: #4f46e5;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// Multi-step signup form script`
+            },
+            {
+                id: "l",
+                title: "Cyberpunk Neon Dark",
+                category: "Dark Mode",
+                tags: ["Dark Mode", "Cyberpunk", "Neon", "Glow"],
+                rating: 4.9,
+                previewImg: "assets/previews/l.png",
+                description: "Futuristic neon glowing terminal sign-in interface with monospace terminal fonts.",
+                htmlCode: `<div class="cyber-card">
+    <div class="cyber-top">
+        <span>SYSTEM_AUTH // v9.0</span>
+        <span class="status">● ONLINE</span>
+    </div>
+    <h2>NEON_NET</h2>
+    <div class="cyber-field">
+        <label>> USER_IDENTIFIER</label>
+        <input type="text" value="CYBER_PUNK_2077">
+    </div>
+    <div class="cyber-field">
+        <label>> ENCRYPTED_PASSKEY</label>
+        <input type="password" value="••••••••••••">
+    </div>
+    <button class="cyber-btn">[ INITIALIZE MATRIX ]</button>
+</div>`,
+                cssCode: `body {
+    background: #09090b;
+    font-family: monospace;
+    color: #00f0ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.cyber-card {
+    width: 400px;
+    padding: 36px;
+    background: #121215;
+    border: 1px solid #00f0ff;
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+    border-radius: 16px;
+}
+.cyber-field {
+    margin-bottom: 16px;
+}
+.cyber-field label {
+    font-size: 11px;
+    color: #888;
+    display: block;
+    margin-bottom: 4px;
+}
+.cyber-field input {
+    width: 100%;
+    padding: 12px;
+    background: #000;
+    border: 1px solid #00f0ff;
+    color: #00f0ff;
+    font-family: monospace;
+    box-sizing: border-box;
+}
+.cyber-btn {
+    width: 100%;
+    background: #00f0ff;
+    color: #000;
+    border: none;
+    padding: 12px;
+    font-family: monospace;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 0 15px rgba(0,240,255,0.4);
+}`,
+                jsCode: `// Cyberpunk audio click effect script`
+            },
+            {
+                id: "m",
+                title: "Soft Claymorphism Card",
+                category: "Modern",
+                tags: ["Claymorphism", "Soft UI", "Modern", "3D"],
+                rating: 4.6,
+                previewImg: "assets/previews/m.png",
+                description: "Soft inflated claymorphism rounded 3D login container with tactile inner shadows.",
+                htmlCode: `<div class="clay-card">
+    <div class="clay-icon">☁️</div>
+    <h3>Clay Design</h3>
+    <input type="text" value="soft_user@clay.ui" class="clay-input">
+    <input type="password" value="••••••••" class="clay-input">
+    <button class="clay-btn">Log In</button>
+</div>`,
+                cssCode: `body {
+    background: #e0e8f0;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.clay-card {
+    width: 380px;
+    padding: 40px;
+    background: #e0e8f0;
+    border-radius: 32px;
+    box-shadow: 12px 12px 24px #b8c4d0, -12px -12px 24px #ffffff;
+    text-align: center;
+}
+.clay-icon {
+    width: 60px;
+    height: 60px;
+    background: #e0e8f0;
+    border-radius: 20px;
+    box-shadow: inset 4px 4px 8px #b8c4d0, inset -4px -4px 8px #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 24px;
+}
+.clay-input {
+    width: 100%;
+    padding: 14px;
+    background: #e0e8f0;
+    border: none;
+    border-radius: 16px;
+    box-shadow: inset 4px 4px 8px #b8c4d0, inset -4px -4px 8px #ffffff;
+    margin-bottom: 16px;
+    box-sizing: border-box;
+    outline: none;
+}
+.clay-btn {
+    width: 100%;
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 16px;
+    font-weight: 600;
+    box-shadow: 6px 6px 12px #b8c4d0, -6px -6px 12px #ffffff;
+    cursor: pointer;
+}`,
+                jsCode: `// Claymorphism soft tactile UI feedback`
+            },
+            {
+                id: "n",
+                title: "Split Screen Creative Showcase",
+                category: "Desktop",
+                tags: ["Desktop", "Split Screen", "Modern", "Creative"],
+                rating: 4.8,
+                previewImg: "assets/previews/n.png",
+                description: "High-impact split screen sign-in card featuring artist quote testmonial and soft rose accents.",
+                htmlCode: `<div class="artisan-split">
+    <div class="artisan-left">
+        <div class="brand">ARTISAN</div>
+        <blockquote>"The cleanest UI library for modern creators."</blockquote>
+    </div>
+    <div class="artisan-right">
+        <h3>Welcome back</h3>
+        <p>Access your creative portfolio</p>
+        <input type="text" value="sarah@artisan.co">
+        <input type="password" value="••••••••">
+        <button class="artisan-btn">Sign In</button>
+    </div>
+</div>`,
+                cssCode: `body {
+    background: #f8fafc;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.artisan-split {
+    width: 600px;
+    display: flex;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+.artisan-left {
+    width: 50%;
+    background: linear-gradient(135deg, #f43f5e, #fb7185);
+    padding: 36px;
+    color: white;
+}
+.artisan-right {
+    width: 50%;
+    padding: 36px;
+}
+.artisan-right input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e4e4e7;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+.artisan-btn {
+    width: 100%;
+    background: #f43f5e;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// Creative showcase split screen logic`
+            },
+            {
+                id: "o",
+                title: "Floating Card Blur",
+                category: "Glassmorphism",
+                tags: ["Glassmorphism", "Blur", "Dark Mode", "Floating"],
+                rating: 4.7,
+                previewImg: "assets/previews/o.png",
+                description: "Deep dark floating translucent sign-in panel with ambient lighting effect.",
+                htmlCode: `<div class="float-card">
+    <div class="head">
+        <div class="float-icon">F</div>
+        <h3>FloatUI Auth</h3>
+    </div>
+    <input type="text" value="user@floatui.com">
+    <input type="password" value="••••••••">
+    <button class="float-btn">Log In</button>
+</div>`,
+                cssCode: `body {
+    background: #0f172a;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.float-card {
+    width: 380px;
+    padding: 36px;
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+}
+.float-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #10b981, #059669);
+    border-radius: 12px;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.float-card input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 10px;
+    color: white;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+.float-btn {
+    width: 100%;
+    background: #10b981;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// Floating blur panel animation`
+            },
+            {
+                id: "p",
+                title: "Gmail Dark Theme Auth",
+                category: "Gmail Inspired",
+                tags: ["Gmail", "Dark Mode", "Google", "Material"],
+                rating: 4.9,
+                previewImg: "assets/previews/p.png",
+                description: "Dark mode implementation of the classic Google sign-in layout.",
+                htmlCode: `<div class="gmail-dark-card">
+    <div class="gmail-dark-head">
+        <h2>Sign in</h2>
+        <p>with your Google Account</p>
+    </div>
+    <input type="text" value="dark.mode@gmail.com" class="gmail-dark-input">
+    <div class="actions">
+        <a href="#">Forgot email?</a>
+        <button class="gmail-dark-btn">Next</button>
+    </div>
+</div>`,
+                cssCode: `body {
+    background: #1f1f1f;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.gmail-dark-card {
+    width: 420px;
+    padding: 40px;
+    background: #2d2d2d;
+    border-radius: 28px;
+    color: #e3e3e3;
+}
+.gmail-dark-input {
+    width: 100%;
+    padding: 14px 16px;
+    background: transparent;
+    border: 2px solid #a8c7fa;
+    border-radius: 4px;
+    color: #a8c7fa;
+    box-sizing: border-box;
+}
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+}
+.actions a {
+    color: #a8c7fa;
+    text-decoration: none;
+}
+.gmail-dark-btn {
+    background: #a8c7fa;
+    color: #062e6f;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// Gmail dark mode authentication handling`
+            },
+            {
+                id: "q",
+                title: "Biometric Security OTP",
+                category: "OTP",
+                tags: ["OTP", "Biometric", "Passkey", "Security"],
+                rating: 4.8,
+                previewImg: "assets/previews/q.png",
+                description: "Passkey biometric prompt card with fingerprint icon scanner indicator.",
+                htmlCode: `<div class="bio-card">
+    <div class="fingerprint">👆</div>
+    <h3>Passkey Verification</h3>
+    <p>Use Touch ID or Face ID to confirm login</p>
+    <div class="status-box">Scanning Biometrics...</div>
+    <button class="bio-btn">Use Backup OTP</button>
+</div>`,
+                cssCode: `body {
+    background: #0f172a;
+    font-family: sans-serif;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.bio-card {
+    width: 360px;
+    padding: 36px;
+    background: #1e293b;
+    border-radius: 28px;
+    text-align: center;
+    border: 1px solid #334155;
+}
+.fingerprint {
+    width: 64px;
+    height: 64px;
+    background: #0284c7;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+    font-size: 30px;
+}
+.status-box {
+    padding: 16px;
+    background: #0f172a;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    border: 1px dashed #38bdf8;
+    color: #38bdf8;
+}
+.bio-btn {
+    width: 100%;
+    background: #38bdf8;
+    color: #0f172a;
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}`,
+                jsCode: `// Passkey biometric verification logic`
+            },
+            {
+                id: "r",
+                title: "Retro Terminal Developer Login",
+                category: "Dark Mode",
+                tags: ["Terminal", "Retro", "Developer", "CLI"],
+                rating: 4.9,
+                previewImg: "assets/previews/r.png",
+                description: "Linux CLI terminal inspired login prompt with simulated SSH session headers.",
+                htmlCode: `<div class="term-card">
+    <div class="term-bar">
+        <span class="dot red"></span>
+        <span class="dot yellow"></span>
+        <span class="dot green"></span>
+        <span class="title">bash - auth@terminal:~</span>
+    </div>
+    <div class="term-body">
+        <p class="cmd">$ ssh root@auth.server.internal</p>
+        <div class="line">login as: admin_user</div>
+        <div class="line">password: ••••••••••••</div>
+        <button class="term-btn">[ PRESS ENTER TO AUTHENTICATE ]</button>
+    </div>
+</div>`,
+                cssCode: `body {
+    background: #0d1117;
+    font-family: monospace;
+    color: #58a6ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.term-card {
+    width: 440px;
+    padding: 28px;
+    background: #161b22;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+}
+.term-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #30363d;
+    padding-bottom: 12px;
+}
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+.dot.red { background: #ff5f56; }
+.dot.yellow { background: #ffbd2e; }
+.dot.green { background: #27c93f; }
+.cmd { color: #7ee787; }
+.line { color: #79c0ff; margin-bottom: 8px; }
+.term-btn {
+    width: 100%;
+    background: #238636;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-family: monospace;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 16px;
+}`,
+                jsCode: `// Terminal command parser simulator`
+            },
+            {
+                id: "s",
+                title: "Gradient Mesh Glow",
+                category: "Modern",
+                tags: ["Gradient", "Mesh", "Modern", "SaaS"],
+                rating: 4.8,
+                previewImg: "assets/previews/s.png",
+                description: "Vibrant radial gradient background with crisp white elevated auth card.",
+                htmlCode: `<div class="nova-card">
+    <div class="nova-logo">N</div>
+    <h3>Nova Studio</h3>
+    <p>Sign in to your creative suite</p>
+    <input type="text" value="designer@nova.app">
+    <input type="password" value="••••••••">
+    <button class="nova-btn">Launch Workspaces</button>
+</div>`,
+                cssCode: `body {
+    background: radial-gradient(circle at 50% 50%, #3b82f6 0%, #1d4ed8 50%, #0f172a 100%);
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.nova-card {
+    width: 380px;
+    padding: 36px;
+    background: #ffffff;
+    border-radius: 28px;
+    text-align: center;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+}
+.nova-logo {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    border-radius: 16px;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    font-size: 22px;
+}
+.nova-card input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+.nova-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #6366f1, #a855f7);
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 100px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// Gradient mesh workspace launcher`
+            },
+            {
+                id: "t",
+                title: "Minimal Passwordless Magic Link",
+                category: "Minimal",
+                tags: ["Passwordless", "Magic Link", "Minimal", "Clean"],
+                rating: 4.9,
+                previewImg: "assets/previews/t.png",
+                description: "Passwordless authentication screen featuring instant magic email link trigger.",
+                htmlCode: `<div class="magic-card">
+    <div class="wand-icon">✨</div>
+    <h2>Passwordless Access</h2>
+    <p>Enter your email to receive a instant magic sign-in link.</p>
+    <input type="email" value="alex@magiclink.dev" class="magic-input">
+    <button class="magic-btn">Send Magic Link ✨</button>
+</div>`,
+                cssCode: `body {
+    background: #f9fafb;
+    font-family: sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+.magic-card {
+    width: 380px;
+    padding: 36px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #e5e7eb;
+    text-align: center;
+}
+.wand-icon {
+    width: 48px;
+    height: 48px;
+    background: #f3e8ff;
+    color: #9333ea;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin: 0 auto 16px;
+}
+.magic-input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    text-align: center;
+    box-sizing: border-box;
+}
+.magic-btn {
+    width: 100%;
+    background: #9333ea;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 100px;
+    font-weight: 600;
+    cursor: pointer;
+}`,
+                jsCode: `// Magic link dispatch logic`
+            }
+        ];
+
+        // --- APPLICATION STATE ---
+        let state = {
+            searchQuery: "",
+            selectedCategory: "All",
+            selectedSubCategory: "All",
+            selectedRating: 0,
+            selectedTag: "All",
+            sortOption: "featured",
+            favorites: JSON.parse(localStorage.getItem('authmarket_favorites') || '[]'),
+            recentlyViewed: JSON.parse(localStorage.getItem('authmarket_recently_viewed') || '[]'),
+            activeDetailId: null
+        };
+
+        // --- DOM ELEMENTS ---
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const headerCategorySelect = document.getElementById('headerCategorySelect');
+        const designsGrid = document.getElementById('designsGrid');
+        const resultsCount = document.getElementById('resultsCount');
+        const emptyState = document.getElementById('emptyState');
+        const resetSearchBtn = document.getElementById('resetSearchBtn');
+        const sortSelect = document.getElementById('sortSelect');
+        const favBadge = document.getElementById('favBadge');
+        const categoryCheckboxes = document.getElementById('categoryCheckboxes');
+        const ratingFilter = document.getElementById('ratingFilter');
+        const tagCloud = document.getElementById('tagCloud');
+        const clearFiltersBtn = document.getElementById('clearFiltersBtn');
+        const detailModal = document.getElementById('detailModal');
+        const closeDetailModalBtn = document.getElementById('closeDetailModalBtn');
+        const recentlyViewedModal = document.getElementById('recentlyViewedModal');
+        const recentlyViewedBtn = document.getElementById('recentlyViewedBtn');
+        const favoritesNavBtn = document.getElementById('favoritesNavBtn');
+        const closeRecentlyViewedBtn = document.getElementById('closeRecentlyViewedBtn');
+        const recentlyViewedList = document.getElementById('recentlyViewedList');
+        const toast = document.getElementById('toast');
+
+        // Modal Elements
+        const modalPreviewImg = document.getElementById('modalPreviewImg');
+        const downloadPngBtn = document.getElementById('downloadPngBtn');
+        const modalFavBtn = document.getElementById('modalFavBtn');
+        const modalFavIcon = document.getElementById('modalFavIcon');
+        const modalFavText = document.getElementById('modalFavText');
+        const modalCategory = document.getElementById('modalCategory');
+        const modalRatingVal = document.getElementById('modalRatingVal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDesc = document.getElementById('modalDesc');
+        const modalTags = document.getElementById('modalTags');
+        const demoIframe = document.getElementById('demoIframe');
+        const htmlCodeBlock = document.getElementById('htmlCodeBlock');
+        const cssCodeBlock = document.getElementById('cssCodeBlock');
+        const jsCodeBlock = document.getElementById('jsCodeBlock');
+
+        // --- INIT APPLICATION ---
+        function init() {
+            renderSidebarFilters();
+            renderGrid();
+            updateFavoritesBadge();
+            setupEventListeners();
+        }
+
+        // --- RENDER SIDEBAR FILTERS ---
+        function renderSidebarFilters() {
+            // Populate Categories
+            const categories = ["Gmail Inspired", "Minimal", "Modern", "Dark Mode", "Glassmorphism", "Mobile", "Desktop", "SaaS", "Signup", "OTP", "Forgot Password"];
+            categoryCheckboxes.innerHTML = categories.map(cat => `
+                <label class="checkbox-item">
+                    <input type="checkbox" value="${cat}" class="cat-checkbox">
+                    ${cat}
+                </label>
+            `).join('');
+
+            // Populate Tags
+            const allTags = [...new Set(DESIGNS_DATA.flatMap(d => d.tags))];
+            tagCloud.innerHTML = allTags.map(tag => `
+                <span class="tag-pill" data-tag="${tag}">${tag}</span>
+            `).join('');
+        }
+
+        // --- FILTER & SORT LOGIC ---
+        function getFilteredDesigns() {
+            let list = [...DESIGNS_DATA];
+
+            // 1. Search Query
+            if (state.searchQuery.trim()) {
+                const q = state.searchQuery.toLowerCase();
+                list = list.filter(d =>
+                    d.title.toLowerCase().includes(q) ||
+                    d.category.toLowerCase().includes(q) ||
+                    d.tags.some(t => t.toLowerCase().includes(q))
+                );
+            }
+
+            // 2. Subnav or Header Category
+            if (state.selectedCategory !== "All") {
+                if (state.selectedCategory === "Favorites") {
+                    list = list.filter(d => state.favorites.includes(d.id));
+                } else {
+                    list = list.filter(d => d.category === state.selectedCategory);
+                }
+            }
+
+            // 3. Checked Sidebar Categories
+            const checkedCats = Array.from(document.querySelectorAll('.cat-checkbox:checked')).map(cb => cb.value);
+            if (checkedCats.length > 0) {
+                list = list.filter(d => checkedCats.includes(d.category));
+            }
+
+            // 4. Rating Filter
+            if (state.selectedRating > 0) {
+                list = list.filter(d => d.rating >= state.selectedRating);
+            }
+
+            // 5. Tag Filter
+            if (state.selectedTag !== "All") {
+                list = list.filter(d => d.tags.includes(state.selectedTag));
+            }
+
+            // 6. Sorting
+            if (state.sortOption === "rating") {
+                list.sort((a, b) => b.rating - a.rating);
+            } else if (state.sortOption === "newest") {
+                list.sort((a, b) => b.id.localeCompare(a.id));
+            } else if (state.sortOption === "title") {
+                list.sort((a, b) => a.title.localeCompare(b.title));
+            }
+
+            return list;
+        }
+
+        // --- RENDER DESIGNS GRID ---
+        function renderGrid() {
+            const filtered = getFilteredDesigns();
+            resultsCount.textContent = filtered.length;
+
+            if (filtered.length === 0) {
+                designsGrid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            designsGrid.innerHTML = filtered.map(item => {
+                const isFav = state.favorites.includes(item.id);
+                return `
+                <div class="design-card" data-id="${item.id}">
+                    <div class="card-preview-wrap">
+                        <img src="${item.previewImg}" alt="${item.title}">
+                        <button class="card-fav-btn ${isFav ? 'active' : ''}" data-fav-id="${item.id}" aria-label="Favorite">
+                            ${isFav ? '❤️' : '🤍'}
+                        </button>
+                    </div>
+                    <div class="card-content">
+                        <div class="card-meta">
+                            <span class="category-badge">${item.category}</span>
+                            <div class="rating-wrap">
+                                <span>★</span>
+                                <span>${item.rating}</span>
+                            </div>
+                        </div>
+                        <h3 class="card-title">${item.title}</h3>
+                        <div class="card-tags">
+                            ${item.tags.slice(0, 3).map(t => `<span class="tag-item">#${t}</span>`).join('')}
+                        </div>
+                        <div class="card-footer">
+                            <button class="primary-btn open-detail-btn" data-id="${item.id}">View Code & Live Demo</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // --- UPDATE FAVORITES BADGE & LOCAL STORAGE ---
+        function updateFavoritesBadge() {
+            favBadge.textContent = state.favorites.length;
+            localStorage.setItem('authmarket_favorites', JSON.stringify(state.favorites));
+        }
+
+        function toggleFavorite(id) {
+            if (state.favorites.includes(id)) {
+                state.favorites = state.favorites.filter(fav => fav !== id);
+            } else {
+                state.favorites.push(id);
+            }
+            updateFavoritesBadge();
+            renderGrid();
+            if (state.activeDetailId === id) {
+                updateModalFavState(id);
+            }
+        }
+
+        function addToRecentlyViewed(id) {
+            state.recentlyViewed = state.recentlyViewed.filter(rId => rId !== id);
+            state.recentlyViewed.unshift(id);
+            if (state.recentlyViewed.length > 8) state.recentlyViewed.pop();
+            localStorage.setItem('authmarket_recently_viewed', JSON.stringify(state.recentlyViewed));
+        }
+
+        // --- OPEN DETAIL MODAL WORKSTATION ---
+        function openDetailModal(id) {
+            const item = DESIGNS_DATA.find(d => d.id === id);
+            if (!item) return;
+
+            state.activeDetailId = id;
+            addToRecentlyViewed(id);
+
+            modalPreviewImg.src = item.previewImg;
+            downloadPngBtn.href = item.previewImg;
+            downloadPngBtn.download = `${item.id}-${item.title.toLowerCase().replace(/\s+/g, '-')}.png`;
+            modalCategory.textContent = item.category;
+            modalRatingVal.textContent = item.rating;
+            modalTitle.textContent = item.title;
+            modalDesc.textContent = item.description;
+
+            modalTags.innerHTML = item.tags.map(t => `<span class="tag-item">#${t}</span>`).join('');
+            updateModalFavState(id);
+
+            // Populate Code Tabs
+            htmlCodeBlock.textContent = item.htmlCode;
+            cssCodeBlock.textContent = item.cssCode;
+            jsCodeBlock.textContent = item.jsCode;
+
+            // Render Live Demo Sandbox iframe
+            const demoDocument = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <meta charset="utf-8">
+                    <style>${item.cssCode}</style>
+                </head>
+                <body>
+                    ${item.htmlCode}
+                    <script>${item.jsCode}<\/script>
+                </body>
+                </html>
+            `;
+            demoIframe.srcdoc = demoDocument;
+
+            detailModal.classList.remove('hidden');
+        }
+
+        function updateModalFavState(id) {
+            const isFav = state.favorites.includes(id);
+            modalFavIcon.textContent = isFav ? '❤️' : '🤍';
+            modalFavText.textContent = isFav ? 'Saved in Favorites' : 'Add to Favorites';
+        }
+
+        // --- RECENTLY VIEWED MODAL ---
+        function openRecentlyViewedModal() {
+            if (state.recentlyViewed.length === 0) {
+                recentlyViewedList.innerHTML = '<p style="font-size:13px; color:#64748b; text-align:center;">No recently viewed designs yet.</p>';
+            } else {
+                const items = state.recentlyViewed.map(rId => DESIGNS_DATA.find(d => d.id === rId)).filter(Boolean);
+                recentlyViewedList.innerHTML = items.map(item => `
+                    <div class="rv-item" data-id="${item.id}">
+                        <img src="${item.previewImg}" alt="${item.title}">
+                        <div class="rv-info">
+                            <h4>${item.title}</h4>
+                            <span>${item.category} • ★ ${item.rating}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+            recentlyViewedModal.classList.remove('hidden');
+        }
+
+        // --- SHOW TOAST NOTIFICATION ---
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 2500);
+        }
+
+        // --- SETUP ALL EVENT LISTENERS ---
+        function setupEventListeners() {
+            // Search Input & Button
+            searchBtn.addEventListener('click', () => {
+                state.searchQuery = searchInput.value;
+                renderGrid();
+            });
+
+            searchInput.addEventListener('keyup', (e) => {
+                state.searchQuery = searchInput.value;
+                renderGrid();
+            });
+
+            // Header Category Select
+            headerCategorySelect.addEventListener('change', (e) => {
+                state.selectedCategory = e.target.value;
+                renderGrid();
+            });
+
+            // Subnav Bar Click
+            document.querySelectorAll('.subnav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    document.querySelectorAll('.subnav-item').forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                    state.selectedCategory = item.dataset.category;
+                    renderGrid();
+                });
+            });
+
+            // Footer Category Links
+            document.querySelectorAll('.footer-cat-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    state.selectedCategory = link.dataset.cat;
+                    window.scrollTo({ top: 300, behavior: 'smooth' });
+                    renderGrid();
+                });
+            });
+
+            // Checkbox & Rating Filters
+            categoryCheckboxes.addEventListener('change', () => renderGrid());
+            ratingFilter.addEventListener('change', (e) => {
+                state.selectedRating = parseFloat(e.target.value);
+                renderGrid();
+            });
+
+            // Tag Cloud Click
+            tagCloud.addEventListener('click', (e) => {
+                if (e.target.classList.contains('tag-pill')) {
+                    const tag = e.target.dataset.tag;
+                    if (state.selectedTag === tag) {
+                        state.selectedTag = "All";
+                        e.target.classList.remove('active');
+                    } else {
+                        document.querySelectorAll('.tag-pill').forEach(t => t.classList.remove('active'));
+                        state.selectedTag = tag;
+                        e.target.classList.add('active');
+                    }
+                    renderGrid();
+                }
+            });
+
+            // Clear Filters
+            clearFiltersBtn.addEventListener('click', () => {
+                state.searchQuery = "";
+                state.selectedCategory = "All";
+                state.selectedRating = 0;
+                state.selectedTag = "All";
+                searchInput.value = "";
+                headerCategorySelect.value = "All";
+                ratingFilter.value = "0";
+                document.querySelectorAll('.cat-checkbox').forEach(cb => cb.checked = false);
+                document.querySelectorAll('.tag-pill').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.subnav-item').forEach(i => i.classList.remove('active'));
+                document.querySelector('.subnav-item[data-category="All"]').classList.add('active');
+                renderGrid();
+            });
+
+            resetSearchBtn.addEventListener('click', () => clearFiltersBtn.click());
+
+            // Sort Selector
+            sortSelect.addEventListener('change', (e) => {
+                state.sortOption = e.target.value;
+                renderGrid();
+            });
+
+            // Grid Delegation (Card Open & Favorite)
+            designsGrid.addEventListener('click', (e) => {
+                const favBtn = e.target.closest('.card-fav-btn');
+                if (favBtn) {
+                    e.stopPropagation();
+                    toggleFavorite(favBtn.dataset.favId);
+                    return;
+                }
+
+                const card = e.target.closest('.design-card');
+                if (card) {
+                    openDetailModal(card.dataset.id);
+                }
+            });
+
+            // Modal Favorite Toggle
+            modalFavBtn.addEventListener('click', () => {
+                if (state.activeDetailId) {
+                    toggleFavorite(state.activeDetailId);
+                }
+            });
+
+            // Recently Viewed Modal Open & Delegated Card Click
+            recentlyViewedBtn.addEventListener('click', () => openRecentlyViewedModal());
+            closeRecentlyViewedBtn.addEventListener('click', () => recentlyViewedModal.classList.add('hidden'));
+
+            recentlyViewedList.addEventListener('click', (e) => {
+                const item = e.target.closest('.rv-item');
+                if (item) {
+                    recentlyViewedModal.classList.add('hidden');
+                    openDetailModal(item.dataset.id);
+                }
+            });
+
+            // Favorites Nav Button
+            favoritesNavBtn.addEventListener('click', () => {
+                state.selectedCategory = "Favorites";
+                renderGrid();
+            });
+
+            // Detail Modal Close
+            closeDetailModalBtn.addEventListener('click', () => detailModal.classList.add('hidden'));
+            detailModal.addEventListener('click', (e) => {
+                if (e.target === detailModal) detailModal.classList.add('hidden');
+            });
+
+            // Workstation Tabs Toggle
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                });
+            });
+
+            // Copy Code Buttons
+            document.querySelectorAll('.copy-code-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.dataset.target;
+                    const code = document.getElementById(targetId).textContent;
+                    navigator.clipboard.writeText(code).then(() => {
+                        showToast("Copied code to clipboard! 🚀");
+                    });
+                });
+            });
+        }
+
+        // Start App
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
