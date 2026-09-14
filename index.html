@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Whispers of the Ancient Grove - 2D Fantasy Adventure</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Game Container -->
+  <div id="gameContainer">
+    <!-- HTML5 Canvas Engine -->
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Main Menu Overlay -->
+    <div id="menuScreen" class="ui-screen active">
+      <div class="menu-content">
+        <div class="game-logo">
+          <span class="logo-subtitle">A FANTASY ADVENTURE</span>
+          <h1 class="logo-title">WHISPERS <span class="accent">OF THE</span> GROVE</h1>
+        </div>
+
+        <div class="menu-actions">
+          <button id="btnPlay" class="btn btn-primary"><span class="btn-icon">⚔️</span> New Game</button>
+          <button id="btnContinue" class="btn btn-secondary" disabled><span class="btn-icon">📜</span> Continue Game</button>
+          <button id="btnSettings" class="btn btn-secondary"><span class="btn-icon">⚙️</span> Settings</button>
+          <button id="btnHowToPlay" class="btn btn-secondary"><span class="btn-icon">❓</span> How to Play</button>
+          <button id="btnAbout" class="btn btn-secondary"><span class="btn-icon">🌿</span> About</button>
+        </div>
+
+        <div class="menu-footer">
+          <p>High Score: <span id="menuHighScore">0</span> | Runes Collected: <span id="menuTotalRunes">0</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- HUD Overlay -->
+    <div id="hudOverlay" class="ui-overlay hidden">
+      <!-- Desktop / Top HUD Bar -->
+      <div class="hud-top">
+        <div class="hud-left">
+          <div class="health-container">
+            <span class="hud-label">HEALTH</span>
+            <div class="hearts-wrapper" id="healthHearts">
+              <!-- Hearts dynamically generated -->
+            </div>
+          </div>
+        </div>
+
+        <div class="hud-center">
+          <div class="level-badge">
+            <span class="level-icon">🌲</span>
+            <span id="hudLevelName">The Mystical Grove</span>
+          </div>
+          <div class="objective-tracker" id="hudObjective">
+            Objective: Explore the ancient forest and find the Sacred Crystal
+          </div>
+        </div>
+
+        <div class="hud-right">
+          <div class="stat-pill">
+            <span class="stat-icon">🔮</span>
+            <span id="hudScore">0000</span>
+          </div>
+          <div class="stat-pill">
+            <span class="stat-icon">✨</span>
+            <span id="hudCoins">0 / 20</span>
+          </div>
+          <button id="btnPause" class="btn-icon-only" aria-label="Pause Game">⏸️</button>
+        </div>
+      </div>
+
+      <!-- Boss Health Bar (Hidden by default) -->
+      <div id="bossHealthContainer" class="boss-health-bar hidden">
+        <div class="boss-header">
+          <span class="boss-title" id="bossName">ANCIENT FOREST GUARDIAN</span>
+          <span class="boss-hp-text" id="bossHpText">100 / 100</span>
+        </div>
+        <div class="boss-hp-track">
+          <div class="boss-hp-fill" id="bossHpFill" style="width: 100%;"></div>
+        </div>
+      </div>
+
+      <!-- Virtual Mobile Touch Controls -->
+      <div id="mobileControls" class="mobile-controls">
+        <div class="touch-pad-left">
+          <button id="btnTouchLeft" class="touch-btn touch-move" aria-label="Move Left">◀</button>
+          <button id="btnTouchRight" class="touch-btn touch-move" aria-label="Move Right">▶</button>
+        </div>
+        <div class="touch-pad-right">
+          <button id="btnTouchAttack" class="touch-btn touch-action btn-attack" aria-label="Attack">⚔️</button>
+          <button id="btnTouchJump" class="touch-btn touch-action btn-jump" aria-label="Jump">▲</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pause Screen -->
+    <div id="pauseScreen" class="ui-screen hidden modal-blur">
+      <div class="modal-card">
+        <h2 class="modal-title">GAME PAUSED</h2>
+        <div class="modal-body vertical-buttons">
+          <button id="btnResume" class="btn btn-primary"><span class="btn-icon">▶</span> Resume</button>
+          <button id="btnRestartCheckpoint" class="btn btn-secondary"><span class="btn-icon">🔄</span> Restart Checkpoint</button>
+          <button id="btnPauseSettings" class="btn btn-secondary"><span class="btn-icon">⚙️</span> Settings</button>
+          <button id="btnPauseMainMenu" class="btn btn-danger"><span class="btn-icon">🏠</span> Main Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Settings Screen -->
+    <div id="settingsScreen" class="ui-screen hidden modal-blur">
+      <div class="modal-card wide">
+        <h2 class="modal-title">SETTINGS</h2>
+        <div class="modal-body settings-grid">
+          <div class="setting-row">
+            <label for="sliderMusic">Music Volume</label>
+            <div class="slider-control">
+              <input type="range" id="sliderMusic" min="0" max="100" value="70">
+              <span id="valMusic">70%</span>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <label for="sliderSfx">Sound Effects</label>
+            <div class="slider-control">
+              <input type="range" id="sliderSfx" min="0" max="100" value="80">
+              <span id="valSfx">80%</span>
+            </div>
+          </div>
+
+          <div class="setting-row">
+            <label for="selectGraphics">Graphics Quality</label>
+            <select id="selectGraphics" class="select-input">
+              <option value="high" selected>High (Full Parallax & Particles)</option>
+              <option value="medium">Medium (Reduced Particles)</option>
+              <option value="low">Low (Performance Mode)</option>
+            </select>
+          </div>
+
+          <div class="setting-row">
+            <label for="toggleMobileControls">Touch Controls HUD</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="toggleMobileControls" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+
+          <div class="setting-row">
+            <label for="btnFullscreen">Display</label>
+            <button id="btnFullscreen" class="btn btn-sm btn-secondary">Toggle Fullscreen</button>
+          </div>
+
+          <div class="setting-row border-top">
+            <label>Reset Game Save Data</label>
+            <button id="btnResetProgress" class="btn btn-sm btn-danger">Reset High Score & Progress</button>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btnSettingsBack" class="btn btn-primary">Back to Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to Play Screen -->
+    <div id="howToPlayScreen" class="ui-screen hidden modal-blur">
+      <div class="modal-card wide">
+        <h2 class="modal-title">HOW TO PLAY</h2>
+        <div class="modal-body instructions-content">
+          <div class="instructions-grid">
+            <div class="instruction-box">
+              <h3>Desktop Controls</h3>
+              <ul>
+                <li><kbd>A</kbd> / <kbd>◄</kbd> : Move Left</li>
+                <li><kbd>D</kbd> / <kbd>►</kbd> : Move Right</li>
+                <li><kbd>W</kbd> / <kbd>▲</kbd> / <kbd>Space</kbd> : Jump / Double Jump</li>
+                <li><kbd>J</kbd> / <kbd>X</kbd> : Sword Attack</li>
+                <li><kbd>ESC</kbd> / <kbd>P</kbd> : Pause Game</li>
+              </ul>
+            </div>
+
+            <div class="instruction-box">
+              <h3>Mobile Touch Controls</h3>
+              <ul>
+                <li><strong>On-Screen D-Pad:</strong> Tap Left/Right arrows to walk</li>
+                <li><strong>▲ Button:</strong> Jump (Tap again in mid-air to Double Jump)</li>
+                <li><strong>⚔️ Button:</strong> Melee Sword Strike</li>
+                <li><strong>⏸️ Button:</strong> Pause Menu</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="instruction-tips">
+            <h3>Adventure Tips</h3>
+            <p>✨ Collect glowing Ancient Runes to increase your score.</p>
+            <p>🛡️ Pass glowing Stone Checkpoints to save your progress in the level.</p>
+            <p>👾 Watch out for forest enemies! Strike them with your sword or jump over them.</p>
+            <p>👑 Defeat the Ancient Forest Guardian at the end of the grove to claim victory!</p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btnHowToPlayBack" class="btn btn-primary">Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Screen -->
+    <div id="aboutScreen" class="ui-screen hidden modal-blur">
+      <div class="modal-card">
+        <h2 class="modal-title">ABOUT THE GAME</h2>
+        <div class="modal-body about-text">
+          <p class="highlight-p">"Whispers of the Ancient Grove"</p>
+          <p>Embark on an enchanting journey through a dark, mysterious forest filled with giant ancient trees, hanging vines, atmospheric mist, and ancient magical runes.</p>
+          <p>Built with modern Canvas API, Web Audio synthesizer, and responsive layout for desktop and mobile play.</p>
+          <div class="tech-tags">
+            <span class="tag">HTML5 Canvas</span>
+            <span class="tag">Vanilla JS</span>
+            <span class="tag">Web Audio API</span>
+            <span class="tag">Parallax Rendering</span>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btnAboutBack" class="btn btn-primary">Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Game Over Screen -->
+    <div id="gameOverScreen" class="ui-screen hidden modal-blur">
+      <div class="modal-card">
+        <h2 class="modal-title text-danger">GAME OVER</h2>
+        <p class="modal-subtitle">The forest shadows consumed your spirit...</p>
+
+        <div class="results-box">
+          <div class="result-row">
+            <span>Score:</span>
+            <strong id="goScore">0000</strong>
+          </div>
+          <div class="result-row">
+            <span>Runes Collected:</span>
+            <strong id="goCoins">0</strong>
+          </div>
+        </div>
+
+        <div class="modal-body vertical-buttons">
+          <button id="btnGoRetry" class="btn btn-primary"><span class="btn-icon">🔄</span> Retry From Checkpoint</button>
+          <button id="btnGoRestart" class="btn btn-secondary"><span class="btn-icon">🚀</span> Restart Level</button>
+          <button id="btnGoMenu" class="btn btn-danger"><span class="btn-icon">🏠</span> Main Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Victory Screen -->
+    <div id="victoryScreen" class="ui-screen hidden modal-blur">
+      <div class="modal-card">
+        <h2 class="modal-title text-gold">VICTORY!</h2>
+        <p class="modal-subtitle">You cleansed the ancient grove of darkness!</p>
+
+        <div class="results-box gold-border">
+          <div class="result-row">
+            <span>Final Score:</span>
+            <strong id="vicScore">0000</strong>
+          </div>
+          <div class="result-row">
+            <span>Runes Collected:</span>
+            <strong id="vicCoins">0 / 20</strong>
+          </div>
+          <div class="result-row">
+            <span>Guardian Defeated:</span>
+            <strong class="text-success">YES ⚔️</strong>
+          </div>
+        </div>
+
+        <div class="modal-body vertical-buttons">
+          <button id="btnVicPlayAgain" class="btn btn-primary"><span class="btn-icon">🎮</span> Play Again</button>
+          <button id="btnVicMenu" class="btn btn-secondary"><span class="btn-icon">🏠</span> Main Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification / Toast Message Popup -->
+    <div id="gameToast" class="toast-popup hidden"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
