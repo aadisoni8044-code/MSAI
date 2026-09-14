@@ -1,0 +1,216 @@
+/* SYLVAN WHISPERS - MENU STYLES */
+#menu-bg-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.menu-overlay {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    padding: 60px 20px 40px 20px;
+    background: radial-gradient(circle at 50% 30%, rgba(20, 184, 166, 0.08) 0%, rgba(5, 13, 18, 0.6) 80%);
+}
+
+.title-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    animation: fadeInDown 1s ease-out;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.title-container .subtitle {
+    font-size: 0.95rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent-cyan);
+    font-weight: 500;
+}
+
+.main-title {
+    font-family: var(--font-heading);
+    font-size: 3.8rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: #ffffff;
+    text-shadow: 0 0 25px rgba(78, 252, 228, 0.5), 0 4px 10px rgba(0, 0, 0, 0.9);
+}
+
+.main-title span {
+    color: var(--accent-glow);
+    font-style: italic;
+}
+
+.title-divider {
+    width: 140px;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-glow), transparent);
+    margin-top: 10px;
+    border-radius: 2px;
+}
+
+.menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 320px;
+    animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-actions .btn {
+    width: 100%;
+}
+
+.menu-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 900px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    padding-top: 16px;
+}
+
+.version-tag {
+    background: rgba(20, 184, 166, 0.15);
+    padding: 3px 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(78, 252, 228, 0.2);
+    color: var(--accent-glow);
+}
+
+/* SETTINGS MODAL GRID */
+.settings-card {
+    max-width: 580px;
+}
+
+.settings-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.slider-control {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 60%;
+}
+
+.slider-control input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent-teal);
+    height: 6px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.slider-control span {
+    font-size: 0.85rem;
+    min-width: 40px;
+    text-align: right;
+    color: var(--accent-glow);
+}
+
+.toggle-checkbox {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--accent-teal);
+    cursor: pointer;
+}
+
+.custom-select {
+    background: var(--bg-forest-deep);
+    color: var(--text-primary);
+    border: 1px solid var(--panel-border);
+    padding: 8px 14px;
+    border-radius: 6px;
+    outline: none;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* HOW TO PLAY MODAL */
+.info-card {
+    max-width: 640px;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.howto-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.controls-guide h3, .guide-section h3 {
+    font-size: 1.1rem;
+    color: var(--accent-cyan);
+    margin-bottom: 10px;
+    font-family: var(--font-heading);
+}
+
+.keybind-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 10px;
+}
+
+.keybind-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+}
+
+.keybind-item span {
+    background: rgba(78, 252, 228, 0.15);
+    border: 1px solid var(--panel-border);
+    color: var(--accent-glow);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.guide-section p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}

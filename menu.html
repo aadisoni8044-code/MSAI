@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sylvan Whispers - Main Menu</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/menu.css">
+</head>
+<body class="menu-only-mode">
+    <div id="app-container">
+        <!-- Background Ambient Canvas for Standalone Menu -->
+        <canvas id="menu-bg-canvas"></canvas>
+
+        <!-- MAIN MENU SCREEN -->
+        <section id="menu-screen" class="screen active">
+            <div class="menu-overlay">
+                <div class="title-container">
+                    <span class="subtitle">A Magical Forest Journey</span>
+                    <h1 class="main-title">SYLVAN <span>WHISPERS</span></h1>
+                    <div class="title-divider"></div>
+                </div>
+
+                <div class="menu-actions">
+                    <a href="game.html" class="btn btn-primary"><span class="icon">▶</span> Play Game</a>
+                    <button id="btn-menu-continue" class="btn btn-secondary" disabled><span class="icon">↺</span> Continue</button>
+                    <button id="btn-menu-how-to-play" class="btn btn-secondary"><span class="icon">📖</span> How to Play</button>
+                    <button id="btn-menu-settings" class="btn btn-secondary"><span class="icon">⚙</span> Settings</button>
+                </div>
+
+                <div class="menu-footer">
+                    <span>Use Keyboard or Touch Controls</span>
+                    <span class="version-tag">v1.0.0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Settings Modal -->
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content glass-card settings-card">
+                <h2>Settings</h2>
+                <div class="modal-divider"></div>
+
+                <div class="settings-grid">
+                    <div class="setting-row">
+                        <label for="slider-music">Music Volume</label>
+                        <div class="slider-control">
+                            <input type="range" id="slider-music" min="0" max="100" value="70">
+                            <span id="val-music">70%</span>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <label for="slider-sfx">Sound FX Volume</label>
+                        <div class="slider-control">
+                            <input type="range" id="slider-sfx" min="0" max="100" value="80">
+                            <span id="val-sfx">80%</span>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <label for="toggle-touch">Mobile Touch Controls</label>
+                        <input type="checkbox" id="toggle-touch" class="toggle-checkbox">
+                    </div>
+                    <div class="setting-row">
+                        <label for="select-graphics">Graphics Quality</label>
+                        <select id="select-graphics" class="custom-select">
+                            <option value="high">High (Full Particles)</option>
+                            <option value="medium">Medium (Optimized)</option>
+                            <option value="low">Low (Performance)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="modal-buttons horizontal">
+                    <button id="settings-btn-save" class="btn btn-primary">Save & Close</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How To Play Modal -->
+        <div id="howto-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content glass-card info-card">
+                <h2>How To Play</h2>
+                <div class="modal-divider"></div>
+
+                <div class="howto-body">
+                    <div class="controls-guide">
+                        <h3>Controls</h3>
+                        <div class="keybind-list">
+                            <div class="keybind-item"><span>A / D or ◀ ▶</span> Move Left / Right</div>
+                            <div class="keybind-item"><span>SPACE or ▲</span> Jump (Double Jump available)</div>
+                            <div class="keybind-item"><span>SHIFT</span> Run / Sprint</div>
+                            <div class="keybind-item"><span>J or ⚔</span> Attack with Spirit Blade</div>
+                            <div class="keybind-item"><span>E or 🖐</span> Interact / Read Ancient Tablets</div>
+                            <div class="keybind-item"><span>ESC or ⏸</span> Pause Game</div>
+                        </div>
+                    </div>
+
+                    <div class="guide-section">
+                        <h3>Your Quest</h3>
+                        <p>Explore the ancient Sylvan Forest across 5 distinct regions: Forest Entrance, Ancient Tree, Dark Swamp, Hidden Cave, and the Ancient Temple. Collect glowing Lumina Orbs, unlock checkpoints, and defeat shadowy forest creatures.</p>
+                    </div>
+                </div>
+
+                <div class="modal-buttons horizontal">
+                    <button id="howto-btn-close" class="btn btn-primary">Back to Menu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/save.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/particles.js"></script>
+    <script>
+        // Standalone Menu Ambient Canvas Renderer
+        const canvas = document.getElementById('menu-bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        const fireflies = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        for (let i = 0; i < 40; i++) {
+            fireflies.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                radius: Math.random() * 2.5 + 1,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                alpha: Math.random(),
+                pulseSpeed: 0.01 + Math.random() * 0.02
+            });
+        }
+
+        function animate() {
+            ctx.fillStyle = '#06131a';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw forest background gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, height);
+            grad.addColorStop(0, '#041017');
+            grad.addColorStop(0.5, '#0b242a');
+            grad.addColorStop(1, '#05181b');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
+
+            // Light rays
+            ctx.save();
+            ctx.fillStyle = 'rgba(78, 205, 196, 0.04)';
+            ctx.beginPath();
+            ctx.moveTo(width * 0.2, 0);
+            ctx.lineTo(width * 0.5, height);
+            ctx.lineTo(width * 0.35, height);
+            ctx.lineTo(width * 0.1, 0);
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(width * 0.6, 0);
+            ctx.lineTo(width * 0.9, height);
+            ctx.lineTo(width * 0.75, height);
+            ctx.lineTo(width * 0.5, 0);
+            ctx.fill();
+            ctx.restore();
+
+            // Fireflies
+            fireflies.forEach(f => {
+                f.x += f.vx;
+                f.y += f.vy;
+                f.alpha += f.pulseSpeed;
+
+                if (f.alpha > 1 || f.alpha < 0.2) f.pulseSpeed = -f.pulseSpeed;
+                if (f.x < 0) f.x = width;
+                if (f.x > width) f.x = 0;
+                if (f.y < 0) f.y = height;
+                if (f.y > height) f.y = 0;
+
+                ctx.save();
+                ctx.globalAlpha = Math.max(0.1, Math.min(1, f.alpha));
+                ctx.fillStyle = '#4efce4';
+                ctx.shadowColor = '#4efce4';
+                ctx.shadowBlur = 12;
+                ctx.beginPath();
+                ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // Modal Listeners for Menu Page
+        const settingsModal = document.getElementById('settings-modal');
+        const howtoModal = document.getElementById('howto-modal');
+
+        document.getElementById('btn-menu-settings')?.addEventListener('click', () => settingsModal.classList.remove('hidden'));
+        document.getElementById('btn-menu-how-to-play')?.addEventListener('click', () => howtoModal.classList.remove('hidden'));
+        document.getElementById('settings-btn-save')?.addEventListener('click', () => settingsModal.classList.add('hidden'));
+        document.getElementById('howto-btn-close')?.addEventListener('click', () => howtoModal.classList.add('hidden'));
+    </script>
+</body>
+</html>
