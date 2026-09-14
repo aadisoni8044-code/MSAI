@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sylvan Whispers - Direct Play</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/game.css">
+</head>
+<body class="direct-game-mode">
+    <div id="app-container">
+        <!-- GAMEPLAY SCREEN -->
+        <section id="game-screen" class="screen active">
+            <div class="canvas-wrapper">
+                <canvas id="game-canvas"></canvas>
+                <div id="vignette-overlay"></div>
+
+                <div id="section-banner" class="hidden">
+                    <h2 id="section-title">Forest Entrance</h2>
+                    <p id="section-subtitle">The Journey Begins</p>
+                </div>
+
+                <!-- HUD -->
+                <div id="hud-container">
+                    <div class="hud-top-left">
+                        <div class="stat-bar-group">
+                            <div class="stat-icon health-icon">♥</div>
+                            <div class="bar-outer">
+                                <div id="health-bar-inner" class="bar-inner health" style="width: 100%;"></div>
+                                <span id="health-text" class="bar-label">100 / 100</span>
+                            </div>
+                        </div>
+                        <div class="stat-bar-group">
+                            <div class="stat-icon stamina-icon">⚡</div>
+                            <div class="bar-outer">
+                                <div id="stamina-bar-inner" class="bar-inner stamina" style="width: 100%;"></div>
+                                <span id="stamina-text" class="bar-label">100 / 100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hud-top-right">
+                        <div class="collectible-badge">
+                            <span class="orb-icon">✦</span>
+                            <span id="collectible-count">0</span>
+                            <span class="orb-total">/ 25</span>
+                        </div>
+                        <button id="btn-pause" class="btn-icon">⏸</button>
+                    </div>
+
+                    <div id="interaction-prompt" class="interaction-prompt hidden">
+                        <span class="key-badge">E</span> <span id="interaction-text">Interact</span>
+                    </div>
+                </div>
+
+                <!-- TOUCH CONTROLS OVERLAY -->
+                <div id="touch-controls" class="touch-overlay">
+                    <div class="touch-cluster dpad-cluster">
+                        <button id="touch-left" class="touch-btn">◀</button>
+                        <button id="touch-right" class="touch-btn">▶</button>
+                    </div>
+                    <div class="touch-cluster action-cluster">
+                        <button id="touch-crouch" class="touch-btn action-btn">▼</button>
+                        <button id="touch-attack" class="touch-btn action-btn attack-btn">⚔</button>
+                        <button id="touch-jump" class="touch-btn action-btn jump-btn">▲</button>
+                        <button id="touch-interact" class="touch-btn action-btn interact-btn">🖐</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MODAL OVERLAYS -->
+        <div id="pause-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content glass-card">
+                <h2>Game Paused</h2>
+                <div class="modal-divider"></div>
+                <div class="modal-buttons">
+                    <button id="pause-btn-resume" class="btn btn-primary">Resume Game</button>
+                    <button id="pause-btn-checkpoint" class="btn btn-secondary">Restart Checkpoint</button>
+                    <button id="pause-btn-settings" class="btn btn-secondary">Settings</button>
+                    <a href="menu.html" class="btn btn-danger">Return to Main Menu</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content glass-card settings-card">
+                <h2>Settings</h2>
+                <div class="modal-divider"></div>
+                <div class="settings-grid">
+                    <div class="setting-row">
+                        <label for="slider-music">Music Volume</label>
+                        <div class="slider-control">
+                            <input type="range" id="slider-music" min="0" max="100" value="70">
+                            <span id="val-music">70%</span>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <label for="slider-sfx">Sound FX Volume</label>
+                        <div class="slider-control">
+                            <input type="range" id="slider-sfx" min="0" max="100" value="80">
+                            <span id="val-sfx">80%</span>
+                        </div>
+                    </div>
+                    <div class="setting-row">
+                        <label for="toggle-touch">Mobile Touch Controls</label>
+                        <input type="checkbox" id="toggle-touch" class="toggle-checkbox">
+                    </div>
+                    <div class="setting-row">
+                        <label for="select-graphics">Graphics Quality</label>
+                        <select id="select-graphics" class="custom-select">
+                            <option value="high">High (Full Particles)</option>
+                            <option value="medium">Medium (Optimized)</option>
+                            <option value="low">Low (Performance)</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="btn-fullscreen">Fullscreen Mode</label>
+                        <button id="btn-fullscreen" class="btn btn-small">Toggle Fullscreen</button>
+                    </div>
+                </div>
+                <div class="modal-buttons horizontal">
+                    <button id="settings-btn-save" class="btn btn-primary">Save & Close</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameover-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content glass-card gameover-card">
+                <h2 class="text-danger">Spirit Faded</h2>
+                <p>The shadows overwhelmed your journey...</p>
+                <div class="modal-divider"></div>
+                <div class="modal-buttons">
+                    <button id="gameover-btn-respawn" class="btn btn-primary">Respawn at Checkpoint</button>
+                    <a href="menu.html" class="btn btn-secondary">Main Menu</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="victory-modal" class="modal hidden">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content glass-card victory-card">
+                <h2 class="text-gold">Forest Restored!</h2>
+                <p>You reached the heart of the Ancient Temple and cleansed the sylvan realm.</p>
+                <div class="stat-summary">
+                    <div>Orbs Collected: <span id="final-orbs">0</span> / 25</div>
+                </div>
+                <div class="modal-divider"></div>
+                <div class="modal-buttons">
+                    <a href="menu.html" class="btn btn-primary">Return to Menu</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/save.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/audio.js"></script>
+    <script src="js/input.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/camera.js"></script>
+    <script src="js/collision.js"></script>
+    <script src="js/level.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/enemy.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            if (window.GameEngine) {
+                window.GameEngine.init();
+                window.GameEngine.startDirectGame();
+            }
+        });
+    </script>
+</body>
+</html>
