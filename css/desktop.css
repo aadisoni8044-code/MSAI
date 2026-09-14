@@ -1,0 +1,38 @@
+/* Desktop & Large Screen Enhancements */
+@media screen and (min-width: 1024px) {
+    /* Hide mobile controls by default on desktop unless force toggled */
+    #mobile-controls.desktop-hidden {
+        display: none !important;
+    }
+
+    .menu-btn {
+        font-size: 15px;
+        padding: 14px 28px;
+    }
+
+    .modal-card {
+        padding: 32px;
+    }
+
+    .player-status-card {
+        padding: 10px 20px 10px 12px;
+    }
+
+    .avatar-frame {
+        width: 50px;
+        height: 50px;
+    }
+
+    .bars-container {
+        width: 220px;
+    }
+
+    .bar-track {
+        height: 14px;
+    }
+
+    .collectibles-card {
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+}

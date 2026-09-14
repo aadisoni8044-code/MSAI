@@ -1,0 +1,327 @@
+/* UI Screen Overlays & Menus */
+.ui-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.ui-screen.hidden {
+    display: none !important;
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Main Menu Styling */
+#main-menu {
+    background: radial-gradient(circle at center, rgba(15, 56, 62, 0.85) 0%, rgba(5, 11, 14, 0.98) 100%);
+}
+
+.menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 32px;
+    z-index: 2;
+    text-align: center;
+}
+
+.game-logo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-sub {
+    font-size: 13px;
+    letter-spacing: 6px;
+    color: var(--teal-cyan);
+    text-shadow: 0 0 10px var(--teal-cyan);
+    margin-bottom: 4px;
+}
+
+.logo-title {
+    font-size: 64px;
+    font-family: var(--font-heading);
+    font-weight: 900;
+    letter-spacing: 4px;
+    background: linear-gradient(180deg, #ffffff 0%, var(--teal-cyan) 60%, var(--teal-primary) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(63, 224, 208, 0.5));
+}
+
+.logo-tagline {
+    font-size: 15px;
+    letter-spacing: 2px;
+    color: var(--gold-accent);
+    margin-top: 4px;
+}
+
+.menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 260px;
+}
+
+.menu-btn {
+    padding: 12px 24px;
+    background: rgba(25, 91, 99, 0.4);
+    border: 1px solid var(--hud-border-glass);
+    border-radius: var(--border-radius-md);
+    color: #e2f1f8;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.menu-btn:hover:not(:disabled) {
+    background: var(--teal-primary);
+    border-color: var(--teal-cyan);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(63, 224, 208, 0.4);
+}
+
+.menu-btn.primary-btn {
+    background: linear-gradient(135deg, var(--teal-primary) 0%, var(--teal-bright) 100%);
+    border-color: var(--teal-cyan);
+    color: #ffffff;
+    box-shadow: 0 0 15px rgba(63, 224, 208, 0.3);
+}
+
+.menu-btn.primary-btn:hover:not(:disabled) {
+    box-shadow: 0 0 25px rgba(63, 224, 208, 0.7);
+    transform: translateY(-2px) scale(1.02);
+}
+
+.menu-btn.danger-btn {
+    background: linear-gradient(135deg, var(--danger-dark) 0%, var(--danger-red) 100%);
+    border-color: var(--danger-red);
+}
+
+.menu-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.version-tag {
+    font-size: 11px;
+    color: rgba(226, 241, 248, 0.5);
+    letter-spacing: 1px;
+}
+
+/* Modals & Dialog Overlay */
+.modal {
+    background: rgba(5, 11, 14, 0.85);
+    backdrop-filter: blur(10px);
+}
+
+.modal-card {
+    background: var(--bg-forest-deep);
+    border: 1px solid var(--teal-bright);
+    border-radius: var(--border-radius-lg);
+    width: 90%;
+    max-width: 560px;
+    max-height: 85vh;
+    padding: 24px;
+    box-shadow: var(--box-shadow-deep), var(--box-shadow-glow);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow-y: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--hud-border-glass);
+    padding-bottom: 12px;
+}
+
+.modal-header h2 {
+    font-family: var(--font-heading);
+    color: var(--teal-cyan);
+    letter-spacing: 2px;
+    font-size: 20px;
+}
+
+.close-btn {
+    font-size: 24px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #fff;
+}
+
+/* Settings Modal Elements */
+.settings-body {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.setting-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.slider-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.slider-wrapper input[type="range"] {
+    accent-color: var(--teal-cyan);
+    cursor: pointer;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    background: var(--teal-dark);
+    border: 1px solid var(--teal-bright);
+    color: #fff;
+    border-radius: var(--border-radius-sm);
+    font-size: 12px;
+}
+
+/* Controls Grid */
+.controls-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.controls-column h3 {
+    font-size: 13px;
+    color: var(--gold-accent);
+    margin-bottom: 10px;
+    letter-spacing: 1px;
+}
+
+.control-list li {
+    font-size: 12px;
+    margin-bottom: 8px;
+    color: #d1e8ef;
+}
+
+kbd {
+    background: var(--teal-dark);
+    border: 1px solid var(--teal-cyan);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #fff;
+}
+
+/* Level Grid */
+.level-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 12px;
+}
+
+.level-card {
+    background: rgba(15, 56, 62, 0.4);
+    border: 1px solid var(--hud-border-glass);
+    border-radius: var(--border-radius-md);
+    padding: 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.level-card:hover:not(.locked) {
+    background: var(--teal-primary);
+    border-color: var(--teal-cyan);
+    transform: translateY(-2px);
+}
+
+.level-card.locked {
+    opacity: 0.4;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+.level-num {
+    font-size: 11px;
+    color: var(--gold-accent);
+}
+
+.level-name {
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 4px;
+}
+
+/* Death & Victory Cards */
+.death-card {
+    border-color: var(--danger-red);
+    text-align: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+}
+
+.death-title {
+    font-size: 42px;
+    color: var(--danger-red);
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px var(--danger-red);
+}
+
+.death-subtitle {
+    font-size: 14px;
+    color: #e0b0b0;
+    margin-bottom: 12px;
+}
+
+.victory-card {
+    border-color: var(--gold-accent);
+    text-align: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(240, 190, 77, 0.4);
+}
+
+.victory-title {
+    font-size: 38px;
+    color: var(--gold-accent);
+    letter-spacing: 3px;
+    text-shadow: 0 0 15px var(--gold-accent);
+}
+
+.victory-stats {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 12px;
+    border-radius: var(--border-radius-md);
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+}

@@ -1,0 +1,287 @@
+/* HUD Layer Styling */
+#hud-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+#hud-layer * {
+    pointer-events: auto;
+}
+
+.hud-top-left {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}
+
+.player-status-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--hud-bg-glass);
+    border: 1px solid var(--hud-border-glass);
+    border-radius: var(--border-radius-md);
+    padding: 8px 16px 8px 10px;
+    backdrop-filter: blur(8px);
+    box-shadow: var(--box-shadow-glow);
+}
+
+.avatar-frame {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid var(--teal-cyan);
+    background: radial-gradient(circle, var(--teal-primary), var(--bg-dark));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px var(--teal-cyan);
+}
+
+.avatar-icon {
+    width: 24px;
+    height: 24px;
+    background: radial-gradient(circle, #e2f1f8, var(--teal-cyan));
+    border-radius: 50%;
+}
+
+.bars-container {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 180px;
+}
+
+.bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bar-label {
+    font-size: 11px;
+    font-weight: bold;
+    color: var(--teal-cyan);
+    width: 20px;
+}
+
+.bar-track {
+    position: relative;
+    flex: 1;
+    height: 12px;
+    background: rgba(5, 15, 20, 0.8);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.25s ease-out;
+}
+
+.health .bar-fill {
+    background: linear-gradient(90deg, #c0392b, #e74c3c, #2ecc71);
+    box-shadow: 0 0 8px rgba(46, 204, 113, 0.6);
+}
+
+.stamina .bar-fill {
+    background: linear-gradient(90deg, #d35400, #f39c12, #f1c40f);
+    box-shadow: 0 0 8px rgba(241, 196, 15, 0.6);
+}
+
+.bar-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 9px;
+    font-weight: bold;
+    color: #fff;
+    text-shadow: 1px 1px 2px #000;
+}
+
+.hud-top-right {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.collectibles-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: var(--hud-bg-glass);
+    border: 1px solid var(--hud-border-glass);
+    border-radius: var(--border-radius-md);
+    padding: 8px 16px;
+    backdrop-filter: blur(8px);
+}
+
+.collectible-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.icon-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--hud-bg-glass);
+    border: 1px solid var(--hud-border-glass);
+    border-radius: 50%;
+    color: var(--teal-cyan);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.icon-btn:hover {
+    background: var(--teal-primary);
+    box-shadow: 0 0 12px var(--teal-cyan);
+    transform: scale(1.05);
+}
+
+/* Objective Banner */
+.objective-banner {
+    position: absolute;
+    top: 76px;
+    left: 16px;
+    background: rgba(11, 31, 36, 0.6);
+    border-left: 3px solid var(--teal-cyan);
+    padding: 6px 12px;
+    border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    color: #d1f2fb;
+    backdrop-filter: blur(4px);
+    transition: opacity 0.3s ease;
+}
+
+.objective-banner .label {
+    color: var(--gold-accent);
+    font-weight: bold;
+    margin-right: 6px;
+}
+
+/* Toast Message */
+.toast-message {
+    position: absolute;
+    top: 120px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 56, 62, 0.9);
+    border: 1px solid var(--teal-cyan);
+    color: #ffffff;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(63, 224, 208, 0.5);
+    pointer-events: none;
+    animation: toastPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes toastPop {
+    0% { transform: translate(-50%, -20px) scale(0.8); opacity: 0; }
+    100% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+}
+
+/* Interaction Prompt */
+.interaction-prompt {
+    position: absolute;
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(7, 16, 21, 0.85);
+    border: 1px solid var(--gold-accent);
+    padding: 8px 16px;
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--gold-glow);
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    animation: bouncePrompt 1.5s infinite ease-in-out;
+}
+
+.key-badge {
+    background: var(--gold-accent);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 900;
+}
+
+@keyframes bouncePrompt {
+    0%, 100% { transform: translate(-50%, 0); }
+    50% { transform: translate(-50%, -8px); }
+}
+
+/* Boss Health Bar */
+.boss-health-container {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 600px;
+    background: rgba(7, 16, 21, 0.85);
+    border: 1px solid var(--danger-red);
+    padding: 10px 16px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.4);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+}
+
+.boss-name {
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    color: #e74c3c;
+    text-shadow: 0 0 8px rgba(231, 76, 60, 0.8);
+}
+
+.boss-bar-track {
+    width: 100%;
+    height: 14px;
+    background: #111;
+    border-radius: 7px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.boss-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #902316, #e74c3c, #ff7675);
+    box-shadow: 0 0 10px #e74c3c;
+    transition: width 0.2s linear;
+}
+
+.boss-phase {
+    font-size: 10px;
+    color: var(--gold-accent);
+    letter-spacing: 1px;
+}
