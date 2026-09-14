@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Sylvan Veil: Ancient Forest</title>
+
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/game.css">
+    <link rel="stylesheet" href="css/menu.css">
+    <link rel="stylesheet" href="css/hud.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/desktop.css">
+</head>
+<body>
+    <div id="game-container">
+        <!-- Canvas for Game World -->
+        <canvas id="game-canvas"></canvas>
+
+        <!-- Ambient Atmosphere Overlay -->
+        <div id="vignette-overlay"></div>
+        <div id="cinematic-bars" class="hidden">
+            <div class="bar top"></div>
+            <div class="bar bottom"></div>
+        </div>
+
+        <!-- HUD Layer -->
+        <div id="hud-layer" class="hidden">
+            <div class="hud-top-left">
+                <!-- Player Avatar & Status Bars -->
+                <div class="player-status-card">
+                    <div class="avatar-frame">
+                        <div class="avatar-icon"></div>
+                    </div>
+                    <div class="bars-container">
+                        <div class="bar-wrapper health">
+                            <div class="bar-label">HP</div>
+                            <div class="bar-track">
+                                <div id="health-bar-fill" class="bar-fill" style="width: 100%;"></div>
+                                <span id="health-text" class="bar-text">100 / 100</span>
+                            </div>
+                        </div>
+                        <div class="bar-wrapper stamina">
+                            <div class="bar-label">EN</div>
+                            <div class="bar-track">
+                                <div id="stamina-bar-fill" class="bar-fill" style="width: 100%;"></div>
+                                <span id="stamina-text" class="bar-text">100 / 100</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hud-top-right">
+                <!-- Collectibles Display -->
+                <div class="collectibles-card">
+                    <div class="collectible-item">
+                        <span class="icon coin-icon">🪙</span>
+                        <span id="coin-count" class="count">0</span>
+                    </div>
+                    <div class="collectible-item">
+                        <span class="icon crystal-icon">💎</span>
+                        <span id="crystal-count" class="count">0</span>
+                    </div>
+                    <div class="collectible-item">
+                        <span class="icon key-icon">🔑</span>
+                        <span id="key-count" class="count">0</span>
+                    </div>
+                </div>
+                <!-- Pause Button -->
+                <button id="btn-pause-hud" class="icon-btn" title="Pause Game">
+                    <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+            </div>
+
+            <!-- Objective & Toast Banner -->
+            <div id="objective-banner" class="objective-banner">
+                <span class="label">OBJECTIVE:</span>
+                <span id="objective-text">Explore the Ancient Forest</span>
+            </div>
+
+            <div id="toast-message" class="toast-message hidden"></div>
+
+            <!-- Interaction Prompt -->
+            <div id="interaction-prompt" class="interaction-prompt hidden">
+                <span id="interact-key-badge" class="key-badge">E</span>
+                <span id="interact-text">Interact</span>
+            </div>
+
+            <!-- Cinematic Boss Health Bar -->
+            <div id="boss-health-container" class="boss-health-container hidden">
+                <div id="boss-name" class="boss-name">ANCIENT FOREST GUARDIAN</div>
+                <div class="boss-bar-track">
+                    <div id="boss-health-fill" class="boss-bar-fill" style="width: 100%;"></div>
+                </div>
+                <div id="boss-phase-indicator" class="boss-phase">PHASE 1</div>
+            </div>
+        </div>
+
+        <!-- Touch Controls for Mobile -->
+        <div id="mobile-controls" class="mobile-controls hidden">
+            <!-- Left Side: Touch D-Pad / Joystick Area -->
+            <div class="dpad-container">
+                <button id="touch-left" class="touch-btn dpad-btn left-btn">◀</button>
+                <button id="touch-right" class="touch-btn dpad-btn right-btn">▶</button>
+                <button id="touch-crouch" class="touch-btn dpad-btn down-btn">▼</button>
+            </div>
+
+            <!-- Right Side: Action Buttons -->
+            <div class="action-container">
+                <button id="touch-attack" class="touch-btn action-btn attack-btn">⚔️<span>ATTACK</span></button>
+                <button id="touch-jump" class="touch-btn action-btn jump-btn">▲<span>JUMP</span></button>
+                <button id="touch-dash" class="touch-btn action-btn dash-btn">⚡<span>DASH</span></button>
+                <button id="touch-interact" class="touch-btn action-btn interact-btn">✋<span>USE</span></button>
+            </div>
+        </div>
+
+        <!-- UI Screen Overlays -->
+
+        <!-- 1. Main Menu Screen -->
+        <div id="main-menu" class="ui-screen active">
+            <div class="menu-background-effect"></div>
+            <div class="menu-content">
+                <div class="game-logo">
+                    <div class="logo-sub">ANCIENT CHRONICLES</div>
+                    <h1 class="logo-title">SYLVAN VEIL</h1>
+                    <div class="logo-tagline">The Dark Magical Forest</div>
+                </div>
+
+                <div class="menu-actions">
+                    <button id="btn-continue" class="menu-btn primary-btn disabled" disabled>CONTINUE</button>
+                    <button id="btn-play" class="menu-btn primary-btn">NEW GAME</button>
+
+                    <button id="btn-level-select" class="menu-btn">SELECT AREA</button>
+                    <button id="btn-settings" class="menu-btn">SETTINGS</button>
+                    <button id="btn-controls" class="menu-btn">CONTROLS</button>
+
+                    <button id="btn-credits" class="menu-btn">CREDITS</button>
+                </div>
+
+                <div class="version-tag">v1.0.0 • Atmospheric Indie Edition</div>
+            </div>
+        </div>
+
+        <!-- 2. Level Select Modal -->
+        <div id="level-select-modal" class="ui-screen modal hidden">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>FOREST REGIONS</h2>
+                    <button id="btn-close-levels" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="level-grid" id="level-grid">
+                        <!-- Level Cards populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Pause Menu Overlay -->
+        <div id="pause-menu" class="ui-screen modal hidden">
+            <div class="modal-card pause-card">
+                <h2 class="menu-heading">GAME PAUSED</h2>
+                <div class="menu-actions vertical">
+                    <button id="btn-resume" class="menu-btn primary-btn">RESUME</button>
+                    <button id="btn-restart-checkpoint" class="menu-btn">RESTART CHECKPOINT</button>
+                    <button id="btn-pause-settings" class="menu-btn">SETTINGS</button>
+                    <button id="btn-pause-controls" class="menu-btn">CONTROLS</button>
+                    <button id="btn-quit-main" class="menu-btn danger-btn">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Game Over Overlay -->
+        <div id="game-over-screen" class="ui-screen modal hidden">
+            <div class="modal-card death-card">
+                <h1 class="death-title">YOU DIED</h1>
+                <p class="death-subtitle">The dark forest claims another wandering soul...</p>
+                <div class="menu-actions vertical">
+                    <button id="btn-restart-dead" class="menu-btn primary-btn">RETRY CHECKPOINT</button>
+                    <button id="btn-dead-main" class="menu-btn">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Victory Screen Overlay -->
+        <div id="victory-screen" class="ui-screen modal hidden">
+            <div class="modal-card victory-card">
+                <h1 class="victory-title">AREA CLEARED</h1>
+                <p id="victory-subtitle" class="victory-subtitle">You cleansed the corrupted grove!</p>
+
+                <div class="victory-stats">
+                    <div class="stat-row">
+                        <span>Crystals Collected:</span>
+                        <strong id="victory-crystals">0 / 0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Coins Found:</span>
+                        <strong id="victory-coins">0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Time Taken:</span>
+                        <strong id="victory-time">00:00</strong>
+                    </div>
+                </div>
+
+                <div class="menu-actions vertical">
+                    <button id="btn-next-level" class="menu-btn primary-btn">NEXT AREA</button>
+                    <button id="btn-victory-main" class="menu-btn">MAIN MENU</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6. Settings Modal -->
+        <div id="settings-modal" class="ui-screen modal hidden">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>SETTINGS</h2>
+                    <button id="btn-close-settings" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body settings-body">
+                    <div class="setting-group">
+                        <label for="setting-music">Music Volume</label>
+                        <div class="slider-wrapper">
+                            <input type="range" id="setting-music" min="0" max="100" value="70">
+                            <span id="music-val">70%</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="setting-sfx">SFX Volume</label>
+                        <div class="slider-wrapper">
+                            <input type="range" id="setting-sfx" min="0" max="100" value="80">
+                            <span id="sfx-val">80%</span>
+                        </div>
+                    </div>
+
+                    <div class="setting-group checkbox-group">
+                        <label for="setting-mobile-controls">Force Mobile Touch Controls</label>
+                        <input type="checkbox" id="setting-mobile-controls">
+                    </div>
+
+                    <div class="setting-group checkbox-group">
+                        <label for="setting-fullscreen">Fullscreen Mode</label>
+                        <button id="btn-toggle-fullscreen" class="btn-small">Toggle Fullscreen</button>
+                    </div>
+
+                    <div class="setting-group button-group danger-zone">
+                        <button id="btn-reset-progress" class="menu-btn danger-btn">RESET SAVE PROGRESS</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7. Controls Modal -->
+        <div id="controls-modal" class="ui-screen modal hidden">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>CONTROLS</h2>
+                    <button id="btn-close-controls" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body controls-body">
+                    <div class="controls-column">
+                        <h3>LAPTOP / DESKTOP</h3>
+                        <ul class="control-list">
+                            <li><kbd>A</kbd> / <kbd>◀</kbd> : Move Left</li>
+                            <li><kbd>D</kbd> / <kbd>▶</kbd> : Move Right</li>
+                            <li><kbd>W</kbd> / <kbd>▲</kbd> / <kbd>Space</kbd> : Jump / Double Jump</li>
+                            <li><kbd>S</kbd> / <kbd>▼</kbd> : Crouch</li>
+                            <li><kbd>Shift</kbd> : Dash</li>
+                            <li><kbd>J</kbd> / <kbd>Left Click</kbd> : Attack</li>
+                            <li><kbd>E</kbd> : Interact / Open Door</li>
+                            <li><kbd>Esc</kbd> : Pause Game</li>
+                        </ul>
+                    </div>
+                    <div class="controls-column">
+                        <h3>MOBILE / TOUCH</h3>
+                        <ul class="control-list">
+                            <li><strong>Left Joystick / Buttons:</strong> Move & Crouch</li>
+                            <li><strong>▲ JUMP:</strong> Jump / Double Jump</li>
+                            <li><strong>⚔️ ATTACK:</strong> Sword Slash Attack</li>
+                            <li><strong>⚡ DASH:</strong> Rapid Forward Dash</li>
+                            <li><strong>✋ USE:</strong> Interact with Objects</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 8. Credits Modal -->
+        <div id="credits-modal" class="ui-screen modal hidden">
+            <div class="modal-card">
+                <div class="modal-header">
+                    <h2>CREDITS</h2>
+                    <button id="btn-close-credits" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body credits-body">
+                    <p class="credits-title">SYLVAN VEIL: ANCIENT CHRONICLES</p>
+                    <p>A dark fantasy side-scrolling platformer engine created with Vanilla HTML5, CSS3, and JavaScript.</p>
+
+                    <div class="credit-section">
+                        <h4>Game Design & Engine Architecture</h4>
+                        <p>Built with Web Audio API Synthesizer, Fixed Timestep Physics Loop, Vector Canvas Rendering, and Multi-layer Parallax Renderer.</p>
+                    </div>
+
+                    <div class="credit-section">
+                        <h4>Atmosphere & Visual Art</h4>
+                        <p>Inspired by deep dark teal forest compositions, glowing fireflies, ancient hanging vines, and ethereal blue-green mist.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Scripts -->
+    <!-- Engine Core -->
+    <script src="js/engine/audio.js"></script>
+    <script src="js/engine/saveSystem.js"></script>
+    <script src="js/engine/input.js"></script>
+    <script src="js/engine/mobileControls.js"></script>
+    <script src="js/engine/camera.js"></script>
+    <script src="js/engine/physics.js"></script>
+    <script src="js/engine/collision.js"></script>
+    <script src="js/engine/particles.js"></script>
+
+    <!-- Entities -->
+    <script src="js/entities/characterRenderer.js"></script>
+    <script src="js/entities/player.js"></script>
+    <script src="js/entities/enemies.js"></script>
+    <script src="js/entities/boss.js"></script>
+    <script src="js/entities/collectibles.js"></script>
+    <script src="js/entities/environment.js"></script>
+
+    <!-- World & Parallax -->
+    <script src="js/world/parallax.js"></script>
+
+    <!-- Levels -->
+    <script src="js/levels/forest01.js"></script>
+    <script src="js/levels/forest02.js"></script>
+    <script src="js/levels/forest03.js"></script>
+    <script src="js/levels/forest04.js"></script>
+    <script src="js/levels/forest05.js"></script>
+    <script src="js/levels/forest06.js"></script>
+    <script src="js/levels/forest07.js"></script>
+    <script src="js/levels/forest08.js"></script>
+
+    <!-- UI & Game Controller -->
+    <script src="js/ui/hud.js"></script>
+    <script src="js/ui/menu.js"></script>
+    <script src="js/engine/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
