@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Zipgram - Fast, Clean & Modern Social Platform</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="app-layout">
+
+    <!-- MOBILE TOP HEADER -->
+    <header class="mobile-header">
+      <div class="mobile-header-user" id="mobileHeaderUserBtn">
+        <img id="mobileHeaderAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User Avatar" class="avatar-sm">
+      </div>
+      <div class="mobile-header-brand">
+        <i class="fa-solid fa-bolt-lightning brand-icon"></i>
+        <span class="brand-text">Zipgram</span>
+      </div>
+      <button class="icon-btn theme-toggle-btn" id="mobileThemeToggleBtn" title="Toggle Theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </header>
+
+    <!-- LEFT SIDEBAR NAVIGATION -->
+    <aside class="sidebar-left">
+      <div class="sidebar-header">
+        <a href="#home" class="brand-logo" id="brandLogo">
+          <div class="logo-icon-wrap">
+            <i class="fa-solid fa-bolt-lightning"></i>
+          </div>
+          <span class="brand-name">Zipgram</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#home" class="nav-item active" data-view="home">
+          <i class="fa-solid fa-house nav-icon"></i>
+          <span class="nav-label">Home</span>
+        </a>
+        <a href="#explore" class="nav-item" data-view="explore">
+          <i class="fa-solid fa-compass nav-icon"></i>
+          <span class="nav-label">Explore</span>
+        </a>
+        <a href="#notifications" class="nav-item" data-view="notifications">
+          <div class="nav-icon-wrap">
+            <i class="fa-solid fa-bell nav-icon"></i>
+            <span class="badge" id="notificationsBadge">3</span>
+          </div>
+          <span class="nav-label">Notifications</span>
+        </a>
+        <a href="#messages" class="nav-item" data-view="messages">
+          <div class="nav-icon-wrap">
+            <i class="fa-solid fa-paper-plane nav-icon"></i>
+            <span class="badge" id="messagesBadge">2</span>
+          </div>
+          <span class="nav-label">Messages</span>
+        </a>
+        <a href="#profile" class="nav-item" data-view="profile">
+          <i class="fa-solid fa-user nav-icon"></i>
+          <span class="nav-label">Profile</span>
+        </a>
+        <a href="#settings" class="nav-item" data-view="settings">
+          <i class="fa-solid fa-gear nav-icon"></i>
+          <span class="nav-label">Settings</span>
+        </a>
+      </nav>
+
+      <button class="btn btn-primary btn-zip-large" id="openCreatePostBtn">
+        <i class="fa-solid fa-plus"></i>
+        <span>Zip Post</span>
+      </button>
+
+      <div class="sidebar-user-card" id="sidebarUserCard">
+        <img id="sidebarUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User Avatar" class="avatar-md">
+        <div class="sidebar-user-info">
+          <span class="sidebar-user-name" id="sidebarUserName">Alex Rivers</span>
+          <span class="sidebar-user-handle" id="sidebarUserHandle">@alexrivers</span>
+        </div>
+        <i class="fa-solid fa-ellipsis sidebar-user-more"></i>
+      </div>
+    </aside>
+
+    <!-- CENTER MAIN CONTAINER -->
+    <main class="main-content">
+
+      <!-- VIEW: HOME FEED -->
+      <section id="viewHome" class="view-section active">
+        <header class="view-header sticky-header">
+          <div class="feed-tabs">
+            <button class="feed-tab active" data-feed-type="for-you">For You</button>
+            <button class="feed-tab" data-feed-type="following">Following</button>
+          </div>
+          <button class="icon-btn" id="refreshFeedBtn" title="Refresh Feed">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </header>
+
+        <!-- Inline Post Composer -->
+        <div class="composer-card">
+          <img id="composerUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User Avatar" class="avatar-md">
+          <div class="composer-body">
+            <textarea id="composerText" placeholder="What's zipping in your world?" rows="3" maxlength="280"></textarea>
+
+            <div id="composerImagePreview" class="image-preview-container hidden">
+              <img id="previewImg" src="" alt="Post Attachment">
+              <button class="btn-remove-media" id="removeMediaBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="composer-actions">
+              <div class="composer-tools">
+                <button class="tool-btn" id="addComposerImageBtn" title="Add Image">
+                  <i class="fa-regular fa-image"></i>
+                </button>
+                <button class="tool-btn" id="addComposerEmojiBtn" title="Add Emoji">
+                  <i class="fa-regular fa-face-smile"></i>
+                </button>
+              </div>
+              <div class="composer-submit-wrap">
+                <span class="char-counter" id="composerCharCounter">280</span>
+                <button class="btn btn-primary btn-sm" id="submitPostBtn" disabled>Zip</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feed Stream -->
+        <div class="posts-stream" id="homeFeedStream">
+          <!-- Posts rendered via JS -->
+        </div>
+      </section>
+
+      <!-- VIEW: EXPLORE -->
+      <section id="viewExplore" class="view-section hidden">
+        <header class="view-header sticky-header">
+          <div class="explore-search-wrap">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="exploreSearchInput" placeholder="Search Zipgram, topics or creators...">
+            <button class="search-clear-btn hidden" id="exploreSearchClear"><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </header>
+
+        <div class="explore-content">
+          <!-- Featured Banner -->
+          <div class="explore-banner">
+            <div class="banner-badge">Trending Worldwide</div>
+            <h2 class="banner-title">The Next Era of AI & Decentralized Social Media</h2>
+            <p class="banner-sub">Explore discussions, breaking news, and insights from global innovators.</p>
+          </div>
+
+          <!-- Category Tags -->
+          <div class="category-pills">
+            <button class="pill active" data-category="all">✨ All</button>
+            <button class="pill" data-category="tech">💻 Tech & Code</button>
+            <button class="pill" data-category="design">🎨 UI/UX Design</button>
+            <button class="pill" data-category="ai">🤖 AI & Future</button>
+            <button class="pill" data-category="gaming">🎮 Gaming</button>
+            <button class="pill" data-category="crypto">⚡ Crypto</button>
+          </div>
+
+          <!-- Trending Topics Section -->
+          <div class="explore-section">
+            <h3 class="section-title">Trends for You</h3>
+            <div class="trending-list" id="exploreTrendingList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Explore Posts Section -->
+          <div class="explore-section">
+            <h3 class="section-title">Popular Zips</h3>
+            <div class="posts-stream" id="explorePostsStream">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: NOTIFICATIONS -->
+      <section id="viewNotifications" class="view-section hidden">
+        <header class="view-header sticky-header">
+          <h2 class="view-title">Notifications</h2>
+          <div class="notification-tabs">
+            <button class="sub-tab active" data-notif-filter="all">All</button>
+            <button class="sub-tab" data-notif-filter="verified">Verified</button>
+            <button class="sub-tab" data-notif-filter="mentions">Mentions</button>
+          </div>
+        </header>
+
+        <div class="notifications-list" id="notificationsList">
+          <!-- Rendered via JS -->
+        </div>
+      </section>
+
+      <!-- VIEW: MESSAGES -->
+      <section id="viewMessages" class="view-section hidden">
+        <div class="messages-container">
+          <!-- Conversations List Pane -->
+          <div class="conversations-pane" id="conversationsPane">
+            <div class="pane-header">
+              <h2>Messages</h2>
+              <button class="icon-btn" id="newMessageBtn" title="New Message">
+                <i class="fa-regular fa-pen-to-square"></i>
+              </button>
+            </div>
+            <div class="chat-search-wrap">
+              <i class="fa-solid fa-magnifying-glass search-icon"></i>
+              <input type="text" id="chatSearchInput" placeholder="Search Direct Messages">
+            </div>
+            <div class="conversations-list" id="conversationsList">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Active Chat Pane -->
+          <div class="chat-pane hidden-mobile" id="chatPane">
+            <div class="chat-empty-state" id="chatEmptyState">
+              <i class="fa-regular fa-comments chat-empty-icon"></i>
+              <h3>Select a Message</h3>
+              <p>Choose from your existing conversations or start a new one.</p>
+            </div>
+
+            <div class="chat-active-wrap hidden" id="chatActiveWrap">
+              <header class="chat-header">
+                <button class="icon-btn back-to-chats-btn" id="backToChatsBtn">
+                  <i class="fa-solid fa-arrow-left"></i>
+                </button>
+                <div class="chat-user-meta">
+                  <img id="chatHeaderAvatar" src="" alt="Chat Partner Avatar" class="avatar-md">
+                  <div>
+                    <h4 id="chatHeaderName">User Name</h4>
+                    <span id="chatHeaderStatus" class="online-status">Online</span>
+                  </div>
+                </div>
+                <div class="chat-header-actions">
+                  <button class="icon-btn" title="Call"><i class="fa-solid fa-phone"></i></button>
+                  <button class="icon-btn" title="Info"><i class="fa-solid fa-circle-info"></i></button>
+                </div>
+              </header>
+
+              <div class="chat-messages-thread" id="chatMessagesThread">
+                <!-- Chat Bubbles rendered via JS -->
+              </div>
+
+              <div class="chat-input-bar">
+                <button class="tool-btn" id="chatAttachMediaBtn" title="Attach Media"><i class="fa-regular fa-image"></i></button>
+                <input type="text" id="chatTextInput" placeholder="Start a new message..." autocomplete="off">
+                <button class="btn btn-primary btn-icon-only" id="sendChatMessageBtn">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: PROFILE -->
+      <section id="viewProfile" class="view-section hidden">
+        <div class="profile-header">
+          <div class="profile-cover-wrap">
+            <img id="profileCoverImg" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1200&auto=format&fit=crop&q=80" alt="Profile Cover" class="profile-cover">
+          </div>
+
+          <div class="profile-meta-bar">
+            <div class="profile-avatar-wrapper">
+              <img id="profileAvatarImg" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" alt="Profile Avatar" class="profile-avatar">
+            </div>
+            <div class="profile-actions">
+              <button class="btn btn-secondary" id="editProfileBtn">Edit Profile</button>
+            </div>
+          </div>
+
+          <div class="profile-info">
+            <div class="profile-names">
+              <h2 id="profileName">Alex Rivers</h2>
+              <span id="profileHandle">@alexrivers</span>
+            </div>
+            <p id="profileBio" class="profile-bio">Product Designer & Frontend Engineer building clean digital experiences. Coffee enthusiast ☕ | Crafting Zipgram ⚡</p>
+
+            <div class="profile-details">
+              <span><i class="fa-solid fa-location-dot"></i> <span id="profileLocation">San Francisco, CA</span></span>
+              <span><i class="fa-solid fa-link"></i> <a href="#" id="profileWebsite" target="_blank">alexrivers.dev</a></span>
+              <span><i class="fa-regular fa-calendar"></i> Joined March 2024</span>
+            </div>
+
+            <div class="profile-stats">
+              <div class="stat-item">
+                <strong id="profileFollowingCount">342</strong> <span>Following</span>
+              </div>
+              <div class="stat-item">
+                <strong id="profileFollowersCount">1.2K</strong> <span>Followers</span>
+              </div>
+              <div class="stat-item">
+                <strong id="profilePostCount">48</strong> <span>Zips</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Profile Nav Tabs -->
+          <div class="profile-tabs">
+            <button class="prof-tab active" data-prof-tab="posts">Posts</button>
+            <button class="prof-tab" data-prof-tab="replies">Replies</button>
+            <button class="prof-tab" data-prof-tab="media">Media</button>
+            <button class="prof-tab" data-prof-tab="likes">Likes</button>
+          </div>
+        </div>
+
+        <div class="posts-stream" id="profilePostsStream">
+          <!-- Profile Posts rendered via JS -->
+        </div>
+      </section>
+
+      <!-- VIEW: SETTINGS -->
+      <section id="viewSettings" class="view-section hidden">
+        <header class="view-header sticky-header">
+          <h2 class="view-title">Settings</h2>
+        </header>
+
+        <div class="settings-content">
+          <!-- Appearance & Theme Section -->
+          <div class="settings-card">
+            <h3><i class="fa-solid fa-palette"></i> Appearance & Theme</h3>
+            <p class="settings-desc">Customize how Zipgram looks on your device.</p>
+
+            <div class="theme-switch-grid">
+              <div class="theme-option-card active" id="themeDarkCard" data-theme-val="dark">
+                <div class="theme-preview dark-preview">
+                  <div class="preview-line"></div>
+                  <div class="preview-box"></div>
+                </div>
+                <div class="theme-info">
+                  <i class="fa-solid fa-moon"></i>
+                  <span>Dark Mode</span>
+                </div>
+              </div>
+
+              <div class="theme-option-card" id="themeLightCard" data-theme-val="light">
+                <div class="theme-preview light-preview">
+                  <div class="preview-line"></div>
+                  <div class="preview-box"></div>
+                </div>
+                <div class="theme-info">
+                  <i class="fa-solid fa-sun"></i>
+                  <span>Light Mode</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Account Settings -->
+          <div class="settings-card">
+            <h3><i class="fa-solid fa-user-shield"></i> Account & Safety</h3>
+            <div class="setting-row">
+              <div>
+                <span class="setting-label">Private Profile</span>
+                <span class="setting-sub">Only approved followers can see your Zips</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="privateProfileToggle">
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <span class="setting-label">Direct Message Permissions</span>
+                <span class="setting-sub">Allow message requests from everyone</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="dmPermissionsToggle" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Notification Settings -->
+          <div class="settings-card">
+            <h3><i class="fa-solid fa-bell"></i> Notifications</h3>
+            <div class="setting-row">
+              <div>
+                <span class="setting-label">Push Notifications</span>
+                <span class="setting-sub">Receive instant updates for replies & likes</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="pushNotifToggle" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div>
+                <span class="setting-label">Sound Effects</span>
+                <span class="setting-sub">Play audio chime on new interactions</span>
+              </div>
+              <label class="switch">
+                <input type="checkbox" id="soundToggle" checked>
+                <span class="slider round"></span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Reset / System -->
+          <div class="settings-card">
+            <h3><i class="fa-solid fa-database"></i> Application Data</h3>
+            <p class="settings-desc">Reset local storage data back to default initial demo dataset.</p>
+            <button class="btn btn-outline-danger" id="resetDataBtn">
+              <i class="fa-solid fa-trash-arrow-up"></i> Reset Demo Data
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: SEARCH RESULTS -->
+      <section id="viewSearch" class="view-section hidden">
+        <header class="view-header sticky-header">
+          <div class="search-title-wrap">
+            <button class="icon-btn" id="closeSearchBtn"><i class="fa-solid fa-arrow-left"></i></button>
+            <div>
+              <span class="search-meta">Search results for</span>
+              <h3 id="searchQueryTitle" class="search-query-title">"..."</h3>
+            </div>
+          </div>
+        </header>
+
+        <div class="search-tabs">
+          <button class="search-tab active" data-search-tab="all">All</button>
+          <button class="search-tab" data-search-tab="people">People</button>
+          <button class="search-tab" data-search-tab="posts">Posts</button>
+        </div>
+
+        <div class="search-results-content">
+          <div class="people-results-section hidden" id="peopleResultsSection">
+            <h4 class="section-sub-title">People</h4>
+            <div class="suggested-users-list" id="peopleResultsList"></div>
+          </div>
+
+          <div class="posts-results-section" id="postsResultsSection">
+            <h4 class="section-sub-title">Posts</h4>
+            <div class="posts-stream" id="postsResultsStream"></div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- RIGHT SIDEBAR (DESKTOP) -->
+    <aside class="sidebar-right">
+      <!-- Global Search -->
+      <div class="widget-search">
+        <i class="fa-solid fa-magnifying-glass search-icon"></i>
+        <input type="text" id="globalSearchInput" placeholder="Search Zipgram">
+        <button class="search-clear-btn hidden" id="globalSearchClear"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <!-- Trending Topics Widget -->
+      <div class="widget-card">
+        <div class="widget-header">
+          <h3>What's Zipping</h3>
+          <i class="fa-solid fa-fire text-accent"></i>
+        </div>
+        <div class="widget-list" id="sidebarTrendingList">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Suggested Users Widget -->
+      <div class="widget-card">
+        <div class="widget-header">
+          <h3>Who to Follow</h3>
+        </div>
+        <div class="widget-list" id="sidebarSuggestedList">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Right Sidebar Footer -->
+      <footer class="sidebar-footer">
+        <div class="footer-links">
+          <a href="#">Terms</a>
+          <a href="#">Privacy</a>
+          <a href="#">Cookies</a>
+          <a href="#">Accessibility</a>
+        </div>
+        <p>© 2025 Zipgram by Nvisov. All rights reserved.</p>
+      </footer>
+    </aside>
+
+    <!-- MOBILE BOTTOM NAVIGATION -->
+    <nav class="mobile-bottom-nav">
+      <a href="#home" class="mobile-nav-item active" data-view="home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+      <a href="#explore" class="mobile-nav-item" data-view="explore">
+        <i class="fa-solid fa-compass"></i>
+      </a>
+      <a href="#notifications" class="mobile-nav-item" data-view="notifications">
+        <div class="nav-icon-wrap">
+          <i class="fa-solid fa-bell"></i>
+          <span class="badge" id="mobileNotifBadge">3</span>
+        </div>
+      </a>
+      <a href="#messages" class="mobile-nav-item" data-view="messages">
+        <div class="nav-icon-wrap">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span class="badge" id="mobileMsgBadge">2</span>
+        </div>
+      </a>
+      <a href="#profile" class="mobile-nav-item" data-view="profile">
+        <i class="fa-solid fa-user"></i>
+      </a>
+    </nav>
+
+    <!-- MOBILE FLOATING ACTION BUTTON (FAB) -->
+    <button class="mobile-fab" id="mobileFabBtn" title="Create Zip">
+      <i class="fa-solid fa-plus"></i>
+    </button>
+
+  </div>
+
+  <!-- MODAL: CREATE POST -->
+  <div class="modal-overlay hidden" id="createPostModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create New Zip</h3>
+        <button class="icon-btn modal-close-btn" id="closeCreatePostModal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body">
+        <div class="composer-card in-modal">
+          <img id="modalComposerAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User Avatar" class="avatar-md">
+          <div class="composer-body">
+            <textarea id="modalComposerText" placeholder="What's zipping in your world?" rows="4" maxlength="280"></textarea>
+
+            <div id="modalImagePreview" class="image-preview-container hidden">
+              <img id="modalPreviewImg" src="" alt="Post Attachment">
+              <button class="btn-remove-media" id="modalRemoveMediaBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Image URL selector popover or preset options -->
+            <div id="modalImageInputWrap" class="image-url-input-wrap hidden">
+              <input type="text" id="modalImageUrlInput" placeholder="Paste image URL (e.g. Unsplash link)...">
+              <button class="btn btn-secondary btn-sm" id="modalApplyImageBtn">Attach</button>
+            </div>
+
+            <div class="composer-actions">
+              <div class="composer-tools">
+                <button class="tool-btn" id="modalAddImageBtn" title="Add Image URL">
+                  <i class="fa-regular fa-image"></i>
+                </button>
+                <div class="preset-images-dropdown">
+                  <button class="tool-btn" id="modalPresetImageBtn" title="Pick Sample Image">
+                    <i class="fa-solid fa-photo-film"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="composer-submit-wrap">
+                <span class="char-counter" id="modalCharCounter">280</span>
+                <button class="btn btn-primary" id="modalSubmitPostBtn" disabled>Zip Post</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT PROFILE -->
+  <div class="modal-overlay hidden" id="editProfileModal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h3>Edit Profile</h3>
+        <div class="modal-header-actions">
+          <button class="btn btn-primary btn-sm" id="saveProfileBtn">Save</button>
+          <button class="icon-btn modal-close-btn" id="closeEditProfileModal"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+      <div class="modal-body scrollable-modal-body">
+        <div class="form-group">
+          <label>Cover Image URL</label>
+          <input type="text" id="editCoverInput" class="form-control" placeholder="Image URL for header banner">
+        </div>
+        <div class="form-group">
+          <label>Avatar Photo URL</label>
+          <input type="text" id="editAvatarInput" class="form-control" placeholder="Image URL for profile picture">
+        </div>
+        <div class="form-group">
+          <label>Display Name</label>
+          <input type="text" id="editNameInput" class="form-control" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea id="editBioInput" class="form-control" rows="3" placeholder="Tell the world about yourself..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="editLocationInput" class="form-control" placeholder="e.g. San Francisco, CA">
+        </div>
+        <div class="form-group">
+          <label>Website Link</label>
+          <input type="text" id="editWebsiteInput" class="form-control" placeholder="e.g. yoursite.com">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: COMMENTS / REPLIES -->
+  <div class="modal-overlay hidden" id="commentsModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Zip Discussion</h3>
+        <button class="icon-btn modal-close-btn" id="closeCommentsModal"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="modal-body scrollable-modal-body">
+        <div id="modalTargetPost" class="modal-target-post-container">
+          <!-- Target post preview -->
+        </div>
+
+        <div class="comments-thread-list" id="modalCommentsList">
+          <!-- Comments list rendered via JS -->
+        </div>
+
+        <div class="comment-input-area">
+          <input type="text" id="commentTextInput" placeholder="Write your reply..." autocomplete="off">
+          <button class="btn btn-primary btn-sm" id="submitCommentBtn">Reply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
