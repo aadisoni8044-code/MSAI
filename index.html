@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NV ZIP — See How AI Thinks | Interactive AI Laboratory</title>
+  <meta name="description" content="NV ZIP is an interactive educational website visually explaining how modern AI systems, LLMs, GPT, Transformers, Embeddings, and Attention work internally.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/glass.css">
+
+  <!-- Three.js for 3D Visualizations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+</head>
+<body>
+  <!-- Ambient Neural Network Canvas Background -->
+  <canvas id="bg-canvas"></canvas>
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- "INSIDE AI" Immersive Mode HUD Overlay -->
+  <div id="inside-ai-hud" class="inside-ai-hud hidden" aria-hidden="true">
+    <div class="hud-header">
+      <div class="hud-status">
+        <span class="pulse-dot"></span>
+        <span class="hud-title">INSIDE AI — IMMERSIVE NEURAL ENGINE</span>
+      </div>
+      <div class="hud-stats">
+        <span>LATENCY: <strong id="hud-latency">12ms</strong></span>
+        <span>ACTIVE NODES: <strong id="hud-nodes">1,024</strong></span>
+        <span>FPS: <strong id="hud-fps">60</strong></span>
+      </div>
+      <button id="exit-inside-ai" class="hud-exit-btn">
+        <span>EXIT INSIDE AI</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+      </button>
+    </div>
+    <div class="hud-stream" id="hud-stream-log"></div>
+  </div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-container">
+    <nav class="navbar glass-panel">
+      <a href="#home" class="brand-logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">NV <span class="logo-highlight">ZIP</span></span>
+      </a>
+
+      <ul class="nav-links" id="nav-links">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#journey" class="nav-link">Journey</a></li>
+        <li><a href="#llm" class="nav-link">LLM</a></li>
+        <li><a href="#gpt" class="nav-link">GPT</a></li>
+        <li><a href="#transformer" class="nav-link">Transformer</a></li>
+        <li><a href="#view-2d" class="nav-link">2D View</a></li>
+        <li><a href="#view-3d" class="nav-link">3D View</a></li>
+        <li><a href="#api" class="nav-link">API</a></li>
+        <li><a href="#explorer" class="nav-link">AI Explorer</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Search Button -->
+        <button id="search-trigger-btn" class="icon-btn glass-btn" title="Search AI Concepts (Ctrl+K)" aria-label="Search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <span class="search-shortcut">⌘K</span>
+        </button>
+
+        <!-- Theme Selector Toggle -->
+        <div class="theme-dropdown-wrapper">
+          <button id="theme-toggle-btn" class="icon-btn glass-btn" title="Toggle Theme" aria-label="Toggle Theme">
+            <svg class="theme-icon-dark" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          </button>
+          <div class="theme-menu glass-panel hidden" id="theme-menu">
+            <button class="theme-option" data-theme-val="dark">
+              <span class="theme-dot dark-dot"></span> Dark Mode
+            </button>
+            <button class="theme-option" data-theme-val="light">
+              <span class="theme-dot light-dot"></span> Light Mode
+            </button>
+            <button class="theme-option" data-theme-val="frosted">
+              <span class="theme-dot frosted-dot"></span> Frosted Glass
+            </button>
+          </div>
+        </div>
+
+        <!-- INSIDE AI Immersive Mode Toggle -->
+        <button id="inside-ai-toggle" class="inside-ai-btn glass-btn glowing-border" title="Enter INSIDE AI Mode">
+          <span class="pulse-indicator"></span>
+          <span>INSIDE AI</span>
+        </button>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="icon-btn glass-btn mobile-only" aria-label="Open Navigation Menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="main-content">
+
+    <!-- Section 1: Hero Section -->
+    <section id="home" class="hero-section">
+      <div class="hero-container">
+        <div class="hero-badge glass-badge">
+          <span class="badge-dot"></span> CONCEPTUAL AI LABORATORY & SIMULATOR
+        </div>
+
+        <h1 class="hero-title">
+          See How <span class="gradient-text">AI Thinks.</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Explore what happens inside an AI system — from your words to the final answer. Step inside tokenization, vector embeddings, transformer attention, and neural probability engines.
+        </p>
+
+        <!-- Interactive Hero Pipeline Visualizer -->
+        <div class="hero-pipeline-wrapper glass-card">
+          <div class="pipeline-header">
+            <span class="pipeline-title">LIVE CONCEPTUAL DATA PIPELINE</span>
+            <span class="pipeline-status"><span class="pulse-dot green"></span> ACTIVE STREAM</span>
+          </div>
+
+          <div class="hero-pipeline">
+            <div class="pipeline-node" data-node="input">
+              <div class="node-icon">💬</div>
+              <div class="node-label">User Input</div>
+              <div class="node-sub">"Explain gravity"</div>
+            </div>
+
+            <div class="pipeline-arrow">
+              <div class="data-particle"></div>
+              <span>→</span>
+            </div>
+
+            <div class="pipeline-node" data-node="tokens">
+              <div class="node-icon">🧩</div>
+              <div class="node-label">Tokens</div>
+              <div class="node-sub">[7834, 14201]</div>
+            </div>
+
+            <div class="pipeline-arrow">
+              <div class="data-particle delay-1"></div>
+              <span>→</span>
+            </div>
+
+            <div class="pipeline-node" data-node="model">
+              <div class="node-icon">🧠</div>
+              <div class="node-label">AI Model</div>
+              <div class="node-sub">Transformer</div>
+            </div>
+
+            <div class="pipeline-arrow">
+              <div class="data-particle delay-2"></div>
+              <span>→</span>
+            </div>
+
+            <div class="pipeline-node" data-node="processing">
+              <div class="node-icon">⚡</div>
+              <div class="node-label">Processing</div>
+              <div class="node-sub">Self-Attention</div>
+            </div>
+
+            <div class="pipeline-arrow">
+              <div class="data-particle delay-3"></div>
+              <span>→</span>
+            </div>
+
+            <div class="pipeline-node" data-node="output">
+              <div class="node-icon">✨</div>
+              <div class="node-label">Output</div>
+              <div class="node-sub">"Gravity is..."</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-actions">
+          <a href="#journey" class="btn btn-primary glass-btn-glow">
+            <span>Explore AI Pipeline</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+          <a href="#llm" class="btn btn-secondary glass-btn">
+            <span>How LLM Works</span>
+          </a>
+          <a href="#api" class="btn btn-outline glass-btn">
+            <span>Explore API</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 2: Interactive AI Journey ("From Words to Answer") -->
+    <section id="journey" class="section journey-section">
+      <div class="section-header">
+        <div class="section-tag">STEP-BY-STEP PIPELINE</div>
+        <h2 class="section-title">From Words to Answer</h2>
+        <p class="section-desc">Follow the complete journey of how an AI system transforms raw human text into intelligent generated responses.</p>
+      </div>
+
+      <div class="journey-container glass-card">
+        <!-- Interactive Prompt Controller -->
+        <div class="journey-prompt-box">
+          <label for="journey-input-text" class="prompt-label">Try your own prompt or pick an example:</label>
+          <div class="prompt-input-group">
+            <input type="text" id="journey-input-text" class="glass-input" value="Explain gravity" placeholder="Type any prompt here...">
+            <button id="journey-run-btn" class="btn btn-primary">Simulate Journey 🚀</button>
+          </div>
+          <div class="prompt-presets">
+            <span class="preset-title">Presets:</span>
+            <button class="preset-chip" data-prompt="Explain gravity">Explain gravity</button>
+            <button class="preset-chip" data-prompt="Why is the sky blue?">Why is the sky blue?</button>
+            <button class="preset-chip" data-prompt="Write a poem about neural networks">Neural Network Poem</button>
+            <button class="preset-chip" data-prompt="How do AI transformers work?">AI Transformers</button>
+          </div>
+        </div>
+
+        <!-- Journey Step Navigator Tabs -->
+        <div class="journey-tabs-nav" id="journey-tabs-nav">
+          <button class="journey-tab active" data-step="1">
+            <span class="tab-num">01</span>
+            <span class="tab-name">User Input</span>
+          </button>
+          <button class="journey-tab" data-step="2">
+            <span class="tab-num">02</span>
+            <span class="tab-name">Tokenization</span>
+          </button>
+          <button class="journey-tab" data-step="3">
+            <span class="tab-num">03</span>
+            <span class="tab-name">Embeddings</span>
+          </button>
+          <button class="journey-tab" data-step="4">
+            <span class="tab-num">04</span>
+            <span class="tab-name">Transformer</span>
+          </button>
+          <button class="journey-tab" data-step="5">
+            <span class="tab-num">05</span>
+            <span class="tab-name">Attention</span>
+          </button>
+          <button class="journey-tab" data-step="6">
+            <span class="tab-num">06</span>
+            <span class="tab-name">Prediction</span>
+          </button>
+          <button class="journey-tab" data-step="7">
+            <span class="tab-num">07</span>
+            <span class="tab-name">Final Answer</span>
+          </button>
+        </div>
+
+        <!-- Journey Display Stage -->
+        <div class="journey-stage glass-panel" id="journey-stage">
+          <!-- Step 1 View -->
+          <div class="step-view active" id="step-view-1">
+            <div class="step-header">
+              <h3>Step 1: User Input — Raw Prompt Received</h3>
+              <span class="step-badge">Stage: Input Parsing</span>
+            </div>
+            <p class="step-description">
+              AI models do not hear spoken voices directly; they receive raw string characters from user client requests.
+            </p>
+            <div class="input-display-card glass-panel">
+              <span class="card-label">Received Prompt String:</span>
+              <div class="prompt-string-display" id="step1-prompt-display">"Explain gravity"</div>
+              <div class="prompt-stats">
+                <span>Character Count: <strong id="step1-char-count">15</strong></span>
+                <span>Byte Size: <strong id="step1-byte-size">15 bytes</strong></span>
+                <span>Encoding: <strong>UTF-8</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 View -->
+          <div class="step-view" id="step-view-2">
+            <div class="step-header">
+              <h3>Step 2: Tokenization — Subword Breakdown</h3>
+              <span class="step-badge">Stage: BPE Tokenizer</span>
+            </div>
+            <p class="step-description">
+              The string is split into subword tokens using Byte-Pair Encoding (BPE). AI models process token IDs rather than whole sentences.
+            </p>
+            <div class="tokens-container-box">
+              <span class="card-label">Visual Token Breakdown (Click token for details):</span>
+              <div class="tokens-chips-grid" id="step2-tokens-grid">
+                <!-- Dynamically generated token chips -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 View -->
+          <div class="step-view" id="step-view-3">
+            <div class="step-header">
+              <h3>Step 3: Embeddings — Vector Representation</h3>
+              <span class="step-badge">Stage: High-Dimensional Vectors</span>
+            </div>
+            <p class="step-description">
+              Each token ID maps to a dense numerical vector (e.g. 4,096 dimensions) capturing semantic meaning and context in vector space.
+            </p>
+            <div class="embeddings-visual-container" id="step3-vectors-box">
+              <!-- Dynamically populated vector matrices -->
+            </div>
+          </div>
+
+          <!-- Step 4 View -->
+          <div class="step-view" id="step-view-4">
+            <div class="step-header">
+              <h3>Step 4: Transformer Architecture — Deep Neural Layers</h3>
+              <span class="step-badge">Stage: Multi-Layer Perception</span>
+            </div>
+            <p class="step-description">
+              Vectors pass through stacked Transformer blocks containing Multi-Head Self-Attention, Feed-Forward Networks, and Layer Normalization.
+            </p>
+            <div class="transformer-architecture-view" id="step4-transformer-view">
+              <!-- Interactive Transformer Block diagram -->
+            </div>
+          </div>
+
+          <!-- Step 5 View -->
+          <div class="step-view" id="step-view-5">
+            <div class="step-header">
+              <h3>Step 5: Attention Mechanism — Word-to-Word Connections</h3>
+              <span class="step-badge">Stage: Self-Attention Weights</span>
+            </div>
+            <p class="step-description">
+              Select any word below to see how the model calculates context relationship weights with all other tokens in the prompt.
+            </p>
+            <div class="attention-interactive-wrapper" id="step5-attention-box">
+              <!-- Interactive Attention Matrix & Beam connections -->
+            </div>
+          </div>
+
+          <!-- Step 6 View -->
+          <div class="step-view" id="step-view-6">
+            <div class="step-header">
+              <h3>Step 6: Token Prediction — Probability Distribution</h3>
+              <span class="step-badge">Stage: Softmax Output Layer</span>
+            </div>
+            <p class="step-description">
+              The model calculates probabilities for thousands of possible next tokens. The token with the highest weighted probability (or sampled via temperature) is chosen.
+            </p>
+            <div class="prediction-distribution-box" id="step6-prediction-box">
+              <!-- Probability distribution bar charts -->
+            </div>
+          </div>
+
+          <!-- Step 7 View -->
+          <div class="step-view" id="step-view-7">
+            <div class="step-header">
+              <h3>Step 7: Final Answer — Autoregressive Generation</h3>
+              <span class="step-badge">Stage: Response Streaming</span>
+            </div>
+            <p class="step-description">
+              Tokens are predicted one by one autoregressively and decoded back into human-readable text in real time.
+            </p>
+            <div class="final-answer-box glass-panel">
+              <div class="typing-output" id="step7-typewriter-output"></div>
+              <div class="generation-meta">
+                <span>Tokens Generated: <strong id="step7-token-count">0</strong></span>
+                <span>Inference Time: <strong>140ms</strong></span>
+                <span>Status: <strong class="green-text" id="step7-status">Complete</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Journey Controls Footer -->
+        <div class="journey-controls">
+          <button id="journey-prev-btn" class="btn btn-secondary glass-btn">← Previous Step</button>
+          <div class="journey-auto-play">
+            <button id="journey-play-btn" class="btn btn-outline glass-btn">▶ Auto Play Journey</button>
+          </div>
+          <button id="journey-next-btn" class="btn btn-primary glass-btn">Next Step →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 3: Dedicated LLM Explorer Section -->
+    <section id="llm" class="section llm-section">
+      <div class="section-header">
+        <div class="section-tag">ARCHITECTURE MAP</div>
+        <h2 class="section-title">How Does an LLM Work?</h2>
+        <p class="section-desc">Click any component in the interactive architecture block to open a transparent glass panel with clear beginner-friendly explanations.</p>
+      </div>
+
+      <div class="llm-explorer-grid">
+        <!-- Interactive Architecture Diagram -->
+        <div class="llm-diagram-container glass-card">
+          <div class="llm-flow-diagram" id="llm-diagram">
+            <button class="flow-node active" data-concept="user">
+              <span class="node-badge">01</span>
+              <span class="node-icon">👤</span>
+              <span class="node-title">User</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="prompt">
+              <span class="node-badge">02</span>
+              <span class="node-icon">📝</span>
+              <span class="node-title">Prompt</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="token">
+              <span class="node-badge">03</span>
+              <span class="node-icon">🧩</span>
+              <span class="node-title">Tokenizer</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="embedding">
+              <span class="node-badge">04</span>
+              <span class="node-icon">🔢</span>
+              <span class="node-title">Embeddings</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="transformer">
+              <span class="node-badge">05</span>
+              <span class="node-icon">🤖</span>
+              <span class="node-title">Transformer</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="attention">
+              <span class="node-badge">06</span>
+              <span class="node-icon">👁️</span>
+              <span class="node-title">Attention</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="neural">
+              <span class="node-badge">07</span>
+              <span class="node-icon">⚡</span>
+              <span class="node-title">Layers</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="inference">
+              <span class="node-badge">08</span>
+              <span class="node-icon">🎯</span>
+              <span class="node-title">Prediction</span>
+            </button>
+            <div class="flow-connector">→</div>
+
+            <button class="flow-node" data-concept="output">
+              <span class="node-badge">09</span>
+              <span class="node-icon">💬</span>
+              <span class="node-title">Output</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Glass Information Panel -->
+        <div class="llm-info-panel glass-card" id="llm-info-panel">
+          <div class="panel-header">
+            <span class="panel-icon" id="llm-panel-icon">👤</span>
+            <div>
+              <h3 id="llm-panel-title">User Input</h3>
+              <span class="panel-subtitle" id="llm-panel-subtitle">The Starting Point of the Pipeline</span>
+            </div>
+          </div>
+
+          <div class="panel-body">
+            <div class="info-block">
+              <label>What it is:</label>
+              <p id="llm-panel-what">The person or application initiating a prompt request to the AI model.</p>
+            </div>
+
+            <div class="info-block">
+              <label>Why it exists:</label>
+              <p id="llm-panel-why">Provides the context, instructions, and query that guides the neural network's generation response.</p>
+            </div>
+
+            <div class="info-grid">
+              <div class="info-box">
+                <label>What goes into it:</label>
+                <span id="llm-panel-in">Human thought or goal formatted as text string.</span>
+              </div>
+              <div class="info-box">
+                <label>What comes out:</label>
+                <span id="llm-panel-out">Raw string data sent to API or tokenizing layer.</span>
+              </div>
+            </div>
+
+            <div class="info-block analogy-block glass-panel">
+              <label>💡 Simple Real-World Analogy:</label>
+              <p id="llm-panel-analogy">Like a customer placing an order at a restaurant counter before the kitchen begins preparing the meal.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 4: GPT Explanation Section -->
+    <section id="gpt" class="section gpt-section">
+      <div class="section-header">
+        <div class="section-tag">GPT EXPLANATION & SIMULATION</div>
+        <h2 class="section-title">What Happens When You Ask GPT Something?</h2>
+        <p class="section-desc">Type your own sentence below to observe how text flows through a conceptual Generative Pre-trained Transformer pipeline.</p>
+      </div>
+
+      <div class="gpt-container glass-card">
+        <div class="sim-disclaimer-badge">
+          <span>⚠️ Educational conceptual simulation — Not connecting to proprietary internal weights</span>
+        </div>
+
+        <div class="gpt-input-wrapper">
+          <input type="text" id="gpt-sim-input" class="glass-input" value="What is the speed of light?" placeholder="Enter any question for GPT simulation...">
+          <button id="gpt-sim-btn" class="btn btn-primary">Run GPT Flow ⚡</button>
+        </div>
+
+        <div class="gpt-pipeline-visualizer" id="gpt-pipeline-visualizer">
+          <div class="gpt-stage-card glass-panel" id="gpt-stage-prompt">
+            <div class="stage-top">
+              <span class="stage-tag">STAGE 1</span>
+              <h4>Prompt & Context Window</h4>
+            </div>
+            <p>Combines system directives, conversation history, and user input into the active context buffer.</p>
+            <div class="stage-output-box" id="gpt-out-prompt">"What is the speed of light?"</div>
+          </div>
+
+          <div class="gpt-stage-card glass-panel" id="gpt-stage-tokens">
+            <div class="stage-top">
+              <span class="stage-tag">STAGE 2</span>
+              <h4>Token Breakdown</h4>
+            </div>
+            <p>Converts character sequence into discrete vocabulary token IDs.</p>
+            <div class="stage-output-box chips-box" id="gpt-out-tokens">
+              <span class="chip">What</span><span class="chip">is</span><span class="chip">the</span><span class="chip">speed</span><span class="chip">of</span><span class="chip">light</span><span class="chip">?</span>
+            </div>
+          </div>
+
+          <div class="gpt-stage-card glass-panel" id="gpt-stage-model">
+            <div class="stage-top">
+              <span class="stage-tag">STAGE 3</span>
+              <h4>Neural Transformer Layers</h4>
+            </div>
+            <p>Self-attention blocks analyze relationships across all positions simultaneously.</p>
+            <div class="stage-output-box matrix-box" id="gpt-out-model">
+              <span>96 Transformer Layers</span>
+              <span class="pulse-text">Calculating Attention Weights...</span>
+            </div>
+          </div>
+
+          <div class="gpt-stage-card glass-panel" id="gpt-stage-prediction">
+            <div class="stage-top">
+              <span class="stage-tag">STAGE 4</span>
+              <h4>Probabilistic Next-Token Prediction</h4>
+            </div>
+            <p>Evaluates logits for next token continuation.</p>
+            <div class="stage-output-box prob-box" id="gpt-out-prediction">
+              <div>"The" (94.2%)</div>
+              <div>"Light" (3.1%)</div>
+              <div>"Speed" (1.8%)</div>
+            </div>
+          </div>
+
+          <div class="gpt-stage-card glass-panel" id="gpt-stage-generated">
+            <div class="stage-top">
+              <span class="stage-tag">STAGE 5</span>
+              <h4>Generated Text Stream</h4>
+            </div>
+            <p>Appends predicted token back to input context until end-of-text [EOS] token is hit.</p>
+            <div class="stage-output-box text-box" id="gpt-out-text">
+              "The speed of light in a vacuum is approximately 299,792,458 meters per second."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 5: Transformer Section -->
+    <section id="transformer" class="section transformer-section">
+      <div class="section-header">
+        <div class="section-tag">CORE AI ENGINE</div>
+        <h2 class="section-title">The Transformer Architecture</h2>
+        <p class="section-desc">Introduced in 2017 ("Attention Is All You Need"), the Transformer architecture revolutionized AI by enabling parallel context processing.</p>
+      </div>
+
+      <div class="transformer-grid">
+        <div class="trans-card glass-card">
+          <div class="trans-icon">🔄</div>
+          <h3>Self-Attention Mechanism</h3>
+          <p>Allows every token to look at and weight the importance of every other token in the prompt, regardless of distance.</p>
+        </div>
+
+        <div class="trans-card glass-card">
+          <div class="trans-icon">📐</div>
+          <h3>Positional Encoding</h3>
+          <p>Injects word order location values into token vectors so the model knows sequence position without processing sequentially.</p>
+        </div>
+
+        <div class="trans-card glass-card">
+          <div class="trans-icon">🌌</div>
+          <h3>Multi-Head Attention</h3>
+          <p>Runs multiple attention mechanisms in parallel, letting the model focus on syntax, grammar, entity connections, and semantics simultaneously.</p>
+        </div>
+
+        <div class="trans-card glass-card">
+          <div class="trans-icon">⚡</div>
+          <h3>Feed-Forward Networks</h3>
+          <p>Processes attention representations through dense non-linear neural layers to refine learned representations.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 6: 2D Interactive AI Visualizations -->
+    <section id="view-2d" class="section view2d-section">
+      <div class="section-header">
+        <div class="section-tag">2D CANVAS LABORATORY</div>
+        <h2 class="section-title">2D Interactive AI Visualizations</h2>
+        <p class="section-desc">Switch between interactive 2D diagrams to explore neural activations, token flows, transformer blocks, and attention heatmaps.</p>
+      </div>
+
+      <div class="canvas2d-wrapper glass-card">
+        <div class="canvas2d-toolbar">
+          <button class="c2d-btn active" data-mode="neural">🧠 Neural Network</button>
+          <button class="c2d-btn" data-mode="tokens">🧩 Token Flow</button>
+          <button class="c2d-btn" data-mode="transformer">🤖 Transformer Blocks</button>
+          <button class="c2d-btn" data-mode="heatmap">🔥 Attention Heatmap</button>
+          <button class="c2d-btn" data-mode="api">⚡ API Flow</button>
+        </div>
+
+        <div class="canvas2d-container">
+          <canvas id="canvas-2d"></canvas>
+          <div id="c2d-tooltip" class="c2d-tooltip glass-panel hidden">Hover or click a node for details</div>
+        </div>
+
+        <div class="canvas2d-inspector glass-panel" id="c2d-inspector">
+          <div class="inspector-title" id="c2d-inspector-title">Neural Network Diagram</div>
+          <div class="inspector-body" id="c2d-inspector-body">
+            Hover over nodes or connections in the 2D canvas above to inspect live layer weights, firing states, and mathematical operations.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 7: 3D Interactive AI Visualizations -->
+    <section id="view-3d" class="section view3d-section">
+      <div class="section-header">
+        <div class="section-tag">WEBGL 3D EXPERIENCE</div>
+        <h2 class="section-title">3D Interactive AI Visualizations</h2>
+        <p class="section-desc">Explore floating 3D neural topologies, rotating transformer layers, and 3D token particle streams in space.</p>
+      </div>
+
+      <div class="canvas3d-wrapper glass-card">
+        <div class="canvas3d-controls-bar">
+          <div class="controls-left">
+            <button id="c3d-mode-neural" class="c3d-mode-btn active">3D Neural Web</button>
+            <button id="c3d-mode-cube" class="c3d-mode-btn">3D Transformer Cube</button>
+            <button id="c3d-mode-particles" class="c3d-mode-btn">3D Token Stream</button>
+          </div>
+          <div class="controls-right">
+            <button id="c3d-toggle-rotate" class="glass-btn icon-btn" title="Toggle Rotation">🔄 Pause Rotate</button>
+            <button id="c3d-reset-cam" class="glass-btn icon-btn" title="Reset View">🎯 Reset View</button>
+          </div>
+        </div>
+
+        <div class="canvas3d-container" id="canvas3d-container">
+          <!-- WebGL Canvas injected here by 3d-view.js -->
+          <div id="c3d-fallback-msg" class="c3d-fallback hidden">
+            <span>3D WebGL fallback active. Displaying optimized 2D render mode.</span>
+          </div>
+        </div>
+
+        <div class="canvas3d-footer">
+          <span>💡 Click and drag to orbit in 3D space. Scroll to zoom in/out.</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 8: API Explorer & Simulated Playground -->
+    <section id="api" class="section api-section">
+      <div class="section-header">
+        <div class="section-tag">API & INFRASTRUCTURE</div>
+        <h2 class="section-title">How AI APIs Work</h2>
+        <p class="section-desc">Understand client-server AI request flow and test parameters in our simulated interactive API playground.</p>
+      </div>
+
+      <!-- Animated API Flow Diagram -->
+      <div class="api-flow-card glass-card">
+        <h3>Client-Server AI API Lifecycle</h3>
+        <div class="api-diagram">
+          <div class="api-node">
+            <div class="node-icon">💻</div>
+            <div class="node-name">Your App / Client</div>
+          </div>
+
+          <div class="api-arrow animated-arrow">
+            <span>HTTP POST /v1/chat/completions</span>
+            <div class="arrow-line"></div>
+          </div>
+
+          <div class="api-node">
+            <div class="node-icon">🌐</div>
+            <div class="node-name">API Gateway</div>
+          </div>
+
+          <div class="api-arrow animated-arrow">
+            <span>Inference Queue</span>
+            <div class="arrow-line"></div>
+          </div>
+
+          <div class="api-node">
+            <div class="node-icon">⚡</div>
+            <div class="node-label-small">GPU Server Cluster</div>
+            <div class="node-name">AI Model Inference</div>
+          </div>
+
+          <div class="api-arrow animated-arrow">
+            <span>JSON Response Stream</span>
+            <div class="arrow-line"></div>
+          </div>
+
+          <div class="api-node">
+            <div class="node-icon">✨</div>
+            <div class="node-name">App Renders Answer</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive API Playground -->
+      <div class="api-playground-container glass-card">
+        <h3>Interactive API Playground (Simulated)</h3>
+        <p class="subtext">Adjust request parameters and send a simulated API request to observe payload structures.</p>
+
+        <div class="playground-grid">
+          <div class="playground-controls glass-panel">
+            <div class="form-group">
+              <label for="api-model-select">Model Name:</label>
+              <select id="api-model-select" class="glass-select">
+                <option value="nv-zip-flash">nv-zip-flash (Fast, Low Latency)</option>
+                <option value="nv-zip-pro" selected>nv-zip-pro (High Reasoning)</option>
+                <option value="nv-zip-ultra">nv-zip-ultra (Maximum Context Window)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="api-prompt-input">Prompt Content:</label>
+              <textarea id="api-prompt-input" class="glass-textarea" rows="3">Explain how gravity works in simple terms.</textarea>
+            </div>
+
+            <div class="form-group">
+              <div class="slider-header">
+                <label for="api-temp-slider">Temperature:</label>
+                <span id="api-temp-val">0.7</span>
+              </div>
+              <input type="range" id="api-temp-slider" min="0" max="2" step="0.1" value="0.7" class="glass-slider">
+              <span class="range-sub">Lower = deterministic, Higher = creative</span>
+            </div>
+
+            <div class="form-group">
+              <div class="slider-header">
+                <label for="api-tokens-slider">Max Output Tokens:</label>
+                <span id="api-tokens-val">256</span>
+              </div>
+              <input type="range" id="api-tokens-slider" min="16" max="1024" step="16" value="256" class="glass-slider">
+            </div>
+
+            <button id="api-send-btn" class="btn btn-primary btn-block glass-btn-glow">
+              <span>Send Request ⚡</span>
+            </button>
+          </div>
+
+          <div class="playground-output glass-panel">
+            <div class="code-header">
+              <span class="code-title">HTTP JSON Request & Response Preview</span>
+              <button id="api-copy-btn" class="glass-btn icon-btn-sm">Copy JSON</button>
+            </div>
+
+            <div class="code-block-wrapper">
+              <pre><code id="api-json-display" class="json-code">
+{
+  "model": "nv-zip-pro",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Explain how gravity works in simple terms."
+    }
+  ],
+  "temperature": 0.7,
+  "max_tokens": 256
+}
+              </code></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 9: AI Technology Explorer Grid -->
+    <section id="explorer" class="section explorer-section">
+      <div class="section-header">
+        <div class="section-tag">KNOWLEDGE BASE</div>
+        <h2 class="section-title">AI Technology Explorer</h2>
+        <p class="section-desc">Click any technology card to explore detailed interactive breakdowns, diagrams, and explanations.</p>
+      </div>
+
+      <div class="explorer-grid" id="explorer-cards-grid">
+        <!-- 12 Cards dynamically rendered or structured by explorer-cards.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Global Modal for Detailed AI Concepts -->
+  <div id="concept-modal" class="modal-overlay hidden" aria-hidden="true">
+    <div class="modal-card glass-card">
+      <button id="modal-close-btn" class="modal-close-btn" aria-label="Close Modal">✕</button>
+      <div class="modal-header">
+        <span class="modal-icon" id="modal-concept-icon">🧠</span>
+        <div>
+          <h2 id="modal-concept-title">Concept Title</h2>
+          <span class="modal-subtitle" id="modal-concept-category">AI Fundamentals</span>
+        </div>
+      </div>
+      <div class="modal-body" id="modal-concept-body">
+        <!-- Populated dynamically by explorer-cards.js -->
+      </div>
+      <div class="modal-footer">
+        <button id="modal-action-btn" class="btn btn-primary">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Search Modal -->
+  <div id="search-modal" class="modal-overlay hidden" aria-hidden="true">
+    <div class="modal-card search-modal-card glass-card">
+      <div class="search-input-wrapper">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="global-search-input" class="search-input" placeholder="Search concepts (e.g. token, attention, GPU, API)..." autofocus>
+        <button id="search-modal-close" class="modal-close-btn">✕</button>
+      </div>
+
+      <div class="search-results-list" id="search-results-list">
+        <!-- Populated dynamically by search.js -->
+      </div>
+
+      <div class="search-footer">
+        <span>Press <kbd>ESC</kbd> to close</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer glass-panel">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#home" class="brand-logo">
+          <span class="logo-icon">⚡</span>
+          <span class="logo-text">NV <span class="logo-highlight">ZIP</span></span>
+        </a>
+        <p class="footer-tagline">"See How AI Thinks."</p>
+        <p class="footer-disclaimer">
+          Educational interactive laboratory. Visualizations and interactive pipeline stages are conceptual simulations designed for teaching modern AI system architectures.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <div class="link-col">
+          <h4>Navigation</h4>
+          <a href="#home">Home</a>
+          <a href="#journey">Journey</a>
+          <a href="#llm">LLM Explorer</a>
+          <a href="#gpt">GPT System</a>
+        </div>
+
+        <div class="link-col">
+          <h4>Visualizations</h4>
+          <a href="#view-2d">2D Canvas View</a>
+          <a href="#view-3d">3D WebGL View</a>
+          <a href="#api">API Playground</a>
+          <a href="#explorer">AI Technology Grid</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© NV ZIP Interactive AI Laboratory. Built with HTML5, CSS3 & JavaScript.</p>
+    </div>
+  </footer>
+
+  <!-- Core JavaScript Modules -->
+  <script src="js/data.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/inside-ai.js"></script>
+  <script src="js/journey.js"></script>
+  <script src="js/llm-explorer.js"></script>
+  <script src="js/gpt-simulator.js"></script>
+  <script src="js/api-playground.js"></script>
+  <script src="js/2d-view.js"></script>
+  <script src="js/3d-view.js"></script>
+  <script src="js/explorer-cards.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
