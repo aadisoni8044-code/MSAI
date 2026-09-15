@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevSyntax | Learn Code. Understand Everything.</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/editor.css">
+</head>
+<body>
+    <div id="app" class="app-container">
+        <!-- Top Navigation Bar -->
+        <header class="navbar" id="main-navbar">
+            <div class="nav-container">
+                <div class="nav-left">
+                    <button class="mobile-menu-btn" id="mobile-menu-toggle" aria-label="Toggle navigation menu">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+                    </button>
+                    <a href="#" class="brand-logo" id="logo-link">
+                        <div class="logo-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="16 18 22 12 16 6"></polyline>
+                                <polyline points="8 6 2 12 8 18"></polyline>
+                            </svg>
+                        </div>
+                        <span class="brand-name">Dev<span class="brand-highlight">Syntax</span></span>
+                        <span class="brand-badge">PRO</span>
+                    </a>
+                </div>
+
+                <nav class="nav-center">
+                    <a href="#" class="nav-link active" data-view="welcome">Welcome</a>
+                    <a href="#" class="nav-link" data-view="dashboard" id="nav-dashboard-link">Languages</a>
+                    <a href="#" class="nav-link" data-view="practice" id="nav-practice-link">Practice</a>
+                </nav>
+
+                <div class="nav-right">
+                    <button class="search-trigger-btn" id="global-search-trigger">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                        <span class="search-placeholder">Search functions, keywords...</span>
+                        <kbd class="search-kbd"><span class="cmd-symbol">⌘</span>K</kbd>
+                    </button>
+
+                    <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle Theme" title="Switch Theme (Dark / Light)">
+                        <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                        <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+
+                    <button class="profile-btn" id="profile-btn" aria-label="User Profile" title="View Profile & Progress">
+                        <div class="avatar-ring">
+                            <span class="avatar-text">DS</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content" id="main-content">
+
+            <!-- SECTION 1: Welcome / Landing View -->
+            <section id="welcome-view" class="view-section active">
+                <div class="hero-container">
+                    <div class="hero-badge-wrapper">
+                        <span class="hero-badge">
+                            <span class="pulse-dot"></span> Next-Gen Developer Learning Platform
+                        </span>
+                    </div>
+
+                    <h1 class="hero-title">Learn Code. <span class="gradient-text">Understand Everything.</span></h1>
+                    <p class="hero-subtitle">
+                        Explore programming languages, functions, keywords, syntax and real interactive examples — all in one powerful learning platform built for modern developers.
+                    </p>
+
+                    <div class="hero-cta-group">
+                        <a href="#languages-grid-section" class="btn btn-primary btn-lg">
+                            <span>Choose Your Language</span>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                        </a>
+                        <button class="btn btn-secondary btn-lg" id="hero-quick-search-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            <span>Quick Search Syntax</span>
+                        </button>
+                    </div>
+
+                    <!-- Platform Stats Banner -->
+                    <div class="hero-stats-banner">
+                        <div class="stat-item">
+                            <span class="stat-value">16+</span>
+                            <span class="stat-label">Supported Languages</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-value">500+</span>
+                            <span class="stat-label">Functions & Keywords</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-value">100%</span>
+                            <span class="stat-label">Interactive Examples</span>
+                        </div>
+                        <div class="stat-divider"></div>
+                        <div class="stat-item">
+                            <span class="stat-value">Free</span>
+                            <span class="stat-label">Self-Paced Learning</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Choose Your Language Section -->
+                <div id="languages-grid-section" class="languages-section">
+                    <div class="section-header center">
+                        <h2 class="section-title">Choose Your Language</h2>
+                        <p class="section-subtitle">Select a programming language to dive into its interactive documentation, keyword breakdowns, and real-world execution sandboxes.</p>
+
+                        <!-- Filter Tabs -->
+                        <div class="language-filter-tabs">
+                            <button class="filter-btn active" data-filter="all">All Languages</button>
+                            <button class="filter-btn" data-filter="popular">Popular</button>
+                            <button class="filter-btn" data-filter="web">Web & Frontend</button>
+                            <button class="filter-btn" data-filter="backend">Backend & Systems</button>
+                            <button class="filter-btn" data-filter="mobile">Mobile</button>
+                        </div>
+                    </div>
+
+                    <!-- 16 Language Cards Container -->
+                    <div class="languages-grid" id="languages-grid">
+                        <!-- Rendered dynamically by js/app.js -->
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="features-section">
+                    <div class="section-header">
+                        <span class="section-tag font-mono">WHY DEVSYNTAX</span>
+                        <h2 class="section-title">Engineered like a high-end SaaS product</h2>
+                    </div>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon text-indigo">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            </div>
+                            <h3 class="feature-title">Interactive Code Runner</h3>
+                            <p class="feature-desc">Test code directly in your browser. Modify parameters, trigger functions, and see instant execution outputs in real-time.</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon text-emerald">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                            </div>
+                            <h3 class="feature-title">Step-by-Step Breakdown</h3>
+                            <p class="feature-desc">Understand how code works line by line. Every keyword is dissected with beginner-friendly explanations, parameters, and common gotchas.</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon text-sky">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                            </div>
+                            <h3 class="feature-title">Lightning Fast Search</h3>
+                            <p class="feature-desc">Press ⌘K anywhere on the platform to search functions, keywords, syntax, and concepts across all 16 programming languages instantaneously.</p>
+                        </div>
+
+                        <div class="feature-card">
+                            <div class="feature-icon text-amber">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <h3 class="feature-title">Progress & Completion Tracking</h3>
+                            <p class="feature-desc">Keep track of your learning path. Check off mastered concepts, monitor progress percentages, and test yourself with interactive quizzes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer class="app-footer">
+                    <div class="footer-container">
+                        <div class="footer-brand">
+                            <a href="#" class="brand-logo">
+                                <div class="logo-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                                </div>
+                                <span class="brand-name">Dev<span class="brand-highlight">Syntax</span></span>
+                            </a>
+                            <p class="footer-tagline">The modern interactive learning platform for programming languages, syntax, and real-world code execution.</p>
+                            <p class="footer-copyright">© 2025 DevSyntax Inc. All rights reserved.</p>
+                        </div>
+
+                        <div class="footer-links-grid">
+                            <div class="footer-col">
+                                <span class="footer-col-title">Languages</span>
+                                <a href="#" class="footer-link lang-select-footer" data-lang="python">Python</a>
+                                <a href="#" class="footer-link lang-select-footer" data-lang="javascript">JavaScript</a>
+                                <a href="#" class="footer-link lang-select-footer" data-lang="dart">Dart</a>
+                                <a href="#" class="footer-link lang-select-footer" data-lang="java">Java</a>
+                                <a href="#" class="footer-link lang-select-footer" data-lang="rust">Rust</a>
+                                <a href="#" class="footer-link lang-select-footer" data-lang="go">Go</a>
+                            </div>
+
+                            <div class="footer-col">
+                                <span class="footer-col-title">Platform</span>
+                                <a href="#" class="footer-link nav-switch" data-view="welcome">Welcome Hero</a>
+                                <a href="#" class="footer-link nav-switch" data-view="dashboard">Documentation</a>
+                                <a href="#" class="footer-link nav-switch" data-view="practice">Practice Hub</a>
+                                <a href="#" class="footer-link" id="footer-search-trigger">⌘K Palette</a>
+                            </div>
+
+                            <div class="footer-col">
+                                <span class="footer-col-title">Company</span>
+                                <a href="#" class="footer-link">About DevSyntax</a>
+                                <a href="#" class="footer-link">Documentation</a>
+                                <a href="#" class="footer-link">Contact Support</a>
+                                <a href="#" class="footer-link">Privacy Policy</a>
+                                <a href="#" class="footer-link">Terms of Service</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </section>
+
+            <!-- SECTION 2: Language Learning Dashboard View (3-Pane SaaS Layout) -->
+            <section id="dashboard-view" class="view-section">
+                <div class="dashboard-container">
+
+                    <!-- Left Sidebar Pane -->
+                    <aside class="dashboard-sidebar" id="dashboard-sidebar">
+                        <!-- Language Header Dropdown / Selector -->
+                        <div class="sidebar-header">
+                            <div class="active-language-badge" id="sidebar-lang-selector-btn">
+                                <div class="lang-icon" id="sidebar-active-lang-icon">
+                                    <!-- Dynamic SVG icon -->
+                                </div>
+                                <div class="lang-info">
+                                    <span class="lang-title" id="sidebar-active-lang-name">Python</span>
+                                    <span class="lang-meta" id="sidebar-active-lang-meta">13 Categories • 25 Topics</span>
+                                </div>
+                                <svg class="chevron-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+                            </div>
+
+                            <!-- Language Quick Switcher Menu Overlay -->
+                            <div class="lang-dropdown-menu" id="lang-dropdown-menu">
+                                <div class="lang-dropdown-header">Select Language</div>
+                                <div class="lang-dropdown-list" id="lang-dropdown-list">
+                                    <!-- Dynamic list of 16 languages -->
+                                </div>
+                            </div>
+
+                            <!-- Sidebar Category Search Filter -->
+                            <div class="sidebar-search-box">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                                <input type="text" id="sidebar-filter-input" placeholder="Filter functions & keywords..." />
+                            </div>
+                        </div>
+
+                        <!-- Sidebar Category Accordion Tree -->
+                        <div class="sidebar-nav-tree" id="sidebar-category-tree">
+                            <!-- Populated dynamically by js/app.js -->
+                        </div>
+
+                        <!-- Sidebar Footer Progress Card -->
+                        <div class="sidebar-footer-card">
+                            <div class="sidebar-progress-header">
+                                <span class="progress-title">Language Mastery</span>
+                                <span class="progress-percent" id="sidebar-progress-percentage">0%</span>
+                            </div>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" id="sidebar-progress-bar" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-count-text" id="sidebar-progress-text">0 of 0 topics completed</div>
+                        </div>
+                    </aside>
+
+                    <!-- Center Main Learning Panel Pane -->
+                    <section class="dashboard-main-panel" id="dashboard-main-panel">
+                        <!-- Breadcrumbs & Meta Header -->
+                        <div class="topic-header-bar">
+                            <div class="topic-breadcrumbs">
+                                <span class="crumb-lang" id="breadcrumb-lang">Python</span>
+                                <span class="crumb-sep">/</span>
+                                <span class="crumb-cat" id="breadcrumb-cat">Functions</span>
+                                <span class="crumb-sep">/</span>
+                                <span class="crumb-topic" id="breadcrumb-topic">def</span>
+                            </div>
+
+                            <div class="topic-header-actions">
+                                <button class="topic-mark-completed-btn" id="mark-completed-btn" title="Mark topic as completed">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span id="mark-completed-text">Mark as Completed</span>
+                                </button>
+                                <button class="topic-action-icon-btn" id="copy-topic-link-btn" title="Copy link to topic">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Topic Content Body -->
+                        <div class="topic-detail-body" id="topic-detail-content">
+                            <!-- Populated dynamically by js/app.js -->
+                        </div>
+
+                        <!-- Prev / Next Topic Navigation Bar -->
+                        <div class="topic-nav-footer">
+                            <button class="topic-nav-btn prev" id="prev-topic-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                                <div class="nav-btn-text">
+                                    <span class="nav-btn-label">Previous Topic</span>
+                                    <span class="nav-btn-title" id="prev-topic-title">--</span>
+                                </div>
+                            </button>
+
+                            <button class="topic-nav-btn next" id="next-topic-btn">
+                                <div class="nav-btn-text text-right">
+                                    <span class="nav-btn-label">Next Topic</span>
+                                    <span class="nav-btn-title" id="next-topic-title">--</span>
+                                </div>
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
+                    </section>
+
+                    <!-- Right Table of Contents & Quick Reference Pane -->
+                    <aside class="dashboard-right-pane" id="dashboard-right-pane">
+                        <div class="right-pane-card">
+                            <span class="pane-card-title">ON THIS PAGE</span>
+                            <nav class="toc-nav" id="toc-nav-list">
+                                <a href="#overview" class="toc-link active">What is it?</a>
+                                <a href="#syntax" class="toc-link">Syntax</a>
+                                <a href="#code-example" class="toc-link">Interactive Example</a>
+                                <a href="#how-it-works" class="toc-link">How It Works</a>
+                                <a href="#parameters" class="toc-link">Parameters & Return</a>
+                                <a href="#gotchas" class="toc-link">Common Mistakes</a>
+                                <a href="#real-world" class="toc-link">Real-World Use</a>
+                                <a href="#related" class="toc-link">Related Concepts</a>
+                            </nav>
+                        </div>
+
+                        <!-- Language Quick Cheat Sheet Card -->
+                        <div class="right-pane-card">
+                            <span class="pane-card-title">QUICK INFO</span>
+                            <div class="info-stat-group">
+                                <div class="info-stat">
+                                    <span class="info-stat-label">Language:</span>
+                                    <span class="info-stat-val" id="toc-info-lang">Python</span>
+                                </div>
+                                <div class="info-stat">
+                                    <span class="info-stat-label">Category:</span>
+                                    <span class="info-stat-val" id="toc-info-category">Functions</span>
+                                </div>
+                                <div class="info-stat">
+                                    <span class="info-stat-label">Difficulty:</span>
+                                    <span class="info-stat-val badge-easy" id="toc-info-difficulty">Beginner</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Related Topics Widget -->
+                        <div class="right-pane-card">
+                            <span class="pane-card-title">RELATED CONCEPTS</span>
+                            <div class="related-topics-list" id="toc-related-list">
+                                <!-- Dynamic related items -->
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </section>
+
+            <!-- SECTION 3: Practice & Quizzes View -->
+            <section id="practice-view" class="view-section">
+                <div class="practice-container">
+                    <div class="practice-header center">
+                        <span class="section-tag font-mono">INTERACTIVE PRACTICE</span>
+                        <h1 class="practice-title">Test Your Knowledge</h1>
+                        <p class="practice-subtitle">Practice syntax, answer multiple-choice questions, and solve interactive coding challenges across all programming languages.</p>
+
+                        <div class="practice-lang-select-wrapper">
+                            <label for="practice-lang-dropdown">Select Language:</label>
+                            <select id="practice-lang-dropdown" class="select-input">
+                                <!-- Populated with 16 languages -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Practice Quiz Card Container -->
+                    <div class="practice-quiz-card" id="practice-quiz-container">
+                        <!-- Populated dynamically by js/practice.js -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- GLOBAL SEARCH MODAL (Cmd+K) -->
+        <div class="modal-overlay" id="search-modal-overlay">
+            <div class="search-modal-container">
+                <div class="search-input-wrapper">
+                    <svg class="search-input-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <input type="text" id="global-search-input" placeholder="Search functions, keywords, syntax across 16 languages (e.g. def, print, fetch)..." autocomplete="off" />
+                    <button class="search-modal-close-btn" id="search-modal-close" aria-label="Close search">
+                        <kbd>ESC</kbd>
+                    </button>
+                </div>
+
+                <div class="search-results-wrapper" id="global-search-results">
+                    <!-- Dynamic search results rendered here -->
+                </div>
+
+                <div class="search-modal-footer">
+                    <div class="search-shortcut-hint">
+                        <span><kbd>↑</kbd> <kbd>↓</kbd> to navigate</span>
+                        <span><kbd>↵</kbd> to select</span>
+                        <span><kbd>ESC</kbd> to close</span>
+                    </div>
+                    <span class="search-powered-by">Powered by <strong>DevSyntax Engine</strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE / PROGRESS MODAL -->
+        <div class="modal-overlay" id="profile-modal-overlay">
+            <div class="profile-modal-container">
+                <div class="modal-header">
+                    <h3 class="modal-title">Learning Profile & Mastery</h3>
+                    <button class="modal-close-icon" id="profile-modal-close">&times;</button>
+                </div>
+                <div class="modal-body" id="profile-modal-content">
+                    <!-- Rendered by js/progress.js -->
+                </div>
+            </div>
+        </div>
+
+        <!-- TOAST NOTIFICATION CONTAINER -->
+        <div class="toast-container" id="toast-container"></div>
+    </div>
+
+    <!-- JavaScript Modules -->
+    <script src="js/languages-data.js"></script>
+    <script src="js/editor.js"></script>
+    <script src="js/search.js"></script>
+    <script src="js/practice.js"></script>
+    <script src="js/progress.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
