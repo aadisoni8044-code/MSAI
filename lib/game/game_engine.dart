@@ -41,6 +41,7 @@ class Particle {
 }
 
 class GameEngine extends ChangeNotifier {
+  int currentLevelNumber = 1;
   late LevelData levelData;
   late PlayerState player;
 
@@ -50,7 +51,8 @@ class GameEngine extends ChangeNotifier {
   static const double gravity = 0.65;
   static const double moveSpeed = 4.8;
   static const double jumpForce = -13.5;
-  static const double friction = 0.82;
+  static const double standardFriction = 0.82;
+  static const double slipperyFriction = 0.96;
 
   // Checkpoint & Spawn
   double spawnX = 100;
@@ -74,8 +76,9 @@ class GameEngine extends ChangeNotifier {
   // Inputs
   double inputX = 0.0; // -1.0 to 1.0
 
-  GameEngine() {
-    initLevel();
+  GameEngine({int initialLevel = 1}) {
+    currentLevelNumber = initialLevel;
+    initLevel(initialLevel);
   }
 
   void updateScreenSize(double w, double h) {
@@ -83,8 +86,11 @@ class GameEngine extends ChangeNotifier {
     screenHeight = h;
   }
 
-  void initLevel() {
-    levelData = LevelData.createLevel1();
+  void initLevel([int? levelNum]) {
+    if (levelNum != null) {
+      currentLevelNumber = levelNum;
+    }
+    levelData = LevelData.createLevel(currentLevelNumber);
     spawnX = levelData.playerStartX;
     spawnY = levelData.playerStartY;
     player = PlayerState(x: spawnX, y: spawnY);
@@ -142,8 +148,8 @@ class GameEngine extends ChangeNotifier {
     // Limit dt to avoid delta jumps
     final effectiveDt = dt.clamp(0.001, 0.05);
 
-    _updatePlayerMovement(effectiveDt);
     _updateEntities(effectiveDt);
+    _updatePlayerMovement(effectiveDt);
     _updateParticles(effectiveDt);
     _checkCollisions();
     _updateCamera();
@@ -153,7 +159,19 @@ class GameEngine extends ChangeNotifier {
     notifyListeners();
   }
 
+  bool _isPlayerOnSlipperyPlatform() {
+    final footRect = Rect.fromLTWH(player.x + 4, player.y + player.height - 2, player.width - 8, 6);
+    for (final plat in levelData.platforms) {
+      if (plat.type == EntityType.slipperyPlatform && footRect.overlaps(plat.bounds)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void _updatePlayerMovement(double dt) {
+    final currentFriction = _isPlayerOnSlipperyPlatform() ? slipperyFriction : standardFriction;
+
     // Horizontal Movement
     if (inputX.abs() > 0.05) {
       player.vx = inputX * moveSpeed;
@@ -162,7 +180,7 @@ class GameEngine extends ChangeNotifier {
         player.actionState = PlayerActionState.running;
       }
     } else {
-      player.vx *= friction;
+      player.vx *= currentFriction;
       if (player.vx.abs() < 0.1) player.vx = 0;
       if (player.isGrounded && !player.isAttacking) {
         player.actionState = PlayerActionState.idle;
@@ -216,7 +234,6 @@ class GameEngine extends ChangeNotifier {
     for (final plat in levelData.platforms) {
       final platRect = plat.bounds;
       if (playerRect.overlaps(platRect)) {
-        // Simple side collision
         if (player.vx > 0) {
           player.x = platRect.left - player.width;
         } else if (player.vx < 0) {
@@ -234,13 +251,19 @@ class GameEngine extends ChangeNotifier {
       final platRect = plat.bounds;
       if (playerRect.overlaps(platRect)) {
         // Falling down onto platform
-        if (player.vy > 0 && (playerRect.bottom - player.vy) <= platRect.top + 10) {
+        if (player.vy > 0 && (playerRect.bottom - player.vy) <= platRect.top + 12) {
           player.y = platRect.top - player.height;
           player.vy = 0;
           player.isGrounded = true;
+
+          // If on moving platform, carry player along
+          if (plat.type == EntityType.movingPlatform) {
+            player.x += plat.vx;
+            player.y += plat.vy;
+          }
         }
         // Jumping up into platform bottom
-        else if (player.vy < 0 && (playerRect.top - player.vy) >= platRect.bottom - 10) {
+        else if (player.vy < 0 && (playerRect.top - player.vy) >= platRect.bottom - 12) {
           player.y = platRect.bottom;
           player.vy = 0;
         }
@@ -252,6 +275,11 @@ class GameEngine extends ChangeNotifier {
     for (final enemy in levelData.enemies) {
       if (enemy.health > 0) {
         enemy.update(dt);
+      }
+    }
+    for (final plat in levelData.platforms) {
+      if (plat.type == EntityType.movingPlatform) {
+        plat.update(dt);
       }
     }
   }
@@ -287,10 +315,12 @@ class GameEngine extends ChangeNotifier {
         }
       }
 
-      // Hazard hit (spikes)
-      for (final spike in levelData.hazards) {
-        if (playerRect.overlaps(spike.bounds)) {
-          _takeDamage(1, knockbackRight: player.x < spike.x);
+      // Hazard hit (spikes, lava, poison, lightning)
+      for (final hazard in levelData.hazards) {
+        if (playerRect.overlaps(hazard.bounds)) {
+          int damage = 1;
+          if (hazard.type == EntityType.hazardLava) damage = 2;
+          _takeDamage(damage, knockbackRight: player.x < hazard.x);
           break;
         }
       }
@@ -349,7 +379,6 @@ class GameEngine extends ChangeNotifier {
   }
 
   void _updateCamera({bool instant = false}) {
-    // Center camera on player horizontally, keep vertically comfortable for portrait
     final targetX = player.x + player.width / 2 - screenWidth / 2;
     final targetY = player.y + player.height / 2 - screenHeight * 0.55;
 
@@ -363,12 +392,10 @@ class GameEngine extends ChangeNotifier {
       cameraX = clampedTargetX;
       cameraY = clampedTargetY;
     } else {
-      // Smooth lerp
       cameraX += (clampedTargetX - cameraX) * 0.12;
       cameraY += (clampedTargetY - cameraY) * 0.12;
     }
 
-    // Apply Camera Shake
     if (cameraShakeTimer > 0) {
       cameraShakeTimer -= 0.016;
       final shakeOffsetX = (_random.nextDouble() - 0.5) * cameraShakeIntensity;

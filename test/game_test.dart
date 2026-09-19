@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:enchanted_forest_adventure/models/player_state.dart';
 import 'package:enchanted_forest_adventure/models/game_entity.dart';
 import 'package:enchanted_forest_adventure/models/level_data.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
 import 'package:enchanted_forest_adventure/core/settings_controller.dart';
+import 'package:enchanted_forest_adventure/core/level_progress_controller.dart';
 import 'package:enchanted_forest_adventure/widgets/virtual_joystick.dart';
 import 'package:enchanted_forest_adventure/widgets/action_buttons.dart';
 import 'package:enchanted_forest_adventure/widgets/game_hud.dart';
@@ -12,8 +14,15 @@ import 'package:enchanted_forest_adventure/ui/pause_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/game_over_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/victory_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/settings_overlay.dart';
+import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('SettingsController Tests', () {
     test('SettingsController modifies sound, music, and orientation', () {
       final settings = SettingsController.instance;
@@ -25,6 +34,21 @@ void main() {
 
       settings.setOrientationMode(GameOrientationMode.landscape);
       expect(settings.orientationMode, equals(GameOrientationMode.landscape));
+    });
+  });
+
+  group('LevelProgressController Tests', () {
+    test('Level 1 is unlocked initially', () {
+      final progress = LevelProgressController.instance;
+      expect(progress.isUnlocked(1), isTrue);
+      expect(progress.isUnlocked(2), isFalse);
+    });
+
+    test('Completing level 1 unlocks level 2', () async {
+      final progress = LevelProgressController.instance;
+      await progress.completeLevel(1);
+      expect(progress.isUnlocked(2), isTrue);
+      expect(progress.isCompleted(1), isTrue);
     });
   });
 
@@ -50,19 +74,20 @@ void main() {
       expect(player.x, equals(100));
       expect(player.y, equals(200));
       expect(player.currentHealth, equals(5));
-      expect(player.coins, equals(10)); // Coins retained
+      expect(player.coins, equals(10));
     });
   });
 
   group('LevelData Tests', () {
-    test('LevelData.createLevel1 creates valid world objects', () {
-      final level = LevelData.createLevel1();
-      expect(level.worldWidth, equals(3600.0));
-      expect(level.platforms, isNotEmpty);
-      expect(level.enemies, isNotEmpty);
-      expect(level.collectibles, isNotEmpty);
-      expect(level.checkpoints.length, equals(2));
-      expect(level.goalPortal.type, equals(EntityType.goalPortal));
+    test('LevelData.createLevel creates valid objects for all 10 levels', () {
+      for (int i = 1; i <= 10; i++) {
+        final level = LevelData.createLevel(i);
+        expect(level.levelNumber, equals(i));
+        expect(level.platforms, isNotEmpty);
+        expect(level.enemies, isNotEmpty);
+        expect(level.collectibles, isNotEmpty);
+        expect(level.goalPortal.type, equals(EntityType.goalPortal));
+      }
     });
   });
 
@@ -171,6 +196,22 @@ void main() {
       expect(find.text('Landscape'), findsOneWidget);
     });
 
+    testWidgets('LevelSelectScreen renders 10 level cards', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: LevelSelectScreen(
+            onSelectLevel: (lvl) {},
+            onBack: () {},
+          ),
+        ),
+      );
+
+      expect(find.text('SELECT LEVEL'), findsOneWidget);
+      expect(find.text('Forest'), findsOneWidget);
+      expect(find.text('Fire'), findsOneWidget);
+      expect(find.text('Crystal'), findsOneWidget);
+    });
+
     testWidgets('VirtualJoystick renders and triggers callback', (WidgetTester tester) async {
       double receivedVal = 0.0;
       await tester.pumpWidget(
@@ -254,13 +295,16 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: VictoryOverlay(
+            levelNumber: 1,
             coinsCollected: 25,
+            onNextLevel: () {},
             onReplay: () {},
+            onLevelSelect: () {},
           ),
         ),
       );
 
-      expect(find.text('FOREST CLEARED!'), findsOneWidget);
+      expect(find.text('LEVEL 1 CLEARED!'), findsOneWidget);
       expect(find.text('Coins: 25'), findsOneWidget);
     });
   });

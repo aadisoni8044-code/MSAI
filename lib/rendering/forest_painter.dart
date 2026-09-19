@@ -20,67 +20,141 @@ class ForestPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     _drawSkyBackground(canvas, size);
-    _drawFarParallaxForest(canvas, size);
-    _drawGodRays(canvas, size);
-    _drawMidParallaxTrees(canvas, size);
+    _drawFarParallaxLayer(canvas, size);
+    _drawGodRaysAndAtmosphere(canvas, size);
+    _drawMidParallaxLayer(canvas, size);
     _drawPlatformsAndTerrain(canvas, size);
     _drawCheckpointsAndPortal(canvas, size);
   }
 
   void _drawSkyBackground(Canvas canvas, Size size) {
     final Rect rect = Offset.zero & size;
+    final List<Color> skyColors = _getSkyColors(levelData.theme);
+
     final Paint skyPaint = Paint()
-      ..shader = const LinearGradient(
+      ..shader = LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
-        colors: [
-          GameColors.skyBackground,
-          GameColors.deepForestTeal,
-          GameColors.atmosphericHaze,
-        ],
-        stops: [0.0, 0.6, 1.0],
+        colors: skyColors,
       ).createShader(rect);
 
     canvas.drawRect(rect, skyPaint);
 
-    // Subtle background stars / distant bioluminescent dots
-    final Paint starPaint = Paint()..color = const Color(0x66A6E3E9);
-    for (int i = 0; i < 30; i++) {
+    // Subtle background stars / distant glowing dust
+    final Paint starPaint = Paint()..color = _getStarColor(levelData.theme);
+    for (int i = 0; i < 35; i++) {
       final double sx = ((i * 137.5) % size.width);
       final double sy = ((i * 83.1) % (size.height * 0.5));
       final double pulse = 1.0 + 0.5 * sin(time * 2 + i);
-      canvas.drawCircle(Offset(sx, sy), 1.2 * pulse, starPaint);
+      canvas.drawCircle(Offset(sx, sy), 1.3 * pulse, starPaint);
     }
   }
 
-  void _drawFarParallaxForest(Canvas canvas, Size size) {
-    // Parallax factor 0.2
+  List<Color> _getSkyColors(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.forest:
+        return [GameColors.skyBackground, GameColors.deepForestTeal, GameColors.atmosphericHaze];
+      case LevelTheme.fire:
+        return [const Color(0xFF2B0903), const Color(0xFF5A1408), const Color(0xFF8D220F)];
+      case LevelTheme.water:
+        return [const Color(0xFF031926), const Color(0xFF0A3663), const Color(0xFF1B4978)];
+      case LevelTheme.ice:
+        return [const Color(0xFF0B2545), const Color(0xFF134074), const Color(0xFF4A90A4)];
+      case LevelTheme.desert:
+        return [const Color(0xFF3A1C02), const Color(0xFF6B3A0A), const Color(0xFF9E5C1B)];
+      case LevelTheme.thunder:
+        return [const Color(0xFF19002E), const Color(0xFF2B0040), const Color(0xFF3C096C)];
+      case LevelTheme.poison:
+        return [const Color(0xFF10002B), const Color(0xFF240046), const Color(0xFF3C096C)];
+      case LevelTheme.sky:
+        return [const Color(0xFF003049), const Color(0xFF125B8A), const Color(0xFF2A83B9)];
+      case LevelTheme.shadow:
+        return [const Color(0xFF03071E), const Color(0xFF0D1B2A), const Color(0xFF1B263B)];
+      case LevelTheme.crystal:
+        return [const Color(0xFF240046), const Color(0xFF5A189A), const Color(0xFF7B2CBF)];
+    }
+  }
+
+  Color _getStarColor(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.fire:
+        return const Color(0x77FF6B6B);
+      case LevelTheme.water:
+        return const Color(0x774EA8DE);
+      case LevelTheme.ice:
+        return const Color(0x88CAF0F8);
+      case LevelTheme.desert:
+        return const Color(0x77FFD166);
+      case LevelTheme.thunder:
+        return const Color(0x88C77DFF);
+      case LevelTheme.poison:
+        return const Color(0x7700F5D4);
+      case LevelTheme.crystal:
+        return const Color(0x88F72585);
+      default:
+        return const Color(0x66A6E3E9);
+    }
+  }
+
+  void _drawFarParallaxLayer(Canvas canvas, Size size) {
     final double farCamX = cameraX * 0.2;
-    final Paint treePaint = Paint()..color = const Color(0xFF132A36);
+    final Paint farPaint = Paint()..color = _getFarLayerColor(levelData.theme);
 
     final Path path = Path();
     path.moveTo(0, size.height);
 
-    const double treeSpacing = 180;
-    final double startX = -((farCamX) % treeSpacing) - treeSpacing;
+    const double spacing = 200;
+    final double startX = -((farCamX) % spacing) - spacing;
 
-    for (double x = startX; x < size.width + treeSpacing * 2; x += treeSpacing) {
-      final double treeHeight = 350 + sin(x * 0.01) * 80;
-      final double topY = size.height - treeHeight - (cameraY * 0.1);
+    for (double x = startX; x < size.width + spacing * 2; x += spacing) {
+      final double h = 320 + sin(x * 0.01) * 80;
+      final double topY = size.height - h - (cameraY * 0.1);
 
-      path.lineTo(x, topY + 120);
-      path.quadraticBezierTo(x + 40, topY - 30, x + 90, topY + 100);
-      path.quadraticBezierTo(x + 140, topY - 10, x + treeSpacing, topY + 140);
+      if (levelData.theme == LevelTheme.ice || levelData.theme == LevelTheme.desert) {
+        // Sharp mountain peaks
+        path.lineTo(x + spacing / 2, topY);
+        path.lineTo(x + spacing, topY + h);
+      } else {
+        // Curved tree or terrain silhouettes
+        path.lineTo(x, topY + 100);
+        path.quadraticBezierTo(x + 40, topY - 30, x + 100, topY + 80);
+        path.quadraticBezierTo(x + 150, topY - 10, x + spacing, topY + 120);
+      }
     }
 
     path.lineTo(size.width, size.height);
     path.close();
-    canvas.drawPath(path, treePaint);
+    canvas.drawPath(path, farPaint);
   }
 
-  void _drawGodRays(Canvas canvas, Size size) {
+  Color _getFarLayerColor(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.fire:
+        return const Color(0xFF3D0C02);
+      case LevelTheme.water:
+        return const Color(0xFF041926);
+      case LevelTheme.ice:
+        return const Color(0xFF0D2838);
+      case LevelTheme.desert:
+        return const Color(0xFF4A2503);
+      case LevelTheme.thunder:
+        return const Color(0xFF1D0036);
+      case LevelTheme.poison:
+        return const Color(0xFF1B0033);
+      case LevelTheme.sky:
+        return const Color(0xFF0D3B66);
+      case LevelTheme.shadow:
+        return const Color(0xFF0A0F1D);
+      case LevelTheme.crystal:
+        return const Color(0xFF38004D);
+      default:
+        return const Color(0xFF132A36);
+    }
+  }
+
+  void _drawGodRaysAndAtmosphere(Canvas canvas, Size size) {
     final Paint rayPaint = Paint()
-      ..color = GameColors.godRayLight
+      ..color = _getStarColor(levelData.theme)
       ..blendMode = BlendMode.screen;
 
     for (int i = 0; i < 4; i++) {
@@ -94,55 +168,97 @@ class ForestPainter extends CustomPainter {
         ..lineTo(rayOffset - 210, size.height + 50)
         ..close();
 
-      rayPaint.color = GameColors.godRayLight.withValues(alpha: 0.12 * pulse);
+      rayPaint.color = _getStarColor(levelData.theme).withValues(alpha: 0.12 * pulse);
       canvas.drawPath(rayPath, rayPaint);
     }
   }
 
-  void _drawMidParallaxTrees(Canvas canvas, Size size) {
-    // Parallax factor 0.5
+  void _drawMidParallaxLayer(Canvas canvas, Size size) {
     final double midCamX = cameraX * 0.5;
     final double midCamY = cameraY * 0.3;
 
-    final Paint barkPaint = Paint()..color = GameColors.ancientBarkDark;
-    final Paint leafPaint = Paint()..color = const Color(0xFF1E4638);
+    final Paint midBodyPaint = Paint()..color = _getMidLayerColor(levelData.theme);
+    final Paint midDetailPaint = Paint()..color = _getMidAccentColor(levelData.theme);
 
-    const double treeWidth = 80;
-    const double treeInterval = 320;
-    final double startX = -((midCamX) % treeInterval) - treeInterval;
+    const double width = 80;
+    const double interval = 320;
+    final double startX = -((midCamX) % interval) - interval;
 
-    for (double x = startX; x < size.width + treeInterval; x += treeInterval) {
-      final double treeY = size.height - 700 - midCamY;
+    for (double x = startX; x < size.width + interval; x += interval) {
+      final double treeY = size.height - 680 - midCamY;
 
-      // Trunk
-      final Path trunkPath = Path()
-        ..moveTo(x, size.height)
-        ..quadraticBezierTo(x + 10, treeY + 300, x + 20, treeY)
-        ..lineTo(x + treeWidth - 20, treeY)
-        ..quadraticBezierTo(x + treeWidth - 10, treeY + 300, x + treeWidth, size.height)
-        ..close();
+      if (levelData.theme == LevelTheme.crystal) {
+        // Glowing Crystal Spire background elements
+        final Path spirePath = Path()
+          ..moveTo(x + width / 2, treeY)
+          ..lineTo(x + width, treeY + 350)
+          ..lineTo(x, treeY + 350)
+          ..close();
+        canvas.drawPath(spirePath, midDetailPaint);
+      } else {
+        // Trunk / Pillar
+        final Path trunkPath = Path()
+          ..moveTo(x, size.height)
+          ..quadraticBezierTo(x + 10, treeY + 300, x + 20, treeY)
+          ..lineTo(x + width - 20, treeY)
+          ..quadraticBezierTo(x + width - 10, treeY + 300, x + width, size.height)
+          ..close();
 
-      canvas.drawPath(trunkPath, barkPaint);
+        canvas.drawPath(trunkPath, midBodyPaint);
 
-      // Canopy Foliage
-      canvas.drawCircle(Offset(x + treeWidth / 2, treeY - 20), 110, leafPaint);
-      canvas.drawCircle(Offset(x - 20, treeY + 30), 80, leafPaint);
-      canvas.drawCircle(Offset(x + treeWidth + 20, treeY + 40), 85, leafPaint);
-
-      // Hanging Vines
-      final Paint vinePaint = Paint()
-        ..color = GameColors.vineGreen
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 3;
-
-      for (int v = 0; v < 3; v++) {
-        final double vineX = x + 15 + v * 25;
-        final double vineLen = 80 + sin(time * 1.5 + v) * 10;
-        final Path vinePath = Path()
-          ..moveTo(vineX, treeY + 80)
-          ..quadraticBezierTo(vineX + sin(time + v) * 8, treeY + 80 + vineLen / 2, vineX, treeY + 80 + vineLen);
-        canvas.drawPath(vinePath, vinePaint);
+        // Canopy / Cap
+        canvas.drawCircle(Offset(x + width / 2, treeY - 20), 100, midDetailPaint);
       }
+    }
+  }
+
+  Color _getMidLayerColor(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.fire:
+        return const Color(0xFF260501);
+      case LevelTheme.water:
+        return const Color(0xFF082238);
+      case LevelTheme.ice:
+        return const Color(0xFF113247);
+      case LevelTheme.desert:
+        return const Color(0xFF331802);
+      case LevelTheme.thunder:
+        return const Color(0xFF140026);
+      case LevelTheme.poison:
+        return const Color(0xFF16002B);
+      case LevelTheme.sky:
+        return const Color(0xFF16425B);
+      case LevelTheme.shadow:
+        return const Color(0xFF0A0F1D);
+      case LevelTheme.crystal:
+        return const Color(0xFF2B003B);
+      default:
+        return GameColors.ancientBarkDark;
+    }
+  }
+
+  Color _getMidAccentColor(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.fire:
+        return const Color(0xFF5A1408);
+      case LevelTheme.water:
+        return const Color(0xFF1B4978);
+      case LevelTheme.ice:
+        return const Color(0xFF2C5E7A);
+      case LevelTheme.desert:
+        return const Color(0xFF6B3A0A);
+      case LevelTheme.thunder:
+        return const Color(0xFF3C096C);
+      case LevelTheme.poison:
+        return const Color(0xFF240046);
+      case LevelTheme.sky:
+        return const Color(0xFF2A83B9);
+      case LevelTheme.shadow:
+        return const Color(0xFF1B263B);
+      case LevelTheme.crystal:
+        return const Color(0xFF7B2CBF);
+      default:
+        return const Color(0xFF1E4638);
     }
   }
 
@@ -150,70 +266,35 @@ class ForestPainter extends CustomPainter {
     canvas.save();
     canvas.translate(-cameraX, -cameraY);
 
-    final Paint platBodyPaint = Paint()..color = GameColors.ancientBarkDark;
-    final Paint mossTopPaint = Paint()..color = GameColors.mossyGreenBright;
+    final Paint platBodyPaint = Paint()..color = _getPlatformBodyColor(levelData.theme);
+    final Paint platTopPaint = Paint()..color = _getPlatformTopColor(levelData.theme);
 
     for (final plat in levelData.platforms) {
-      // Cull offscreen platforms
       if (plat.x + plat.width < cameraX - 100 || plat.x > cameraX + size.width + 100) {
         continue;
       }
 
       final Rect rect = plat.bounds;
-
-      // Platform Main Body (Earth/Root)
       final RRect rrect = RRect.fromRectAndRadius(rect, const Radius.circular(8));
+
+      // Platform Main Body
       canvas.drawRRect(rrect, platBodyPaint);
 
-      // Top Moss Layer
-      final Path mossPath = Path();
-      mossPath.moveTo(rect.left - 4, rect.top + 8);
-      mossPath.lineTo(rect.left - 4, rect.top);
+      // Top Trim / Surface Layer
+      final Path topPath = Path();
+      topPath.moveTo(rect.left - 2, rect.top + 6);
+      topPath.lineTo(rect.left - 2, rect.top);
 
       for (double x = rect.left; x <= rect.right; x += 12) {
-        final double wave = sin(x * 0.1) * 4;
-        mossPath.lineTo(x, rect.top + wave);
+        final double wave = sin(x * 0.1) * 3;
+        topPath.lineTo(x, rect.top + wave);
       }
 
-      mossPath.lineTo(rect.right + 4, rect.top);
-      mossPath.lineTo(rect.right + 4, rect.top + 10);
+      topPath.lineTo(rect.right + 2, rect.top);
+      topPath.lineTo(rect.right + 2, rect.top + 8);
+      topPath.close();
 
-      // Grass fringe details
-      for (double x = rect.right; x >= rect.left; x -= 12) {
-        mossPath.quadraticBezierTo(x, rect.top + 18, x - 6, rect.top + 10);
-      }
-      mossPath.close();
-
-      canvas.drawPath(mossPath, mossTopPaint);
-
-      // Root Bark Lines
-      final Paint linePaint = Paint()
-        ..color = GameColors.ancientBarkLight
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2;
-
-      for (double y = rect.top + 20; y < rect.bottom - 10; y += 18) {
-        canvas.drawLine(
-          Offset(rect.left + 10, y),
-          Offset(rect.right - 10, y + sin(y) * 4),
-          linePaint,
-        );
-      }
-
-      // Hanging roots / vines under platforms
-      final Paint rootPaint = Paint()
-        ..color = GameColors.vineGreen
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.5;
-
-      for (double rx = rect.left + 20; rx < rect.right - 10; rx += 45) {
-        final double rootLen = 15 + sin(rx + time) * 6;
-        canvas.drawLine(
-          Offset(rx, rect.bottom),
-          Offset(rx + sin(rx) * 5, rect.bottom + rootLen),
-          rootPaint,
-        );
-      }
+      canvas.drawPath(topPath, platTopPaint);
     }
 
     // Collectibles (Coins & Potions)
@@ -232,7 +313,6 @@ class ForestPainter extends CustomPainter {
         canvas.drawCircle(center, 9, coinPaint);
         canvas.drawCircle(center, 5, Paint()..color = const Color(0xFFE9C46A));
       } else if (item.type == EntityType.healthPot) {
-        // Red glowing flask
         final Paint potPaint = Paint()..color = const Color(0xFFE63946);
         canvas.drawCircle(center, 12, Paint()..color = const Color(0x66E63946));
         canvas.drawCircle(center, 8, potPaint);
@@ -241,6 +321,56 @@ class ForestPainter extends CustomPainter {
     }
 
     canvas.restore();
+  }
+
+  Color _getPlatformBodyColor(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.fire:
+        return const Color(0xFF1E1010);
+      case LevelTheme.water:
+        return const Color(0xFF0F2537);
+      case LevelTheme.ice:
+        return const Color(0xFF1B3B52);
+      case LevelTheme.desert:
+        return const Color(0xFF3D230D);
+      case LevelTheme.thunder:
+        return const Color(0xFF221133);
+      case LevelTheme.poison:
+        return const Color(0xFF280C3D);
+      case LevelTheme.sky:
+        return const Color(0xFF1B3C59);
+      case LevelTheme.shadow:
+        return const Color(0xFF111422);
+      case LevelTheme.crystal:
+        return const Color(0xFF3D0C4A);
+      default:
+        return GameColors.ancientBarkDark;
+    }
+  }
+
+  Color _getPlatformTopColor(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.fire:
+        return const Color(0xFFFF4500);
+      case LevelTheme.water:
+        return const Color(0xFF00B4D8);
+      case LevelTheme.ice:
+        return const Color(0xFFCAF0F8);
+      case LevelTheme.desert:
+        return const Color(0xFFFFC6FF);
+      case LevelTheme.thunder:
+        return const Color(0xFFC77DFF);
+      case LevelTheme.poison:
+        return const Color(0xFF00F5D4);
+      case LevelTheme.sky:
+        return const Color(0xFFE0F1E7);
+      case LevelTheme.shadow:
+        return const Color(0xFF7B2CBF);
+      case LevelTheme.crystal:
+        return const Color(0xFFF72585);
+      default:
+        return GameColors.mossyGreenBright;
+    }
   }
 
   void _drawCheckpointsAndPortal(Canvas canvas, Size size) {
@@ -286,7 +416,6 @@ class ForestPainter extends CustomPainter {
 
     canvas.drawCircle(pCenter, 55, portalGlow);
 
-    // Rotating Portal Energy Rings
     final Paint ringPaint = Paint()
       ..color = GameColors.portalGlow
       ..style = PaintingStyle.stroke

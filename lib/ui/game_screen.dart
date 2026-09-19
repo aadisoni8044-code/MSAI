@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/core/settings_controller.dart';
+import 'package:enchanted_forest_adventure/core/level_progress_controller.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
 import 'package:enchanted_forest_adventure/rendering/forest_painter.dart';
 import 'package:enchanted_forest_adventure/rendering/character_painter.dart';
@@ -14,9 +15,15 @@ import 'package:enchanted_forest_adventure/ui/pause_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/game_over_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/victory_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/main_menu_screen.dart';
+import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+  final int initialLevel;
+
+  const GameScreen({
+    super.key,
+    this.initialLevel = 1,
+  });
 
   @override
   State<GameScreen> createState() => _GameScreenState();
@@ -27,11 +34,12 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   late Ticker _ticker;
   double _time = 0.0;
   Duration _lastElapsed = Duration.zero;
+  bool _hasSavedProgress = false;
 
   @override
   void initState() {
     super.initState();
-    _engine = GameEngine();
+    _engine = GameEngine(initialLevel: widget.initialLevel);
     _ticker = createTicker(_onTick)..start();
     SettingsController.instance.applyCurrentOrientation();
   }
@@ -47,6 +55,11 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     _time += dt;
 
     _engine.tick(dt);
+
+    if (_engine.status == GameStatus.victory && !_hasSavedProgress) {
+      _hasSavedProgress = true;
+      LevelProgressController.instance.completeLevel(_engine.currentLevelNumber);
+    }
   }
 
   @override
@@ -54,6 +67,32 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     _ticker.dispose();
     _engine.dispose();
     super.dispose();
+  }
+
+  void _goToNextLevel() {
+    setState(() {
+      _hasSavedProgress = false;
+      _engine.initLevel(_engine.currentLevelNumber + 1);
+    });
+  }
+
+  void _openLevelSelect() {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => LevelSelectScreen(
+          onSelectLevel: (lvl) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => GameScreen(initialLevel: lvl)),
+            );
+          },
+          onBack: () {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const MainMenuScreen()),
+            );
+          },
+        ),
+      ),
+    );
   }
 
   @override
@@ -71,7 +110,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
         builder: (context, _) {
           return Stack(
             children: [
-              // 1. Forest World & Platforms
+              // 1. World & Platforms
               CustomPaint(
                 size: screenSize,
                 painter: ForestPainter(
@@ -149,7 +188,10 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
               if (_engine.status == GameStatus.paused)
                 PauseOverlay(
                   onResume: () => _engine.togglePause(),
-                  onRestart: () => _engine.initLevel(),
+                  onRestart: () {
+                    _hasSavedProgress = false;
+                    _engine.initLevel();
+                  },
                   onQuit: () {
                     Navigator.of(context).pushReplacement(
                       MaterialPageRoute(builder: (_) => const MainMenuScreen()),
@@ -162,14 +204,23 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
                 GameOverOverlay(
                   hasCheckpoint: _engine.activeCheckpointId != null,
                   onRespawn: () => _engine.restartFromCheckpoint(),
-                  onRestart: () => _engine.initLevel(),
+                  onRestart: () {
+                    _hasSavedProgress = false;
+                    _engine.initLevel();
+                  },
                 ),
 
               // 9. Victory Overlay
               if (_engine.status == GameStatus.victory)
                 VictoryOverlay(
+                  levelNumber: _engine.currentLevelNumber,
                   coinsCollected: _engine.player.coins,
-                  onReplay: () => _engine.initLevel(),
+                  onNextLevel: _goToNextLevel,
+                  onReplay: () {
+                    _hasSavedProgress = false;
+                    _engine.initLevel();
+                  },
+                  onLevelSelect: _openLevelSelect,
                 ),
             ],
           );

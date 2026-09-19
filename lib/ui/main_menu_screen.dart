@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/ui/game_screen.dart';
+import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
 import 'package:enchanted_forest_adventure/ui/settings_overlay.dart';
 
 class MainMenuScreen extends StatelessWidget {
@@ -27,6 +28,21 @@ class MainMenuScreen extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  void _openLevelSelect(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => LevelSelectScreen(
+          onSelectLevel: (lvl) {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => GameScreen(initialLevel: lvl)),
+            );
+          },
+          onBack: () => Navigator.of(context).pop(),
+        ),
+      ),
     );
   }
 
@@ -88,7 +104,7 @@ class MainMenuScreen extends StatelessWidget {
             ),
           ),
 
-          // Title & Play Card
+          // Title & Play Cards
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
@@ -141,32 +157,32 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 40),
+                    const SizedBox(height: 36),
 
-                    // Play Button
+                    // Start Game Button
                     SizedBox(
-                      height: 56,
+                      width: 240,
+                      height: 52,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: GameColors.mossyGreenBright,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 32),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(28),
+                            borderRadius: BorderRadius.circular(26),
                           ),
                           elevation: 8,
                           shadowColor: GameColors.mossyGreenBright,
                         ),
                         onPressed: () {
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (_) => const GameScreen()),
+                            MaterialPageRoute(builder: (_) => const GameScreen(initialLevel: 1)),
                           );
                         },
                         icon: const Icon(Icons.play_arrow_rounded, size: 28),
                         label: const Text(
                           'START GAME',
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.5,
                           ),
@@ -174,7 +190,35 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 14),
+
+                    // Level Select Button
+                    SizedBox(
+                      width: 240,
+                      height: 52,
+                      child: OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: GameColors.uiTextLight,
+                          backgroundColor: GameColors.uiPanelBg,
+                          side: const BorderSide(color: GameColors.playerGlow, width: 1.5),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(26),
+                          ),
+                        ),
+                        onPressed: () => _openLevelSelect(context),
+                        icon: const Icon(Icons.grid_view_rounded, size: 24, color: GameColors.foliageGlow),
+                        label: const Text(
+                          'SELECT LEVEL',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 28),
 
                     // Touch Controls Help Card
                     Container(

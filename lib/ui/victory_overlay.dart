@@ -2,22 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 
 class VictoryOverlay extends StatelessWidget {
+  final int levelNumber;
   final int coinsCollected;
+  final VoidCallback onNextLevel;
   final VoidCallback onReplay;
+  final VoidCallback onLevelSelect;
 
   const VictoryOverlay({
     super.key,
+    this.levelNumber = 1,
     required this.coinsCollected,
+    required this.onNextLevel,
     required this.onReplay,
+    required this.onLevelSelect,
   });
 
   @override
   Widget build(BuildContext context) {
+    final bool hasNext = levelNumber < 10;
+
     return Container(
       color: Colors.black.withValues(alpha: 0.75),
       child: Center(
         child: Container(
-          width: 300,
+          width: 310,
           padding: const EdgeInsets.all(24),
           decoration: BoxDecoration(
             color: GameColors.uiPanelBg,
@@ -36,11 +44,12 @@ class VictoryOverlay extends StatelessWidget {
             children: [
               const Icon(Icons.stars_rounded, color: GameColors.portalGlow, size: 58),
               const SizedBox(height: 12),
-              const Text(
-                'FOREST CLEARED!',
-                style: TextStyle(
+              Text(
+                'LEVEL $levelNumber CLEARED!',
+                textAlign: TextAlign.center,
+                style: const TextStyle(
                   color: GameColors.uiTextLight,
-                  fontSize: 22,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.8,
                   shadows: [
@@ -72,28 +81,76 @@ class VictoryOverlay extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
+
+              if (hasNext) ...[
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: GameColors.mossyGreenBright,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      elevation: 4,
+                    ),
+                    onPressed: onNextLevel,
+                    icon: const Icon(Icons.arrow_forward_rounded, size: 22),
+                    label: const Text(
+                      'NEXT LEVEL',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+              ],
+
               SizedBox(
                 width: double.infinity,
-                height: 48,
-                child: ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: GameColors.uiButtonBg,
+                height: 44,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
                     foregroundColor: GameColors.playerGlow,
+                    side: const BorderSide(color: GameColors.playerGlow, width: 1.5),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
-                      side: const BorderSide(color: GameColors.playerGlow, width: 1.5),
                     ),
-                    elevation: 4,
                   ),
                   onPressed: onReplay,
-                  icon: const Icon(Icons.replay_rounded, size: 22),
+                  icon: const Icon(Icons.replay_rounded, size: 20),
                   label: const Text(
-                    'PLAY AGAIN',
+                    'REPLAY LEVEL',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: FontWeight.bold,
-                      letterSpacing: 1.2,
+                      letterSpacing: 1.1,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              SizedBox(
+                width: double.infinity,
+                height: 44,
+                child: TextButton.icon(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white70,
+                  ),
+                  onPressed: onLevelSelect,
+                  icon: const Icon(Icons.grid_view_rounded, size: 20),
+                  label: const Text(
+                    'SELECT LEVEL',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.1,
                     ),
                   ),
                 ),
