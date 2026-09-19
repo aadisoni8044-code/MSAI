@@ -4,14 +4,30 @@ import 'package:enchanted_forest_adventure/models/player_state.dart';
 import 'package:enchanted_forest_adventure/models/game_entity.dart';
 import 'package:enchanted_forest_adventure/models/level_data.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
+import 'package:enchanted_forest_adventure/core/settings_controller.dart';
 import 'package:enchanted_forest_adventure/widgets/virtual_joystick.dart';
 import 'package:enchanted_forest_adventure/widgets/action_buttons.dart';
 import 'package:enchanted_forest_adventure/widgets/game_hud.dart';
 import 'package:enchanted_forest_adventure/ui/pause_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/game_over_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/victory_overlay.dart';
+import 'package:enchanted_forest_adventure/ui/settings_overlay.dart';
 
 void main() {
+  group('SettingsController Tests', () {
+    test('SettingsController modifies sound, music, and orientation', () {
+      final settings = SettingsController.instance;
+      settings.setSoundEnabled(false);
+      expect(settings.soundEnabled, isFalse);
+
+      settings.setMusicEnabled(false);
+      expect(settings.musicEnabled, isFalse);
+
+      settings.setOrientationMode(GameOrientationMode.landscape);
+      expect(settings.orientationMode, equals(GameOrientationMode.landscape));
+    });
+  });
+
   group('PlayerState Tests', () {
     test('PlayerState initializes with correct default values', () {
       final player = PlayerState(x: 100, y: 200);
@@ -137,8 +153,22 @@ void main() {
       );
 
       expect(find.text('12'), findsOneWidget);
-      expect(find.byIcon(Icons.favorite), findsOneWidget);
+      expect(find.byIcon(Icons.favorite_rounded), findsOneWidget);
       expect(find.byIcon(Icons.pause_rounded), findsOneWidget);
+    });
+
+    testWidgets('SettingsOverlay renders sound, music, and orientation controls', (WidgetTester tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: SettingsOverlay(),
+        ),
+      );
+
+      expect(find.text('SETTINGS'), findsOneWidget);
+      expect(find.text('Sound Effects'), findsOneWidget);
+      expect(find.text('Background Music'), findsOneWidget);
+      expect(find.text('Portrait'), findsOneWidget);
+      expect(find.text('Landscape'), findsOneWidget);
     });
 
     testWidgets('VirtualJoystick renders and triggers callback', (WidgetTester tester) async {

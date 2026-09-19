@@ -18,106 +18,110 @@ class GameHud extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Health Bar Top-Left
+          // Health Bar (Top Left)
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: GameColors.uiPanelBg,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
+              border: Border.all(color: GameColors.uiGlassBorder),
               boxShadow: const [
-                BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 3)),
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 8,
+                ),
               ],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.favorite, color: GameColors.uiHealthRed, size: 20),
+                const Icon(Icons.favorite_rounded, color: GameColors.uiHealthRed, size: 20),
                 const SizedBox(width: 8),
                 Row(
-                  children: List.generate(maxHealth, (index) {
-                    final bool isFull = index < currentHealth;
-                    return Container(
+                  children: List.generate(
+                    maxHealth,
+                    (index) => Container(
+                      width: 10,
+                      height: 10,
                       margin: const EdgeInsets.only(right: 4),
-                      width: 14,
-                      height: 14,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: isFull ? GameColors.uiHealthRed : GameColors.uiHealthBg,
-                        border: Border.all(
-                          color: isFull ? GameColors.uiHealthRed : Colors.white24,
-                          width: 1.5,
-                        ),
-                        boxShadow: isFull
-                            ? [
-                                const BoxShadow(
+                        color: index < currentHealth
+                            ? GameColors.uiHealthRed
+                            : Colors.white24,
+                        boxShadow: index < currentHealth
+                            ? const [
+                                BoxShadow(
                                   color: GameColors.uiHealthRed,
                                   blurRadius: 6,
-                                )
+                                ),
                               ]
                             : null,
                       ),
-                    );
-                  }),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
 
-          // Pause Button Center-Top
-          GestureDetector(
-            onTap: onPause,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: GameColors.uiPanelBg,
-                border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
-                boxShadow: const [
-                  BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 3)),
-                ],
+          // Pause Button (Top Center)
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: onPause,
+              borderRadius: BorderRadius.circular(20),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: GameColors.uiPanelBg,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: GameColors.uiGlassBorder),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 8,
+                    ),
+                  ],
+                ),
+                child: const Icon(
+                  Icons.pause_rounded,
+                  color: GameColors.uiTextLight,
+                  size: 22,
+                ),
               ),
-              child: const Icon(Icons.pause_rounded, color: GameColors.uiTextLight, size: 22),
             ),
           ),
 
-          // Coin Counter Top-Right
+          // Coins Counter (Top Right)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               color: GameColors.uiPanelBg,
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
+              border: Border.all(color: GameColors.uiGlassBorder),
               boxShadow: const [
-                BoxShadow(color: Colors.black45, blurRadius: 8, offset: Offset(0, 3)),
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 8,
+                ),
               ],
             ),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: GameColors.coinGold,
-                  ),
-                  child: const Icon(Icons.monetization_on, color: GameColors.ancientBarkDark, size: 16),
-                ),
-                const SizedBox(width: 8),
+                const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 20),
+                const SizedBox(width: 6),
                 Text(
                   '$coins',
                   style: const TextStyle(
                     color: GameColors.uiTextGold,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 0.8,
-                    shadows: [
-                      Shadow(color: GameColors.coinGold, blurRadius: 6),
-                    ],
                   ),
                 ),
               ],

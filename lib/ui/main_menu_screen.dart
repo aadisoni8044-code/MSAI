@@ -1,9 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/ui/game_screen.dart';
+import 'package:enchanted_forest_adventure/ui/settings_overlay.dart';
 
 class MainMenuScreen extends StatelessWidget {
   const MainMenuScreen({super.key});
+
+  void _openSettings(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Settings',
+      barrierColor: Colors.black54,
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, anim1, anim2) {
+        return const SettingsOverlay();
+      },
+      transitionBuilder: (context, anim1, anim2, child) {
+        return FadeTransition(
+          opacity: anim1,
+          child: ScaleTransition(
+            scale: Tween<double>(begin: 0.9, end: 1.0).animate(
+              CurvedAnimation(parent: anim1, curve: Curves.easeOutBack),
+            ),
+            child: child,
+          ),
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +51,48 @@ class MainMenuScreen extends StatelessWidget {
             ),
           ),
 
+          // Settings Button (Top Right)
+          SafeArea(
+            child: Align(
+              alignment: Alignment.topRight,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 16.0, right: 20.0),
+                child: Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => _openSettings(context),
+                    borderRadius: BorderRadius.circular(24),
+                    child: Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: GameColors.uiPanelBg,
+                        border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: GameColors.playerGlow,
+                            blurRadius: 12,
+                            spreadRadius: -2,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.settings_rounded,
+                        color: GameColors.uiTextLight,
+                        size: 26,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
           // Title & Play Card
           SafeArea(
             child: Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -79,7 +141,7 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 48),
+                    const SizedBox(height: 40),
 
                     // Play Button
                     SizedBox(
@@ -88,7 +150,7 @@ class MainMenuScreen extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: GameColors.mossyGreenBright,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 28),
+                          padding: const EdgeInsets.symmetric(horizontal: 32),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(28),
                           ),
@@ -112,7 +174,7 @@ class MainMenuScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 36),
+                    const SizedBox(height: 32),
 
                     // Touch Controls Help Card
                     Container(

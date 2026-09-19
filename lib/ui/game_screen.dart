@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
+import 'package:enchanted_forest_adventure/core/settings_controller.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
 import 'package:enchanted_forest_adventure/rendering/forest_painter.dart';
 import 'package:enchanted_forest_adventure/rendering/character_painter.dart';
@@ -32,6 +33,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     super.initState();
     _engine = GameEngine();
     _ticker = createTicker(_onTick)..start();
+    SettingsController.instance.applyCurrentOrientation();
   }
 
   void _onTick(Duration elapsed) {
@@ -57,6 +59,9 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
+    final EdgeInsets padding = MediaQuery.of(context).padding;
+    final bool isLandscape = MediaQuery.of(context).orientation == Orientation.landscape;
+
     _engine.updateScreenSize(screenSize.width, screenSize.height);
 
     return Scaffold(
@@ -110,7 +115,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
                 ),
               ),
 
-              // 5. Game HUD
+              // 5. Game HUD (Top SafeArea)
               SafeArea(
                 child: GameHud(
                   currentHealth: _engine.player.currentHealth,
@@ -120,11 +125,11 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
                 ),
               ),
 
-              // 6. Mobile Touch Controls
+              // 6. Mobile Touch Controls (Responsive Layout)
               if (_engine.status == GameStatus.playing)
                 Positioned(
-                  left: 20,
-                  bottom: 30,
+                  left: isLandscape ? padding.left + 24 : 20,
+                  bottom: isLandscape ? 20 : 30,
                   child: VirtualJoystick(
                     onChanged: (val) => _engine.setJoystickInput(val),
                   ),
@@ -132,8 +137,8 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
 
               if (_engine.status == GameStatus.playing)
                 Positioned(
-                  right: 20,
-                  bottom: 30,
+                  right: isLandscape ? padding.right + 24 : 20,
+                  bottom: isLandscape ? 20 : 30,
                   child: ActionButtons(
                     onJump: () => _engine.jump(),
                     onAttack: () => _engine.attack(),
