@@ -1,0 +1,24 @@
+# Flutter / Dart ignores
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Platform directories (if auto-generated and not strictly needed in git or ignored)
+# Actually let's keep android if needed for android apk build, but ignore others or let git track what's needed.
+# Let's see why git diff was large: flutter create created ~129 untracked/added files.
+ios/
+macos/
+windows/
+linux/
+web/
+.idea/
+*.iml
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
