@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:enchanted_forest_adventure/core/zombie_audio_controller.dart';
 import 'package:enchanted_forest_adventure/ui/zombie_game_screen.dart';
 
 class ZombieIntroScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class _ZombieIntroScreenState extends State<ZombieIntroScreen> with SingleTicker
   @override
   void initState() {
     super.initState();
+    ZombieAudioController.instance.startZombieModeAudio();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 3200),

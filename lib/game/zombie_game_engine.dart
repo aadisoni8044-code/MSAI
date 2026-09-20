@@ -6,6 +6,7 @@ import 'package:enchanted_forest_adventure/models/zombie_entity.dart';
 import 'package:enchanted_forest_adventure/models/zombie_mode_data.dart';
 import 'package:enchanted_forest_adventure/models/weapon_data.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
+import 'package:enchanted_forest_adventure/core/zombie_audio_controller.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
 
 enum ZombieGameState {
@@ -36,6 +37,7 @@ class ZombieGameEngine extends ChangeNotifier {
 
   // Countdown & Prep
   double countdownTimer = 10.0;
+  int _lastCountdownSecond = 10;
   String warningMessage = "10 SECONDS LEFT — FIND A SAFE PLACE!";
   int pendingMilestone = 0; // 50 or 100
 
@@ -118,7 +120,9 @@ class ZombieGameEngine extends ChangeNotifier {
   void startPreparationCountdown() {
     gameState = ZombieGameState.preparingWave;
     countdownTimer = 10.0;
+    _lastCountdownSecond = 10;
     warningMessage = "10 SECONDS LEFT — FIND A SAFE PLACE!";
+    ZombieAudioController.instance.playCountdownBeep(10);
     notifyListeners();
   }
 
@@ -157,6 +161,8 @@ class ZombieGameEngine extends ChangeNotifier {
       player.attackTimer = 0.28 / weapon.fireRate;
       player.actionState = PlayerActionState.attacking;
       _triggerCameraShake(0.15, 3.5);
+
+      ZombieAudioController.instance.playPlayerAttack();
       _checkAttackCollisions(weapon);
     }
   }
@@ -177,16 +183,24 @@ class ZombieGameEngine extends ChangeNotifier {
 
     if (gameState == ZombieGameState.preparingWave) {
       countdownTimer -= effectiveDt;
+      final currentSec = countdownTimer.ceil();
+
+      if (currentSec != _lastCountdownSecond && currentSec > 0) {
+        _lastCountdownSecond = currentSec;
+        ZombieAudioController.instance.playCountdownBeep(currentSec);
+      }
+
       if (countdownTimer <= 0) {
         countdownTimer = 0;
         gameState = ZombieGameState.playing;
+        ZombieAudioController.instance.playWaveWarning();
+        ZombieAudioController.instance.playZombieScream();
       } else if (countdownTimer <= 3.0) {
         warningMessage = "GET READY! ZOMBIES INCOMING!";
       } else if (countdownTimer <= 6.0) {
         warningMessage = "HEAD TO THE WATCHTOWER FOR HIGH GROUND!";
       }
 
-      // Allow player movement during countdown
       _updatePlayerMovement(effectiveDt);
       _updateParticles(effectiveDt);
       _updateCamera();
@@ -205,6 +219,11 @@ class ZombieGameEngine extends ChangeNotifier {
     _updateCamera();
 
     player.animationTimer += effectiveDt;
+
+    // Periodic ambient chase sounds
+    if (activeZombies.isNotEmpty) {
+      ZombieAudioController.instance.playChaseAmbience(activeZombies.length);
+    }
 
     // Check wave clear transition
     if (zombiesRemainingInWave <= 0 && activeZombies.isEmpty) {
@@ -248,7 +267,6 @@ class ZombieGameEngine extends ChangeNotifier {
     if (_spawnQueue.isEmpty) return;
 
     _spawnTimer += dt;
-    // Spawn gradually every 0.8 seconds (max 15 zombies active concurrently)
     if (_spawnTimer >= 0.8 && activeZombies.length < 15) {
       _spawnTimer = 0;
       final type = _spawnQueue.removeAt(0);
@@ -270,6 +288,9 @@ class ZombieGameEngine extends ChangeNotifier {
         x: spawnX,
         y: spawnY,
       ));
+
+      // Play spawn growl
+      ZombieAudioController.instance.playZombieGrowl(isLarge: type == ZombieType.large);
     }
   }
 
@@ -291,6 +312,8 @@ class ZombieGameEngine extends ChangeNotifier {
         zombiesKilledInWave++;
         totalZombiesKilledThisRun++;
         player.coins += zombie.zombieType == ZombieType.large ? 10 : 3;
+
+        ZombieAudioController.instance.playZombieDeath(isLarge: zombie.zombieType == ZombieType.large);
         _addSparkleParticles(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2, const Color(0xFFFF5252));
       }
     }
@@ -306,6 +329,14 @@ class ZombieGameEngine extends ChangeNotifier {
       player.facingRight = combinedX > 0;
       if (player.isGrounded && !player.isAttacking) {
         player.actionState = PlayerActionState.running;
+
+        // Check if walking on watchtower platforms
+        for (final towerRect in nightWorld.watchtowers) {
+          if (towerRect.contains(Offset(player.x + player.width / 2, player.y + player.height))) {
+            ZombieAudioController.instance.playTowerStep();
+            break;
+          }
+        }
       }
     } else {
       player.vx *= 0.82;
@@ -383,7 +414,6 @@ class ZombieGameEngine extends ChangeNotifier {
   }
 
   void _checkAttackCollisions(WeaponData weapon) {
-    // Determine attack reach based on selected weapon range
     final baseBox = player.attackBounds;
     final double extraReach = weapon.range - 220.0;
     final attackBox = Rect.fromLTRB(
@@ -397,6 +427,8 @@ class ZombieGameEngine extends ChangeNotifier {
       if (zombie.health > 0 && attackBox.overlaps(zombie.bounds)) {
         final damage = (1 * weapon.damageMultiplier).round();
         zombie.takeDamage(damage > 0 ? damage : 1);
+
+        ZombieAudioController.instance.playHitImpact();
         _addHitParticles(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2, 12);
         _triggerCameraShake(0.2, 5.0);
       }
@@ -418,6 +450,7 @@ class ZombieGameEngine extends ChangeNotifier {
         player.vx = player.x < zombie.x ? -6.0 : 6.0;
         player.actionState = PlayerActionState.hurt;
 
+        ZombieAudioController.instance.playZombieAttack(isLarge: zombie.zombieType == ZombieType.large);
         _triggerCameraShake(0.3, 8.0);
         _addHitParticles(player.x + player.width / 2, player.y + player.height / 2, 12);
 

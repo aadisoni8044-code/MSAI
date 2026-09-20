@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/core/settings_controller.dart';
+import 'package:enchanted_forest_adventure/core/zombie_audio_controller.dart';
 import 'package:enchanted_forest_adventure/game/zombie_game_engine.dart';
 import 'package:enchanted_forest_adventure/rendering/night_world_painter.dart';
 import 'package:enchanted_forest_adventure/rendering/zombie_painter.dart';
@@ -39,6 +40,10 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
     _ticker = createTicker(_onTick)..start();
     SettingsController.instance.applyCurrentOrientation();
 
+    if (!ZombieAudioController.instance.isZombieAudioActive) {
+      ZombieAudioController.instance.startZombieModeAudio();
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _focusNode.requestFocus();
@@ -61,6 +66,7 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
 
   @override
   void dispose() {
+    ZombieAudioController.instance.stopAllZombieAudio();
     _focusNode.dispose();
     _ticker.dispose();
     _engine.dispose();
@@ -344,6 +350,7 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                     onResume: () => _engine.togglePause(),
                     onRestart: () => _engine.initNightWorld(),
                     onQuit: () {
+                      ZombieAudioController.instance.stopAllZombieAudio();
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => const MainMenuScreen()),
                       );
