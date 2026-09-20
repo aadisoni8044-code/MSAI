@@ -162,7 +162,7 @@ class ZombieGameEngine extends ChangeNotifier {
       player.actionState = PlayerActionState.attacking;
       _triggerCameraShake(0.15, 3.5);
 
-      ZombieAudioController.instance.playPlayerAttack();
+      ZombieAudioController.instance.playPlayerAttack(isHeavy: weaponId == 'ak47');
       _checkAttackCollisions(weapon);
     }
   }
@@ -174,6 +174,15 @@ class ZombieGameEngine extends ChangeNotifier {
       gameState = ZombieGameState.playing;
     }
     notifyListeners();
+  }
+
+  bool _isPlayerOnWatchtower() {
+    for (final towerRect in nightWorld.watchtowers) {
+      if (towerRect.contains(Offset(player.x + player.width / 2, player.y + player.height))) {
+        return true;
+      }
+    }
+    return false;
   }
 
   void tick(double dt) {
@@ -220,9 +229,20 @@ class ZombieGameEngine extends ChangeNotifier {
 
     player.animationTimer += effectiveDt;
 
+    final isOnTower = _isPlayerOnWatchtower();
+    ZombieAudioController.instance.updateHordeIntensity(
+      nearbyZombieCount: activeZombies.length,
+      isPlayerOnTower: isOnTower,
+    );
+
     // Periodic ambient chase sounds
     if (activeZombies.isNotEmpty) {
-      ZombieAudioController.instance.playChaseAmbience(activeZombies.length);
+      double minZombieDist = 9999.0;
+      for (final z in activeZombies) {
+        final dist = (z.x - player.x).abs();
+        if (dist < minZombieDist) minZombieDist = dist;
+      }
+      ZombieAudioController.instance.playChaseAmbience(activeZombies.length, minDistance: minZombieDist);
     }
 
     // Check wave clear transition
@@ -289,8 +309,8 @@ class ZombieGameEngine extends ChangeNotifier {
         y: spawnY,
       ));
 
-      // Play spawn growl
-      ZombieAudioController.instance.playZombieGrowl(isLarge: type == ZombieType.large);
+      final dist = (spawnX - player.x).abs();
+      ZombieAudioController.instance.playSpatialGrowl(distance: dist, isLarge: type == ZombieType.large);
     }
   }
 
@@ -306,6 +326,16 @@ class ZombieGameEngine extends ChangeNotifier {
         platformRects: platformRects,
       );
 
+      final dist = (zombie.x - player.x).abs();
+
+      // Trigger footsteps for nearby moving zombies
+      if (zombie.vx.abs() > 0.5 && zombie.isGrounded) {
+        ZombieAudioController.instance.playZombieFootstep(
+          isLarge: zombie.zombieType == ZombieType.large,
+          distance: dist,
+        );
+      }
+
       if (zombie.state == ZombieState.dead) {
         activeZombies.removeAt(i);
         zombiesRemainingInWave--;
@@ -313,7 +343,10 @@ class ZombieGameEngine extends ChangeNotifier {
         totalZombiesKilledThisRun++;
         player.coins += zombie.zombieType == ZombieType.large ? 10 : 3;
 
-        ZombieAudioController.instance.playZombieDeath(isLarge: zombie.zombieType == ZombieType.large);
+        ZombieAudioController.instance.playZombieDeath(
+          isLarge: zombie.zombieType == ZombieType.large,
+          distance: dist,
+        );
         _addSparkleParticles(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2, const Color(0xFFFF5252));
       }
     }
@@ -428,7 +461,8 @@ class ZombieGameEngine extends ChangeNotifier {
         final damage = (1 * weapon.damageMultiplier).round();
         zombie.takeDamage(damage > 0 ? damage : 1);
 
-        ZombieAudioController.instance.playHitImpact();
+        final isHeavy = weapon.id == 'ak47' || damage > 1;
+        ZombieAudioController.instance.playHitImpact(isHeavy: isHeavy);
         _addHitParticles(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2, 12);
         _triggerCameraShake(0.2, 5.0);
       }
@@ -450,7 +484,11 @@ class ZombieGameEngine extends ChangeNotifier {
         player.vx = player.x < zombie.x ? -6.0 : 6.0;
         player.actionState = PlayerActionState.hurt;
 
-        ZombieAudioController.instance.playZombieAttack(isLarge: zombie.zombieType == ZombieType.large);
+        final dist = (zombie.x - player.x).abs();
+        ZombieAudioController.instance.playZombieAttack(
+          isLarge: zombie.zombieType == ZombieType.large,
+          distance: dist,
+        );
         _triggerCameraShake(0.3, 8.0);
         _addHitParticles(player.x + player.width / 2, player.y + player.height / 2, 12);
 

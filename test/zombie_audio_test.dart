@@ -9,7 +9,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  group('ZombieAudioController Tests', () {
+  group('ZombieAudioController Spatial Tests', () {
     test('Audio controller initializes and responds to audio status flags', () {
       final audioCtrl = ZombieAudioController.instance;
       audioCtrl.init();
@@ -22,20 +22,24 @@ void main() {
       expect(audioCtrl.isZombieAudioActive, isFalse);
     });
 
-    test('Audio trigger calls execute cleanly without error when sound enabled or disabled', () {
+    test('Spatial audio triggers execute cleanly at varied distances', () {
       final audioCtrl = ZombieAudioController.instance;
       audioCtrl.startZombieModeAudio();
 
-      expect(() => audioCtrl.playZombieGrowl(), returnsNormally);
-      expect(() => audioCtrl.playZombieScream(), returnsNormally);
-      expect(() => audioCtrl.playChaseAmbience(5), returnsNormally);
-      expect(() => audioCtrl.playZombieAttack(), returnsNormally);
-      expect(() => audioCtrl.playPlayerAttack(), returnsNormally);
-      expect(() => audioCtrl.playHitImpact(), returnsNormally);
-      expect(() => audioCtrl.playZombieDeath(), returnsNormally);
+      expect(() => audioCtrl.playSpatialGrowl(distance: 150), returnsNormally);
+      expect(() => audioCtrl.playSpatialGrowl(distance: 800, isLarge: true), returnsNormally);
+      expect(() => audioCtrl.playZombieFootstep(distance: 200, isLarge: false), returnsNormally);
+      expect(() => audioCtrl.playZombieFootstep(distance: 400, isLarge: true), returnsNormally);
+      expect(() => audioCtrl.playZombieScream(distance: 300), returnsNormally);
+      expect(() => audioCtrl.playChaseAmbience(5, minDistance: 250), returnsNormally);
+      expect(() => audioCtrl.playZombieAttack(distance: 100), returnsNormally);
+      expect(() => audioCtrl.playPlayerAttack(isHeavy: true), returnsNormally);
+      expect(() => audioCtrl.playHitImpact(isHeavy: true), returnsNormally);
+      expect(() => audioCtrl.playZombieDeath(distance: 200), returnsNormally);
       expect(() => audioCtrl.playWaveWarning(), returnsNormally);
       expect(() => audioCtrl.playCountdownBeep(3), returnsNormally);
       expect(() => audioCtrl.playTowerStep(), returnsNormally);
+      expect(() => audioCtrl.updateHordeIntensity(nearbyZombieCount: 10, isPlayerOnTower: true), returnsNormally);
 
       audioCtrl.stopAllZombieAudio();
     });
