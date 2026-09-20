@@ -74,7 +74,10 @@ class GameEngine extends ChangeNotifier {
   final Random _random = Random();
 
   // Inputs
-  double inputX = 0.0; // -1.0 to 1.0
+  double inputX = 0.0; // -1.0 to 1.0 (-1 left, +1 right from joystick)
+  bool keyLeft = false;
+  bool keyRight = false;
+  bool keyDown = false;
 
   GameEngine({int initialLevel = 1}) {
     currentLevelNumber = initialLevel;
@@ -109,6 +112,18 @@ class GameEngine extends ChangeNotifier {
 
   void setJoystickInput(double x) {
     inputX = x.clamp(-1.0, 1.0);
+  }
+
+  void setKeyLeft(bool pressed) {
+    keyLeft = pressed;
+  }
+
+  void setKeyRight(bool pressed) {
+    keyRight = pressed;
+  }
+
+  void setKeyDown(bool pressed) {
+    keyDown = pressed;
   }
 
   void jump() {
@@ -172,10 +187,18 @@ class GameEngine extends ChangeNotifier {
   void _updatePlayerMovement(double dt) {
     final currentFriction = _isPlayerOnSlipperyPlatform() ? slipperyFriction : standardFriction;
 
+    // Combine Joystick Input with Keyboard Input
+    double combinedX = inputX;
+    if (keyLeft && !keyRight) {
+      combinedX = -1.0;
+    } else if (keyRight && !keyLeft) {
+      combinedX = 1.0;
+    }
+
     // Horizontal Movement
-    if (inputX.abs() > 0.05) {
-      player.vx = inputX * moveSpeed;
-      player.facingRight = inputX > 0;
+    if (combinedX.abs() > 0.05) {
+      player.vx = combinedX * moveSpeed;
+      player.facingRight = combinedX > 0;
       if (player.isGrounded && !player.isAttacking) {
         player.actionState = PlayerActionState.running;
       }

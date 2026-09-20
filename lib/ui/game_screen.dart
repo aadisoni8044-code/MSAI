@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/core/settings_controller.dart';
 import 'package:enchanted_forest_adventure/core/level_progress_controller.dart';
@@ -32,6 +33,7 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateMixin {
   late GameEngine _engine;
   late Ticker _ticker;
+  late final FocusNode _focusNode;
   double _time = 0.0;
   Duration _lastElapsed = Duration.zero;
   bool _hasSavedProgress = false;
@@ -39,9 +41,16 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
   @override
   void initState() {
     super.initState();
+    _focusNode = FocusNode();
     _engine = GameEngine(initialLevel: widget.initialLevel);
     _ticker = createTicker(_onTick)..start();
     SettingsController.instance.applyCurrentOrientation();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _focusNode.requestFocus();
+      }
+    });
   }
 
   void _onTick(Duration elapsed) {
@@ -64,9 +73,41 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
 
   @override
   void dispose() {
+    _focusNode.dispose();
     _ticker.dispose();
     _engine.dispose();
     super.dispose();
+  }
+
+  void _handleKeyEvent(KeyEvent event) {
+    final bool isDown = event is KeyDownEvent;
+    final bool isUp = event is KeyUpEvent;
+    final bool isRepeat = event is KeyRepeatEvent;
+
+    final key = event.logicalKey;
+
+    if (key == LogicalKeyboardKey.keyA) {
+      if (isDown) _engine.setKeyLeft(true);
+      if (isUp) _engine.setKeyLeft(false);
+    } else if (key == LogicalKeyboardKey.keyD) {
+      if (isDown) _engine.setKeyRight(true);
+      if (isUp) _engine.setKeyRight(false);
+    } else if (key == LogicalKeyboardKey.keyS) {
+      if (isDown) _engine.setKeyDown(true);
+      if (isUp) _engine.setKeyDown(false);
+    } else if (key == LogicalKeyboardKey.keyW || key == LogicalKeyboardKey.space) {
+      if (isDown && !isRepeat) {
+        _engine.jump();
+      }
+    } else if (key == LogicalKeyboardKey.keyJ) {
+      if (isDown && !isRepeat) {
+        _engine.attack();
+      }
+    } else if (key == LogicalKeyboardKey.escape) {
+      if (isDown && !isRepeat) {
+        _engine.togglePause();
+      }
+    }
   }
 
   void _goToNextLevel() {
@@ -103,9 +144,13 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
 
     _engine.updateScreenSize(screenSize.width, screenSize.height);
 
-    return Scaffold(
-      backgroundColor: GameColors.skyBackground,
-      body: ListenableBuilder(
+    return KeyboardListener(
+      focusNode: _focusNode,
+      autofocus: true,
+      onKeyEvent: _handleKeyEvent,
+      child: Scaffold(
+        backgroundColor: GameColors.skyBackground,
+        body: ListenableBuilder(
         listenable: _engine,
         builder: (context, _) {
           return Stack(
@@ -226,6 +271,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
           );
         },
       ),
+    ),
     );
   }
 }

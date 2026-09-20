@@ -110,6 +110,34 @@ void main() {
       expect(engine.player.facingRight, isFalse);
     });
 
+    test('Keyboard input moves player continuously left/right', () {
+      // Key Right (D)
+      engine.setKeyRight(true);
+      engine.tick(0.016);
+      expect(engine.player.vx, greaterThan(0));
+      expect(engine.player.facingRight, isTrue);
+
+      // Release D - decelerates with friction
+      engine.setKeyRight(false);
+      for (int i = 0; i < 20; i++) {
+        engine.tick(0.016);
+      }
+      expect(engine.player.vx, equals(0));
+
+      // Key Left (A)
+      engine.setKeyLeft(true);
+      engine.tick(0.016);
+      expect(engine.player.vx, lessThan(0));
+      expect(engine.player.facingRight, isFalse);
+
+      // Simultaneous A + D cancels active input direction
+      engine.setKeyRight(true);
+      for (int i = 0; i < 20; i++) {
+        engine.tick(0.016);
+      }
+      expect(engine.player.vx, equals(0));
+    });
+
     test('Jump sets negative vertical velocity when grounded', () {
       engine.player.isGrounded = true;
       engine.jump();
@@ -182,7 +210,7 @@ void main() {
       expect(find.byIcon(Icons.pause_rounded), findsOneWidget);
     });
 
-    testWidgets('SettingsOverlay renders sound, music, and orientation controls', (WidgetTester tester) async {
+    testWidgets('SettingsOverlay renders sound, music, orientation, and controls section', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: SettingsOverlay(),
@@ -194,6 +222,11 @@ void main() {
       expect(find.text('Background Music'), findsOneWidget);
       expect(find.text('Portrait'), findsOneWidget);
       expect(find.text('Landscape'), findsOneWidget);
+      expect(find.text('CONTROLS'), findsOneWidget);
+      expect(find.text('W / A / S / D'), findsOneWidget);
+      expect(find.text('SPACE — Jump'), findsOneWidget);
+      expect(find.text('J — Attack'), findsOneWidget);
+      expect(find.text('ESC — Pause'), findsOneWidget);
     });
 
     testWidgets('LevelSelectScreen renders 10 level cards', (WidgetTester tester) async {

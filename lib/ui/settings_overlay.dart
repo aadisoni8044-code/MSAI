@@ -123,6 +123,105 @@ class SettingsOverlay extends StatelessWidget {
                         ),
                       ],
                     ),
+                    const Divider(color: Colors.white12, height: 24),
+
+                    // Controls Section
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: const [
+                            Icon(Icons.sports_esports_rounded, color: GameColors.uiTextGold, size: 20),
+                            SizedBox(width: 10),
+                            Text(
+                              'CONTROLS',
+                              style: TextStyle(
+                                color: GameColors.uiTextLight,
+                                fontSize: 15,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 12),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.black38,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: GameColors.uiGlassBorder),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Mobile info
+                              Row(
+                                children: const [
+                                  Icon(Icons.smartphone_rounded, color: GameColors.foliageGlow, size: 16),
+                                  SizedBox(width: 8),
+                                  Text(
+                                    'Mobile:',
+                                    style: TextStyle(
+                                      color: GameColors.foliageGlow,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      'Touch Controls',
+                                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              const Divider(color: Colors.white10, height: 1),
+                              const SizedBox(height: 10),
+                              // Laptop info
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Icon(Icons.laptop_mac_rounded, color: GameColors.mistBlue, size: 16),
+                                  const SizedBox(width: 8),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: const [
+                                      Text(
+                                        'Laptop:',
+                                        style: TextStyle(
+                                          color: GameColors.mistBlue,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: const [
+                                        Text('W / A / S / D', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+                                        SizedBox(height: 2),
+                                        Text('SPACE — Jump', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                                        SizedBox(height: 2),
+                                        Text('J — Attack', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                                        SizedBox(height: 2),
+                                        Text('ESC — Pause', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 28),
 
                     // Back / Close Button
