@@ -98,6 +98,8 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
     } else if (key == LogicalKeyboardKey.keyW || key == LogicalKeyboardKey.space) {
       if (isDown && !isRepeat) {
         _engine.jump();
+      } else if (isUp) {
+        _engine.releaseJump();
       }
     } else if (key == LogicalKeyboardKey.keyJ) {
       if (isDown && !isRepeat) {
@@ -225,6 +227,7 @@ class _GameScreenState extends State<GameScreen> with SingleTickerProviderStateM
                   bottom: isLandscape ? 20 : 30,
                   child: ActionButtons(
                     onJump: () => _engine.jump(),
+                    onJumpRelease: () => _engine.releaseJump(),
                     onAttack: () => _engine.attack(),
                   ),
                 ),

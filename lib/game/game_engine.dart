@@ -48,9 +48,10 @@ class GameEngine extends ChangeNotifier {
   GameStatus status = GameStatus.playing;
 
   // Physics constants
-  static const double gravity = 0.65;
+  static const double gravity = 0.60;
   static const double moveSpeed = 4.8;
-  static const double jumpForce = -13.5;
+  static const double jumpForce = -16.0;
+  static const double minJumpCutoff = -6.5;
   static const double standardFriction = 0.82;
   static const double slipperyFriction = 0.96;
 
@@ -78,6 +79,7 @@ class GameEngine extends ChangeNotifier {
   bool keyLeft = false;
   bool keyRight = false;
   bool keyDown = false;
+  bool isJumpHeld = false;
 
   GameEngine({int initialLevel = 1}) {
     currentLevelNumber = initialLevel;
@@ -128,13 +130,21 @@ class GameEngine extends ChangeNotifier {
 
   void jump() {
     if (status != GameStatus.playing) return;
+    isJumpHeld = true;
     if (player.isGrounded) {
       player.vy = jumpForce;
       player.isGrounded = false;
       player.actionState = PlayerActionState.jumping;
 
       // Dust particles on jump
-      _addDustParticles(player.x + player.width / 2, player.y + player.height, 6);
+      _addDustParticles(player.x + player.width / 2, player.y + player.height, 8);
+    }
+  }
+
+  void releaseJump() {
+    isJumpHeld = false;
+    if (player.vy < minJumpCutoff) {
+      player.vy = minJumpCutoff;
     }
   }
 

@@ -3,11 +3,13 @@ import 'package:enchanted_forest_adventure/core/game_colors.dart';
 
 class ActionButtons extends StatelessWidget {
   final VoidCallback onJump;
+  final VoidCallback? onJumpRelease;
   final VoidCallback onAttack;
 
   const ActionButtons({
     super.key,
     required this.onJump,
+    this.onJumpRelease,
     required this.onAttack,
   });
 
@@ -32,6 +34,7 @@ class ActionButtons extends StatelessWidget {
           glowColor: GameColors.playerGlow,
           buttonSize: 74,
           onPressed: onJump,
+          onReleased: onJumpRelease,
         ),
       ],
     );
@@ -44,6 +47,7 @@ class _ActionButton extends StatefulWidget {
   final Color glowColor;
   final double buttonSize;
   final VoidCallback onPressed;
+  final VoidCallback? onReleased;
 
   const _ActionButton({
     required this.icon,
@@ -51,6 +55,7 @@ class _ActionButton extends StatefulWidget {
     required this.glowColor,
     required this.buttonSize,
     required this.onPressed,
+    this.onReleased,
   });
 
   @override
@@ -67,8 +72,14 @@ class _ActionButtonState extends State<_ActionButton> {
         setState(() => _isPressed = true);
         widget.onPressed();
       },
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
+      onTapUp: (_) {
+        setState(() => _isPressed = false);
+        widget.onReleased?.call();
+      },
+      onTapCancel: () {
+        setState(() => _isPressed = false);
+        widget.onReleased?.call();
+      },
       child: AnimatedScale(
         scale: _isPressed ? 0.92 : 1.0,
         duration: const Duration(milliseconds: 100),

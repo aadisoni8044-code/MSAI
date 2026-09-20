@@ -138,11 +138,32 @@ void main() {
       expect(engine.player.vx, equals(0));
     });
 
-    test('Jump sets negative vertical velocity when grounded', () {
+    test('Jump sets initial jump force and allows variable height cutoff', () {
       engine.player.isGrounded = true;
       engine.jump();
-      expect(engine.player.vy, lessThan(0));
+      expect(engine.player.vy, equals(-16.0));
       expect(engine.player.isGrounded, isFalse);
+
+      // Releasing jump cuts upward velocity to minJumpCutoff
+      engine.releaseJump();
+      expect(engine.player.vy, equals(-6.5));
+    });
+
+    test('Air control allows mid-air horizontal maneuvering', () {
+      engine.player.isGrounded = true;
+      engine.jump();
+      expect(engine.player.isGrounded, isFalse);
+
+      // Apply right movement in air
+      engine.setKeyRight(true);
+      engine.tick(0.016);
+      expect(engine.player.vx, greaterThan(0));
+
+      // Switch to left movement in air
+      engine.setKeyRight(false);
+      engine.setKeyLeft(true);
+      engine.tick(0.016);
+      expect(engine.player.vx, lessThan(0));
     });
 
     test('Attack triggers attack timer and state', () {
