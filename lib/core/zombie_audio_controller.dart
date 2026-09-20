@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'package:audioplayers/audioplayers.dart';
 import 'package:enchanted_forest_adventure/core/settings_controller.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class ZombieAudioController extends ChangeNotifier {
   static final ZombieAudioController _instance = ZombieAudioController._internal();
@@ -34,7 +34,6 @@ class ZombieAudioController extends ChangeNotifier {
       _musicPlayer = AudioPlayer();
       _windPlayer = AudioPlayer();
 
-      // Pool of 8 reusable SFX players
       for (int i = 0; i < 8; i++) {
         _sfxPool.add(AudioPlayer());
       }
@@ -57,20 +56,25 @@ class ZombieAudioController extends ChangeNotifier {
 
     try {
       if (_musicVolume > 0 && _musicPlayer != null) {
-        await _musicPlayer!.stop();
-        await _musicPlayer!.setReleaseMode(ReleaseMode.loop);
-        await _musicPlayer!.setVolume(_musicVolume * 0.5);
-        await _musicPlayer!.play(AssetSource('audio/zombie/zombie_bg_music.wav'));
+        // Do not restart if already playing background.wav continuously
+        if (_musicPlayer!.state != PlayerState.playing) {
+          await _musicPlayer!.stop();
+          await _musicPlayer!.setReleaseMode(ReleaseMode.loop);
+          await _musicPlayer!.setVolume(_musicVolume * 0.5);
+          await _musicPlayer!.play(AssetSource('audio/background.wav'));
+        }
       }
 
       if (_sfxVolume > 0 && _windPlayer != null) {
-        await _windPlayer!.stop();
-        await _windPlayer!.setReleaseMode(ReleaseMode.loop);
-        await _windPlayer!.setVolume(0.25);
-        await _windPlayer!.play(AssetSource('audio/zombie/night_wind.wav'));
+        if (_windPlayer!.state != PlayerState.playing) {
+          await _windPlayer!.stop();
+          await _windPlayer!.setReleaseMode(ReleaseMode.loop);
+          await _windPlayer!.setVolume(0.25);
+          await _windPlayer!.play(AssetSource('audio/zombie/night_wind.wav'));
+        }
       }
     } catch (e) {
-      debugPrint('Error starting zombie mode audio: $e');
+      debugPrint('Error starting zombie mode background audio: $e');
     }
   }
 
@@ -111,11 +115,8 @@ class ZombieAudioController extends ChangeNotifier {
     final double distFactor = _calculateDistanceFactor(distance);
     if (distFactor <= 0.01) return;
 
-    // Random volume variation ±12%
     final randomVolVar = 0.88 + _random.nextDouble() * 0.24;
     final finalVolume = (_sfxVolume * volumeFactor * distFactor * randomVolVar).clamp(0.0, 1.0);
-
-    // Random playback rate (pitch) variation: 0.92 to 1.08
     final randomRate = 0.92 + _random.nextDouble() * 0.16;
 
     try {
@@ -246,10 +247,10 @@ class ZombieAudioController extends ChangeNotifier {
       if (_musicPlayer != null && _musicVolume > 0) {
         double musicVol = _musicVolume * 0.5;
         if (nearbyZombieCount >= 8) {
-          musicVol = _musicVolume * 0.85; // Higher tension pulse when horde is large
+          musicVol = _musicVolume * 0.85;
         }
         if (isPlayerOnTower) {
-          musicVol = _musicVolume * 0.40; // Slightly lower music on tower
+          musicVol = _musicVolume * 0.40;
         }
         _musicPlayer!.setVolume(musicVol.clamp(0.0, 1.0));
       }
