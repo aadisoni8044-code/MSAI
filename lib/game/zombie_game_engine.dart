@@ -5,6 +5,7 @@ import 'package:enchanted_forest_adventure/models/game_entity.dart';
 import 'package:enchanted_forest_adventure/models/zombie_entity.dart';
 import 'package:enchanted_forest_adventure/models/zombie_mode_data.dart';
 import 'package:enchanted_forest_adventure/models/weapon_data.dart';
+import 'package:enchanted_forest_adventure/models/weapon_drop_entity.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
 import 'package:enchanted_forest_adventure/core/zombie_audio_controller.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
@@ -38,6 +39,9 @@ class ZombieGameEngine extends ChangeNotifier {
   int totalZombiesKilledThisRun = 0;
 
   int get zombiesRemainingInWave => max(0, totalZombiesForWave - zombiesDefeatedInWave);
+
+  // Weapon Skydrop Supply Crate
+  WeaponDropEntity? activeWeaponDrop;
 
   // Countdown & Prep
   double countdownTimer = 10.0;
@@ -85,6 +89,7 @@ class ZombieGameEngine extends ChangeNotifier {
     gameState = ZombieGameState.weaponSelect;
     particles.clear();
     activeZombies.clear();
+    activeWeaponDrop = null;
 
     currentWave = 1;
     totalZombiesKilledThisRun = 0;
@@ -233,6 +238,7 @@ class ZombieGameEngine extends ChangeNotifier {
 
     _updateSpawning(effectiveDt);
     _updateZombiesAI(effectiveDt);
+    _updateWeaponDrop(effectiveDt);
     _updatePlayerMovement(effectiveDt);
     _checkZombieCollisions();
     _checkCollectibleCollisions();
@@ -265,6 +271,51 @@ class ZombieGameEngine extends ChangeNotifier {
     notifyListeners();
   }
 
+  void _updateWeaponDrop(double dt) {
+    final controller = ZombieProgressController.instance;
+
+    // Check 10-zombie milestone drop trigger
+    if (!controller.has10MilestoneDropped &&
+        (totalZombiesKilledThisRun >= 10 || controller.totalZombiesDefeated >= 10) &&
+        activeWeaponDrop == null) {
+      controller.set10MilestoneDropped();
+
+      final dropX = (player.x + 120.0).clamp(100.0, nightWorld.worldWidth - 150.0);
+      activeWeaponDrop = WeaponDropEntity(
+        id: 'ak47_drop',
+        weaponId: 'ak47',
+        weaponName: 'AK-47 Rifle',
+        x: dropX,
+        y: 40.0,
+      );
+
+      warningMessage = "10 ZOMBIES DEFEATED! WEAPON DROP INCOMING!";
+      ZombieAudioController.instance.playWaveWarning();
+    }
+
+    if (activeWeaponDrop != null) {
+      final platformRects = nightWorld.platforms.map((p) => p.bounds).toList();
+      activeWeaponDrop!.update(dt, platformRects);
+
+      // Check player pickup range
+      final playerBox = player.bounds;
+      if (playerBox.overlaps(activeWeaponDrop!.bounds)) {
+        controller.unlockWeapon('ak47');
+        controller.selectWeapon('ak47');
+
+        _addSparkleParticles(
+          activeWeaponDrop!.x + activeWeaponDrop!.width / 2,
+          activeWeaponDrop!.y + activeWeaponDrop!.height / 2,
+          const Color(0xFF10B981),
+        );
+
+        ZombieAudioController.instance.playHitImpact(isHeavy: true);
+        warningMessage = "AK-47 RIFLE PICKED UP & EQUIPPED!";
+        activeWeaponDrop = null;
+      }
+    }
+  }
+
   void _handleWaveCleared() {
     ZombieProgressController.instance.completeWave(currentWave);
     ZombieProgressController.instance.addZombiesDefeated(zombiesDefeatedInWave);
@@ -273,7 +324,6 @@ class ZombieGameEngine extends ChangeNotifier {
     final controller = ZombieProgressController.instance;
 
     if (currentWave >= 10) {
-      // Wave 10 completed - Final Victory state
       gameState = ZombieGameState.completed;
       return;
     }
@@ -311,7 +361,6 @@ class ZombieGameEngine extends ChangeNotifier {
     if (_spawnQueue.isEmpty || zombiesSpawned >= totalZombiesForWave) return;
 
     _spawnTimer += dt;
-    // Spawn gradually every 0.8 seconds (max 15 zombies active concurrently)
     if (_spawnTimer >= 0.8 && activeZombies.length < 15 && zombiesSpawned < totalZombiesForWave) {
       _spawnTimer = 0;
       final type = _spawnQueue.removeAt(0);

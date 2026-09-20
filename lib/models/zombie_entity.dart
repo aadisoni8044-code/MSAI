@@ -61,16 +61,8 @@ class ZombieEntity {
             : zombieType == ZombieType.fast
                 ? 3.2
                 : 2.1,
-        health = zombieType == ZombieType.large
-            ? 5
-            : zombieType == ZombieType.fast
-                ? 1
-                : 2,
-        maxHealth = zombieType == ZombieType.large
-            ? 5
-            : zombieType == ZombieType.fast
-                ? 1
-                : 2,
+        health = zombieType == ZombieType.large ? 5 : 1,
+        maxHealth = zombieType == ZombieType.large ? 5 : 1,
         damage = zombieType == ZombieType.large ? 2 : 1,
         vx = 0,
         vy = 0,

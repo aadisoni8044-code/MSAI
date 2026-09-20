@@ -11,7 +11,8 @@ class ZombieProgressController extends ChangeNotifier {
   int _totalZombiesDefeated = 0;
   final Set<String> _unlockedWeapons = {'basic'};
   String _selectedWeapon = 'basic';
-  bool _towerUnlocked = true; // Default tower available as defensive position
+  bool _towerUnlocked = true;
+  bool _has10MilestoneDropped = false;
   bool _has50MilestoneShown = false;
   bool _has100MilestoneShown = false;
   bool _initialized = false;
@@ -21,6 +22,7 @@ class ZombieProgressController extends ChangeNotifier {
   Set<String> get unlockedWeapons => Set.unmodifiable(_unlockedWeapons);
   String get selectedWeapon => _selectedWeapon;
   bool get towerUnlocked => _towerUnlocked;
+  bool get has10MilestoneDropped => _has10MilestoneDropped;
   bool get has50MilestoneShown => _has50MilestoneShown;
   bool get has100MilestoneShown => _has100MilestoneShown;
 
@@ -41,6 +43,7 @@ class ZombieProgressController extends ChangeNotifier {
       }
 
       _towerUnlocked = prefs.getBool('zombie_tower_unlocked') ?? true;
+      _has10MilestoneDropped = prefs.getBool('zombie_10_milestone_dropped') ?? false;
       _has50MilestoneShown = prefs.getBool('zombie_50_milestone') ?? false;
       _has100MilestoneShown = prefs.getBool('zombie_100_milestone') ?? false;
     } catch (e) {
@@ -52,12 +55,6 @@ class ZombieProgressController extends ChangeNotifier {
 
   Future<void> addZombiesDefeated(int count) async {
     _totalZombiesDefeated += count;
-
-    // Check auto unlocks
-    if (_totalZombiesDefeated >= 30 && !_unlockedWeapons.contains('ak47')) {
-      _unlockedWeapons.add('ak47');
-    }
-
     notifyListeners();
     await _save();
   }
@@ -66,12 +63,12 @@ class ZombieProgressController extends ChangeNotifier {
     if (waveNumber > _highestWaveCompleted) {
       _highestWaveCompleted = waveNumber;
     }
+    notifyListeners();
+    await _save();
+  }
 
-    // Unlocks based on wave completion
-    if (waveNumber >= 2 && !_unlockedWeapons.contains('ak47')) {
-      _unlockedWeapons.add('ak47');
-    }
-
+  Future<void> set10MilestoneDropped() async {
+    _has10MilestoneDropped = true;
     notifyListeners();
     await _save();
   }
@@ -86,6 +83,7 @@ class ZombieProgressController extends ChangeNotifier {
 
   Future<void> unlockWeapon(String weaponId) async {
     _unlockedWeapons.add(weaponId);
+    _selectedWeapon = weaponId;
     notifyListeners();
     await _save();
   }
@@ -108,6 +106,7 @@ class ZombieProgressController extends ChangeNotifier {
       await prefs.setStringList('zombie_unlocked_weapons', _unlockedWeapons.toList());
       await prefs.setString('zombie_selected_weapon', _selectedWeapon);
       await prefs.setBool('zombie_tower_unlocked', _towerUnlocked);
+      await prefs.setBool('zombie_10_milestone_dropped', _has10MilestoneDropped);
       await prefs.setBool('zombie_50_milestone', _has50MilestoneShown);
       await prefs.setBool('zombie_100_milestone', _has100MilestoneShown);
     } catch (e) {
@@ -122,6 +121,7 @@ class ZombieProgressController extends ChangeNotifier {
     _unlockedWeapons.add('basic');
     _selectedWeapon = 'basic';
     _towerUnlocked = true;
+    _has10MilestoneDropped = false;
     _has50MilestoneShown = false;
     _has100MilestoneShown = false;
     notifyListeners();
@@ -133,6 +133,7 @@ class ZombieProgressController extends ChangeNotifier {
       await prefs.remove('zombie_unlocked_weapons');
       await prefs.remove('zombie_selected_weapon');
       await prefs.remove('zombie_tower_unlocked');
+      await prefs.remove('zombie_10_milestone_dropped');
       await prefs.remove('zombie_50_milestone');
       await prefs.remove('zombie_100_milestone');
     } catch (e) {

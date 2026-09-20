@@ -140,11 +140,12 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                   ),
                 ),
 
-                // 2. Zombie Horde Entities
+                // 2. Zombie Horde & Skydrop Crate Entities
                 CustomPaint(
                   size: screenSize,
                   painter: ZombiePainter(
                     zombies: _engine.activeZombies,
+                    activeWeaponDrop: _engine.activeWeaponDrop,
                     cameraX: _engine.cameraX,
                     cameraY: _engine.cameraY,
                     time: _time,
@@ -252,8 +253,8 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                   ),
                 ),
 
-                // 6. Pre-Wave Preparation Countdown Banner (Top Center Notification)
-                if (_engine.gameState == ZombieGameState.preparingWave)
+                // 6. Pre-Wave Preparation Countdown / Notification Banner
+                if (_engine.gameState == ZombieGameState.preparingWave || _engine.activeWeaponDrop != null)
                   Positioned(
                     top: 70,
                     left: 20,
@@ -278,7 +279,9 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                                 const Icon(Icons.timer_outlined, color: Color(0xFFF59E0B), size: 22),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'NEXT WAVE IN ${_engine.countdownTimer.ceil()}s',
+                                  _engine.gameState == ZombieGameState.preparingWave
+                                      ? 'NEXT WAVE IN ${_engine.countdownTimer.ceil()}s'
+                                      : 'WEAPON DROP',
                                   style: const TextStyle(
                                     color: Color(0xFFF59E0B),
                                     fontSize: 16,

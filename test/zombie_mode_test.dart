@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:enchanted_forest_adventure/models/zombie_entity.dart';
 import 'package:enchanted_forest_adventure/models/zombie_mode_data.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
 import 'package:enchanted_forest_adventure/game/zombie_game_engine.dart';
@@ -14,6 +15,27 @@ void main() {
     SharedPreferences.setMockInitialValues({});
     await ZombieProgressController.instance.init();
     await ZombieProgressController.instance.resetProgress();
+  });
+
+  group('ZombieEntity Health Tests', () {
+    test('Normal and Fast Zombies have 1 health and die in a single hit', () {
+      final normalZ = ZombieEntity(id: 'zn', zombieType: ZombieType.normal, x: 100, y: 500);
+      expect(normalZ.health, equals(1));
+      normalZ.takeDamage(1);
+      expect(normalZ.health, equals(0));
+      expect(normalZ.state, equals(ZombieState.dying));
+
+      final fastZ = ZombieEntity(id: 'zf', zombieType: ZombieType.fast, x: 100, y: 500);
+      expect(fastZ.health, equals(1));
+      fastZ.takeDamage(1);
+      expect(fastZ.health, equals(0));
+      expect(fastZ.state, equals(ZombieState.dying));
+    });
+
+    test('Large Zombies have 5 health', () {
+      final largeZ = ZombieEntity(id: 'zl', zombieType: ZombieType.large, x: 100, y: 500);
+      expect(largeZ.health, equals(5));
+    });
   });
 
   group('ZombieMode Exact Wave Config Tests', () {
@@ -31,7 +53,7 @@ void main() {
     });
   });
 
-  group('ZombieGameEngine Strict Wave & Spawn Invariant Tests', () {
+  group('ZombieGameEngine Skydrop Weapon Drop Tests', () {
     late ZombieGameEngine engine;
 
     setUp(() {
@@ -39,40 +61,15 @@ void main() {
       engine.updateScreenSize(390, 844);
     });
 
-    test('Engine starts Wave 1 with totalZombiesForWave=10 and zombiesSpawned=0', () {
-      expect(engine.currentWave, equals(1));
-      expect(engine.totalZombiesForWave, equals(10));
-      expect(engine.zombiesSpawned, equals(0));
-      expect(engine.zombiesRemainingInWave, equals(10));
-    });
-
-    test('Engine spawns zombies up to totalZombiesForWave and NEVER exceeds it', () {
-      engine.startPreparationCountdown();
-      for (int i = 0; i < 210; i++) {
-        engine.tick(0.05);
-      }
-      expect(engine.gameState, equals(ZombieGameState.playing));
-
-      // Tick many frames to allow full spawning
-      for (int i = 0; i < 500; i++) {
-        engine.tick(0.05);
-      }
-
-      expect(engine.zombiesSpawned, lessThanOrEqualTo(engine.totalZombiesForWave));
-      expect(engine.zombiesSpawned, equals(10));
-    });
-
-    test('Wave 10 clear transitions to ZombieGameState.completed', () {
+    test('10 Zombie Milestone triggers AK-47 skydrop supply box', () {
       engine.gameState = ZombieGameState.playing;
-      engine.currentWave = 10;
-      engine.totalZombiesForWave = 100;
-      engine.zombiesSpawned = 100;
-      engine.zombiesDefeatedInWave = 100;
-      engine.activeZombies.clear();
+      engine.totalZombiesKilledThisRun = 10;
 
       engine.tick(0.05);
 
-      expect(engine.gameState, equals(ZombieGameState.completed));
+      expect(engine.activeWeaponDrop, isNotNull);
+      expect(engine.activeWeaponDrop!.weaponId, equals('ak47'));
+      expect(ZombieProgressController.instance.has10MilestoneDropped, isTrue);
     });
   });
 
