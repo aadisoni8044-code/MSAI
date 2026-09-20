@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/ui/game_screen.dart';
+import 'package:enchanted_forest_adventure/ui/zombie_intro_screen.dart';
 import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
 import 'package:enchanted_forest_adventure/ui/settings_overlay.dart';
 
@@ -185,6 +186,51 @@ class MainMenuScreen extends StatelessWidget {
                             fontSize: 15,
                             fontWeight: FontWeight.bold,
                             letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 14),
+
+                    // Zombie Mode Button
+                    SizedBox(
+                      width: 240,
+                      height: 52,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(26),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0xFF8B0000),
+                              blurRadius: 16,
+                              spreadRadius: -2,
+                            ),
+                          ],
+                        ),
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0F070B),
+                            foregroundColor: const Color(0xFFFF4D4D),
+                            side: const BorderSide(color: Color(0xFFFF3333), width: 1.8),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(26),
+                            ),
+                            elevation: 6,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (_) => const ZombieIntroScreen()),
+                            );
+                          },
+                          icon: const Icon(Icons.coronavirus_rounded, size: 24, color: Color(0xFFFF3333)),
+                          label: const Text(
+                            'ZOMBIE MODE',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1.8,
+                            ),
                           ),
                         ),
                       ),
