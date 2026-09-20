@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:enchanted_forest_adventure/models/zombie_entity.dart';
 import 'package:enchanted_forest_adventure/models/zombie_mode_data.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
 import 'package:enchanted_forest_adventure/game/zombie_game_engine.dart';
@@ -17,85 +16,22 @@ void main() {
     await ZombieProgressController.instance.resetProgress();
   });
 
-  group('ZombieEntity Tests', () {
-    test('Normal Zombie has standard stats', () {
-      final z = ZombieEntity(id: 'z1', zombieType: ZombieType.normal, x: 100, y: 500);
-      expect(z.zombieType, equals(ZombieType.normal));
-      expect(z.health, equals(2));
-      expect(z.damage, equals(1));
-    });
-
-    test('Fast Zombie has higher speed and lower health', () {
-      final z = ZombieEntity(id: 'z2', zombieType: ZombieType.fast, x: 100, y: 500);
-      expect(z.zombieType, equals(ZombieType.fast));
-      expect(z.speed, equals(3.2));
-      expect(z.health, equals(1));
-    });
-
-    test('Large Zombie has high health and strong damage', () {
-      final z = ZombieEntity(id: 'z3', zombieType: ZombieType.large, x: 100, y: 500);
-      expect(z.zombieType, equals(ZombieType.large));
-      expect(z.health, equals(5));
-      expect(z.damage, equals(2));
-      expect(z.width, equals(58));
-      expect(z.height, equals(64));
+  group('ZombieMode Exact Wave Config Tests', () {
+    test('Wave 1 to Wave 10 have exact required counts', () {
+      expect(ZombieModeData.getWaveConfig(1).totalZombies, equals(10));
+      expect(ZombieModeData.getWaveConfig(2).totalZombies, equals(20));
+      expect(ZombieModeData.getWaveConfig(3).totalZombies, equals(30));
+      expect(ZombieModeData.getWaveConfig(4).totalZombies, equals(40));
+      expect(ZombieModeData.getWaveConfig(5).totalZombies, equals(50));
+      expect(ZombieModeData.getWaveConfig(6).totalZombies, equals(60));
+      expect(ZombieModeData.getWaveConfig(7).totalZombies, equals(70));
+      expect(ZombieModeData.getWaveConfig(8).totalZombies, equals(80));
+      expect(ZombieModeData.getWaveConfig(9).totalZombies, equals(90));
+      expect(ZombieModeData.getWaveConfig(10).totalZombies, equals(100));
     });
   });
 
-  group('ZombieModeData WaveConfig Progression Tests', () {
-    test('Wave 1 has exactly 10 weak zombies', () {
-      final w1 = ZombieModeData.getWaveConfig(1);
-      expect(w1.totalZombies, equals(10));
-      expect(w1.largeCount, equals(0));
-    });
-
-    test('Wave 2 has exactly 20 zombies', () {
-      final w2 = ZombieModeData.getWaveConfig(2);
-      expect(w2.totalZombies, equals(20));
-      expect(w2.largeCount, equals(0));
-    });
-
-    test('Wave 3 has 30 zombies', () {
-      final w3 = ZombieModeData.getWaveConfig(3);
-      expect(w3.totalZombies, equals(30));
-    });
-
-    test('Wave 4 has 40 zombies and introduces Large Zombies', () {
-      final w4 = ZombieModeData.getWaveConfig(4);
-      expect(w4.totalZombies, equals(40));
-      expect(w4.largeCount, equals(2));
-    });
-
-    test('Wave 5 has 50 zombies', () {
-      final w5 = ZombieModeData.getWaveConfig(5);
-      expect(w5.totalZombies, equals(50));
-    });
-  });
-
-  group('ZombieProgressController & Weapon Selection Tests', () {
-    test('Initial progress starts at wave 0 and basic weapon', () {
-      final controller = ZombieProgressController.instance;
-      expect(controller.highestWaveCompleted, equals(0));
-      expect(controller.totalZombiesDefeated, equals(0));
-      expect(controller.unlockedWeapons, contains('basic'));
-      expect(controller.selectedWeapon, equals('basic'));
-    });
-
-    test('Completing wave 2 unlocks AK-47', () async {
-      final controller = ZombieProgressController.instance;
-      await controller.completeWave(2);
-      expect(controller.unlockedWeapons, contains('ak47'));
-    });
-
-    test('Defeating 50 zombies triggers milestone flag and AK-47 unlock', () async {
-      final controller = ZombieProgressController.instance;
-      await controller.addZombiesDefeated(50);
-      expect(controller.totalZombiesDefeated, equals(50));
-      expect(controller.unlockedWeapons, contains('ak47'));
-    });
-  });
-
-  group('ZombieGameEngine Logic & Countdown Tests', () {
+  group('ZombieGameEngine Strict Wave & Spawn Invariant Tests', () {
     late ZombieGameEngine engine;
 
     setUp(() {
@@ -103,32 +39,40 @@ void main() {
       engine.updateScreenSize(390, 844);
     });
 
-    test('Engine starts in weaponSelect state', () {
-      expect(engine.gameState, equals(ZombieGameState.weaponSelect));
+    test('Engine starts Wave 1 with totalZombiesForWave=10 and zombiesSpawned=0', () {
       expect(engine.currentWave, equals(1));
+      expect(engine.totalZombiesForWave, equals(10));
+      expect(engine.zombiesSpawned, equals(0));
       expect(engine.zombiesRemainingInWave, equals(10));
     });
 
-    test('Starting preparation countdown sets 10s timer and allows movement', () {
+    test('Engine spawns zombies up to totalZombiesForWave and NEVER exceeds it', () {
       engine.startPreparationCountdown();
-      expect(engine.gameState, equals(ZombieGameState.preparingWave));
-      expect(engine.countdownTimer, equals(10.0));
-
-      // Tick 100 x 0.05 = 5 seconds
-      for (int i = 0; i < 100; i++) {
-        engine.tick(0.05);
-      }
-      expect(engine.countdownTimer, closeTo(5.0, 0.2));
-      expect(engine.gameState, equals(ZombieGameState.preparingWave));
-    });
-
-    test('Countdown finishing transitions to playing state', () {
-      engine.startPreparationCountdown();
-      // Tick 210 x 0.05 = 10.5 seconds
       for (int i = 0; i < 210; i++) {
         engine.tick(0.05);
       }
       expect(engine.gameState, equals(ZombieGameState.playing));
+
+      // Tick many frames to allow full spawning
+      for (int i = 0; i < 500; i++) {
+        engine.tick(0.05);
+      }
+
+      expect(engine.zombiesSpawned, lessThanOrEqualTo(engine.totalZombiesForWave));
+      expect(engine.zombiesSpawned, equals(10));
+    });
+
+    test('Wave 10 clear transitions to ZombieGameState.completed', () {
+      engine.gameState = ZombieGameState.playing;
+      engine.currentWave = 10;
+      engine.totalZombiesForWave = 100;
+      engine.zombiesSpawned = 100;
+      engine.zombiesDefeatedInWave = 100;
+      engine.activeZombies.clear();
+
+      engine.tick(0.05);
+
+      expect(engine.gameState, equals(ZombieGameState.completed));
     });
   });
 

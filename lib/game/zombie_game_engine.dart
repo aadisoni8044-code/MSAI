@@ -17,6 +17,7 @@ enum ZombieGameState {
   waveComplete,
   milestone,
   gameOver,
+  completed,
 }
 
 class ZombieGameEngine extends ChangeNotifier {
@@ -31,9 +32,12 @@ class ZombieGameEngine extends ChangeNotifier {
   }
 
   int currentWave = 1;
-  int zombiesRemainingInWave = 0;
-  int zombiesKilledInWave = 0;
+  int totalZombiesForWave = 10;
+  int zombiesSpawned = 0;
+  int zombiesDefeatedInWave = 0;
   int totalZombiesKilledThisRun = 0;
+
+  int get zombiesRemainingInWave => max(0, totalZombiesForWave - zombiesDefeatedInWave);
 
   // Countdown & Prep
   double countdownTimer = 10.0;
@@ -92,12 +96,13 @@ class ZombieGameEngine extends ChangeNotifier {
 
   void _setupWaveData(int waveNum) {
     currentWave = waveNum;
-    zombiesKilledInWave = 0;
+    zombiesSpawned = 0;
+    zombiesDefeatedInWave = 0;
     _spawnQueue.clear();
     activeZombies.clear();
 
     final config = ZombieModeData.getWaveConfig(waveNum);
-    zombiesRemainingInWave = config.totalZombies;
+    totalZombiesForWave = config.totalZombies;
 
     for (int i = 0; i < config.normalCount; i++) {
       _spawnQueue.add(ZombieType.normal);
@@ -186,7 +191,14 @@ class ZombieGameEngine extends ChangeNotifier {
   }
 
   void tick(double dt) {
-    if (gameState == ZombieGameState.paused || gameState == ZombieGameState.gameOver) return;
+    if (gameState == ZombieGameState.paused ||
+        gameState == ZombieGameState.gameOver ||
+        gameState == ZombieGameState.completed ||
+        gameState == ZombieGameState.waveComplete ||
+        gameState == ZombieGameState.weaponSelect ||
+        gameState == ZombieGameState.milestone) {
+      return;
+    }
 
     final effectiveDt = dt.clamp(0.001, 0.05);
 
@@ -245,8 +257,8 @@ class ZombieGameEngine extends ChangeNotifier {
       ZombieAudioController.instance.playChaseAmbience(activeZombies.length, minDistance: minZombieDist);
     }
 
-    // Check wave clear transition
-    if (zombiesRemainingInWave <= 0 && activeZombies.isEmpty) {
+    // Check wave clear transition: All required wave zombies spawned AND all defeated
+    if (zombiesSpawned >= totalZombiesForWave && activeZombies.isEmpty && zombiesDefeatedInWave >= totalZombiesForWave) {
       _handleWaveCleared();
     }
 
@@ -255,10 +267,16 @@ class ZombieGameEngine extends ChangeNotifier {
 
   void _handleWaveCleared() {
     ZombieProgressController.instance.completeWave(currentWave);
-    ZombieProgressController.instance.addZombiesDefeated(zombiesKilledInWave);
+    ZombieProgressController.instance.addZombiesDefeated(zombiesDefeatedInWave);
 
     final totalDefeated = ZombieProgressController.instance.totalZombiesDefeated;
     final controller = ZombieProgressController.instance;
+
+    if (currentWave >= 10) {
+      // Wave 10 completed - Final Victory state
+      gameState = ZombieGameState.completed;
+      return;
+    }
 
     if (totalDefeated >= 100 && !controller.has100MilestoneShown) {
       pendingMilestone = 100;
@@ -274,6 +292,11 @@ class ZombieGameEngine extends ChangeNotifier {
   }
 
   void proceedToNextWave() {
+    if (currentWave >= 10) {
+      gameState = ZombieGameState.completed;
+      notifyListeners();
+      return;
+    }
     _setupWaveData(currentWave + 1);
     startWeaponSelect();
   }
@@ -284,12 +307,15 @@ class ZombieGameEngine extends ChangeNotifier {
   }
 
   void _updateSpawning(double dt) {
-    if (_spawnQueue.isEmpty) return;
+    if (gameState != ZombieGameState.playing) return;
+    if (_spawnQueue.isEmpty || zombiesSpawned >= totalZombiesForWave) return;
 
     _spawnTimer += dt;
-    if (_spawnTimer >= 0.8 && activeZombies.length < 15) {
+    // Spawn gradually every 0.8 seconds (max 15 zombies active concurrently)
+    if (_spawnTimer >= 0.8 && activeZombies.length < 15 && zombiesSpawned < totalZombiesForWave) {
       _spawnTimer = 0;
       final type = _spawnQueue.removeAt(0);
+      zombiesSpawned++;
 
       final spawnOnRight = _random.nextBool();
       double spawnX;
@@ -328,7 +354,6 @@ class ZombieGameEngine extends ChangeNotifier {
 
       final dist = (zombie.x - player.x).abs();
 
-      // Trigger footsteps for nearby moving zombies
       if (zombie.vx.abs() > 0.5 && zombie.isGrounded) {
         ZombieAudioController.instance.playZombieFootstep(
           isLarge: zombie.zombieType == ZombieType.large,
@@ -338,8 +363,7 @@ class ZombieGameEngine extends ChangeNotifier {
 
       if (zombie.state == ZombieState.dead) {
         activeZombies.removeAt(i);
-        zombiesRemainingInWave--;
-        zombiesKilledInWave++;
+        zombiesDefeatedInWave++;
         totalZombiesKilledThisRun++;
         player.coins += zombie.zombieType == ZombieType.large ? 10 : 3;
 
@@ -363,7 +387,6 @@ class ZombieGameEngine extends ChangeNotifier {
       if (player.isGrounded && !player.isAttacking) {
         player.actionState = PlayerActionState.running;
 
-        // Check if walking on watchtower platforms
         for (final towerRect in nightWorld.watchtowers) {
           if (towerRect.contains(Offset(player.x + player.width / 2, player.y + player.height))) {
             ZombieAudioController.instance.playTowerStep();

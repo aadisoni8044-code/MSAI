@@ -17,6 +17,7 @@ import 'package:enchanted_forest_adventure/ui/main_menu_screen.dart';
 import 'package:enchanted_forest_adventure/ui/weapon_selection_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/wave_complete_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/zombie_milestone_overlay.dart';
+import 'package:enchanted_forest_adventure/ui/zombie_mode_completed_overlay.dart';
 
 class ZombieGameScreen extends StatefulWidget {
   const ZombieGameScreen({super.key});
@@ -233,7 +234,7 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                                   const Icon(Icons.coronavirus_rounded, color: Color(0xFFFF5252), size: 18),
                                   const SizedBox(width: 6),
                                   Text(
-                                    '${_engine.zombiesRemainingInWave + _engine.activeZombies.length}',
+                                    '${_engine.zombiesRemainingInWave}',
                                     style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
                                   ),
                                 ],
@@ -333,7 +334,7 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                 if (_engine.gameState == ZombieGameState.waveComplete)
                   WaveCompleteOverlay(
                     waveNumber: _engine.currentWave,
-                    zombiesKilled: _engine.zombiesKilledInWave,
+                    zombiesKilled: _engine.zombiesDefeatedInWave,
                     onNextWave: () => _engine.proceedToNextWave(),
                   ),
 
@@ -344,7 +345,19 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                     onContinue: () => _engine.dismissMilestone(),
                   ),
 
-                // 11. Pause Overlay
+                // 11. Zombie Mode Completed Overlay (Wave 10 Clear)
+                if (_engine.gameState == ZombieGameState.completed)
+                  ZombieModeCompletedOverlay(
+                    onReplay: () => _engine.initNightWorld(),
+                    onQuit: () {
+                      ZombieAudioController.instance.stopAllZombieAudio();
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(builder: (_) => const MainMenuScreen()),
+                      );
+                    },
+                  ),
+
+                // 12. Pause Overlay
                 if (_engine.gameState == ZombieGameState.paused)
                   PauseOverlay(
                     onResume: () => _engine.togglePause(),
@@ -357,7 +370,7 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                     },
                   ),
 
-                // 12. Game Over Overlay
+                // 13. Game Over Overlay
                 if (_engine.gameState == ZombieGameState.gameOver)
                   GameOverOverlay(
                     hasCheckpoint: false,

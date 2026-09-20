@@ -56,7 +56,6 @@ class ZombieAudioController extends ChangeNotifier {
 
     try {
       if (_musicVolume > 0 && _musicPlayer != null) {
-        // Do not restart if already playing background.wav continuously
         if (_musicPlayer!.state != PlayerState.playing) {
           await _musicPlayer!.stop();
           await _musicPlayer!.setReleaseMode(ReleaseMode.loop);
@@ -91,7 +90,6 @@ class ZombieAudioController extends ChangeNotifier {
     }
   }
 
-  // Distance attenuation factor: 1.0 at 0px -> 0.0 at 1200px
   double _calculateDistanceFactor(double distance) {
     if (distance <= 200) return 1.0;
     if (distance >= 1200) return 0.0;
@@ -260,6 +258,7 @@ class ZombieAudioController extends ChangeNotifier {
         _windPlayer!.setVolume(windVol.clamp(0.0, 1.0));
       }
     } catch (e) {
+      // Gracefully handle uninitialized audio player channel in headless test runner
       debugPrint('Error updating horde intensity: $e');
     }
   }
