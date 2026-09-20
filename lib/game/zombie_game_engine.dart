@@ -4,17 +4,40 @@ import 'package:enchanted_forest_adventure/models/player_state.dart';
 import 'package:enchanted_forest_adventure/models/game_entity.dart';
 import 'package:enchanted_forest_adventure/models/zombie_entity.dart';
 import 'package:enchanted_forest_adventure/models/zombie_mode_data.dart';
+import 'package:enchanted_forest_adventure/models/weapon_data.dart';
+import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
+
+enum ZombieGameState {
+  weaponSelect,
+  preparingWave,
+  playing,
+  paused,
+  waveComplete,
+  milestone,
+  gameOver,
+}
 
 class ZombieGameEngine extends ChangeNotifier {
   late ZombieModeData nightWorld;
   late PlayerState player;
 
-  GameStatus status = GameStatus.playing;
+  ZombieGameState gameState = ZombieGameState.weaponSelect;
+  GameStatus get status {
+    if (gameState == ZombieGameState.paused) return GameStatus.paused;
+    if (gameState == ZombieGameState.gameOver) return GameStatus.gameOver;
+    return GameStatus.playing;
+  }
 
   int currentWave = 1;
   int zombiesRemainingInWave = 0;
   int zombiesKilledInWave = 0;
+  int totalZombiesKilledThisRun = 0;
+
+  // Countdown & Prep
+  double countdownTimer = 10.0;
+  String warningMessage = "10 SECONDS LEFT — FIND A SAFE PLACE!";
+  int pendingMilestone = 0; // 50 or 100
 
   final List<ZombieEntity> activeZombies = [];
   final List<ZombieType> _spawnQueue = [];
@@ -53,18 +76,19 @@ class ZombieGameEngine extends ChangeNotifier {
   void initNightWorld() {
     nightWorld = ZombieModeData.createNightWorld();
     player = PlayerState(x: nightWorld.playerStartX, y: nightWorld.playerStartY);
-    status = GameStatus.playing;
+    gameState = ZombieGameState.weaponSelect;
     particles.clear();
     activeZombies.clear();
 
     currentWave = 1;
-    _startWave(currentWave);
+    totalZombiesKilledThisRun = 0;
+    _setupWaveData(currentWave);
 
     _updateCamera(instant: true);
     notifyListeners();
   }
 
-  void _startWave(int waveNum) {
+  void _setupWaveData(int waveNum) {
     currentWave = waveNum;
     zombiesKilledInWave = 0;
     _spawnQueue.clear();
@@ -86,6 +110,18 @@ class ZombieGameEngine extends ChangeNotifier {
     _spawnQueue.shuffle(_random);
   }
 
+  void startWeaponSelect() {
+    gameState = ZombieGameState.weaponSelect;
+    notifyListeners();
+  }
+
+  void startPreparationCountdown() {
+    gameState = ZombieGameState.preparingWave;
+    countdownTimer = 10.0;
+    warningMessage = "10 SECONDS LEFT — FIND A SAFE PLACE!";
+    notifyListeners();
+  }
+
   void setJoystickInput(double x) {
     inputX = x.clamp(-1.0, 1.0);
   }
@@ -95,7 +131,7 @@ class ZombieGameEngine extends ChangeNotifier {
   void setKeyDown(bool pressed) => keyDown = pressed;
 
   void jump() {
-    if (status != GameStatus.playing) return;
+    if (gameState != ZombieGameState.playing && gameState != ZombieGameState.preparingWave) return;
     isJumpHeld = true;
     if (player.isGrounded) {
       player.vy = -16.0;
@@ -113,28 +149,52 @@ class ZombieGameEngine extends ChangeNotifier {
   }
 
   void attack() {
-    if (status != GameStatus.playing) return;
+    if (gameState != ZombieGameState.playing && gameState != ZombieGameState.preparingWave) return;
     if (player.attackTimer <= 0) {
-      player.attackTimer = 0.28;
+      final weaponId = ZombieProgressController.instance.selectedWeapon;
+      final weapon = WeaponData.getById(weaponId);
+
+      player.attackTimer = 0.28 / weapon.fireRate;
       player.actionState = PlayerActionState.attacking;
       _triggerCameraShake(0.15, 3.5);
-      _checkAttackCollisions();
+      _checkAttackCollisions(weapon);
     }
   }
 
   void togglePause() {
-    if (status == GameStatus.playing) {
-      status = GameStatus.paused;
-    } else if (status == GameStatus.paused) {
-      status = GameStatus.playing;
+    if (gameState == ZombieGameState.playing || gameState == ZombieGameState.preparingWave) {
+      gameState = ZombieGameState.paused;
+    } else if (gameState == ZombieGameState.paused) {
+      gameState = ZombieGameState.playing;
     }
     notifyListeners();
   }
 
   void tick(double dt) {
-    if (status != GameStatus.playing) return;
+    if (gameState == ZombieGameState.paused || gameState == ZombieGameState.gameOver) return;
 
     final effectiveDt = dt.clamp(0.001, 0.05);
+
+    if (gameState == ZombieGameState.preparingWave) {
+      countdownTimer -= effectiveDt;
+      if (countdownTimer <= 0) {
+        countdownTimer = 0;
+        gameState = ZombieGameState.playing;
+      } else if (countdownTimer <= 3.0) {
+        warningMessage = "GET READY! ZOMBIES INCOMING!";
+      } else if (countdownTimer <= 6.0) {
+        warningMessage = "HEAD TO THE WATCHTOWER FOR HIGH GROUND!";
+      }
+
+      // Allow player movement during countdown
+      _updatePlayerMovement(effectiveDt);
+      _updateParticles(effectiveDt);
+      _updateCamera();
+      notifyListeners();
+      return;
+    }
+
+    if (gameState != ZombieGameState.playing) return;
 
     _updateSpawning(effectiveDt);
     _updateZombiesAI(effectiveDt);
@@ -148,9 +208,39 @@ class ZombieGameEngine extends ChangeNotifier {
 
     // Check wave clear transition
     if (zombiesRemainingInWave <= 0 && activeZombies.isEmpty) {
-      _startWave(currentWave + 1);
+      _handleWaveCleared();
     }
 
+    notifyListeners();
+  }
+
+  void _handleWaveCleared() {
+    ZombieProgressController.instance.completeWave(currentWave);
+    ZombieProgressController.instance.addZombiesDefeated(zombiesKilledInWave);
+
+    final totalDefeated = ZombieProgressController.instance.totalZombiesDefeated;
+    final controller = ZombieProgressController.instance;
+
+    if (totalDefeated >= 100 && !controller.has100MilestoneShown) {
+      pendingMilestone = 100;
+      controller.setMilestoneShown(100);
+      gameState = ZombieGameState.milestone;
+    } else if (totalDefeated >= 50 && !controller.has50MilestoneShown) {
+      pendingMilestone = 50;
+      controller.setMilestoneShown(50);
+      gameState = ZombieGameState.milestone;
+    } else {
+      gameState = ZombieGameState.waveComplete;
+    }
+  }
+
+  void proceedToNextWave() {
+    _setupWaveData(currentWave + 1);
+    startWeaponSelect();
+  }
+
+  void dismissMilestone() {
+    gameState = ZombieGameState.waveComplete;
     notifyListeners();
   }
 
@@ -158,12 +248,11 @@ class ZombieGameEngine extends ChangeNotifier {
     if (_spawnQueue.isEmpty) return;
 
     _spawnTimer += dt;
-    // Maintain maximum 15 active zombies concurrently for optimal mobile performance
+    // Spawn gradually every 0.8 seconds (max 15 zombies active concurrently)
     if (_spawnTimer >= 0.8 && activeZombies.length < 15) {
       _spawnTimer = 0;
       final type = _spawnQueue.removeAt(0);
 
-      // Spawn on left or right side of player outside current screen view
       final spawnOnRight = _random.nextBool();
       double spawnX;
       if (spawnOnRight) {
@@ -173,7 +262,7 @@ class ZombieGameEngine extends ChangeNotifier {
       }
 
       spawnX = spawnX.clamp(50.0, nightWorld.worldWidth - 100.0);
-      const double spawnY = 640.0; // Near ground level
+      const double spawnY = 640.0;
 
       activeZombies.add(ZombieEntity(
         id: 'z_${DateTime.now().microsecondsSinceEpoch}_${_random.nextInt(1000)}',
@@ -200,6 +289,7 @@ class ZombieGameEngine extends ChangeNotifier {
         activeZombies.removeAt(i);
         zombiesRemainingInWave--;
         zombiesKilledInWave++;
+        totalZombiesKilledThisRun++;
         player.coins += zombie.zombieType == ZombieType.large ? 10 : 3;
         _addSparkleParticles(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2, const Color(0xFFFF5252));
       }
@@ -292,12 +382,21 @@ class ZombieGameEngine extends ChangeNotifier {
     }
   }
 
-  void _checkAttackCollisions() {
-    final attackBox = player.attackBounds;
+  void _checkAttackCollisions(WeaponData weapon) {
+    // Determine attack reach based on selected weapon range
+    final baseBox = player.attackBounds;
+    final double extraReach = weapon.range - 220.0;
+    final attackBox = Rect.fromLTRB(
+      player.facingRight ? baseBox.left : baseBox.left - extraReach,
+      baseBox.top,
+      player.facingRight ? baseBox.right + extraReach : baseBox.right,
+      baseBox.bottom,
+    );
 
     for (final zombie in activeZombies) {
       if (zombie.health > 0 && attackBox.overlaps(zombie.bounds)) {
-        zombie.takeDamage(1);
+        final damage = (1 * weapon.damageMultiplier).round();
+        zombie.takeDamage(damage > 0 ? damage : 1);
         _addHitParticles(zombie.x + zombie.width / 2, zombie.y + zombie.height / 2, 12);
         _triggerCameraShake(0.2, 5.0);
       }
@@ -313,7 +412,7 @@ class ZombieGameEngine extends ChangeNotifier {
         final damage = zombie.damage;
         player.currentHealth -= damage;
         player.invulnerableTimer = 1.0;
-        damageCooldownTimer = 1.0; // Reasonable damage cooldown so player can escape horde
+        damageCooldownTimer = 1.0;
 
         player.vy = -6.0;
         player.vx = player.x < zombie.x ? -6.0 : 6.0;
@@ -350,7 +449,7 @@ class ZombieGameEngine extends ChangeNotifier {
   void _handlePlayerDeath() {
     player.currentHealth = 0;
     player.actionState = PlayerActionState.dead;
-    status = GameStatus.gameOver;
+    gameState = ZombieGameState.gameOver;
   }
 
   void _updateCamera({bool instant = false}) {

@@ -3,7 +3,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/core/settings_controller.dart';
-import 'package:enchanted_forest_adventure/game/game_engine.dart';
 import 'package:enchanted_forest_adventure/game/zombie_game_engine.dart';
 import 'package:enchanted_forest_adventure/rendering/night_world_painter.dart';
 import 'package:enchanted_forest_adventure/rendering/zombie_painter.dart';
@@ -14,6 +13,9 @@ import 'package:enchanted_forest_adventure/widgets/action_buttons.dart';
 import 'package:enchanted_forest_adventure/ui/pause_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/game_over_overlay.dart';
 import 'package:enchanted_forest_adventure/ui/main_menu_screen.dart';
+import 'package:enchanted_forest_adventure/ui/weapon_selection_overlay.dart';
+import 'package:enchanted_forest_adventure/ui/wave_complete_overlay.dart';
+import 'package:enchanted_forest_adventure/ui/zombie_milestone_overlay.dart';
 
 class ZombieGameScreen extends StatefulWidget {
   const ZombieGameScreen({super.key});
@@ -115,6 +117,9 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
         body: ListenableBuilder(
           listenable: _engine,
           builder: (context, _) {
+            final isPlayingOrPrep = _engine.gameState == ZombieGameState.playing ||
+                _engine.gameState == ZombieGameState.preparingWave;
+
             return Stack(
               children: [
                 // 1. Night World Environment
@@ -150,7 +155,7 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                   ),
                 ),
 
-                // 4. Particles (Spores, Sparks, Blood Hits)
+                // 4. Particles
                 CustomPaint(
                   size: screenSize,
                   painter: ParticlePainter(
@@ -240,8 +245,59 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                   ),
                 ),
 
-                // 6. Mobile Touch Controls
-                if (_engine.status == GameStatus.playing)
+                // 6. Pre-Wave Preparation Countdown Banner (Top Center Notification)
+                if (_engine.gameState == ZombieGameState.preparingWave)
+                  Positioned(
+                    top: 70,
+                    left: 20,
+                    right: 20,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xEE0B0F19),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(color: const Color(0xFFF59E0B), width: 2),
+                          boxShadow: const [
+                            BoxShadow(color: Color(0x66F59E0B), blurRadius: 12, spreadRadius: 1),
+                          ],
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.timer_outlined, color: Color(0xFFF59E0B), size: 22),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'NEXT WAVE IN ${_engine.countdownTimer.ceil()}s',
+                                  style: const TextStyle(
+                                    color: Color(0xFFF59E0B),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 1.2,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _engine.warningMessage,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                // 7. Mobile Touch Controls
+                if (isPlayingOrPrep)
                   Positioned(
                     left: isLandscape ? padding.left + 24 : 20,
                     bottom: isLandscape ? 20 : 30,
@@ -250,7 +306,7 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                     ),
                   ),
 
-                if (_engine.status == GameStatus.playing)
+                if (isPlayingOrPrep)
                   Positioned(
                     right: isLandscape ? padding.right + 24 : 20,
                     bottom: isLandscape ? 20 : 30,
@@ -261,8 +317,29 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                     ),
                   ),
 
-                // 7. Pause Overlay
-                if (_engine.status == GameStatus.paused)
+                // 8. Weapon Selection Overlay
+                if (_engine.gameState == ZombieGameState.weaponSelect)
+                  WeaponSelectionOverlay(
+                    onStartWave: () => _engine.startPreparationCountdown(),
+                  ),
+
+                // 9. Wave Complete Overlay
+                if (_engine.gameState == ZombieGameState.waveComplete)
+                  WaveCompleteOverlay(
+                    waveNumber: _engine.currentWave,
+                    zombiesKilled: _engine.zombiesKilledInWave,
+                    onNextWave: () => _engine.proceedToNextWave(),
+                  ),
+
+                // 10. Milestone Overlay (50 or 100 Zombies Defeated)
+                if (_engine.gameState == ZombieGameState.milestone)
+                  ZombieMilestoneOverlay(
+                    milestone: _engine.pendingMilestone,
+                    onContinue: () => _engine.dismissMilestone(),
+                  ),
+
+                // 11. Pause Overlay
+                if (_engine.gameState == ZombieGameState.paused)
                   PauseOverlay(
                     onResume: () => _engine.togglePause(),
                     onRestart: () => _engine.initNightWorld(),
@@ -273,8 +350,8 @@ class _ZombieGameScreenState extends State<ZombieGameScreen> with SingleTickerPr
                     },
                   ),
 
-                // 8. Game Over Overlay
-                if (_engine.status == GameStatus.gameOver)
+                // 12. Game Over Overlay
+                if (_engine.gameState == ZombieGameState.gameOver)
                   GameOverOverlay(
                     hasCheckpoint: false,
                     onRespawn: () => _engine.initNightWorld(),

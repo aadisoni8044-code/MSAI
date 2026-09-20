@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
+import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
 import 'package:enchanted_forest_adventure/ui/game_screen.dart';
 import 'package:enchanted_forest_adventure/ui/zombie_intro_screen.dart';
 import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
@@ -113,7 +114,7 @@ class MainMenuScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Game Icon / Avatar Crest
+                    // Game Icon
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
@@ -162,7 +163,7 @@ class MainMenuScreen extends StatelessWidget {
 
                     // Start Game Button
                     SizedBox(
-                      width: 240,
+                      width: 260,
                       height: 52,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
@@ -193,54 +194,82 @@ class MainMenuScreen extends StatelessWidget {
 
                     const SizedBox(height: 14),
 
-                    // Zombie Mode Button
-                    SizedBox(
-                      width: 240,
-                      height: 52,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(26),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0xFF8B0000),
-                              blurRadius: 16,
-                              spreadRadius: -2,
+                    // Zombie Mode Button & Stats Badge
+                    ListenableBuilder(
+                      listenable: ZombieProgressController.instance,
+                      builder: (context, _) {
+                        final zCtrl = ZombieProgressController.instance;
+
+                        return Column(
+                          children: [
+                            SizedBox(
+                              width: 260,
+                              height: 52,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(26),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color(0xFF8B0000),
+                                      blurRadius: 16,
+                                      spreadRadius: -2,
+                                    ),
+                                  ],
+                                ),
+                                child: ElevatedButton.icon(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xFF0F070B),
+                                    foregroundColor: const Color(0xFFFF4D4D),
+                                    side: const BorderSide(color: Color(0xFFFF3333), width: 1.8),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(26),
+                                    ),
+                                    elevation: 6,
+                                  ),
+                                  onPressed: () {
+                                    Navigator.of(context).push(
+                                      MaterialPageRoute(builder: (_) => const ZombieIntroScreen()),
+                                    );
+                                  },
+                                  icon: const Icon(Icons.coronavirus_rounded, size: 24, color: Color(0xFFFF3333)),
+                                  label: const Text(
+                                    'ZOMBIE MODE',
+                                    style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w900,
+                                      letterSpacing: 1.8,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xAA0F070B),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: const Color(0x66FF3333)),
+                              ),
+                              child: Text(
+                                'Highest Wave: ${zCtrl.highestWaveCompleted}  |  Defeated: ${zCtrl.totalZombiesDefeated}  |  Weapons: ${zCtrl.unlockedWeapons.length}',
+                                style: const TextStyle(
+                                  color: Color(0xFFFF8080),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             ),
                           ],
-                        ),
-                        child: ElevatedButton.icon(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF0F070B),
-                            foregroundColor: const Color(0xFFFF4D4D),
-                            side: const BorderSide(color: Color(0xFFFF3333), width: 1.8),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(26),
-                            ),
-                            elevation: 6,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (_) => const ZombieIntroScreen()),
-                            );
-                          },
-                          icon: const Icon(Icons.coronavirus_rounded, size: 24, color: Color(0xFFFF3333)),
-                          label: const Text(
-                            'ZOMBIE MODE',
-                            style: TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1.8,
-                            ),
-                          ),
-                        ),
-                      ),
+                        );
+                      },
                     ),
 
                     const SizedBox(height: 14),
 
                     // Level Select Button
                     SizedBox(
-                      width: 240,
+                      width: 260,
                       height: 52,
                       child: OutlinedButton.icon(
                         style: OutlinedButton.styleFrom(
@@ -287,7 +316,7 @@ class MainMenuScreen extends StatelessWidget {
                           ),
                           SizedBox(height: 6),
                           Text(
-                            '• Left Joystick: Move Left / Right\n• Bottom-Right Buttons: Jump & Attack',
+                            '• Left Joystick / WASD: Move\n• Bottom-Right Buttons / Space / J: Jump & Attack',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               color: Colors.white70,

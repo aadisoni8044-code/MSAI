@@ -42,7 +42,7 @@ class ZombieModeData {
     const double groundY = 700.0;
 
     final List<GameEntity> platforms = [
-      // Main ground sections with chasms
+      // Main ground sections
       GameEntity(id: 'zg1', type: EntityType.platform, x: 0, y: groundY, width: 1200, height: 150),
       GameEntity(id: 'zg2', type: EntityType.platform, x: 1350, y: groundY, width: 1400, height: 150),
       GameEntity(id: 'zg3', type: EntityType.platform, x: 2900, y: groundY, width: 1600, height: 150),
@@ -68,7 +68,6 @@ class ZombieModeData {
       GameEntity(id: 'sc3_top', type: EntityType.platform, x: 3700, y: 300, width: 240, height: 28),
     ];
 
-    // Watchtower structures (for visual rendering bounds)
     final List<Rect> watchtowers = [
       const Rect.fromLTWH(460, 270, 260, 430),
       const Rect.fromLTWH(2260, 250, 260, 450),
@@ -86,7 +85,6 @@ class ZombieModeData {
         height: 22,
       ));
     }
-    // Health Pots on watchtowers
     collectibles.add(GameEntity(id: 'zhp1', type: EntityType.healthPot, x: 580, y: 230, width: 24, height: 28));
     collectibles.add(GameEntity(id: 'zhp2', type: EntityType.healthPot, x: 2380, y: 210, width: 24, height: 28));
     collectibles.add(GameEntity(id: 'zhp3', type: EntityType.healthPot, x: 3800, y: 260, width: 24, height: 28));
@@ -104,23 +102,31 @@ class ZombieModeData {
 
   static WaveConfig getWaveConfig(int waveNumber) {
     if (waveNumber == 1) {
-      return WaveConfig(waveNumber: 1, normalCount: 6, fastCount: 0, largeCount: 0);
+      // WAVE 1: 10 Zombies (Weak, slow tutorial wave)
+      return WaveConfig(waveNumber: 1, normalCount: 10, fastCount: 0, largeCount: 0);
     } else if (waveNumber == 2) {
-      return WaveConfig(waveNumber: 2, normalCount: 10, fastCount: 2, largeCount: 0);
+      // WAVE 2: 20 Zombies (Slightly faster, weak)
+      return WaveConfig(waveNumber: 2, normalCount: 18, fastCount: 2, largeCount: 0);
     } else if (waveNumber == 3) {
-      return WaveConfig(waveNumber: 3, normalCount: 12, fastCount: 5, largeCount: 0);
+      // WAVE 3: 30 Zombies
+      return WaveConfig(waveNumber: 3, normalCount: 24, fastCount: 6, largeCount: 0);
     } else if (waveNumber == 4) {
-      return WaveConfig(waveNumber: 4, normalCount: 12, fastCount: 4, largeCount: 1);
+      // WAVE 4: 40 Zombies
+      return WaveConfig(waveNumber: 4, normalCount: 30, fastCount: 8, largeCount: 2);
     } else if (waveNumber == 5) {
-      return WaveConfig(waveNumber: 5, normalCount: 15, fastCount: 8, largeCount: 2);
+      // WAVE 5: 50 Zombies (Milestone wave, includes Large Zombies)
+      return WaveConfig(waveNumber: 5, normalCount: 35, fastCount: 12, largeCount: 3);
     } else {
-      // Endless scaling waves
-      final extra = waveNumber - 5;
+      // WAVE 6+: 60, 70, 80, 90, 100 Zombies
+      final total = 50 + (waveNumber - 5) * 10;
+      final largeCount = 3 + (waveNumber - 5);
+      final fastCount = 12 + (waveNumber - 5) * 2;
+      final normalCount = (total - largeCount - fastCount).clamp(10, 1000);
       return WaveConfig(
         waveNumber: waveNumber,
-        normalCount: 16 + extra * 3,
-        fastCount: 8 + extra * 2,
-        largeCount: 2 + extra,
+        normalCount: normalCount,
+        fastCount: fastCount,
+        largeCount: largeCount,
       );
     }
   }
