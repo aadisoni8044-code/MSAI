@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090d16" />
+  <title>Game Information — Shadow Forest: Zombie Outbreak</title>
+  <meta name="description" content="Explore detailed information about Shadow Forest: Zombie Outbreak. Learn about combat, 10 elemental levels, zombie outbreak wave rules, weapons, and controls." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="hero.css" />
+  <link rel="stylesheet" href="gallery.css" />
+  <link rel="stylesheet" href="animations.css" />
+  <link rel="stylesheet" href="responsive.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-header">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="a.png" alt="Shadow Forest Logo" />
+        <span class="nav-brand-title">SHADOW FOREST</span>
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="game.html" class="nav-link active">Game Info</a></li>
+          <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+          <li><a href="videos.html" class="nav-link">Videos</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="index.html#download" class="nav-link">Download</a></li>
+        </ul>
+      </nav>
+
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button id="soundToggleBtn" class="sound-toggle-btn" title="Toggle Sound">🔇</button>
+        <button class="hamburger-toggle" aria-label="Toggle Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header Banner -->
+  <section class="section-padding" style="padding-top: calc(var(--nav-height) + 3rem); background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.25) 0%, rgba(9, 13, 22, 1) 80%); border-bottom: 1px solid var(--border-glass);">
+    <div class="container" style="text-align: center;">
+      <span class="badge" style="margin-bottom: 0.75rem;">COMPREHENSIVE GAME INTEL</span>
+      <h1 class="hero-title" style="font-size: 3.2rem; margin-bottom: 1rem;">GAME INFORMATION</h1>
+      <p style="max-width: 700px; margin: 0 auto; color: var(--text-sub);">
+        Deep-dive into the world of Shadow Forest, master the 10 elemental realms, inspect the arsenal, and learn the zombie outbreak wave survival rules.
+      </p>
+    </div>
+  </section>
+
+  <!-- About The Game Section -->
+  <section class="section-padding container" id="about">
+    <div class="glass-card reveal">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 3rem; align-items: center;">
+        <div>
+          <span class="section-subtitle">The Lore & World</span>
+          <h2 style="color: #ffffff; font-size: 2.2rem; margin-bottom: 1rem;">ABOUT THE GAME</h2>
+          <p style="color: var(--text-sub); margin-bottom: 1rem;">
+            Set in an ancient realm fractured by dark elemental corruption, <strong>Shadow Forest: Zombie Outbreak</strong> immerses players into high-octane combat, platforming puzzles, and brutal survival wave combat.
+          </p>
+          <p style="color: var(--text-sub); margin-bottom: 1.5rem;">
+            As an elite shadow guardian, you must harness 10 elemental magical attributes (Forest, Fire, Water, Ice, Desert, Thunder, Poison, Sky, Shadow, and Crystal) to defeat demonic titans and withstand the relentless undead outbreak.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem;">
+            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+              <span style="color: var(--primary); font-weight: bold; display: block;">ENGINE</span>
+              <span style="color: #fff;">Custom Canvas 3D & WebGL</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+              <span style="color: var(--primary); font-weight: bold; display: block;">GENRE</span>
+              <span style="color: #fff;">Action / Zombie Survival</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-glass);">
+          <img src="b.png" alt="Shadow Forest Gameplay" style="width: 100%; height: 100%; object-fit: cover;" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Core Game Features Section -->
+  <section class="section-padding" style="background: rgba(15, 23, 42, 0.4);" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-subtitle">System Breakdown</span>
+        <h2 class="section-title">CORE GAME FEATURES</h2>
+        <p>Explore the combat, tower defense, and atmospheric mechanisms that define the gameplay.</p>
+      </div>
+
+      <div id="featuresGridContainer" class="gallery-grid">
+        <!-- Rendered dynamically by main.js from GAME_DATA -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 Normal Levels Section -->
+  <section class="section-padding container" id="levels">
+    <div class="section-header reveal">
+      <span class="section-subtitle">Campaign Progression</span>
+      <h2 class="section-title">THE 10 ELEMENTAL LEVELS</h2>
+      <p>Journey through 10 distinct, visually stunning elemental biomes, each featuring unique enemies and boss fights.</p>
+    </div>
+
+    <div id="levelsGridContainer" class="gallery-grid">
+      <!-- Rendered dynamically by main.js from GAME_DATA -->
+    </div>
+  </section>
+
+  <!-- Zombie Mode Deep Dive Section -->
+  <section class="section-padding container" id="zombieMode">
+    <div class="glass-card reveal" style="border-color: rgba(239, 68, 68, 0.5); background: linear-gradient(135deg, rgba(239, 68, 68, 0.08), rgba(9, 13, 22, 0.95));">
+      <div class="section-header">
+        <span class="section-subtitle" style="color: var(--accent-red);">Deterministic Survival</span>
+        <h2 class="section-title" style="color: #ffffff;">ZOMBIE OUTBREAK MODE</h2>
+        <p style="color: var(--text-sub);">
+          Survive 10 escalating wave rounds starting from 10 slow walker zombies up to 100 mutated apex tyrants.
+        </p>
+      </div>
+
+      <!-- Highlights Grid -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; margin-bottom: 3rem;">
+        <div style="background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3);">
+          <h4 style="color: var(--accent-gold); margin-bottom: 0.5rem;">📦 Skydrop Supply Crate</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">Eliminate 10 zombies to trigger an animated supply crate drop unlocking the automatic AK-47 rifle.</p>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3);">
+          <h4 style="color: var(--primary); margin-bottom: 0.5rem;">🏰 Defense Watchtowers</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">Climb fortified towers to establish choke points and trigger auto-turrets.</p>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3);">
+          <h4 style="color: var(--accent-red); margin-bottom: 0.5rem;">🔊 Spatial Audio</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">Distance sound attenuation & pitch modulation allow you to detect nearby horde movement.</p>
+        </div>
+        <div style="background: rgba(0,0,0,0.4); padding: 1.25rem; border-radius: var(--radius-sm); border: 1px solid rgba(239, 68, 68, 0.3);">
+          <h4 style="color: var(--accent-green); margin-bottom: 0.5rem;">⚙️ Deterministic Spawns</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">Fixed spawn mechanics yield predictable performance and pure tactical skill mastery.</p>
+        </div>
+      </div>
+
+      <!-- Wave Rules Table -->
+      <h3 style="color: #ffffff; text-align: center; margin-bottom: 1.5rem;">Zombie Outbreak Wave Schedule (10 Waves)</h3>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+          <thead>
+            <tr style="background: rgba(239, 68, 68, 0.2); border-bottom: 2px solid rgba(239, 68, 68, 0.5);">
+              <th style="padding: 1rem; color: #ffffff;">Wave #</th>
+              <th style="padding: 1rem; color: #ffffff;">Zombie Count</th>
+              <th style="padding: 1rem; color: #ffffff;">Wave Title</th>
+              <th style="padding: 1rem; color: #ffffff;">Infected Speed / Type</th>
+              <th style="padding: 1rem; color: #ffffff;">Infected HP</th>
+            </tr>
+          </thead>
+          <tbody id="zombieWaveTableBody">
+            <!-- Rendered dynamically by main.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Weapons & Arsenal Section -->
+  <section class="section-padding container" id="weapons">
+    <div class="section-header reveal">
+      <span class="section-subtitle">Lethal Firepower</span>
+      <h2 class="section-title">WEAPONS & ARSENAL</h2>
+      <p>Equip powerful melee weapons, elemental bows, shotguns, and the air-dropped AK-47.</p>
+    </div>
+
+    <div id="weaponsGridContainer" class="gallery-grid">
+      <!-- Rendered dynamically by main.js from GAME_DATA -->
+    </div>
+  </section>
+
+  <!-- Controls Section -->
+  <section class="section-padding container" id="controls">
+    <div class="glass-card reveal" style="max-width: 900px; margin: 0 auto;">
+      <div class="section-header">
+        <span class="section-subtitle">Player Inputs</span>
+        <h2 class="section-title">GAMEPLAY CONTROLS</h2>
+        <p>Master keyboard and gamepad controls for desktop and mobile touch controls.</p>
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+            <tr style="background: rgba(99, 102, 241, 0.2); border-bottom: 2px solid var(--border-active);">
+              <th style="padding: 1rem; color: #ffffff;">Key / Input</th>
+              <th style="padding: 1rem; color: #ffffff;">Action Performed</th>
+            </tr>
+          </thead>
+          <tbody id="controlsTableBody">
+            <!-- Rendered dynamically by main.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="a.png" alt="Shadow Forest Logo" />
+            <span>SHADOW FOREST</span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            Shadow Forest: Zombie Outbreak is a next-generation AAA dark fantasy action adventure platformer with deterministic wave survival mechanics.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-btn" title="Discord">💬</a>
+            <a href="#" class="social-btn" title="Twitter / X">🐦</a>
+            <a href="#" class="social-btn" title="YouTube">📺</a>
+            <a href="#" class="social-btn" title="Steam">🎮</a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="game.html">Game Information</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+            <li><a href="videos.html">Video Gallery</a></li>
+            <li><a href="index.html#download">Download Game</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Game Content</h4>
+          <ul>
+            <li><a href="#levels">10 Elemental Realms</a></li>
+            <li><a href="#zombieMode">Zombie Outbreak Mode</a></li>
+            <li><a href="#weapons">Arsenal & Weapons</a></li>
+            <li><a href="#controls">Controls Guide</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Community & Support</h4>
+          <ul>
+            <li><a href="#" onclick="alert('Support portal reachable at support@nvisovgames.com'); return false;">Support Center</a></li>
+            <li><a href="#" onclick="alert('Patch notes v2.5 loaded.'); return false;">Patch Notes</a></li>
+            <li><a href="#" onclick="alert('Community discord link: discord.gg/shadowforest'); return false;">Discord Server</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> Nvisov Game Studios. All Rights Reserved. Built with HTML, CSS & JavaScript.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Universal Video Player Modal -->
+  <div id="videoModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content-wrapper">
+      <button id="modalCloseBtn" class="modal-close-btn" aria-label="Close Modal">✕</button>
+      <div class="modal-media-container">
+        <video id="modalVideoPlayer" controls playsinline poster="b.png">
+          <source src="a.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="modal-caption-bar">
+        <h3 id="modalTitle" class="modal-caption-title">Game Trailer</h3>
+        <p id="modalDesc" class="modal-caption-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Stack -->
+  <script src="game-data.js"></script>
+  <script src="navigation.js"></script>
+  <script src="video.js"></script>
+  <script src="gallery.js"></script>
+  <script src="animations.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
