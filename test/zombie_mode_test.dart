@@ -82,7 +82,7 @@ void main() {
       );
 
       expect(find.text('ZOMBIE MODE'), findsOneWidget);
-      expect(find.textContaining('Highest Wave:'), findsOneWidget);
+      expect(find.textContaining('Defeated'), findsOneWidget);
     });
 
     testWidgets('Tapping ZOMBIE MODE button navigates to ZombieIntroScreen', (WidgetTester tester) async {

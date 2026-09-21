@@ -6,6 +6,6 @@ void main() {
     await tester.pumpWidget(const EnchantedForestApp());
 
     expect(find.text('ENCHANTED\nFOREST'), findsOneWidget);
-    expect(find.text('START GAME'), findsOneWidget);
+    expect(find.text('START ADVENTURE'), findsOneWidget);
   });
 }
