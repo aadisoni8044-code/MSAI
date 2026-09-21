@@ -78,15 +78,17 @@ void main() {
     });
   });
 
-  group('LevelData Tests', () {
-    test('LevelData.createLevel creates valid objects for all 10 levels', () {
+  group('Expanded LevelData Tests', () {
+    test('LevelData.createLevel creates expanded maps (>=9600px width) for all 10 levels', () {
       for (int i = 1; i <= 10; i++) {
         final level = LevelData.createLevel(i);
         expect(level.levelNumber, equals(i));
+        expect(level.worldWidth, greaterThanOrEqualTo(9600.0));
         expect(level.platforms, isNotEmpty);
         expect(level.enemies, isNotEmpty);
         expect(level.collectibles, isNotEmpty);
         expect(level.goalPortal.type, equals(EntityType.goalPortal));
+        expect(level.goalPortal.x, greaterThanOrEqualTo(9400.0));
       }
     });
   });
