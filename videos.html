@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Gallery & Trailers | Shadow Realm: Undead Rising</title>
+  <meta name="description" content="Watch official gameplay trailers, Zombie Mode survival guides, and elemental realms showcases for Shadow Realm: Undead Rising.">
+  <meta name="theme-color" content="#0a0b10">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="hero.css">
+  <link rel="stylesheet" href="gallery.css">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="a.png" onerror="this.onerror=null; this.src='assets/images/a.png';" alt="Shadow Realm Logo" class="nav-logo-img">
+        <span class="nav-brand-text">SHADOW REALM</span>
+      </a>
+
+      <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="game.html" class="nav-link">Game Info</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="videos.html" class="nav-link active">Videos</a></li>
+        <li><a href="game.html#features" class="nav-link">Features</a></li>
+        <li><a href="index.html#download" class="nav-link">Download</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="index.html#download" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Play Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Videos Page Header -->
+  <section class="section" style="padding-top: 9rem; padding-bottom: 2rem; text-align: center;">
+    <div class="container">
+      <span class="section-subtitle">Cinematic Cinema</span>
+      <h1 class="section-title" style="font-size: 3.2rem;">Official Gameplay Trailers & Spotlights</h1>
+      <p class="section-desc" style="max-width: 650px; margin: 0 auto 2.5rem auto;">Click any video trailer card below to launch the interactive cinematic video player modal.</p>
+    </div>
+  </section>
+
+  <!-- Video Grid Container -->
+  <section class="section" style="padding-top: 1rem;">
+    <div class="container">
+      <div class="video-grid" id="videoGrid">
+        <!-- Rendered dynamically by video.js using GAME_DATA.videos -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2025 Shadow Realm: Undead Rising by Nvisov Game Studios. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Video Modal Player -->
+  <div id="videoModal" class="modal" aria-hidden="true">
+    <div class="video-modal-backdrop modal-backdrop"></div>
+    <div class="video-modal-content">
+      <button class="video-modal-close modal-close-btn" aria-label="Close Video Player">&times;</button>
+
+      <div class="video-player-frame">
+        <video id="modalVideoPlayer" controls playsinline>
+          Your browser does not support HTML5 video playback.
+        </video>
+      </div>
+
+      <div class="video-modal-info">
+        <h3 id="modalVideoTitle" class="video-modal-title">Video Title</h3>
+        <p id="modalVideoDesc" class="video-modal-desc">Video description goes here.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="game-data.js"></script>
+  <script src="navigation.js"></script>
+  <script src="gallery.js"></script>
+  <script src="video.js"></script>
+  <script src="animations.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+/* ==========================================================================
+   RESPONSIVE.CSS - BREAKPOINT MEDIA QUERIES & MOBILE COMPATIBILITY
+   ========================================================================== */
+
+/* Large Desktop screens (1440px and above) */
+@media (min-width: 1440px) {
+  .container {
+    max-width: 1360px;
+  }
+}
+
+/* Standard Laptops & Tablets Landscape (1024px to 1439px) */
+@media (max-width: 1200px) {
+  .hero-stats-banner {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+  }
+}
+
+/* Tablets Portrait (768px to 1023px) */
+@media (max-width: 992px) {
+  .section {
+    padding: 4.5rem 0;
+  }
+
+  .section-title {
+    font-size: 2.25rem;
+  }
+
+  /* Navigation Drawer for Mobile/Tablet */
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 360px;
+    height: 100vh;
+    background: #0f111a;
+    border-left: 1px solid var(--glass-border);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 2.5rem;
+    gap: 1.75rem;
+    transition: right var(--transition-normal);
+    box-shadow: -10px 0 30px rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+  }
+
+  .nav-menu.active {
+    right: 0;
+  }
+
+  .nav-link {
+    font-size: 1.2rem;
+  }
+
+  .gallery-grid, .video-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* Mobile Screens (up to 767px - 375px & 320px) */
+@media (max-width: 767px) {
+  .container {
+    padding: 0 1.25rem;
+  }
+
+  .section {
+    padding: 3.5rem 0;
+  }
+
+  .section-title {
+    font-size: 1.85rem;
+  }
+
+  .hero-section {
+    padding: 6.5rem 0 3.5rem 0;
+    min-height: auto;
+  }
+
+  .hero-game-logo {
+    width: 90px;
+    height: 90px;
+  }
+
+  .hero-title {
+    font-size: 2.15rem;
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.85rem;
+  }
+
+  .hero-actions .btn {
+    width: 100%;
+  }
+
+  .hero-stats-banner {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .grid-3, .gallery-grid, .video-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .lightbox-prev { left: 0.5rem; }
+  .lightbox-next { right: 0.5rem; }
+
+  .lightbox-prev, .lightbox-next {
+    width: 40px;
+    height: 40px;
+  }
+
+  .video-modal-info {
+    padding: 1rem;
+  }
+
+  .video-modal-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* Extra Small Phones (320px) */
+@media (max-width: 380px) {
+  .nav-brand-text {
+    font-size: 1.05rem;
+  }
+
+  .nav-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .hero-title {
+    font-size: 1.75rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}

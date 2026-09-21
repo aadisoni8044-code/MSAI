@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Information | Shadow Realm: Undead Rising</title>
+  <meta name="description" content="Detailed game guide for Shadow Realm: Undead Rising. Learn about the 10 elemental realms, Zombie Mode wave defense, weapons arsenal, and controls.">
+  <meta name="theme-color" content="#0a0b10">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="hero.css">
+  <link rel="stylesheet" href="gallery.css">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="responsive.css">
+
+  <style>
+    /* Specific styles for game.html sections */
+    .level-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      position: relative;
+      overflow: hidden;
+      transition: all var(--transition-normal);
+    }
+    .level-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--level-accent, var(--accent-primary));
+    }
+    .level-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      border-color: var(--level-accent);
+    }
+    .level-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .level-badge {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      border-radius: var(--radius-full);
+      background: rgba(255,255,255,0.08);
+      color: var(--level-accent);
+    }
+    .level-icon {
+      font-size: 1.8rem;
+    }
+    .level-title {
+      font-size: 1.35rem;
+      margin-bottom: 0.25rem;
+    }
+    .level-element {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+    .level-desc {
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+    }
+    .level-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: var(--text-dim);
+    }
+    .difficulty-pill {
+      font-weight: 700;
+      color: var(--level-accent);
+    }
+
+    /* Weapon cards */
+    .weapon-card {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 1.75rem;
+      transition: all var(--transition-fast);
+    }
+    .weapon-card:hover {
+      border-color: var(--accent-cyan);
+      transform: translateY(-4px);
+    }
+    .weapon-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .weapon-icon { font-size: 2.2rem; }
+    .weapon-category { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--accent-cyan); }
+    .weapon-name { font-size: 1.3rem; margin-bottom: 0.5rem; }
+    .weapon-stats { display: flex; gap: 1rem; font-size: 0.85rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 0.75rem; }
+    .weapon-desc { font-size: 0.9rem; color: var(--text-muted); }
+
+    /* Controls table/grid */
+    .control-box {
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+    }
+    .control-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .control-row:last-child { border-bottom: none; }
+    kbd.control-key {
+      background: #1e2436;
+      border: 1px solid var(--glass-border);
+      padding: 0.3rem 0.75rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: bold;
+      color: var(--accent-cyan);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.5);
+    }
+    .control-touch-badge {
+      background: rgba(99,102,241,0.2);
+      color: var(--accent-primary);
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-weight: bold;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="a.png" onerror="this.onerror=null; this.src='assets/images/a.png';" alt="Shadow Realm Logo" class="nav-logo-img">
+        <span class="nav-brand-text">SHADOW REALM</span>
+      </a>
+
+      <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="game.html" class="nav-link active">Game Info</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="videos.html" class="nav-link">Videos</a></li>
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="index.html#download" class="nav-link">Download</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="index.html#download" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Play Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header Hero -->
+  <section class="section" style="padding-top: 9rem; padding-bottom: 3rem; background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.2) 0%, transparent 70%);">
+    <div class="container text-center" style="text-align: center;">
+      <span class="section-subtitle">Comprehensive Compendium</span>
+      <h1 class="section-title" style="font-size: 3.2rem;">Game Guide & System Specifications</h1>
+      <p class="section-desc" style="max-width: 700px; margin: 0 auto;">Everything you need to know about Shadow Realm: Undead Rising — levels, zombie survival, arsenal, and controls.</p>
+    </div>
+  </section>
+
+  <!-- About The Game -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="glass-panel" style="padding: 3.5rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;" class="responsive-grid-wrap">
+          <div>
+            <span class="badge badge-indigo" style="margin-bottom: 1rem;">WORLD & LORE</span>
+            <h2 class="section-title" style="text-align: left; font-size: 2.2rem;">About Shadow Realm</h2>
+            <p style="margin-bottom: 1rem;">When the Void Alignment shattered the elemental balance, dark necrotic energy spilled across 10 mythical realms. You play as the last Shadow Hunter, equipped with ancient elemental magic and high-tech weaponry.</p>
+            <p>Combine high-mobility platforming, wall jumps, and dash dodges with tactical tower defense mechanics to cleanse the corrupted lands and hold the line against infinite zombie waves.</p>
+          </div>
+          <div>
+            <img src="b.png" onerror="this.onerror=null; this.src='assets/images/b.png';" alt="About Game Image" style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--glass-border);">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 Game Features Cards -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Key Systems</span>
+        <h2 class="section-title">Game Features</h2>
+        <p class="section-desc">Nine core pillars powering the gameplay experience.</p>
+      </div>
+
+      <div class="grid-3" id="featuresGrid">
+        <!-- Rendered by main.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 Normal Levels -->
+  <section class="section" id="levels" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Realms Compendium</span>
+        <h2 class="section-title">10 Normal Elemental Levels</h2>
+        <p class="section-desc">Journey through 10 hand-crafted elemental realms, each introducing unique terrain mechanics, hazards, and boss abominations.</p>
+      </div>
+
+      <div class="grid-3" id="levelsGrid">
+        <!-- Rendered by main.js from GAME_DATA.levels -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Zombie Mode Section -->
+  <section class="section" id="zombie-mode">
+    <div class="container">
+      <div class="glass-panel" style="padding: 3.5rem; border-color: rgba(239, 68, 68, 0.4);">
+        <div class="section-header" style="margin-bottom: 2.5rem;">
+          <span class="section-subtitle" style="background: rgba(239,68,68,0.15); color: var(--accent-crimson); border-color: rgba(239,68,68,0.3);">
+            ☣️ SURVIVAL MODE GUIDE
+          </span>
+          <h2 class="section-title">Zombie Mode Mechanics</h2>
+          <p class="section-desc">Face 10 deterministic zombie waves of increasing horde scaling in an endless procedural arena.</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start;" class="responsive-grid-wrap">
+          <div id="zombieFeaturesList" style="display: flex; flex-direction: column; gap: 1.25rem;">
+            <!-- Rendered by main.js -->
+          </div>
+
+          <div>
+            <img src="e.png" onerror="this.onerror=null; this.src='assets/images/e.png';" alt="Zombie Mode Wave Defense" style="width: 100%; border-radius: var(--radius-md); border: 1px solid var(--glass-border); margin-bottom: 1.5rem;">
+            <div class="glass-panel" style="padding: 1.5rem; text-align: center; background: rgba(10,11,16,0.8);">
+              <h4 style="color: var(--accent-gold); margin-bottom: 0.5rem;">⚡ Milestone Supply Crate Unlocks</h4>
+              <p style="font-size: 0.9rem;">Eliminate 10 zombies in Wave Mode to trigger the animated supply drop containing the legendary AK-47 assault rifle with full-auto burst capabilities!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Weapons Showcase Section -->
+  <section class="section" id="weapons">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Hunter Arsenal</span>
+        <h2 class="section-title">Weapons & Equipment</h2>
+        <p class="section-desc">Master close-quarters swords, bow snipers, and heavy explosive launchers.</p>
+      </div>
+
+      <div class="grid-3" id="weaponsGrid">
+        <!-- Rendered by main.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Game Controls Section -->
+  <section class="section" id="controls" style="background: var(--bg-secondary);">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Input Mapping</span>
+        <h2 class="section-title">Controls & Interface</h2>
+        <p class="section-desc">Fully customizable input schemes for Keyboard/Mouse and Mobile Touch devices.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;" class="responsive-grid-wrap">
+        <div class="control-box">
+          <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            💻 PC Keyboard & Mouse
+          </h3>
+          <div id="keyboardControlsGrid"></div>
+        </div>
+
+        <div class="control-box">
+          <h3 style="margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+            📱 Mobile Touch Screen
+          </h3>
+          <div id="touchControlsGrid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2025 Shadow Realm: Undead Rising by Nvisov Game Studios. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="game-data.js"></script>
+  <script src="navigation.js"></script>
+  <script src="gallery.js"></script>
+  <script src="video.js"></script>
+  <script src="animations.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadow Realm: Undead Rising | Official Game Website</title>
+  <meta name="description" content="Experience Shadow Realm: Undead Rising - the premier dark fantasy action platformer & zombie survival game. Explore 10 elemental realms and survive the undead horde!">
+  <meta name="keywords" content="Shadow Realm, Undead Rising, Zombie Game, Action Platformer, Tower Defense, Dark Fantasy">
+  <meta name="theme-color" content="#0a0b10">
+
+  <!-- Open Graph / Social Media Meta -->
+  <meta property="og:title" content="Shadow Realm: Undead Rising">
+  <meta property="og:description" content="Face the dark horde in the ultimate tactical survival platformer.">
+  <meta property="og:image" content="a.png">
+  <meta property="og:type" content="website">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="hero.css">
+  <link rel="stylesheet" href="gallery.css">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="a.png" onerror="this.onerror=null; this.src='assets/images/a.png';" alt="Shadow Realm Logo" class="nav-logo-img">
+        <span class="nav-brand-text">SHADOW REALM</span>
+      </a>
+
+      <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link active">Home</a></li>
+        <li><a href="game.html" class="nav-link">Game Info</a></li>
+        <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+        <li><a href="videos.html" class="nav-link">Videos</a></li>
+        <li><a href="game.html#features" class="nav-link">Features</a></li>
+        <li><a href="#download" class="nav-link">Download</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <button id="heroSoundToggle" class="btn-sound-toggle" aria-label="Toggle Hero Background Audio">
+          <svg id="soundIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"/>
+            <line x1="23" y1="9" x2="17" y2="15"/>
+            <line x1="17" y1="9" x2="23" y2="15"/>
+          </svg>
+          <span id="soundLabel">Unmute Audio</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Autoplay Video Background -->
+  <section class="hero-section">
+    <div class="hero-video-container">
+      <video id="heroBgVideo" class="hero-bg-video" autoplay muted loop playsinline poster="a.png">
+        <source src="a.mp4" type="video/mp4">
+        <source src="assets/videos/a.mp4" type="video/mp4">
+        Your browser does not support HTML5 video autoplay.
+      </video>
+      <div class="hero-video-overlay"></div>
+    </div>
+
+    <div class="container hero-content">
+      <div class="hero-logo-wrapper">
+        <img src="a.png" onerror="this.onerror=null; this.src='assets/images/a.png';" alt="Shadow Realm Game Logo" class="hero-game-logo">
+      </div>
+      <div>
+        <span class="hero-badge-pill">⚡ Official Launch Release</span>
+      </div>
+      <h1 class="hero-title">SHADOW REALM<br><span style="color: var(--accent-cyan)">UNDEAD RISING</span></h1>
+      <p class="hero-description">Unleash elemental mastery, build impenetrable watchtower defenses, and face endless night in the realm of shadows.</p>
+
+      <div class="hero-actions">
+        <a href="game.html" class="btn btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          Explore Game
+        </a>
+        <a href="videos.html" class="btn btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="10 8 16 12 10 16 10 8"></polygon>
+          </svg>
+          Watch Gameplay
+        </a>
+      </div>
+
+      <!-- Quick Stats Banner -->
+      <div class="hero-stats-banner">
+        <div class="stat-item">
+          <span class="stat-value" data-count="10" data-suffix="+">10+</span>
+          <span class="stat-label">Elemental Realms</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" data-count="100" data-suffix="+">100+</span>
+          <span class="stat-label">Zombie Waves</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" data-count="15" data-suffix="+">15+</span>
+          <span class="stat-label">Legendary Weapons</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" data-count="1" data-suffix="M+">1M+</span>
+          <span class="stat-label">Active Hunters</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section Preview -->
+  <section class="section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Core Gameplay</span>
+        <h2 class="section-title">Designed for Ultimate Action</h2>
+        <p class="section-desc">Immerse yourself in precision platformer controls, deep elemental combat mechanics, and tactical horde defense.</p>
+      </div>
+
+      <div class="grid-3" id="featuresGrid">
+        <!-- Dynamically rendered by main.js from GAME_DATA -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Zombie Mode Highlight Banner -->
+  <section class="section" style="background: linear-gradient(180deg, var(--bg-primary) 0%, #150a18 50%, var(--bg-primary) 100%);">
+    <div class="container">
+      <div class="glass-panel" style="padding: 3.5rem; border-color: rgba(239, 68, 68, 0.3);">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;" class="responsive-grid-wrap">
+          <div>
+            <span class="badge badge-indigo" style="background: rgba(239, 68, 68, 0.2); color: var(--accent-crimson); border-color: rgba(239, 68, 68, 0.4); margin-bottom: 1rem;">
+              ☣️ SURVIVAL MODE
+            </span>
+            <h2 class="section-title" style="text-align: left; font-size: 2.4rem;">Endless Zombie Wave Escalation</h2>
+            <p style="margin-bottom: 1.5rem;">Battle up to 100+ bloodthirsty nightstalkers per wave. Survive 10 deterministic zombie waves, trigger 10-kill milestone supply drops, and unlock the legendary AK-47 assault rifle!</p>
+
+            <a href="game.html#zombie-mode" class="btn btn-accent">
+              Read Zombie Mode Guide
+            </a>
+          </div>
+
+          <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--glass-border);">
+            <img src="e.png" onerror="this.onerror=null; this.src='assets/images/e.png';" alt="Zombie Mode Screenshot" style="width: 100%; height: 100%; object-fit: cover;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery & Video Spotlight -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Media Spotlight</span>
+        <h2 class="section-title">Screenshots & Gameplay Trailers</h2>
+        <p class="section-desc">Get a glimpse of the dark fantasy visuals, elemental bosses, and high-octane combat.</p>
+      </div>
+
+      <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem;">
+        <a href="gallery.html" class="btn btn-secondary">View Photo Gallery (4)</a>
+        <a href="videos.html" class="btn btn-secondary">Watch Video Trailers (4)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section class="section" id="download">
+    <div class="container">
+      <div class="glass-panel" style="padding: 4rem 2rem; text-align: center;">
+        <span class="section-subtitle">Ready To Fight?</span>
+        <h2 class="section-title" style="font-size: 2.8rem;">Download Shadow Realm Today</h2>
+        <p class="section-desc" style="max-width: 650px; margin: 0 auto 2.5rem auto;">Join over 1 million active hunters online. Available now on PC, Android, and Web Browser with cross-platform progression!</p>
+
+        <div style="display: flex; gap: 1.25rem; justify-content: center; flex-wrap: wrap;">
+          <a href="#" class="btn btn-primary btn-download" data-platform="Windows PC">
+            💻 Download for PC (Windows)
+          </a>
+          <a href="#" class="btn btn-secondary btn-download" data-platform="Android APK">
+            📱 Download Android APK
+          </a>
+          <a href="#" class="btn btn-accent btn-download" data-platform="Web Browser">
+            🌐 Play in Browser
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="a.png" onerror="this.onerror=null; this.src='assets/images/a.png';" alt="Shadow Realm Logo">
+            <span>SHADOW REALM</span>
+          </div>
+          <p style="font-size: 0.9rem;">The premier 2D dark fantasy action platformer and zombie wave defense game created by Nvisov Game Studios.</p>
+          <div class="social-links">
+            <a href="#" class="social-btn" aria-label="Discord">🎮</a>
+            <a href="#" class="social-btn" aria-label="Twitter">🐦</a>
+            <a href="#" class="social-btn" aria-label="YouTube">📺</a>
+            <a href="#" class="social-btn" aria-label="Steam">💨</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="game.html">Game Information</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+            <li><a href="videos.html">Video Trailers</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Game Content</h4>
+          <ul class="footer-links">
+            <li><a href="game.html#levels">10 Elemental Levels</a></li>
+            <li><a href="game.html#zombie-mode">Zombie Mode Guide</a></li>
+            <li><a href="game.html#weapons">Weapons Arsenal</a></li>
+            <li><a href="game.html#controls">Game Controls</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contact & Support</h4>
+          <form id="contactForm" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <input type="email" placeholder="Your email address" required style="padding: 0.6rem 0.8rem; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); color: #fff; border-radius: var(--radius-sm); font-size: 0.85rem;">
+            <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Subscribe</button>
+          </form>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2025 Shadow Realm: Undead Rising by Nvisov Game Studios. All Rights Reserved. HTML5 / CSS3 / Vanilla JavaScript.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal for Gallery -->
+  <div id="lightboxModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="lightbox-content-box">
+      <button class="lightbox-close" aria-label="Close Lightbox">&times;</button>
+      <button class="lightbox-prev" aria-label="Previous Image">&#10094;</button>
+      <button class="lightbox-next" aria-label="Next Image">&#10095;</button>
+
+      <div class="lightbox-image-wrapper">
+        <img id="lightboxImg" class="lightbox-img" src="" alt="">
+      </div>
+
+      <div class="lightbox-caption-bar">
+        <h3 id="lightboxTitle" class="lightbox-title"></h3>
+        <p id="lightboxCaption" class="lightbox-caption"></p>
+        <span id="lightboxCounter" style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem; display: block;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="game-data.js"></script>
+  <script src="navigation.js"></script>
+  <script src="gallery.js"></script>
+  <script src="video.js"></script>
+  <script src="animations.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Gallery | Shadow Realm: Undead Rising</title>
+  <meta name="description" content="Explore high-definition gameplay screenshots, boss encounters, and visual environments of Shadow Realm: Undead Rising.">
+  <meta name="theme-color" content="#0a0b10">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="navbar.css">
+  <link rel="stylesheet" href="hero.css">
+  <link rel="stylesheet" href="gallery.css">
+  <link rel="stylesheet" href="animations.css">
+  <link rel="stylesheet" href="responsive.css">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="nav-brand">
+        <img src="a.png" onerror="this.onerror=null; this.src='assets/images/a.png';" alt="Shadow Realm Logo" class="nav-logo-img">
+        <span class="nav-brand-text">SHADOW REALM</span>
+      </a>
+
+      <button class="mobile-menu-toggle" aria-label="Toggle Mobile Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="nav-menu">
+        <li><a href="index.html" class="nav-link">Home</a></li>
+        <li><a href="game.html" class="nav-link">Game Info</a></li>
+        <li><a href="gallery.html" class="nav-link active">Gallery</a></li>
+        <li><a href="videos.html" class="nav-link">Videos</a></li>
+        <li><a href="game.html#features" class="nav-link">Features</a></li>
+        <li><a href="index.html#download" class="nav-link">Download</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="index.html#download" class="btn btn-primary" style="padding: 0.5rem 1.25rem; font-size: 0.85rem;">Play Now</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Gallery Header -->
+  <section class="section" style="padding-top: 9rem; padding-bottom: 2rem; text-align: center;">
+    <div class="container">
+      <span class="section-subtitle">Visual Showcase</span>
+      <h1 class="section-title" style="font-size: 3.2rem;">Game Screenshots & Media Gallery</h1>
+      <p class="section-desc" style="max-width: 650px; margin: 0 auto 2.5rem auto;">Click any screenshot to open the high-definition Lightbox viewer with zoom and controls.</p>
+
+      <!-- Category Filter Buttons -->
+      <div class="gallery-filters">
+        <button class="gallery-filter-btn active" data-filter="all">All Photos</button>
+        <button class="gallery-filter-btn" data-filter="combat">Combat</button>
+        <button class="gallery-filter-btn" data-filter="environment">Environments</button>
+        <button class="gallery-filter-btn" data-filter="bosses">Boss Fights</button>
+        <button class="gallery-filter-btn" data-filter="zombies">Zombie Mode</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Grid Container -->
+  <section class="section" style="padding-top: 1rem;">
+    <div class="container">
+      <div class="gallery-grid" id="galleryGrid">
+        <!-- Rendered dynamically by gallery.js using GAME_DATA.gallery -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2025 Shadow Realm: Undead Rising by Nvisov Game Studios. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Lightbox Modal -->
+  <div id="lightboxModal" class="modal" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="lightbox-content-box">
+      <button class="lightbox-close" aria-label="Close Lightbox">&times;</button>
+      <button class="lightbox-prev" aria-label="Previous Image">&#10094;</button>
+      <button class="lightbox-next" aria-label="Next Image">&#10095;</button>
+
+      <div class="lightbox-image-wrapper">
+        <img id="lightboxImg" class="lightbox-img" src="" alt="">
+      </div>
+
+      <div class="lightbox-caption-bar">
+        <h3 id="lightboxTitle" class="lightbox-title"></h3>
+        <p id="lightboxCaption" class="lightbox-caption"></p>
+        <span id="lightboxCounter" style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem; display: block;"></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="game-data.js"></script>
+  <script src="navigation.js"></script>
+  <script src="gallery.js"></script>
+  <script src="video.js"></script>
+  <script src="animations.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
