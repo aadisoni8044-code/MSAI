@@ -1,0 +1,1932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sylvan Whispers - Official Game Website</title>
+  <meta name="description" content="Official website for Sylvan Whispers - A cinematic 2D fantasy adventure game with combat, exploration, and intense zombie survival mode.">
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM & CSS VARIABLES
+       ========================================================================== */
+    :root {
+      --bg-dark: #070a12;
+      --bg-surface: #0f1524;
+      --bg-card: rgba(21, 28, 48, 0.7);
+      --bg-glass: rgba(18, 25, 43, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --glass-glow: rgba(99, 102, 241, 0.15);
+
+      --primary: #6366f1;
+      --primary-hover: #4f46e5;
+      --primary-light: #818cf8;
+      --accent-cyan: #06b6d4;
+      --accent-glow: rgba(6, 182, 212, 0.3);
+
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+
+      --transition-fast: 0.2s ease;
+      --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-bounce: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+      --shadow-subtle: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 30px rgba(99, 102, 241, 0.25);
+
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      --container-max: 1240px;
+    }
+
+    /* Reset & Base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      min-height: 100vh;
+      line-height: 1.6;
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 60%, rgba(6, 182, 212, 0.06) 0%, transparent 40%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      outline: none;
+    }
+
+    img, video {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Typography Utilities */
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.75rem);
+      font-weight: 800;
+      text-align: center;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #ffffff 30%, var(--text-muted) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .section-subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      max-width: 620px;
+      margin: 0 auto 3rem auto;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      color: var(--primary-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0.85rem 1.75rem;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #ffffff;
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+      background: linear-gradient(135deg, #7073f8 0%, #584ee8 100%);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Sections Shared Styling */
+    section {
+      padding: 5rem 0;
+      position: relative;
+    }
+
+    /* ==========================================================================
+       2. NAVIGATION
+       ========================================================================== */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      transition: all var(--transition-normal);
+      padding: 1.25rem 0;
+      background: transparent;
+    }
+
+    .navbar.scrolled {
+      padding: 0.8rem 0;
+      background: rgba(9, 13, 22, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--glass-border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.2rem;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-logo img {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.4));
+    }
+
+    .nav-logo-text {
+      background: linear-gradient(135deg, #fff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-link {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color var(--transition-fast);
+      position: relative;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: #ffffff;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+      transition: width var(--transition-normal);
+      border-radius: 2px;
+    }
+
+    .nav-link:hover::after, .nav-link.active::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      padding: 0.6rem 1.25rem;
+      font-size: 0.88rem;
+    }
+
+    /* Hamburger Toggle */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 28px;
+      height: 20px;
+      background: transparent;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 100%;
+      height: 2px;
+      background-color: var(--text-main);
+      border-radius: 2px;
+      transition: all var(--transition-normal);
+    }
+
+    .nav-toggle.open span:nth-child(1) {
+      transform: translateY(9px) rotate(45deg);
+    }
+
+    .nav-toggle.open span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-toggle.open span:nth-child(3) {
+      transform: translateY(-9px) rotate(-45deg);
+    }
+
+    /* Mobile Drawer */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 80%;
+      max-width: 320px;
+      height: 100vh;
+      background: rgba(13, 18, 30, 0.98);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-left: 1px solid var(--glass-border);
+      box-shadow: -10px 0 30px rgba(0, 0, 0, 0.6);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      padding: 6rem 2rem 2rem 2rem;
+      transition: right var(--transition-normal);
+    }
+
+    .mobile-menu.open {
+      right: 0;
+    }
+
+    .mobile-nav-links {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .mobile-nav-link {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color var(--transition-fast);
+      display: block;
+    }
+
+    .mobile-nav-link:hover, .mobile-nav-link.active {
+      color: var(--primary-light);
+    }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 998;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+    }
+
+    .mobile-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION
+       ========================================================================== */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 6rem;
+      overflow: hidden;
+    }
+
+    .hero-video-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      filter: brightness(0.7) contrast(1.05);
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(7, 10, 18, 0.5) 0%,
+        rgba(7, 10, 18, 0.75) 60%,
+        var(--bg-dark) 100%
+      );
+      z-index: 2;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      text-align: center;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 2rem 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-logo-wrapper {
+      margin-bottom: 1.5rem;
+      position: relative;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .hero-logo {
+      width: clamp(140px, 22vw, 220px);
+      height: auto;
+      filter: drop-shadow(0 0 25px rgba(99, 102, 241, 0.5));
+    }
+
+    .hero-title {
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #ffffff 20%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-tagline {
+      font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+      color: #e2e8f0;
+      margin-bottom: 2.25rem;
+      max-width: 680px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+      font-weight: 400;
+    }
+
+    .hero-cta-group {
+      display: flex;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .hero-sound-toggle {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 2rem;
+      z-index: 10;
+      background: rgba(15, 21, 36, 0.7);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-full);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      transition: all var(--transition-fast);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .hero-sound-toggle:hover {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: rgba(99, 102, 241, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* ==========================================================================
+       4. ABOUT SECTION
+       ========================================================================== */
+    .about-section {
+      background: relative;
+    }
+
+    .about-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      backdrop-filter: blur(16px);
+      box-shadow: var(--shadow-subtle);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .about-info h3 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+
+    .about-info p {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    .about-highlights {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .highlight-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.92rem;
+      font-weight: 500;
+    }
+
+    .highlight-item svg {
+      color: var(--accent-cyan);
+      flex-shrink: 0;
+    }
+
+    .about-media-box {
+      position: relative;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    .about-media-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .about-media-box:hover img {
+      transform: scale(1.04);
+    }
+
+    /* ==========================================================================
+       5. FEATURES SECTION
+       ========================================================================== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .feature-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      backdrop-filter: blur(12px);
+      transition: all var(--transition-normal);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-cyan));
+      opacity: 0;
+      transition: opacity var(--transition-normal);
+    }
+
+    .feature-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(99, 102, 241, 0.3);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px var(--glass-glow);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon-wrapper {
+      width: 54px;
+      height: 54px;
+      border-radius: var(--radius-sm);
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+      color: var(--primary-light);
+    }
+
+    .feature-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       6. SCREENSHOTS GALLERY SECTION
+       ========================================================================== */
+    .gallery-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .gallery-main-view {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+      background: #05070d;
+      cursor: pointer;
+    }
+
+    .gallery-main-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.35s ease, transform 0.5s ease;
+    }
+
+    .gallery-main-view:hover .gallery-main-img {
+      transform: scale(1.02);
+    }
+
+    .gallery-main-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(7, 10, 18, 0.8) 0%, transparent 50%);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      padding: 1.75rem;
+      opacity: 0.9;
+      transition: opacity var(--transition-normal);
+    }
+
+    .gallery-caption {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 1.1rem;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .gallery-zoom-badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 21, 36, 0.8);
+      border: 1px solid var(--glass-border);
+      padding: 0.5rem 0.9rem;
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 500;
+      backdrop-filter: blur(8px);
+    }
+
+    .gallery-thumbnails {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .thumb-item {
+      position: relative;
+      height: 110px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      background: #05070d;
+    }
+
+    .thumb-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.65;
+      transition: all var(--transition-fast);
+    }
+
+    .thumb-item:hover img {
+      opacity: 0.9;
+    }
+
+    .thumb-item.active {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .thumb-item.active img {
+      opacity: 1;
+    }
+
+    /* ==========================================================================
+       7. GAMEPLAY VIDEOS SECTION
+       ========================================================================== */
+    .videos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 1.75rem;
+    }
+
+    .video-card {
+      background: var(--bg-glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      transition: all var(--transition-normal);
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(99, 102, 241, 0.4);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(99, 102, 241, 0.2);
+    }
+
+    .video-thumb-wrapper {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      overflow: hidden;
+    }
+
+    .video-thumb-preview {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .video-card:hover .video-thumb-preview {
+      transform: scale(1.05);
+    }
+
+    .play-button-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+      transition: background var(--transition-fast);
+    }
+
+    .video-card:hover .play-button-overlay {
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .play-icon-btn {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      background: rgba(99, 102, 241, 0.9);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+      transition: transform var(--transition-bounce);
+      padding-left: 3px;
+    }
+
+    .video-card:hover .play-icon-btn {
+      transform: scale(1.12);
+      background: var(--primary);
+    }
+
+    .video-card-body {
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .video-card-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.4rem;
+    }
+
+    .video-card-desc {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* ==========================================================================
+       8. DOWNLOAD SECTION
+       ========================================================================== */
+    .download-box {
+      background: linear-gradient(135deg, rgba(21, 28, 48, 0.9) 0%, rgba(12, 17, 30, 0.95) 100%);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-radius: var(--radius-lg);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(99, 102, 241, 0.15);
+    }
+
+    .download-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .download-cards {
+      display: flex;
+      justify-content: center;
+      gap: 1.75rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+
+    .platform-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-md);
+      padding: 1.75rem 2.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 220px;
+      transition: all var(--transition-normal);
+    }
+
+    .platform-card:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(99, 102, 241, 0.4);
+      transform: translateY(-4px);
+    }
+
+    .platform-icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.8rem;
+      color: var(--primary-light);
+    }
+
+    .platform-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.2rem;
+    }
+
+    .platform-req {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-bottom: 1.25rem;
+    }
+
+    /* ==========================================================================
+       9. FOOTER
+       ========================================================================== */
+    .footer {
+      background: #04060b;
+      border-top: 1px solid var(--glass-border);
+      padding: 4rem 0 2rem 0;
+      position: relative;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr repeat(3, 1fr);
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.25rem;
+      color: #ffffff;
+    }
+
+    .footer-logo img {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+    }
+
+    .footer-desc {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      max-width: 320px;
+      line-height: 1.6;
+    }
+
+    .footer-heading {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.02em;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .footer-link {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      transition: color var(--transition-fast);
+    }
+
+    .footer-link:hover {
+      color: var(--primary-light);
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: all var(--transition-fast);
+    }
+
+    .social-btn:hover {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ==========================================================================
+       10. MODALS (LIGHTBOX & VIDEO MODAL)
+       ========================================================================== */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 5, 10, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all var(--transition-normal);
+      padding: 1.5rem;
+    }
+
+    .modal-backdrop.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal-close-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 2010;
+      transition: all var(--transition-fast);
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.8);
+      transform: rotate(90deg);
+    }
+
+    /* Image Lightbox Specifics */
+    .lightbox-content {
+      position: relative;
+      max-width: 1100px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: var(--radius-md);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
+    }
+
+    .lightbox-caption {
+      margin-top: 1rem;
+      color: var(--text-main);
+      font-size: 1.05rem;
+      font-weight: 500;
+      text-align: center;
+    }
+
+    .lightbox-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(15, 21, 36, 0.8);
+      border: 1px solid var(--glass-border);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      z-index: 2005;
+    }
+
+    .lightbox-nav-btn:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    .lightbox-prev { left: -1.5rem; }
+    .lightbox-next { right: -1.5rem; }
+
+    /* Video Modal Specifics */
+    .video-modal-content {
+      width: 100%;
+      max-width: 960px;
+      background: var(--bg-surface);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-modal-player-wrapper {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .video-modal-player {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .video-modal-header {
+      padding: 1.25rem 1.75rem;
+      border-top: 1px solid var(--glass-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-surface);
+    }
+
+    .video-modal-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    /* ==========================================================================
+       11. RESPONSIVE MEDIA QUERIES
+       ========================================================================== */
+    @media (max-width: 1024px) {
+      .about-card {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 2.25rem;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links, .nav-cta {
+        display: none;
+      }
+
+      .nav-toggle {
+        display: flex;
+      }
+
+      .gallery-main-view {
+        height: 320px;
+      }
+
+      .gallery-thumbnails {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+      }
+
+      .thumb-item {
+        height: 75px;
+      }
+
+      .hero-sound-toggle {
+        bottom: 1.5rem;
+        right: 1.5rem;
+        padding: 0.6rem 0.85rem;
+        font-size: 0.78rem;
+      }
+
+      .footer-top {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+
+      .lightbox-prev { left: 0.5rem; }
+      .lightbox-next { right: 0.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      section {
+        padding: 3.5rem 0;
+      }
+
+      .gallery-main-view {
+        height: 240px;
+      }
+
+      .thumb-item {
+        height: 60px;
+      }
+
+      .about-highlights {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-cta-group {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .hero-cta-group .btn {
+        width: 100%;
+      }
+    }
+
+    /* Reduced Motion Accessibility */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==========================================================================
+       NAVIGATION BAR
+       ========================================================================== -->
+  <nav class="navbar" id="navbar">
+    <div class="container nav-container">
+      <a href="#home" class="nav-logo">
+        <img src="a.png" alt="Sylvan Whispers Logo">
+        <span class="nav-logo-text">SYLVAN WHISPERS</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#home" class="nav-link active">Home</a></li>
+        <li><a href="#about" class="nav-link">About Game</a></li>
+        <li><a href="#features" class="nav-link">Features</a></li>
+        <li><a href="#screenshots" class="nav-link">Screenshots</a></li>
+        <li><a href="#videos" class="nav-link">Videos</a></li>
+        <li><a href="#download" class="nav-link">Download</a></li>
+      </ul>
+
+      <a href="#download" class="btn btn-primary nav-cta">Play Now</a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul class="mobile-nav-links">
+      <li><a href="#home" class="mobile-nav-link">Home</a></li>
+      <li><a href="#about" class="mobile-nav-link">About Game</a></li>
+      <li><a href="#features" class="mobile-nav-link">Features</a></li>
+      <li><a href="#screenshots" class="mobile-nav-link">Screenshots</a></li>
+      <li><a href="#videos" class="mobile-nav-link">Videos</a></li>
+      <li><a href="#download" class="mobile-nav-link">Download</a></li>
+    </ul>
+    <a href="#download" class="btn btn-primary" style="margin-top: 2rem; text-align: center;">Download Game</a>
+  </div>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+
+  <!-- ==========================================================================
+       HERO SECTION WITH AUTOPLAY VIDEO
+       ========================================================================== -->
+  <section id="home" class="hero">
+    <video class="hero-video-bg" id="heroVideo" autoplay muted loop playsinline preload="auto">
+      <source src="a.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay"></div>
+
+    <div class="container hero-content">
+      <div class="hero-logo-wrapper">
+        <img src="a.png" alt="Sylvan Whispers Game Logo" class="hero-logo">
+      </div>
+
+      <span class="badge">Official Web Experience</span>
+      <h1 class="hero-title">SYLVAN WHISPERS</h1>
+      <p class="hero-tagline">Step into a breathtaking 2D fantasy realm filled with ancient secrets, fluid combat, and relentless zombie survival challenges.</p>
+
+      <div class="hero-cta-group">
+        <a href="#about" class="btn btn-primary">
+          <span>Explore Game</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#videos" class="btn btn-secondary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          <span>Watch Gameplay</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Mute/Unmute toggle button for Hero Video -->
+    <button class="hero-sound-toggle" id="heroSoundToggle" aria-label="Toggle Sound">
+      <svg id="soundIconMuted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+      <svg id="soundIconUnmuted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      <span id="soundText">Sound Off</span>
+    </button>
+  </section>
+
+  <!-- ==========================================================================
+       ABOUT GAME SECTION
+       ========================================================================== -->
+  <section id="about" class="about-section">
+    <div class="container">
+      <span class="badge" style="display: block; text-align: center; margin: 0 auto 0.5rem auto; width: fit-content;">Overview</span>
+      <h2 class="section-title">About The Game</h2>
+      <p class="section-subtitle">Discover an atmospheric 2D fantasy action adventure handcrafted with fluid animation and dynamic gameplay mechanics.</p>
+
+      <div class="about-card">
+        <div class="about-info">
+          <h3>Embark on an Unforgettable Journey</h3>
+          <p>Sylvan Whispers combines high-stakes platforming action, strategic melee and ranged combat, and expansive world exploration. Navigate through enchanted forests, ancient ruins, and dark towers while facing off against tactical enemies and endless undead hordes.</p>
+
+          <div class="about-highlights">
+            <div class="highlight-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Multiple Themed Worlds</span>
+            </div>
+            <div class="highlight-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Dynamic Enemy Combat</span>
+            </div>
+            <div class="highlight-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Zombie Survival Mode</span>
+            </div>
+            <div class="highlight-item">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>Tower Defense High Ground</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="about-media-box">
+          <img src="b.png" alt="Sylvan Whispers Gameplay Preview" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FEATURES SECTION
+       ========================================================================== -->
+  <section id="features">
+    <div class="container">
+      <span class="badge" style="display: block; text-align: center; margin: 0 auto 0.5rem auto; width: fit-content;">Key Features</span>
+      <h2 class="section-title">Unmatched Gameplay Experience</h2>
+      <p class="section-subtitle">Built from the ground up for immersive action, challenge, and seamless controls on both mobile and desktop platforms.</p>
+
+      <div class="features-grid">
+        <!-- Feature 1: Adventure -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3 class="feature-title">Adventure</h3>
+          <p class="feature-desc">Explore large fantasy environments packed with hidden secrets, collectibles, and rich multi-layered parallax scenery.</p>
+        </div>
+
+        <!-- Feature 2: Combat -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/></svg>
+          </div>
+          <h3 class="feature-title">Combat</h3>
+          <p class="feature-desc">Fight challenging enemies using different combat mechanics, fast sword strikes, and precision ranged weaponry.</p>
+        </div>
+
+        <!-- Feature 3: Multiple Worlds -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </div>
+          <h3 class="feature-title">Multiple Worlds</h3>
+          <p class="feature-desc">Journey across different themed environments featuring unique obstacles, atmospheric lighting, and distinct physics challenges.</p>
+        </div>
+
+        <!-- Feature 4: Zombie Mode -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <h3 class="feature-title">Zombie Mode</h3>
+          <p class="feature-desc">Test your grit in an intense survival mode against progressively difficult zombie waves and milestone air-drops.</p>
+        </div>
+
+        <!-- Feature 5: Tower System -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M8 10h.01M16 10h.01M8 14h.01M16 14h.01"/></svg>
+          </div>
+          <h3 class="feature-title">Tower System</h3>
+          <p class="feature-desc">Use high ground and watchtowers strategically in Zombie Mode to bottleneck undead hordes and secure tactical advantage.</p>
+        </div>
+
+        <!-- Feature 6: Mobile + Desktop -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          <h3 class="feature-title">Mobile + Desktop</h3>
+          <p class="feature-desc">Enjoy full support for responsive mobile touch controls, full virtual joysticks, and responsive desktop keyboard keybindings.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       SCREENSHOTS SECTION
+       ========================================================================== -->
+  <section id="screenshots">
+    <div class="container">
+      <span class="badge" style="display: block; text-align: center; margin: 0 auto 0.5rem auto; width: fit-content;">Visual Gallery</span>
+      <h2 class="section-title">In-Game Screenshots</h2>
+      <p class="section-subtitle">Click on any screenshot to preview or enter full-screen lightbox viewing mode.</p>
+
+      <div class="gallery-container">
+        <!-- Main Selected Image Preview -->
+        <div class="gallery-main-view" id="galleryMainView" title="Click for Fullscreen Lightbox">
+          <img src="b.png" alt="Game Screenshot Preview" id="galleryMainImg" class="gallery-main-img">
+          <div class="gallery-main-overlay">
+            <span class="gallery-caption" id="galleryCaption">Enchanted Forest Exploration</span>
+            <div class="gallery-zoom-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+              <span>Expand Lightbox</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thumbnails Grid -->
+        <div class="gallery-thumbnails">
+          <div class="thumb-item active" data-src="b.png" data-caption="Enchanted Forest Exploration">
+            <img src="b.png" alt="Screenshot 1 Thumbnail" loading="lazy">
+          </div>
+          <div class="thumb-item" data-src="c.png" data-caption="High Ground Tower Defense">
+            <img src="c.png" alt="Screenshot 2 Thumbnail" loading="lazy">
+          </div>
+          <div class="thumb-item" data-src="d.png" data-caption="Zombie Wave Survival Mode">
+            <img src="d.png" alt="Screenshot 3 Thumbnail" loading="lazy">
+          </div>
+          <div class="thumb-item" data-src="e.png" data-caption="Challenging Boss & Combat Arena">
+            <img src="e.png" alt="Screenshot 4 Thumbnail" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       GAMEPLAY VIDEOS SECTION
+       ========================================================================== -->
+  <section id="videos">
+    <div class="container">
+      <span class="badge" style="display: block; text-align: center; margin: 0 auto 0.5rem auto; width: fit-content;">Gameplay Action</span>
+      <h2 class="section-title">Gameplay Videos</h2>
+      <p class="section-subtitle">Select a video clip below to watch high-definition gameplay trailers and combat footage.</p>
+
+      <div class="videos-grid">
+        <!-- Video Card 1 -->
+        <div class="video-card" data-video-src="a.mp4" data-video-title="Official Reveal Trailer">
+          <div class="video-thumb-wrapper">
+            <video class="video-thumb-preview" preload="metadata" muted playsinline>
+              <source src="a.mp4#t=0.5" type="video/mp4">
+            </video>
+            <div class="play-button-overlay">
+              <div class="play-icon-btn">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="video-card-body">
+            <h3 class="video-card-title">Official Reveal Trailer</h3>
+            <p class="video-card-desc">An overview of world exploration, core combat, and environmental dynamics.</p>
+          </div>
+        </div>
+
+        <!-- Video Card 2 -->
+        <div class="video-card" data-video-src="b.mp4" data-video-title="Zombie Mode Survival Gameplay">
+          <div class="video-thumb-wrapper">
+            <video class="video-thumb-preview" preload="metadata" muted playsinline>
+              <source src="b.mp4#t=0.5" type="video/mp4">
+            </video>
+            <div class="play-button-overlay">
+              <div class="play-icon-btn">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="video-card-body">
+            <h3 class="video-card-title">Zombie Mode Survival</h3>
+            <p class="video-card-desc">Survive wave after wave of undead threats using tactical high-ground positioning.</p>
+          </div>
+        </div>
+
+        <!-- Video Card 3 -->
+        <div class="video-card" data-video-src="c.mp4" data-video-title="Combat Mechanics Showcase">
+          <div class="video-thumb-wrapper">
+            <video class="video-thumb-preview" preload="metadata" muted playsinline>
+              <source src="c.mp4#t=0.5" type="video/mp4">
+            </video>
+            <div class="play-button-overlay">
+              <div class="play-icon-btn">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="video-card-body">
+            <h3 class="video-card-title">Combat & Weaponry</h3>
+            <p class="video-card-desc">Demonstration of melee strikes, ranged attacks, and special weapon drops.</p>
+          </div>
+        </div>
+
+        <!-- Video Card 4 -->
+        <div class="video-card" data-video-src="d.mp4" data-video-title="World Exploration & Levels">
+          <div class="video-thumb-wrapper">
+            <video class="video-thumb-preview" preload="metadata" muted playsinline>
+              <source src="d.mp4#t=0.5" type="video/mp4">
+            </video>
+            <div class="play-button-overlay">
+              <div class="play-icon-btn">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="video-card-body">
+            <h3 class="video-card-title">World Exploration</h3>
+            <p class="video-card-desc">Detailed walkthrough of levels, environmental hazards, and tower structures.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       DOWNLOAD SECTION
+       ========================================================================== -->
+  <section id="download">
+    <div class="container">
+      <div class="download-box">
+        <span class="badge">Get Started</span>
+        <h2 class="section-title">Download The Game</h2>
+        <p class="section-subtitle" style="margin-bottom: 0;">Choose your platform and start your fantasy adventure today.</p>
+
+        <div class="download-cards">
+          <!-- Android Platform Card -->
+          <div class="platform-card">
+            <div class="platform-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M17.52 3.82l1.95-2.67a.75.75 0 00-1.22-.88l-2 2.73A11.02 11.02 0 0012 2c-1.52 0-2.96.31-4.25.88l-2-2.73a.75.75 0 10-1.22.88l1.95 2.67C3.59 5.86 1.5 9.61 1.5 14h21c0-4.39-2.09-8.14-4.98-10.18zM8.5 9a1 1 0 110-2 1 1 0 010 2zm7 0a1 1 0 110-2 1 1 0 010 2zM2 15.5v5a1.5 1.5 0 001.5 1.5h17a1.5 1.5 0 001.5-1.5v-5H2z"/></svg>
+            </div>
+            <div class="platform-name">Android</div>
+            <div class="platform-req">Requires Android 8.0+</div>
+            <a href="#download-android" class="btn btn-primary" onclick="alert('Android APK Download link placeholder.'); return false;">Download APK</a>
+          </div>
+
+          <!-- Windows Platform Card -->
+          <div class="platform-card">
+            <div class="platform-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor"><path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.851"/></svg>
+            </div>
+            <div class="platform-name">Windows</div>
+            <div class="platform-req">Windows 10 / 11 64-bit</div>
+            <a href="#download-windows" class="btn btn-primary" onclick="alert('Windows Installer Download link placeholder.'); return false;">Download EXE</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       FOOTER
+       ========================================================================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="a.png" alt="Sylvan Whispers Logo">
+            <span>SYLVAN WHISPERS</span>
+          </div>
+          <p class="footer-desc">An immersive 2D fantasy action adventure game with fluid mechanics, exploration, and intense survival modes.</p>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Quick Links</h4>
+          <ul class="footer-links">
+            <li><a href="#home" class="footer-link">Home</a></li>
+            <li><a href="#about" class="footer-link">About Game</a></li>
+            <li><a href="#features" class="footer-link">Features</a></li>
+            <li><a href="#download" class="footer-link">Download</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Media</h4>
+          <ul class="footer-links">
+            <li><a href="#screenshots" class="footer-link">Screenshots</a></li>
+            <li><a href="#videos" class="footer-link">Gameplay Videos</a></li>
+            <li><a href="#videos" class="footer-link">Trailers</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-heading">Follow Us</h4>
+          <div class="social-links">
+            <a href="#social" class="social-btn" aria-label="Twitter">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg>
+            </a>
+            <a href="#social" class="social-btn" aria-label="YouTube">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19c1.72.46 8.6.46 8.6.46s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.25 29 29 0 0 0-.46-5.33z"/><polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02" fill="#04060b"/></svg>
+            </a>
+            <a href="#social" class="social-btn" aria-label="Discord">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> Sylvan Whispers. All rights reserved.</p>
+        <p>Built with HTML5, CSS3 &amp; Vanilla JavaScript.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       LIGHTBOX MODAL FOR SCREENSHOTS
+       ========================================================================== -->
+  <div class="modal-backdrop" id="imageLightboxModal">
+    <button class="modal-close-btn" id="lightboxCloseBtn" aria-label="Close Lightbox">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="lightbox-nav-btn lightbox-prev" id="lightboxPrevBtn" aria-label="Previous Image">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="lightbox-nav-btn lightbox-next" id="lightboxNextBtn" aria-label="Next Image">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+    <div class="lightbox-content">
+      <img src="" alt="Enlarged Screenshot" id="lightboxImg" class="lightbox-img">
+      <div id="lightboxCaption" class="lightbox-caption"></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       VIDEO MODAL FOR GAMEPLAY VIDEOS
+       ========================================================================== -->
+  <div class="modal-backdrop" id="videoModal">
+    <button class="modal-close-btn" id="videoModalCloseBtn" aria-label="Close Video Modal">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <div class="video-modal-content">
+      <div class="video-modal-player-wrapper">
+        <video id="modalVideoPlayer" class="video-modal-player" controls preload="metadata">
+          <source src="" type="video/mp4">
+          Your browser does not support HTML5 video.
+        </video>
+      </div>
+      <div class="video-modal-header">
+        <h3 class="video-modal-title" id="videoModalTitle">Gameplay Video</h3>
+        <span class="badge" style="margin-bottom:0;">HD 1080p</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT LOGIC
+       ========================================================================== -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set current year in footer
+      document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+      /* ------------------------------------------------------------------------
+         1. HERO VIDEO AUTOPLAY & SOUND TOGGLE
+         ------------------------------------------------------------------------ */
+      const heroVideo = document.getElementById('heroVideo');
+      const heroSoundToggle = document.getElementById('heroSoundToggle');
+      const soundIconMuted = document.getElementById('soundIconMuted');
+      const soundIconUnmuted = document.getElementById('soundIconUnmuted');
+      const soundText = document.getElementById('soundText');
+
+      // Guarantee Autoplay
+      if (heroVideo) {
+        heroVideo.muted = true;
+        const playPromise = heroVideo.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(error => {
+            console.log('Hero video autoplay error:', error);
+          });
+        }
+      }
+
+      heroSoundToggle.addEventListener('click', () => {
+        if (heroVideo.muted) {
+          heroVideo.muted = false;
+          soundIconMuted.style.display = 'none';
+          soundIconUnmuted.style.display = 'inline-block';
+          soundText.textContent = 'Sound On';
+        } else {
+          heroVideo.muted = true;
+          soundIconMuted.style.display = 'inline-block';
+          soundIconUnmuted.style.display = 'none';
+          soundText.textContent = 'Sound Off';
+        }
+      });
+
+      /* ------------------------------------------------------------------------
+         2. NAVIGATION & NAVBAR SCROLL EFFECT
+         ------------------------------------------------------------------------ */
+      const navbar = document.getElementById('navbar');
+      const navToggle = document.getElementById('navToggle');
+      const mobileMenu = document.getElementById('mobileMenu');
+      const mobileOverlay = document.getElementById('mobileOverlay');
+      const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+      const navLinks = document.querySelectorAll('.nav-link');
+
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+
+        // Active link tracking on scroll
+        const sections = document.querySelectorAll('section');
+        let currentSectionId = '';
+        sections.forEach(sec => {
+          const sectionTop = sec.offsetTop - 120;
+          if (window.scrollY >= sectionTop) {
+            currentSectionId = sec.getAttribute('id');
+          }
+        });
+
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === `#${currentSectionId}`) {
+            link.classList.add('active');
+          }
+        });
+      });
+
+      // Mobile Drawer Toggle Functionality
+      function toggleMobileMenu(open) {
+        if (open) {
+          navToggle.classList.add('open');
+          mobileMenu.classList.add('open');
+          mobileOverlay.classList.add('open');
+          document.body.style.overflow = 'hidden';
+        } else {
+          navToggle.classList.remove('open');
+          mobileMenu.classList.remove('open');
+          mobileOverlay.classList.remove('open');
+          document.body.style.overflow = '';
+        }
+      }
+
+      navToggle.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.contains('open');
+        toggleMobileMenu(!isOpen);
+      });
+
+      mobileOverlay.addEventListener('click', () => toggleMobileMenu(false));
+      mobileNavLinks.forEach(link => {
+        link.addEventListener('click', () => toggleMobileMenu(false));
+      });
+
+      /* ------------------------------------------------------------------------
+         3. SCREENSHOT GALLERY & LIGHTBOX
+         ------------------------------------------------------------------------ */
+      const galleryMainImg = document.getElementById('galleryMainImg');
+      const galleryCaption = document.getElementById('galleryCaption');
+      const galleryMainView = document.getElementById('galleryMainView');
+      const thumbItems = document.querySelectorAll('.thumb-item');
+
+      const galleryData = [
+        { src: 'b.png', caption: 'Enchanted Forest Exploration' },
+        { src: 'c.png', caption: 'High Ground Tower Defense' },
+        { src: 'd.png', caption: 'Zombie Wave Survival Mode' },
+        { src: 'e.png', caption: 'Challenging Boss & Combat Arena' }
+      ];
+      let currentGalleryIndex = 0;
+
+      thumbItems.forEach((thumb, index) => {
+        thumb.addEventListener('click', () => {
+          currentGalleryIndex = index;
+          updateGalleryView();
+        });
+      });
+
+      function updateGalleryView() {
+        thumbItems.forEach((item, i) => {
+          if (i === currentGalleryIndex) {
+            item.classList.add('active');
+          } else {
+            item.classList.remove('active');
+          }
+        });
+
+        const current = galleryData[currentGalleryIndex];
+        galleryMainImg.style.opacity = '0.3';
+        setTimeout(() => {
+          galleryMainImg.src = current.src;
+          galleryCaption.textContent = current.caption;
+          galleryMainImg.style.opacity = '1';
+        }, 150);
+      }
+
+      // Lightbox Modal Logic
+      const imageLightboxModal = document.getElementById('imageLightboxModal');
+      const lightboxImg = document.getElementById('lightboxImg');
+      const lightboxCaption = document.getElementById('lightboxCaption');
+      const lightboxCloseBtn = document.getElementById('lightboxCloseBtn');
+      const lightboxPrevBtn = document.getElementById('lightboxPrevBtn');
+      const lightboxNextBtn = document.getElementById('lightboxNextBtn');
+
+      function openLightbox(index) {
+        currentGalleryIndex = index;
+        lightboxImg.src = galleryData[currentGalleryIndex].src;
+        lightboxCaption.textContent = galleryData[currentGalleryIndex].caption;
+        imageLightboxModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeLightbox() {
+        imageLightboxModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      function nextLightboxImage() {
+        currentGalleryIndex = (currentGalleryIndex + 1) % galleryData.length;
+        lightboxImg.src = galleryData[currentGalleryIndex].src;
+        lightboxCaption.textContent = galleryData[currentGalleryIndex].caption;
+      }
+
+      function prevLightboxImage() {
+        currentGalleryIndex = (currentGalleryIndex - 1 + galleryData.length) % galleryData.length;
+        lightboxImg.src = galleryData[currentGalleryIndex].src;
+        lightboxCaption.textContent = galleryData[currentGalleryIndex].caption;
+      }
+
+      galleryMainView.addEventListener('click', () => openLightbox(currentGalleryIndex));
+      lightboxCloseBtn.addEventListener('click', closeLightbox);
+      lightboxNextBtn.addEventListener('click', nextLightboxImage);
+      lightboxPrevBtn.addEventListener('click', prevLightboxImage);
+
+      imageLightboxModal.addEventListener('click', (e) => {
+        if (e.target === imageLightboxModal) {
+          closeLightbox();
+        }
+      });
+
+      /* ------------------------------------------------------------------------
+         4. VIDEO GALLERY & VIDEO MODAL
+         ------------------------------------------------------------------------ */
+      const videoCards = document.querySelectorAll('.video-card');
+      const videoModal = document.getElementById('videoModal');
+      const videoModalCloseBtn = document.getElementById('videoModalCloseBtn');
+      const modalVideoPlayer = document.getElementById('modalVideoPlayer');
+      const videoModalTitle = document.getElementById('videoModalTitle');
+
+      videoCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const videoSrc = card.getAttribute('data-video-src');
+          const videoTitle = card.getAttribute('data-video-title');
+
+          modalVideoPlayer.src = videoSrc;
+          videoModalTitle.textContent = videoTitle;
+          videoModal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+
+          modalVideoPlayer.play().catch(err => console.log('Video playback error:', err));
+        });
+      });
+
+      function closeVideoModal() {
+        modalVideoPlayer.pause();
+        modalVideoPlayer.src = '';
+        videoModal.classList.remove('active');
+        document.body.style.overflow = '';
+      }
+
+      videoModalCloseBtn.addEventListener('click', closeVideoModal);
+      videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) {
+          closeVideoModal();
+        }
+      });
+
+      /* ------------------------------------------------------------------------
+         5. KEYBOARD NAVIGATION & ACCESSIBILITY
+         ------------------------------------------------------------------------ */
+      document.addEventListener('keydown', (e) => {
+        if (imageLightboxModal.classList.contains('active')) {
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowRight') nextLightboxImage();
+          if (e.key === 'ArrowLeft') prevLightboxImage();
+        }
+
+        if (videoModal.classList.contains('active')) {
+          if (e.key === 'Escape') closeVideoModal();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
