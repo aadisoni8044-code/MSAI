@@ -17,7 +17,7 @@ class SettingsController extends ChangeNotifier {
 
   bool _soundEnabled = true;
   bool _musicEnabled = true;
-  GameOrientationMode _orientationMode = GameOrientationMode.portrait;
+  GameOrientationMode _orientationMode = GameOrientationMode.landscape;
 
   bool get soundEnabled => _soundEnabled;
   bool get musicEnabled => _musicEnabled;

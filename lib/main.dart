@@ -5,10 +5,10 @@ import 'package:enchanted_forest_adventure/ui/main_menu_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // Lock orientation to portrait
+  // Automatically switch device to Landscape orientation at startup
   SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
   ]);
 
   runApp(const EnchantedForestApp());

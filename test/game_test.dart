@@ -24,16 +24,18 @@ void main() {
   });
 
   group('SettingsController Tests', () {
-    test('SettingsController modifies sound, music, and orientation', () {
+    test('SettingsController defaults to landscape and modifies sound, music, and orientation', () {
       final settings = SettingsController.instance;
+      expect(settings.orientationMode, equals(GameOrientationMode.landscape));
+
       settings.setSoundEnabled(false);
       expect(settings.soundEnabled, isFalse);
 
       settings.setMusicEnabled(false);
       expect(settings.musicEnabled, isFalse);
 
-      settings.setOrientationMode(GameOrientationMode.landscape);
-      expect(settings.orientationMode, equals(GameOrientationMode.landscape));
+      settings.setOrientationMode(GameOrientationMode.portrait);
+      expect(settings.orientationMode, equals(GameOrientationMode.portrait));
     });
   });
 
