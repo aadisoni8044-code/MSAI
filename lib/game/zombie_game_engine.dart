@@ -8,6 +8,7 @@ import 'package:enchanted_forest_adventure/models/weapon_data.dart';
 import 'package:enchanted_forest_adventure/models/weapon_drop_entity.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
 import 'package:enchanted_forest_adventure/core/zombie_audio_controller.dart';
+import 'package:enchanted_forest_adventure/core/character_progress_controller.dart';
 import 'package:enchanted_forest_adventure/game/game_engine.dart';
 
 enum ZombieGameState {
@@ -414,7 +415,9 @@ class ZombieGameEngine extends ChangeNotifier {
         activeZombies.removeAt(i);
         zombiesDefeatedInWave++;
         totalZombiesKilledThisRun++;
-        player.coins += zombie.zombieType == ZombieType.large ? 10 : 3;
+        final reward = zombie.zombieType == ZombieType.large ? 10 : 3;
+        player.coins += reward;
+        CharacterProgressController.instance.addCoins(reward);
 
         ZombieAudioController.instance.playZombieDeath(
           isLarge: zombie.zombieType == ZombieType.large,

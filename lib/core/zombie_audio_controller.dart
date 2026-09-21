@@ -241,25 +241,24 @@ class ZombieAudioController extends ChangeNotifier {
   void updateHordeIntensity({required int nearbyZombieCount, required bool isPlayerOnTower}) {
     if (!_isZombieAudioActive) return;
 
-    try {
-      if (_musicPlayer != null && _musicVolume > 0) {
-        double musicVol = _musicVolume * 0.5;
-        if (nearbyZombieCount >= 8) {
-          musicVol = _musicVolume * 0.85;
-        }
-        if (isPlayerOnTower) {
-          musicVol = _musicVolume * 0.40;
-        }
-        _musicPlayer!.setVolume(musicVol.clamp(0.0, 1.0));
+    if (_musicPlayer != null && _musicVolume > 0) {
+      double musicVol = _musicVolume * 0.5;
+      if (nearbyZombieCount >= 8) {
+        musicVol = _musicVolume * 0.85;
       }
+      if (isPlayerOnTower) {
+        musicVol = _musicVolume * 0.40;
+      }
+      _musicPlayer!.setVolume(musicVol.clamp(0.0, 1.0)).catchError((e) {
+        // Suppress platform channel errors during unit test
+      });
+    }
 
-      if (_windPlayer != null && _sfxVolume > 0) {
-        double windVol = isPlayerOnTower ? 0.45 : 0.20;
-        _windPlayer!.setVolume(windVol.clamp(0.0, 1.0));
-      }
-    } catch (e) {
-      // Gracefully handle uninitialized audio player channel in headless test runner
-      debugPrint('Error updating horde intensity: $e');
+    if (_windPlayer != null && _sfxVolume > 0) {
+      double windVol = isPlayerOnTower ? 0.45 : 0.20;
+      _windPlayer!.setVolume(windVol.clamp(0.0, 1.0)).catchError((e) {
+        // Suppress platform channel errors during unit test
+      });
     }
   }
 

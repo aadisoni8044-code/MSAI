@@ -3,11 +3,13 @@ import 'package:flutter/scheduler.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/core/level_progress_controller.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
+import 'package:enchanted_forest_adventure/core/character_progress_controller.dart';
 import 'package:enchanted_forest_adventure/rendering/lobby_background_painter.dart';
 import 'package:enchanted_forest_adventure/widgets/hero_showcase_widget.dart';
 import 'package:enchanted_forest_adventure/ui/game_screen.dart';
 import 'package:enchanted_forest_adventure/ui/zombie_intro_screen.dart';
 import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
+import 'package:enchanted_forest_adventure/ui/character_shop_screen.dart';
 import 'package:enchanted_forest_adventure/ui/settings_overlay.dart';
 
 class MainMenuScreen extends StatefulWidget {
@@ -88,11 +90,20 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
     );
   }
 
+  void _openShop(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => const CharacterShopScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
     final lvlController = LevelProgressController.instance;
     final zCtrl = ZombieProgressController.instance;
+    final charCtrl = CharacterProgressController.instance;
 
     final currentLevel = lvlController.highestUnlockedLevel.clamp(1, 10);
     final isNewGame = currentLevel == 1 && lvlController.completedLevels.isEmpty;
@@ -117,7 +128,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
               ),
             ),
 
-            // 2. Top Bar HUD (Profile + Campaign Progress + Coins)
+            // 2. Top Bar HUD (Profile + Campaign Progress + Coins & Settings)
             SafeArea(
               child: Align(
                 alignment: Alignment.topCenter,
@@ -199,33 +210,72 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                         },
                       ),
 
-                      // Settings Button
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () => _openSettings(context),
-                          borderRadius: BorderRadius.circular(20),
-                          child: Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: const Color(0xCC0F172A),
-                              border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: GameColors.playerGlow,
-                                  blurRadius: 10,
-                                  spreadRadius: -2,
+                      // Right Top Group: Coin Balance + Settings
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ListenableBuilder(
+                            listenable: charCtrl,
+                            builder: (context, _) {
+                              return GestureDetector(
+                                onTap: () => _openShop(context),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xCC0F172A),
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: Border.all(color: GameColors.coinGold, width: 1.5),
+                                    boxShadow: const [
+                                      BoxShadow(color: Color(0x33FFD166), blurRadius: 8),
+                                    ],
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 20),
+                                      const SizedBox(width: 6),
+                                      Text(
+                                        '${charCtrl.totalCoins}',
+                                        style: const TextStyle(
+                                          color: GameColors.coinGold,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                              ],
-                            ),
-                            child: const Icon(
-                              Icons.settings_rounded,
-                              color: GameColors.uiTextLight,
-                              size: 24,
+                              );
+                            },
+                          ),
+                          const SizedBox(width: 10),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              onTap: () => _openSettings(context),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: const Color(0xCC0F172A),
+                                  border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: GameColors.playerGlow,
+                                      blurRadius: 10,
+                                      spreadRadius: -2,
+                                    ),
+                                  ],
+                                ),
+                                child: const Icon(
+                                  Icons.settings_rounded,
+                                  color: GameColors.uiTextLight,
+                                  size: 24,
+                                ),
+                              ),
                             ),
                           ),
-                        ),
+                        ],
                       ),
                     ],
                   ),
@@ -300,15 +350,25 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                     currentLevel: currentLevel,
                   ),
 
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 12),
 
                   // Zombie Mode Card
                   _buildZombieModeCard(context: context, zCtrl: zCtrl),
 
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 12),
 
-                  // Level Selection Card
-                  _buildLevelSelectButton(context: context),
+                  // Bottom Row: SELECT LEVEL & SHOP Cards
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildLevelSelectButton(context: context),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _buildShopButton(context: context),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -340,7 +400,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
             duration: const Duration(milliseconds: 100),
             child: SizedBox(
               width: double.infinity,
-              height: 68,
+              height: 64,
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(18),
@@ -426,7 +486,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
       builder: (context, _) {
         return SizedBox(
           width: double.infinity,
-          height: 60,
+          height: 56,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
@@ -456,8 +516,8 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
               },
               child: Row(
                 children: [
-                  const Icon(Icons.coronavirus_rounded, color: Color(0xFFFF4D4D), size: 30),
-                  const SizedBox(width: 10),
+                  const Icon(Icons.coronavirus_rounded, color: Color(0xFFFF4D4D), size: 28),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -468,9 +528,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                           'ZOMBIE MODE',
                           style: TextStyle(
                             color: Color(0xFFFF4D4D),
-                            fontSize: 15,
+                            fontSize: 14,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: 1.5,
+                            letterSpacing: 1.2,
                           ),
                         ),
                         Text(
@@ -479,13 +539,13 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.white70,
-                            fontSize: 11,
+                            fontSize: 10.5,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  const Icon(Icons.chevron_right_rounded, color: Color(0xFFFF4D4D), size: 24),
+                  const Icon(Icons.chevron_right_rounded, color: Color(0xFFFF4D4D), size: 22),
                 ],
               ),
             ),
@@ -497,25 +557,66 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
 
   Widget _buildLevelSelectButton({required BuildContext context}) {
     return SizedBox(
-      width: double.infinity,
-      height: 52,
+      height: 50,
       child: OutlinedButton.icon(
         style: OutlinedButton.styleFrom(
           foregroundColor: GameColors.uiTextLight,
           backgroundColor: const Color(0xCC0F172A),
           side: const BorderSide(color: GameColors.playerGlow, width: 1.5),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
         ),
         onPressed: () => _openLevelSelect(context),
-        icon: const Icon(Icons.grid_view_rounded, size: 22, color: GameColors.foliageGlow),
+        icon: const Icon(Icons.grid_view_rounded, size: 20, color: GameColors.foliageGlow),
         label: const Text(
-          'SELECT LEVEL',
+          'LEVELS',
           style: TextStyle(
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: FontWeight.bold,
-            letterSpacing: 1.5,
+            letterSpacing: 1.2,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildShopButton({required BuildContext context}) {
+    return SizedBox(
+      height: 50,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF854D0E), Color(0xFFCA8A04)],
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x66EAB308),
+              blurRadius: 10,
+            ),
+          ],
+        ),
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          onPressed: () => _openShop(context),
+          icon: const Icon(Icons.shopping_bag_rounded, size: 20, color: Colors.white),
+          label: const Text(
+            '🛒 SHOP',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 1.2,
+            ),
           ),
         ),
       ),

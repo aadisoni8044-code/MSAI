@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:enchanted_forest_adventure/models/player_state.dart';
 import 'package:enchanted_forest_adventure/models/game_entity.dart';
 import 'package:enchanted_forest_adventure/models/level_data.dart';
+import 'package:enchanted_forest_adventure/core/character_progress_controller.dart';
 
 enum GameStatus {
   playing,
@@ -330,6 +331,7 @@ class GameEngine extends ChangeNotifier {
           // Defeated enemy particle explosion
           _addDefeatParticles(enemy.x + enemy.width / 2, enemy.y + enemy.height / 2);
           player.coins += 5; // Bonus coins on defeat
+          CharacterProgressController.instance.addCoins(5);
         }
       }
     }
