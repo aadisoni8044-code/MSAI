@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#090d16" />
+  <title>Video Gallery — Shadow Forest: Zombie Outbreak</title>
+  <meta name="description" content="Watch official trailers, combat walkthroughs, zombie mode deep-dives, and boss showcase videos for Shadow Forest: Zombie Outbreak." />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="navbar.css" />
+  <link rel="stylesheet" href="hero.css" />
+  <link rel="stylesheet" href="gallery.css" />
+  <link rel="stylesheet" href="animations.css" />
+  <link rel="stylesheet" href="responsive.css" />
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <header class="navbar-header">
+    <div class="container nav-container">
+      <a href="index.html" class="nav-brand">
+        <img src="a.png" alt="Shadow Forest Logo" />
+        <span class="nav-brand-title">SHADOW FOREST</span>
+      </a>
+
+      <nav>
+        <ul class="nav-menu">
+          <li><a href="index.html" class="nav-link">Home</a></li>
+          <li><a href="game.html" class="nav-link">Game Info</a></li>
+          <li><a href="gallery.html" class="nav-link">Gallery</a></li>
+          <li><a href="videos.html" class="nav-link active">Videos</a></li>
+          <li><a href="game.html#features" class="nav-link">Features</a></li>
+          <li><a href="index.html#download" class="nav-link">Download</a></li>
+        </ul>
+      </nav>
+
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        <button id="soundToggleBtn" class="sound-toggle-btn" title="Toggle Sound">🔇</button>
+        <button class="hamburger-toggle" aria-label="Toggle Navigation Menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page Header Banner -->
+  <section class="section-padding" style="padding-top: calc(var(--nav-height) + 3rem); background: radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.25) 0%, rgba(9, 13, 22, 1) 80%); border-bottom: 1px solid var(--border-glass);">
+    <div class="container" style="text-align: center;">
+      <span class="badge" style="margin-bottom: 0.75rem;">CINEMATIC GAME TRAILERS & WALKTHROUGHS</span>
+      <h1 class="hero-title" style="font-size: 3.2rem; margin-bottom: 1rem;">VIDEO GALLERY</h1>
+      <p style="max-width: 700px; margin: 0 auto; color: var(--text-sub);">
+        Click any video card below to launch the cinematic player with dynamic controls and full audio.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Video Gallery Section -->
+  <section class="section-padding container">
+    <div id="videoGridContainer" class="video-grid">
+      <!-- Rendered dynamically by gallery.js using GAME_DATA.videos (a.mp4, b.mp4, c.mp4, d.mp4) -->
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="a.png" alt="Shadow Forest Logo" />
+            <span>SHADOW FOREST</span>
+          </div>
+          <p style="font-size: 0.9rem; color: var(--text-muted);">
+            Shadow Forest: Zombie Outbreak is a next-generation AAA dark fantasy action adventure platformer with deterministic wave survival mechanics.
+          </p>
+          <div class="social-links">
+            <a href="#" class="social-btn" title="Discord">💬</a>
+            <a href="#" class="social-btn" title="Twitter / X">🐦</a>
+            <a href="#" class="social-btn" title="YouTube">📺</a>
+            <a href="#" class="social-btn" title="Steam">🎮</a>
+          </div>
+        </div>
+
+        <div class="footer-column">
+          <h4>Navigation</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="game.html">Game Information</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+            <li><a href="videos.html">Video Gallery</a></li>
+            <li><a href="index.html#download">Download Game</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Game Content</h4>
+          <ul>
+            <li><a href="game.html#levels">10 Elemental Realms</a></li>
+            <li><a href="game.html#zombieMode">Zombie Outbreak Mode</a></li>
+            <li><a href="game.html#weapons">Arsenal & Weapons</a></li>
+            <li><a href="game.html#controls">Controls Guide</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-column">
+          <h4>Community & Support</h4>
+          <ul>
+            <li><a href="#" onclick="alert('Support portal reachable at support@nvisovgames.com'); return false;">Support Center</a></li>
+            <li><a href="#" onclick="alert('Patch notes v2.5 loaded.'); return false;">Patch Notes</a></li>
+            <li><a href="#" onclick="alert('Community discord link: discord.gg/shadowforest'); return false;">Discord Server</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; <span id="currentYear"></span> Nvisov Game Studios. All Rights Reserved. Built with HTML, CSS & JavaScript.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Universal Video Player Modal -->
+  <div id="videoModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-content-wrapper">
+      <button id="modalCloseBtn" class="modal-close-btn" aria-label="Close Modal">✕</button>
+      <div class="modal-media-container">
+        <video id="modalVideoPlayer" controls playsinline poster="b.png">
+          <source src="a.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="modal-caption-bar">
+        <h3 id="modalTitle" class="modal-caption-title">Game Trailer</h3>
+        <p id="modalDesc" class="modal-caption-desc"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Stack -->
+  <script src="game-data.js"></script>
+  <script src="navigation.js"></script>
+  <script src="video.js"></script>
+  <script src="gallery.js"></script>
+  <script src="animations.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
