@@ -4,6 +4,7 @@ import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/core/character_progress_controller.dart';
 import 'package:enchanted_forest_adventure/core/level_progress_controller.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
+import 'package:enchanted_forest_adventure/core/custom_map_progress_controller.dart';
 import 'package:enchanted_forest_adventure/ui/main_menu_screen.dart';
 
 void main() async {
@@ -18,6 +19,7 @@ void main() async {
   await LevelProgressController.instance.init();
   await ZombieProgressController.instance.init();
   await CharacterProgressController.instance.init();
+  await CustomMapProgressController.instance.init();
 
   runApp(const EnchantedForestApp());
 }

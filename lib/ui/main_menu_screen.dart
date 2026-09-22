@@ -8,6 +8,7 @@ import 'package:enchanted_forest_adventure/rendering/lobby_background_painter.da
 import 'package:enchanted_forest_adventure/widgets/hero_showcase_widget.dart';
 import 'package:enchanted_forest_adventure/ui/game_screen.dart';
 import 'package:enchanted_forest_adventure/ui/zombie_intro_screen.dart';
+import 'package:enchanted_forest_adventure/ui/create_map_home_screen.dart';
 import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
 import 'package:enchanted_forest_adventure/ui/character_shop_screen.dart';
 import 'package:enchanted_forest_adventure/ui/settings_overlay.dart';
@@ -355,7 +356,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                   // Zombie Mode Card
                   _buildZombieModeCard(context: context, zCtrl: zCtrl),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 10),
+
+                  // Create Map Card
+                  _buildCreateMapCard(context: context),
+
+                  const SizedBox(height: 10),
 
                   // Bottom Row: SELECT LEVEL & SHOP Cards
                   Row(
@@ -474,6 +480,75 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCreateMapCard({required BuildContext context}) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          color: const Color(0xEE0F172A),
+          border: Border.all(color: const Color(0xFF38BDF8), width: 1.8),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x4438BDF8),
+              blurRadius: 12,
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const CreateMapHomeScreen()),
+            );
+          },
+          child: Row(
+            children: [
+              const Icon(Icons.build_circle_rounded, color: Color(0xFF38BDF8), size: 28),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text(
+                      '🛠 CREATE MAP',
+                      style: TextStyle(
+                        color: Color(0xFF38BDF8),
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    Text(
+                      'Build, Edit & Play Custom Levels',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: Color(0xFF38BDF8), size: 22),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
