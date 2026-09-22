@@ -389,7 +389,7 @@ class _CustomMapGameScreenState extends State<CustomMapGameScreen> with SingleTi
 
   Widget _buildCustomPauseOverlay() {
     return Container(
-      color: Colors.black70,
+      color: Colors.black.withValues(alpha: 0.70),
       child: Center(
         child: Container(
           width: 320,
