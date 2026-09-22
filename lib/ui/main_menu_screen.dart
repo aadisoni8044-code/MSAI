@@ -8,6 +8,7 @@ import 'package:enchanted_forest_adventure/rendering/lobby_background_painter.da
 import 'package:enchanted_forest_adventure/widgets/hero_showcase_widget.dart';
 import 'package:enchanted_forest_adventure/ui/game_screen.dart';
 import 'package:enchanted_forest_adventure/ui/zombie_intro_screen.dart';
+import 'package:enchanted_forest_adventure/ui/car_zombie_game_screen.dart';
 import 'package:enchanted_forest_adventure/ui/create_map_home_screen.dart';
 import 'package:enchanted_forest_adventure/ui/level_select_screen.dart';
 import 'package:enchanted_forest_adventure/ui/character_shop_screen.dart';
@@ -356,7 +357,12 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                   // Zombie Mode Card
                   _buildZombieModeCard(context: context, zCtrl: zCtrl),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
+
+                  // Car Zombie Chase Card
+                  _buildCarZombieChaseCard(context: context),
+
+                  const SizedBox(height: 8),
 
                   // Create Map Card
                   _buildCreateMapCard(context: context),
@@ -480,6 +486,77 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCarZombieChaseCard({required BuildContext context}) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+          gradient: const LinearGradient(
+            colors: [Color(0xFF991B1B), Color(0xFFDC2626)],
+          ),
+          border: Border.all(color: const Color(0xFFFCA5A5), width: 1.5),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x66DC2626),
+              blurRadius: 12,
+            ),
+          ],
+        ),
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.transparent,
+            shadowColor: Colors.transparent,
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const CarZombieGameScreen()),
+            );
+          },
+          child: Row(
+            children: [
+              const Icon(Icons.directions_car_filled_rounded, color: Colors.white, size: 28),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text(
+                      '🚗 CAR ZOMBIE CHASE',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.1,
+                      ),
+                    ),
+                    Text(
+                      'Shoot Horde While Driving Forward!',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 10,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.chevron_right_rounded, color: Colors.white, size: 22),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
