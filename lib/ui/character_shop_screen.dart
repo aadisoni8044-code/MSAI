@@ -327,23 +327,6 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Gender Badge
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: char.gender == 'Boy' ? const Color(0x3338BDF8) : const Color(0x33F472B6),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Text(
-                char.gender.toUpperCase(),
-                style: TextStyle(
-                  color: char.gender == 'Boy' ? const Color(0xFF38BDF8) : const Color(0xFFF472B6),
-                  fontSize: 8.5,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-
             // Character Mini Render
             Expanded(
               child: CharacterPreviewWidget(
@@ -461,25 +444,6 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                       ),
                     ),
                   ],
-                ),
-              ),
-              const SizedBox(width: 6),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: char.gender == 'Boy' ? const Color(0x3338BDF8) : const Color(0x33F472B6),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: char.gender == 'Boy' ? const Color(0xFF38BDF8) : const Color(0xFFF472B6),
-                  ),
-                ),
-                child: Text(
-                  char.gender.toUpperCase(),
-                  style: TextStyle(
-                    color: char.gender == 'Boy' ? const Color(0xFF38BDF8) : const Color(0xFFF472B6),
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
-                  ),
                 ),
               ),
             ],
