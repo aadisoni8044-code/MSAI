@@ -23,6 +23,14 @@ enum EditorCategory {
   actions,
 }
 
+enum ResizeHandle {
+  none,
+  topLeft, // A
+  topRight, // B
+  bottomRight, // C
+  bottomLeft, // D
+}
+
 class MapEditorScreen extends StatefulWidget {
   final CustomMapData mapData;
 
@@ -51,9 +59,13 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
   double _time = 0.0;
   Duration _lastElapsed = Duration.zero;
 
-  // Selection
+  // Selection & Manipulation
   String? _selectedEntityId;
   bool _isDraggingEntity = false;
+  ResizeHandle _activeResizeHandle = ResizeHandle.none;
+
+  // Bottom Toolbar Panel Collapse
+  bool _isToolbarCollapsed = false;
 
   // Notification Toast
   String? _messageText;
@@ -441,309 +453,561 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
         _selectedEntityId = newId;
       });
       _saveHistoryState();
-      _showMessage('Object duplicated');
+      _showMessage('Object duplicated & selected');
     }
+  }
+
+  ResizeHandle _hitTestResizeHandles(CustomMapEntity e, Offset worldPos) {
+    const double handleRadius = 24.0; // Touch hit area
+    final Rect rect = Rect.fromLTWH(e.x, e.y, e.width, e.height);
+
+    final handleA = Offset(rect.left, rect.top);
+    final handleB = Offset(rect.right, rect.top);
+    final handleC = Offset(rect.right, rect.bottom);
+    final handleD = Offset(rect.left, rect.bottom);
+
+    if ((worldPos - handleA).distance <= handleRadius) return ResizeHandle.topLeft;
+    if ((worldPos - handleB).distance <= handleRadius) return ResizeHandle.topRight;
+    if ((worldPos - handleC).distance <= handleRadius) return ResizeHandle.bottomRight;
+    if ((worldPos - handleD).distance <= handleRadius) return ResizeHandle.bottomLeft;
+
+    return ResizeHandle.none;
+  }
+
+  void _performHandleResize(CustomMapEntity e, Offset delta) {
+    double x = e.x;
+    double y = e.y;
+    double w = e.width;
+    double h = e.height;
+
+    switch (_activeResizeHandle) {
+      case ResizeHandle.topLeft: // A
+        x += delta.dx;
+        y += delta.dy;
+        w -= delta.dx;
+        h -= delta.dy;
+        break;
+      case ResizeHandle.topRight: // B
+        y += delta.dy;
+        w += delta.dx;
+        h -= delta.dy;
+        break;
+      case ResizeHandle.bottomRight: // C
+        w += delta.dx;
+        h += delta.dy;
+        break;
+      case ResizeHandle.bottomLeft: // D
+        x += delta.dx;
+        w -= delta.dx;
+        h += delta.dy;
+        break;
+      case ResizeHandle.none:
+        return;
+    }
+
+    if (w < 20) w = 20;
+    if (h < 15) h = 15;
+
+    if (_gridSnap) {
+      x = (x / _gridSize).round() * _gridSize;
+      y = (y / _gridSize).round() * _gridSize;
+      w = (w / _gridSize).round() * _gridSize;
+      h = (h / _gridSize).round() * _gridSize;
+      if (w < 20) w = 20;
+      if (h < 20) h = 20;
+    }
+
+    e.x = x.clamp(0, _map.worldWidth - 20);
+    e.y = y.clamp(0, _map.worldHeight - 20);
+    e.width = w;
+    e.height = h;
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final selectedCharacter = CharacterProgressController.instance.selectedCharacter;
+    final selectedEntity = _selectedEntityId != null
+        ? _map.entities.cast<CustomMapEntity?>().firstWhere((e) => e?.id == _selectedEntityId, orElse: () => null)
+        : null;
 
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // 1. Interactive Canvas Area (Live 60FPS Game World)
-          GestureDetector(
-            onPanUpdate: (details) {
-              if (_isDraggingEntity && _selectedEntityId != null) {
-                final idx = _map.entities.indexWhere((e) => e.id == _selectedEntityId);
-                if (idx >= 0) {
-                  double newX = _map.entities[idx].x + details.delta.dx;
-                  double newY = _map.entities[idx].y + details.delta.dy;
-                  if (_gridSnap) {
-                    newX = (newX / _gridSize).round() * _gridSize;
-                    newY = (newY / _gridSize).round() * _gridSize;
-                  }
-                  setState(() {
-                    _map.entities[idx].x = newX.clamp(0, _map.worldWidth);
-                    _map.entities[idx].y = newY.clamp(0, _map.worldHeight);
-                  });
-                }
-              } else {
-                setState(() {
-                  _scrollX = (_scrollX - details.delta.dx).clamp(0.0, max(0.0, _map.worldWidth - screenSize.width));
-                  _scrollY = (_scrollY - details.delta.dy).clamp(0.0, max(0.0, _map.worldHeight - screenSize.height));
-                });
-              }
-            },
-            onPanEnd: (_) {
-              if (_isDraggingEntity) {
-                _isDraggingEntity = false;
-                _saveHistoryState();
-              }
-            },
-            onTapDown: (details) {
-              final localPos = details.localPosition;
-              final worldX = localPos.dx + _scrollX;
-              final worldY = localPos.dy + _scrollY;
+      body: SafeArea(
+        child: Column(
+          children: [
+            // 1. Top Navigation Bar
+            _buildTopNavBar(),
 
-              // Check if tapped an existing entity
-              for (int i = _map.entities.length - 1; i >= 0; i--) {
-                final e = _map.entities[i];
-                final rect = Rect.fromLTWH(e.x, e.y, e.width, e.height);
-                if (rect.contains(Offset(worldX, worldY))) {
-                  setState(() {
-                    _selectedEntityId = e.id;
-                    _isDraggingEntity = true;
-                  });
-                  return;
-                }
-              }
+            // 2. Middle Interactive Map Canvas Area
+            Expanded(
+              child: Stack(
+                children: [
+                  GestureDetector(
+                    onPanDown: (details) {
+                      final localPos = details.localPosition;
+                      final worldPos = Offset(localPos.dx + _scrollX, localPos.dy + _scrollY);
 
-              // Check Player Start marker tap
-              final pStartRect = Rect.fromLTWH(_map.playerStartX - 25, _map.playerStartY - 50, 50, 70);
-              if (pStartRect.contains(Offset(worldX, worldY))) {
-                _showMessage('🎯 Player Start Position');
-                return;
-              }
+                      // Check if tapped a resize handle on the selected entity
+                      if (selectedEntity != null) {
+                        final handle = _hitTestResizeHandles(selectedEntity, worldPos);
+                        if (handle != ResizeHandle.none) {
+                          _activeResizeHandle = handle;
+                          _isDraggingEntity = false;
+                          return;
+                        }
+                      }
 
-              // Check Finish Portal marker tap
-              final finishRect = Rect.fromLTWH(_map.finishX - 30, _map.finishY - 60, 60, 90);
-              if (finishRect.contains(Offset(worldX, worldY))) {
-                _showMessage('🏁 Finish Portal Position');
-                return;
-              }
+                      // Check if tapped an existing entity
+                      for (int i = _map.entities.length - 1; i >= 0; i--) {
+                        final e = _map.entities[i];
+                        final rect = Rect.fromLTWH(e.x, e.y, e.width, e.height);
+                        if (rect.contains(worldPos)) {
+                          setState(() {
+                            _selectedEntityId = e.id;
+                            _isDraggingEntity = true;
+                            _activeResizeHandle = ResizeHandle.none;
+                          });
+                          return;
+                        }
+                      }
 
-              // Tapped blank canvas -> Place new entity with active tool
-              _addNewEntity(localPos);
-            },
-            child: CustomPaint(
-              size: screenSize,
-              painter: MapEditorCanvasPainter(
-                map: _map,
-                scrollX: _scrollX,
-                scrollY: _scrollY,
-                selectedEntityId: _selectedEntityId,
-                gridSnap: _gridSnap,
-                gridSize: _gridSize,
-                time: _time,
-                selectedCharacter: selectedCharacter,
-              ),
-            ),
-          ),
+                      // Check Player Start marker tap
+                      final pStartRect = Rect.fromLTWH(_map.playerStartX - 25, _map.playerStartY - 50, 50, 70);
+                      if (pStartRect.contains(worldPos)) {
+                        _showMessage('🎯 Player Start Position');
+                        return;
+                      }
 
-          // 2. Top Navigation Bar
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              decoration: const BoxDecoration(
-                color: Color(0xDD0F172A),
-                border: Border(bottom: BorderSide(color: GameColors.uiGlassBorder, width: 1.2)),
-              ),
-              child: SafeArea(
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 20),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                    const SizedBox(width: 8),
-                    GestureDetector(
-                      onTap: _openRenameDialog,
-                      child: Row(
-                        children: [
-                          Text(
-                            _map.name,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.8,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          const Icon(Icons.edit_rounded, color: Color(0xFF38BDF8), size: 16),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    OutlinedButton.icon(
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: _gridSnap ? const Color(0x4438BDF8) : Colors.transparent,
-                        side: BorderSide(color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white24),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                      ),
-                      onPressed: () {
+                      // Check Finish Portal marker tap
+                      final finishRect = Rect.fromLTWH(_map.finishX - 30, _map.finishY - 60, 60, 90);
+                      if (finishRect.contains(worldPos)) {
+                        _showMessage('🏁 Finish Portal Position');
+                        return;
+                      }
+
+                      // Tapped blank canvas -> Deselect or place new entity
+                      if (_selectedEntityId != null) {
                         setState(() {
-                          _gridSnap = !_gridSnap;
+                          _selectedEntityId = null;
                         });
-                        _showMessage(_gridSnap ? 'Grid Snap ON (20px)' : 'Grid Snap OFF');
-                      },
-                      icon: Icon(Icons.grid_on_rounded, size: 16, color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54),
-                      label: Text(
-                        _gridSnap ? 'GRID ON' : 'GRID OFF',
-                        style: TextStyle(
-                          color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54,
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
+                      } else {
+                        _addNewEntity(localPos);
+                      }
+                    },
+                    onPanUpdate: (details) {
+                      if (selectedEntity != null && _activeResizeHandle != ResizeHandle.none) {
+                        setState(() {
+                          _performHandleResize(selectedEntity, details.delta);
+                        });
+                      } else if (selectedEntity != null && _isDraggingEntity) {
+                        double newX = selectedEntity.x + details.delta.dx;
+                        double newY = selectedEntity.y + details.delta.dy;
+                        if (_gridSnap) {
+                          newX = (newX / _gridSize).round() * _gridSize;
+                          newY = (newY / _gridSize).round() * _gridSize;
+                        }
+                        setState(() {
+                          selectedEntity.x = newX.clamp(0, _map.worldWidth - selectedEntity.width);
+                          selectedEntity.y = newY.clamp(0, _map.worldHeight - selectedEntity.height);
+                        });
+                      } else {
+                        setState(() {
+                          _scrollX = (_scrollX - details.delta.dx).clamp(0.0, max(0.0, _map.worldWidth - screenSize.width));
+                          _scrollY = (_scrollY - details.delta.dy).clamp(0.0, max(0.0, _map.worldHeight - (screenSize.height - 180)));
+                        });
+                      }
+                    },
+                    onPanEnd: (_) {
+                      if (_isDraggingEntity || _activeResizeHandle != ResizeHandle.none) {
+                        _isDraggingEntity = false;
+                        _activeResizeHandle = ResizeHandle.none;
+                        _saveHistoryState();
+                      }
+                    },
+                    child: CustomPaint(
+                      size: Size.infinite,
+                      painter: MapEditorCanvasPainter(
+                        map: _map,
+                        scrollX: _scrollX,
+                        scrollY: _scrollY,
+                        selectedEntityId: _selectedEntityId,
+                        gridSnap: _gridSnap,
+                        gridSize: _gridSize,
+                        time: _time,
+                        selectedCharacter: selectedCharacter,
+                      ),
+                    ),
+                  ),
+
+                  // Compact Floating Property Panel for Selected Object
+                  if (selectedEntity != null)
+                    Positioned(
+                      top: 12,
+                      left: 16,
+                      child: _buildPropertyPanel(selectedEntity),
+                    ),
+
+                  // Notification Toast
+                  if (_messageText != null)
+                    Positioned(
+                      top: 12,
+                      right: 16,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: _isSuccessMessage ? const Color(0xEE065F46) : const Color(0xEE991B1B),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: _isSuccessMessage ? const Color(0xFF34D399) : const Color(0xFFF87171),
+                            width: 1.5,
+                          ),
+                          boxShadow: const [BoxShadow(color: Colors.black45, blurRadius: 8)],
+                        ),
+                        child: Text(
+                          _messageText!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.undo_rounded, color: Colors.white, size: 20),
-                      onPressed: _undoStack.length > 1 ? _undo : null,
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.redo_rounded, color: Colors.white, size: 20),
-                      onPressed: _redoStack.isNotEmpty ? _redo : null,
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF0EA5E9),
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      onPressed: _saveMap,
-                      icon: const Icon(Icons.save_rounded, color: Colors.white, size: 18),
-                      label: const Text(
-                        'SAVE',
-                        style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF10B981),
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                      ),
-                      onPressed: _testPlayMap,
-                      icon: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 20),
-                      label: const Text(
-                        'PLAY TEST',
-                        style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w900, letterSpacing: 1.0),
-                      ),
-                    ),
-                  ],
+                ],
+              ),
+            ),
+
+            // 3. Bottom Toolbar Drawer (Non-overflowing & Collapsible)
+            _buildBottomToolbarPanel(selectedCharacter),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopNavBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: const BoxDecoration(
+        color: Color(0xDD0F172A),
+        border: Border(bottom: BorderSide(color: GameColors.uiGlassBorder, width: 1.2)),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          const SizedBox(width: 4),
+          GestureDetector(
+            onTap: _openRenameDialog,
+            child: Row(
+              children: [
+                Text(
+                  _map.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.8,
+                  ),
                 ),
+                const SizedBox(width: 4),
+                const Icon(Icons.edit_rounded, color: Color(0xFF38BDF8), size: 15),
+              ],
+            ),
+          ),
+          const Spacer(),
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              backgroundColor: _gridSnap ? const Color(0x4438BDF8) : Colors.transparent,
+              side: BorderSide(color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white24),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            ),
+            onPressed: () {
+              setState(() {
+                _gridSnap = !_gridSnap;
+              });
+              _showMessage(_gridSnap ? 'Grid Snap ON (20px)' : 'Grid Snap OFF');
+            },
+            icon: Icon(Icons.grid_on_rounded, size: 15, color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54),
+            label: Text(
+              _gridSnap ? 'GRID ON' : 'GRID OFF',
+              style: TextStyle(
+                color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-
-          // 3. Floating Toolbar for Selected Entity
-          if (_selectedEntityId != null)
-            Positioned(
-              top: 75,
-              right: 20,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xEE0F172A),
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(color: const Color(0xFF38BDF8), width: 1.5),
-                  boxShadow: const [BoxShadow(color: Color(0x4438BDF8), blurRadius: 10)],
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('OBJECT SELECTED', style: TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      icon: const Icon(Icons.copy_rounded, color: Color(0xFF80FFDB), size: 18),
-                      onPressed: _duplicateSelectedEntity,
-                      tooltip: 'Duplicate',
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.delete_forever_rounded, color: Color(0xFFFF4D4D), size: 18),
-                      onPressed: _deleteSelectedEntity,
-                      tooltip: 'Delete',
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.close_rounded, color: Colors.white54, size: 18),
-                      onPressed: () => setState(() => _selectedEntityId = null),
-                      tooltip: 'Deselect',
-                    ),
-                  ],
-                ),
-              ),
+          const SizedBox(width: 6),
+          IconButton(
+            icon: const Icon(Icons.undo_rounded, color: Colors.white, size: 18),
+            onPressed: _undoStack.length > 1 ? _undo : null,
+          ),
+          IconButton(
+            icon: const Icon(Icons.redo_rounded, color: Colors.white, size: 18),
+            onPressed: _redoStack.isNotEmpty ? _redo : null,
+          ),
+          const SizedBox(width: 6),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF0EA5E9),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
-
-          // 4. Toast Notification
-          if (_messageText != null)
-            Positioned(
-              top: 75,
-              left: screenSize.width * 0.25,
-              right: screenSize.width * 0.25,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                decoration: BoxDecoration(
-                  color: _isSuccessMessage ? const Color(0xEE065F46) : const Color(0xEE991B1B),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: _isSuccessMessage ? const Color(0xFF34D399) : const Color(0xFFF87171),
-                    width: 1.5,
-                  ),
-                ),
-                child: Text(
-                  _messageText!,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                ),
-              ),
+            onPressed: _saveMap,
+            icon: const Icon(Icons.save_rounded, color: Colors.white, size: 16),
+            label: const Text(
+              'SAVE',
+              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
             ),
+          ),
+          const SizedBox(width: 6),
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF10B981),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            ),
+            onPressed: _testPlayMap,
+            icon: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 18),
+            label: const Text(
+              'PLAY TEST',
+              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-          // 5. Bottom Palette Drawer Tools with Mini Live Vector Previews
-          Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              height: 125,
-              decoration: const BoxDecoration(
-                color: Color(0xEE0F172A),
-                border: Border(top: BorderSide(color: GameColors.uiGlassBorder, width: 1.5)),
+  Widget _buildPropertyPanel(CustomMapEntity e) {
+    final String typeName = _getFormattedEntityName(e.type);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: const Color(0xEE0F172A),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFF38BDF8), width: 1.5),
+        boxShadow: const [BoxShadow(color: Color(0x66000000), blurRadius: 10)],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                typeName,
+                style: const TextStyle(color: Color(0xFF80FFDB), fontSize: 12, fontWeight: FontWeight.bold),
               ),
-              child: Column(
-                children: [
-                  // Category Tabs Bar
-                  SizedBox(
-                    height: 36,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      children: [
-                        _buildCategoryTab('🧱 PLATFORMS', EditorCategory.platforms),
-                        _buildCategoryTab('🪵 TERRAIN', EditorCategory.terrain),
-                        _buildCategoryTab('👾 ENEMIES', EditorCategory.enemies),
-                        _buildCategoryTab('💰 ITEMS', EditorCategory.items),
-                        _buildCategoryTab('⚠️ HAZARDS', EditorCategory.hazards),
-                        _buildCategoryTab('🌲 DECOR', EditorCategory.decor),
-                        _buildCategoryTab('🎯 SPECIAL', EditorCategory.special),
-                        _buildCategoryTab('🎨 THEMES', EditorCategory.themes),
-                        _buildCategoryTab('🛠 ACTIONS', EditorCategory.actions),
-                      ],
-                    ),
-                  ),
-
-                  const Divider(height: 1, color: Colors.white12),
-
-                  // Active Category Objects Ribbon
-                  Expanded(
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      children: _buildActiveCategoryTools(selectedCharacter),
-                    ),
-                  ),
-                ],
+              const SizedBox(width: 12),
+              GestureDetector(
+                onTap: () => setState(() => _selectedEntityId = null),
+                child: const Icon(Icons.close_rounded, color: Colors.white54, size: 16),
               ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'X: ${e.x.toInt()}   Y: ${e.y.toInt()}',
+            style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'W: ${e.width.toInt()}   H: ${e.height.toInt()}',
+            style: const TextStyle(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.bold),
+          ),
+          if (e.type.contains('enemy') || e.type == 'movingPlatform') ...[
+            const SizedBox(height: 4),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Patrol: ', style: TextStyle(color: Colors.white54, fontSize: 10)),
+                Text('${e.patrolRange.toInt()}px', style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 10, fontWeight: FontWeight.bold)),
+                const SizedBox(width: 6),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      e.patrolRange = (e.patrolRange - 20).clamp(40.0, 400.0);
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(color: Colors.white12, borderRadius: BorderRadius.circular(4)),
+                    child: const Text('-', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+                const SizedBox(width: 4),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      e.patrolRange = (e.patrolRange + 20).clamp(40.0, 400.0);
+                    });
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                    decoration: BoxDecoration(color: Colors.white12, borderRadius: BorderRadius.circular(4)),
+                    child: const Text('+', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                  ),
+                ),
+              ],
+            ),
+          ],
+          const SizedBox(height: 8),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF0EA5E9),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: _duplicateSelectedEntity,
+                icon: const Icon(Icons.copy_rounded, size: 12, color: Colors.white),
+                label: const Text('DUPLICATE', style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(width: 6),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFEF4444),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                onPressed: _deleteSelectedEntity,
+                icon: const Icon(Icons.delete_rounded, size: 12, color: Colors.white),
+                label: const Text('DELETE', style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _getFormattedEntityName(String type) {
+    switch (type) {
+      case 'platform':
+        return 'Platform';
+      case 'movingPlatform':
+        return 'Moving Platform';
+      case 'slipperyPlatform':
+        return 'Slippery Ice';
+      case 'enemySlime':
+        return 'Green Slime';
+      case 'enemyShadow':
+        return 'Shadow Stalker';
+      case 'enemyFire':
+        return 'Fire Demon';
+      case 'enemyIce':
+        return 'Ice Golem';
+      case 'enemyToxic':
+        return 'Toxic Beast';
+      case 'coin':
+        return 'Gold Coin';
+      case 'healthPot':
+        return 'Health Potion';
+      case 'checkpoint':
+        return 'Shrine Checkpoint';
+      case 'hazardSpike':
+        return 'Spikes';
+      case 'hazardLava':
+        return 'Lava Pool';
+      case 'hazardPoison':
+        return 'Poison Mud';
+      case 'hazardLightning':
+        return 'Lightning Arc';
+      case 'decorTree':
+        return 'Ancient Tree';
+      case 'decorRock':
+        return 'Forest Rock';
+      case 'decorBush':
+        return 'Green Bush';
+      case 'decorFlower':
+        return 'Magic Flower';
+      case 'decorCrystal':
+        return 'Crystal Shard';
+      case 'decorRuin':
+        return 'Ruin Pillars';
+      case 'decorLamp':
+        return 'Forest Lamp';
+      case 'decorSign':
+        return 'Sign Board';
+      default:
+        return 'Map Object';
+    }
+  }
+
+  Widget _buildBottomToolbarPanel(CharacterData selectedCharacter) {
+    if (_isToolbarCollapsed) {
+      return Container(
+        height: 28,
+        color: const Color(0xEE0F172A),
+        child: Center(
+          child: TextButton.icon(
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            onPressed: () => setState(() => _isToolbarCollapsed = false),
+            icon: const Icon(Icons.keyboard_arrow_up_rounded, color: Color(0xFF38BDF8), size: 18),
+            label: const Text('▲ EXPAND TOOLBAR', style: TextStyle(color: Color(0xFF38BDF8), fontSize: 10, fontWeight: FontWeight.bold)),
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      height: 105,
+      decoration: const BoxDecoration(
+        color: Color(0xEE0F172A),
+        border: Border(top: BorderSide(color: GameColors.uiGlassBorder, width: 1.2)),
+      ),
+      child: Column(
+        children: [
+          // Category Bar + Collapse Button
+          SizedBox(
+            height: 32,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    children: [
+                      _buildCategoryTab('🧱 PLATFORMS', EditorCategory.platforms),
+                      _buildCategoryTab('🪵 TERRAIN', EditorCategory.terrain),
+                      _buildCategoryTab('👾 ENEMIES', EditorCategory.enemies),
+                      _buildCategoryTab('💰 ITEMS', EditorCategory.items),
+                      _buildCategoryTab('⚠️ HAZARDS', EditorCategory.hazards),
+                      _buildCategoryTab('🌲 DECOR', EditorCategory.decor),
+                      _buildCategoryTab('🎯 SPECIAL', EditorCategory.special),
+                      _buildCategoryTab('🎨 THEMES', EditorCategory.themes),
+                      _buildCategoryTab('🛠 ACTIONS', EditorCategory.actions),
+                    ],
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.keyboard_arrow_down_rounded, color: Colors.white54, size: 20),
+                  onPressed: () => setState(() => _isToolbarCollapsed = true),
+                  tooltip: 'Collapse Toolbar',
+                ),
+              ],
+            ),
+          ),
+
+          const Divider(height: 1, color: Colors.white12),
+
+          // Active Category Tools Ribbon
+          Expanded(
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              children: _buildActiveCategoryTools(selectedCharacter),
             ),
           ),
         ],
@@ -760,21 +1024,23 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
         });
       },
       child: Container(
-        margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        margin: const EdgeInsets.only(right: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF0EA5E9) : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSelected ? const Color(0xFF38BDF8) : Colors.white12,
           ),
         ),
-        child: Text(
-          title,
-          style: TextStyle(
-            color: isSelected ? Colors.white : Colors.white60,
-            fontSize: 11,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.white60,
+              fontSize: 10,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            ),
           ),
         ),
       ),
@@ -863,11 +1129,11 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
               _showMessage('Theme set to ${themeName.toUpperCase()}');
             },
             child: Container(
-              margin: const EdgeInsets.only(right: 8),
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              margin: const EdgeInsets.only(right: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
                 color: isSelected ? const Color(0xFF38BDF8) : const Color(0x330F172A),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
                 border: Border.all(color: isSelected ? Colors.white : Colors.white24),
               ),
               child: Center(
@@ -875,7 +1141,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                   themeName.toUpperCase(),
                   style: TextStyle(
                     color: isSelected ? Colors.black : Colors.white,
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -894,10 +1160,10 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
               });
               _showMessage('Map width expanded to ${_map.worldWidth.toInt()}px');
             },
-            icon: const Icon(Icons.add_rounded, size: 16),
-            label: const Text('Expand Map Width (+1200px)'),
+            icon: const Icon(Icons.add_rounded, size: 14),
+            label: const Text('Expand Map Width (+1200px)', style: TextStyle(fontSize: 10)),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           ElevatedButton.icon(
             style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFFEF4444)),
             onPressed: () {
@@ -910,8 +1176,8 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                 _showMessage('Cleared all objects');
               }
             },
-            icon: const Icon(Icons.delete_sweep_rounded, size: 16),
-            label: const Text('Clear All Objects'),
+            icon: const Icon(Icons.delete_sweep_rounded, size: 14),
+            label: const Text('Clear All Objects', style: TextStyle(fontSize: 10)),
           ),
         ];
     }
@@ -927,21 +1193,21 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
         });
       },
       child: Container(
-        margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+        margin: const EdgeInsets.only(right: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         decoration: BoxDecoration(
           color: isSelected ? const Color(0xFF38BDF8) : const Color(0x440F172A),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: isSelected ? const Color(0xFF80FFDB) : Colors.white24,
-            width: isSelected ? 2.0 : 1.0,
+            width: isSelected ? 1.8 : 1.0,
           ),
         ),
         child: Row(
           children: [
             SizedBox(
-              width: 32,
-              height: 32,
+              width: 26,
+              height: 26,
               child: CustomPaint(
                 painter: ToolThumbnailPainter(
                   toolType: toolType,
@@ -950,12 +1216,12 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                 ),
               ),
             ),
-            const SizedBox(width: 6),
+            const SizedBox(width: 4),
             Text(
               label,
               style: TextStyle(
                 color: isSelected ? Colors.black : Colors.white,
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
               ),
             ),
@@ -1029,13 +1295,9 @@ class MapEditorCanvasPainter extends CustomPainter {
 
       _drawEntityAsset(canvas, e, rect, theme);
 
-      // Selection Glow Box
+      // Selection Overlay with Corner Handles A, B, C, D
       if (isSelected) {
-        final outlinePaint = Paint()
-          ..color = const Color(0xFF80FFDB)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.5;
-        canvas.drawRRect(RRect.fromRectAndRadius(rect.inflate(4), const Radius.circular(8)), outlinePaint);
+        _drawSelectionBoundingBoxAndHandles(canvas, rect);
       }
     }
 
@@ -1046,6 +1308,58 @@ class MapEditorCanvasPainter extends CustomPainter {
     _drawFinishPortal(canvas);
 
     canvas.restore();
+  }
+
+  void _drawSelectionBoundingBoxAndHandles(Canvas canvas, Rect rect) {
+    // Dashed / Solid Bounding Box
+    final outlinePaint = Paint()
+      ..color = const Color(0xFF80FFDB)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+
+    canvas.drawRect(rect, outlinePaint);
+
+    // Corner Handles A, B, C, D
+    final handleA = Offset(rect.left, rect.top);
+    final handleB = Offset(rect.right, rect.top);
+    final handleC = Offset(rect.right, rect.bottom);
+    final handleD = Offset(rect.left, rect.bottom);
+
+    _drawHandleBadge(canvas, handleA, 'A');
+    _drawHandleBadge(canvas, handleB, 'B');
+    _drawHandleBadge(canvas, handleC, 'C');
+    _drawHandleBadge(canvas, handleD, 'D');
+
+    // Dimension Banner below object
+    final String dimStr = '${rect.width.toInt()} x ${rect.height.toInt()}';
+    final TextPainter tp = TextPainter(
+      text: TextSpan(
+        text: dimStr,
+        style: const TextStyle(color: Color(0xFF80FFDB), fontSize: 9, fontWeight: FontWeight.bold),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final double bannerW = tp.width + 8;
+    final Rect bannerRect = Rect.fromLTWH(rect.left + rect.width / 2 - bannerW / 2, rect.bottom + 4, bannerW, 14);
+    canvas.drawRRect(RRect.fromRectAndRadius(bannerRect, const Radius.circular(4)), Paint()..color = const Color(0xDD0F172A));
+    tp.paint(canvas, Offset(bannerRect.left + 4, bannerRect.top + 1));
+  }
+
+  void _drawHandleBadge(Canvas canvas, Offset pos, String letter) {
+    final handleRect = Rect.fromCenter(center: pos, width: 16, height: 16);
+    canvas.drawRRect(RRect.fromRectAndRadius(handleRect, const Radius.circular(4)), Paint()..color = const Color(0xFF38BDF8));
+    canvas.drawRRect(RRect.fromRectAndRadius(handleRect, const Radius.circular(4)), Paint()..color = Colors.white..style = PaintingStyle.stroke..strokeWidth = 1.2);
+
+    final TextPainter tp = TextPainter(
+      text: TextSpan(
+        text: letter,
+        style: const TextStyle(color: Colors.black, fontSize: 9, fontWeight: FontWeight.w900),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    tp.paint(canvas, Offset(pos.dx - tp.width / 2, pos.dy - tp.height / 2));
   }
 
   LevelTheme _parseTheme(String themeName) {
@@ -1622,8 +1936,6 @@ class MapEditorCanvasPainter extends CustomPainter {
     canvas.save();
     canvas.translate(cx, cy);
 
-    final playerDummy = PlayerState(x: -20, y: -40, width: 40, height: 60);
-
     CharacterRenderHelper.drawCharacter(
       canvas: canvas,
       character: selectedCharacter,
@@ -1638,7 +1950,6 @@ class MapEditorCanvasPainter extends CustomPainter {
       isAttacking: false,
     );
 
-    // Badge Title Overlay above Player
     final badgePaint = Paint()..color = const Color(0xEE0EA5E9);
     final badgeRect = RRect.fromRectAndRadius(const Rect.fromLTWH(-36, -62, 72, 18), const Radius.circular(8));
     canvas.drawRRect(badgeRect, badgePaint);
@@ -1685,7 +1996,6 @@ class MapEditorCanvasPainter extends CustomPainter {
       canvas.restore();
     }
 
-    // Badge Title Overlay above Finish Portal
     final badgePaint = Paint()..color = const Color(0xEE8B5CF6);
     final badgeRect = RRect.fromRectAndRadius(Rect.fromLTWH(pCenter.dx - 40, pCenter.dy - 62, 80, 18), const Radius.circular(8));
     canvas.drawRRect(badgeRect, badgePaint);
@@ -1723,64 +2033,64 @@ class ToolThumbnailPainter extends CustomPainter {
     canvas.save();
 
     if (toolType.contains('platform') || toolType.contains('ground')) {
-      final Rect rect = Rect.fromCenter(center: Offset(cx, cy), width: size.width * 0.85, height: 12);
+      final Rect rect = Rect.fromCenter(center: Offset(cx, cy), width: size.width * 0.85, height: 10);
       canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(3)), Paint()..color = const Color(0xFF15803D));
       canvas.drawRect(Rect.fromLTWH(rect.left, rect.top, rect.width, 3), Paint()..color = const Color(0xFF22C55E));
     } else if (toolType.contains('enemy')) {
       if (toolType == 'enemy_slime') {
-        canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = GameColors.slimeGreen);
-        canvas.drawCircle(Offset(cx - 3, cy - 2), 2, Paint()..color = Colors.white);
-        canvas.drawCircle(Offset(cx + 3, cy - 2), 2, Paint()..color = Colors.white);
+        canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = GameColors.slimeGreen);
+        canvas.drawCircle(Offset(cx - 2.5, cy - 2), 2, Paint()..color = Colors.white);
+        canvas.drawCircle(Offset(cx + 2.5, cy - 2), 2, Paint()..color = Colors.white);
       } else if (toolType == 'enemy_shadow') {
-        canvas.drawCircle(Offset(cx, cy), 11, Paint()..color = GameColors.shadowEnemyBody);
-        canvas.drawCircle(Offset(cx - 3, cy - 2), 2, Paint()..color = GameColors.shadowEnemyGlow);
-        canvas.drawCircle(Offset(cx + 3, cy - 2), 2, Paint()..color = GameColors.shadowEnemyGlow);
+        canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = GameColors.shadowEnemyBody);
+        canvas.drawCircle(Offset(cx - 2.5, cy - 2), 2, Paint()..color = GameColors.shadowEnemyGlow);
+        canvas.drawCircle(Offset(cx + 2.5, cy - 2), 2, Paint()..color = GameColors.shadowEnemyGlow);
       } else if (toolType == 'enemy_fire') {
-        canvas.drawCircle(Offset(cx, cy), 11, Paint()..color = const Color(0xFFFF3300));
-        canvas.drawCircle(Offset(cx, cy), 5, Paint()..color = const Color(0xFFFFCC00));
+        canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = const Color(0xFFFF3300));
+        canvas.drawCircle(Offset(cx, cy), 4, Paint()..color = const Color(0xFFFFCC00));
       } else if (toolType == 'enemy_ice') {
-        canvas.drawCircle(Offset(cx, cy), 11, Paint()..color = const Color(0xFF4EA8DE));
-        canvas.drawCircle(Offset(cx, cy), 5, Paint()..color = const Color(0xFFCAF0F8));
+        canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = const Color(0xFF4EA8DE));
+        canvas.drawCircle(Offset(cx, cy), 4, Paint()..color = const Color(0xFFCAF0F8));
       } else if (toolType == 'enemy_toxic') {
-        canvas.drawCircle(Offset(cx, cy), 11, Paint()..color = const Color(0xFF5A189A));
-        canvas.drawCircle(Offset(cx, cy), 5, Paint()..color = const Color(0xFF00F5D4));
+        canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = const Color(0xFF5A189A));
+        canvas.drawCircle(Offset(cx, cy), 4, Paint()..color = const Color(0xFF00F5D4));
       }
     } else if (toolType == 'item_coin') {
-      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = GameColors.coinGold);
-      canvas.drawCircle(Offset(cx, cy), 5, Paint()..color = const Color(0xFFE9C46A));
+      canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = GameColors.coinGold);
+      canvas.drawCircle(Offset(cx, cy), 4, Paint()..color = const Color(0xFFE9C46A));
     } else if (toolType == 'item_health_pot') {
-      canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = const Color(0xFFE63946));
+      canvas.drawCircle(Offset(cx, cy), 8, Paint()..color = const Color(0xFFE63946));
     } else if (toolType == 'item_checkpoint') {
-      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = GameColors.shrineActive);
+      canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = GameColors.shrineActive);
     } else if (toolType.contains('hazard')) {
       if (toolType == 'hazard_spike') {
         final Path path = Path()
-          ..moveTo(cx - 10, cy + 8)
-          ..lineTo(cx, cy - 8)
-          ..lineTo(cx + 10, cy + 8)
+          ..moveTo(cx - 8, cy + 6)
+          ..lineTo(cx, cy - 6)
+          ..lineTo(cx + 8, cy + 6)
           ..close();
         canvas.drawPath(path, Paint()..color = GameColors.hazardSpike);
       } else {
-        canvas.drawRect(Rect.fromCenter(center: Offset(cx, cy), width: 22, height: 10), Paint()..color = const Color(0xFFFF3333));
+        canvas.drawRect(Rect.fromCenter(center: Offset(cx, cy), width: 18, height: 8), Paint()..color = const Color(0xFFFF3333));
       }
     } else if (toolType == 'special_player_start' && character != null) {
-      canvas.translate(cx, cy + 10);
+      canvas.translate(cx, cy + 8);
       CharacterRenderHelper.drawCharacter(
         canvas: canvas,
         character: character!,
-        w: 22,
-        h: 30,
-        topY: -15,
+        w: 18,
+        h: 24,
+        topY: -12,
         time: 0,
         armAngle: 0,
         legAngle1: 0,
         legAngle2: 0,
       );
     } else if (toolType == 'special_finish') {
-      canvas.drawCircle(Offset(cx, cy), 12, Paint()..color = GameColors.portalGlow);
-      canvas.drawCircle(Offset(cx, cy), 6, Paint()..color = Colors.white);
+      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = GameColors.portalGlow);
+      canvas.drawCircle(Offset(cx, cy), 5, Paint()..color = Colors.white);
     } else {
-      canvas.drawCircle(Offset(cx, cy), 10, Paint()..color = const Color(0xFF22C55E));
+      canvas.drawCircle(Offset(cx, cy), 9, Paint()..color = const Color(0xFF22C55E));
     }
 
     canvas.restore();
