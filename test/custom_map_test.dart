@@ -20,8 +20,8 @@ void main() {
         id: 'test_1',
         name: 'Test Level',
         theme: 'forest',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        createdDate: DateTime.now(),
+        updatedDate: DateTime.now(),
         entities: [
           CustomMapEntity(id: 'start', type: 'playerStart', x: 100, y: 300, width: 40, height: 60),
           CustomMapEntity(id: 'goal', type: 'goalPortal', x: 2000, y: 300, width: 60, height: 80),
@@ -40,8 +40,8 @@ void main() {
         id: 'map_json_1',
         name: 'My Custom Map',
         theme: 'crystal',
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        createdDate: DateTime.now(),
+        updatedDate: DateTime.now(),
         entities: [
           CustomMapEntity(id: 'c1', type: 'coin', x: 300, y: 400, width: 32, height: 32),
         ],
@@ -84,7 +84,7 @@ void main() {
       expect(controller.getMapById(newMap.id), isNotNull);
 
       // Update map
-      final updatedMap = newMap.copyWith(name: 'Updated Unit Test Map');
+      final updatedMap = newMap.copyAsNewMap(newId: newMap.id, newName: 'Updated Unit Test Map');
       await controller.saveMap(updatedMap);
       expect(controller.getMapById(newMap.id)?.name, equals('Updated Unit Test Map'));
 
@@ -106,9 +106,9 @@ void main() {
       final map = controller.createNewBlankMap(name: 'Stats Test Map');
       await controller.saveMap(map);
 
-      await controller.recordCompletion(map.id, 25.5);
+      await controller.recordMapCompletion(map.id, timeSeconds: 25.5, coinsCollected: 10);
       final updated = controller.getMapById(map.id)!;
-      expect(updated.timesCompleted, equals(1));
+      expect(updated.isCompleted, isTrue);
       expect(updated.bestTimeSeconds, equals(25.5));
     });
   });
@@ -141,7 +141,7 @@ void main() {
 
       expect(find.text('SAVE'), findsOneWidget);
       expect(find.text('PLAY TEST'), findsOneWidget);
-      expect(find.byIcon(Icons.border_clear_rounded), findsOneWidget);
+      expect(find.byIcon(Icons.grid_on_rounded), findsOneWidget);
       expect(find.byIcon(Icons.undo_rounded), findsOneWidget);
     });
 
