@@ -97,7 +97,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -106,26 +106,26 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                           color: Colors.transparent,
                           child: InkWell(
                             onTap: () => Navigator.of(context).pop(),
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(14),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                               decoration: BoxDecoration(
                                 color: const Color(0xCC0F172A),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(color: GameColors.uiGlassBorder, width: 1.2),
                               ),
                               child: const Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
-                                  SizedBox(width: 6),
+                                  Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 16),
+                                  SizedBox(width: 4),
                                   Text(
                                     'LOBBY',
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 12,
+                                      fontSize: 11,
                                       fontWeight: FontWeight.bold,
-                                      letterSpacing: 1.0,
+                                      letterSpacing: 0.8,
                                     ),
                                   ),
                                 ],
@@ -143,34 +143,34 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                             'CHARACTER SHOP',
                             style: TextStyle(
                               color: Colors.white,
-                              fontSize: 22,
+                              fontSize: 18,
                               fontWeight: FontWeight.w900,
-                              letterSpacing: 2.0,
+                              letterSpacing: 1.5,
                             ),
                           ),
                         ),
 
                         // Coin Balance Card
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: const Color(0xCC0F172A),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: GameColors.coinGold, width: 1.5),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: GameColors.coinGold, width: 1.2),
                             boxShadow: const [
-                              BoxShadow(color: Color(0x44FFD166), blurRadius: 10, spreadRadius: 1),
+                              BoxShadow(color: Color(0x33FFD166), blurRadius: 8),
                             ],
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 22),
-                              const SizedBox(width: 6),
+                              const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 18),
+                              const SizedBox(width: 4),
                               Text(
                                 '${charCtrl.totalCoins}',
                                 style: const TextStyle(
                                   color: GameColors.coinGold,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   fontWeight: FontWeight.w900,
                                 ),
                               ),
@@ -186,36 +186,30 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
               // 3. Notification Message Toast
               if (_messageText != null)
                 Positioned(
-                  top: 70,
-                  left: screenSize.width * 0.25,
-                  right: screenSize.width * 0.25,
+                  top: 54,
+                  left: screenSize.width * 0.2,
+                  right: screenSize.width * 0.2,
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 200),
                     opacity: 1.0,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                       decoration: BoxDecoration(
                         color: _isSuccessMessage ? const Color(0xEE065F46) : const Color(0xEE991B1B),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: _isSuccessMessage ? const Color(0xFF34D399) : const Color(0xFFF87171),
-                          width: 1.5,
+                          width: 1.2,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: _isSuccessMessage ? const Color(0x6634D399) : const Color(0x66F87171),
-                            blurRadius: 12,
-                          ),
-                        ],
                       ),
                       child: Text(
                         _messageText!,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 13,
+                          fontSize: 11,
                           fontWeight: FontWeight.bold,
-                          letterSpacing: 1.0,
+                          letterSpacing: 0.8,
                         ),
                       ),
                     ),
@@ -224,29 +218,29 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
 
               // 4. Main Content (Left: Character Grid, Right: Large Detail Preview)
               Positioned(
-                top: 72,
-                left: 20,
-                right: 20,
-                bottom: 16,
+                top: 56,
+                left: 16,
+                right: 16,
+                bottom: 12,
                 child: Row(
                   children: [
-                    // LEFT: Character Grid
+                    // LEFT: Responsive Character Grid
                     Expanded(
                       flex: 6,
                       child: Container(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: const Color(0x880F172A),
-                          borderRadius: BorderRadius.circular(20),
+                          borderRadius: BorderRadius.circular(18),
                           border: Border.all(color: GameColors.uiGlassBorder, width: 1.2),
                         ),
                         child: GridView.builder(
                           physics: const BouncingScrollPhysics(),
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            childAspectRatio: 0.82,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 110.0,
+                            mainAxisExtent: 92.0,
+                            crossAxisSpacing: 8,
+                            mainAxisSpacing: 8,
                           ),
                           itemCount: CharacterData.allCharacters.length,
                           itemBuilder: (context, index) {
@@ -271,16 +265,19 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                       ),
                     ),
 
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
 
                     // RIGHT: Large Character Preview & Purchase Section
                     Expanded(
                       flex: 4,
-                      child: _buildLargePreviewSection(
-                        char: _previewCharacter,
-                        isOwned: isOwned,
-                        isSelected: isSelected,
-                        charCtrl: charCtrl,
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: _buildLargePreviewSection(
+                          char: _previewCharacter,
+                          isOwned: isOwned,
+                          isSelected: isSelected,
+                          charCtrl: charCtrl,
+                        ),
                       ),
                     ),
                   ],
@@ -313,50 +310,48 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
         duration: const Duration(milliseconds: 150),
         decoration: BoxDecoration(
           color: isSelectedCard ? const Color(0xEE1E293B) : const Color(0xCC0F172A),
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: borderColor,
-            width: active || isSelectedCard ? 2.5 : 1.2,
+            width: active || isSelectedCard ? 2.0 : 1.0,
           ),
           boxShadow: active
-              ? const [BoxShadow(color: Color(0x664ADE80), blurRadius: 10, spreadRadius: 1)]
+              ? const [BoxShadow(color: Color(0x444ADE80), blurRadius: 8)]
               : isSelectedCard
-                  ? const [BoxShadow(color: Color(0x6638BDF8), blurRadius: 8)]
+                  ? const [BoxShadow(color: Color(0x4438BDF8), blurRadius: 6)]
                   : null,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Character Mini Render
-            Expanded(
+            SizedBox(
+              width: 42,
+              height: 42,
               child: CharacterPreviewWidget(
                 character: char,
-                width: 60,
-                height: 60,
+                width: 42,
+                height: 42,
                 time: _time,
               ),
             ),
-
-            // Name
+            const SizedBox(height: 2),
             Text(
               char.name,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 10,
+                fontSize: 9.5,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 2),
-
-            // Status or Price Badge
+            const SizedBox(height: 1),
             if (active)
               const Text(
                 'SELECTED',
                 style: TextStyle(
                   color: GameColors.foliageGlow,
-                  fontSize: 9,
+                  fontSize: 8.0,
                   fontWeight: FontWeight.bold,
                 ),
               )
@@ -365,7 +360,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                 'OWNED',
                 style: TextStyle(
                   color: Colors.white54,
-                  fontSize: 9,
+                  fontSize: 8.0,
                   fontWeight: FontWeight.w600,
                 ),
               )
@@ -373,19 +368,18 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 10),
+                  const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 9),
                   const SizedBox(width: 2),
                   Text(
                     '${char.price}',
                     style: const TextStyle(
                       color: GameColors.coinGold,
-                      fontSize: 9.5,
+                      fontSize: 8.5,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ],
               ),
-            const SizedBox(height: 4),
           ],
         ),
       ),
@@ -399,121 +393,110 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
     required CharacterProgressController charCtrl,
   }) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xEE0F172A),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: char.eyeGlowColor.withValues(alpha: 0.6), width: 1.8),
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: char.eyeGlowColor.withValues(alpha: 0.6), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: char.eyeGlowColor.withValues(alpha: 0.25),
-            blurRadius: 18,
-            spreadRadius: 2,
+            color: char.eyeGlowColor.withValues(alpha: 0.2),
+            blurRadius: 14,
           ),
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          // Header Info
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      char.name,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                    Text(
-                      char.outfitTitle,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: char.eyeGlowColor,
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          Text(
+            char.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.8,
+            ),
+          ),
+          Text(
+            char.outfitTitle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: char.eyeGlowColor,
+              fontSize: 10,
+              fontWeight: FontWeight.w600,
+            ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
 
           // Animated Large Preview
-          Expanded(
+          SizedBox(
+            height: 110,
             child: Stack(
               alignment: Alignment.center,
               children: [
                 Container(
-                  width: 140,
-                  height: 140,
+                  width: 90,
+                  height: 90,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: char.eyeGlowColor.withValues(alpha: 0.15),
                     boxShadow: [
-                      BoxShadow(color: char.eyeGlowColor, blurRadius: 36, spreadRadius: 6),
+                      BoxShadow(color: char.eyeGlowColor, blurRadius: 24, spreadRadius: 4),
                     ],
                   ),
                 ),
                 CharacterPreviewWidget(
                   character: char,
-                  width: 130,
-                  height: 130,
+                  width: 95,
+                  height: 95,
                   time: _time,
                 ),
               ],
             ),
           ),
 
-          // Description
+          const SizedBox(height: 4),
+
           Text(
             char.description,
             textAlign: TextAlign.center,
             style: const TextStyle(
               color: Colors.white70,
-              fontSize: 11,
-              height: 1.3,
+              fontSize: 10,
+              height: 1.2,
             ),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
 
           // Action Button (BUY or SELECT or SELECTED)
           SizedBox(
             width: double.infinity,
-            height: 48,
+            height: 40,
             child: isSelected
                 ? Container(
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(12),
                       color: const Color(0x334ADE80),
-                      border: Border.all(color: GameColors.foliageGlow, width: 1.5),
+                      border: Border.all(color: GameColors.foliageGlow, width: 1.2),
                     ),
                     child: const Center(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.check_circle_rounded, color: GameColors.foliageGlow, size: 20),
-                          SizedBox(width: 8),
+                          Icon(Icons.check_circle_rounded, color: GameColors.foliageGlow, size: 16),
+                          SizedBox(width: 6),
                           Text(
                             '✓ SELECTED',
                             style: TextStyle(
                               color: GameColors.foliageGlow,
-                              fontSize: 14,
+                              fontSize: 12,
                               fontWeight: FontWeight.w900,
-                              letterSpacing: 1.2,
+                              letterSpacing: 1.0,
                             ),
                           ),
                         ],
@@ -524,45 +507,45 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                     ? ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF0EA5E9),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         onPressed: () {
                           charCtrl.selectCharacter(char.id);
                           _showMessage('${char.name} Selected!', success: true);
                         },
-                        icon: const Icon(Icons.touch_app_rounded, color: Colors.white, size: 20),
+                        icon: const Icon(Icons.touch_app_rounded, color: Colors.white, size: 16),
                         label: const Text(
-                          'SELECT CHARACTER',
+                          'SELECT',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 13,
+                            fontSize: 11,
                             fontWeight: FontWeight.bold,
-                            letterSpacing: 1.0,
+                            letterSpacing: 0.8,
                           ),
                         ),
                       )
                     : ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFEAB308),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         ),
                         onPressed: () async {
                           final success = await charCtrl.purchaseCharacter(char);
                           if (success) {
-                            _showMessage('✨ CHARACTER UNLOCKED: ${char.name}!', success: true);
+                            _showMessage('✨ UNLOCKED: ${char.name}!', success: true);
                           } else {
                             final missing = char.price - charCtrl.totalCoins;
-                            _showMessage('Not enough coins! Need $missing more 💰', success: false);
+                            _showMessage('Need $missing more 💰', success: false);
                           }
                         },
-                        icon: const Icon(Icons.shopping_bag_rounded, color: Color(0xFF422006), size: 20),
+                        icon: const Icon(Icons.shopping_bag_rounded, color: Color(0xFF422006), size: 16),
                         label: Text(
-                          'BUY FOR ${char.price} COINS',
+                          'BUY ${char.price} COINS',
                           style: const TextStyle(
                             color: Color(0xFF422006),
-                            fontSize: 13,
+                            fontSize: 11,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: 1.0,
+                            letterSpacing: 0.8,
                           ),
                         ),
                       ),

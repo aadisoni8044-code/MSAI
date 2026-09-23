@@ -685,97 +685,116 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
 
   Widget _buildTopNavBar() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: const BoxDecoration(
         color: Color(0xDD0F172A),
         border: Border(bottom: BorderSide(color: GameColors.uiGlassBorder, width: 1.2)),
       ),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          const SizedBox(width: 4),
-          GestureDetector(
-            onTap: _openRenameDialog,
-            child: Row(
-              children: [
-                Text(
-                  _map.name,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.8,
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        physics: const BouncingScrollPhysics(),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              padding: const EdgeInsets.all(6),
+              constraints: const BoxConstraints(),
+              icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            const SizedBox(width: 6),
+            GestureDetector(
+              onTap: _openRenameDialog,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    _map.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.8,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                const Icon(Icons.edit_rounded, color: Color(0xFF38BDF8), size: 15),
-              ],
-            ),
-          ),
-          const Spacer(),
-          OutlinedButton.icon(
-            style: OutlinedButton.styleFrom(
-              backgroundColor: _gridSnap ? const Color(0x4438BDF8) : Colors.transparent,
-              side: BorderSide(color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white24),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            ),
-            onPressed: () {
-              setState(() {
-                _gridSnap = !_gridSnap;
-              });
-              _showMessage(_gridSnap ? 'Grid Snap ON (20px)' : 'Grid Snap OFF');
-            },
-            icon: Icon(Icons.grid_on_rounded, size: 15, color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54),
-            label: Text(
-              _gridSnap ? 'GRID ON' : 'GRID OFF',
-              style: TextStyle(
-                color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
+                  const SizedBox(width: 4),
+                  const Icon(Icons.edit_rounded, color: Color(0xFF38BDF8), size: 14),
+                ],
               ),
             ),
-          ),
-          const SizedBox(width: 6),
-          IconButton(
-            icon: const Icon(Icons.undo_rounded, color: Colors.white, size: 18),
-            onPressed: _undoStack.length > 1 ? _undo : null,
-          ),
-          IconButton(
-            icon: const Icon(Icons.redo_rounded, color: Colors.white, size: 18),
-            onPressed: _redoStack.isNotEmpty ? _redo : null,
-          ),
-          const SizedBox(width: 6),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF0EA5E9),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            const SizedBox(width: 16),
+            OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                backgroundColor: _gridSnap ? const Color(0x4438BDF8) : Colors.transparent,
+                side: BorderSide(color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white24),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              onPressed: () {
+                setState(() {
+                  _gridSnap = !_gridSnap;
+                });
+                _showMessage(_gridSnap ? 'Grid Snap ON (20px)' : 'Grid Snap OFF');
+              },
+              icon: Icon(Icons.grid_on_rounded, size: 14, color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54),
+              label: Text(
+                _gridSnap ? 'GRID ON' : 'GRID OFF',
+                style: TextStyle(
+                  color: _gridSnap ? const Color(0xFF38BDF8) : Colors.white54,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            onPressed: _saveMap,
-            icon: const Icon(Icons.save_rounded, color: Colors.white, size: 16),
-            label: const Text(
-              'SAVE',
-              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+            const SizedBox(width: 6),
+            IconButton(
+              padding: const EdgeInsets.all(6),
+              constraints: const BoxConstraints(),
+              icon: const Icon(Icons.undo_rounded, color: Colors.white, size: 18),
+              onPressed: _undoStack.length > 1 ? _undo : null,
             ),
-          ),
-          const SizedBox(width: 6),
-          ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF10B981),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            const SizedBox(width: 4),
+            IconButton(
+              padding: const EdgeInsets.all(6),
+              constraints: const BoxConstraints(),
+              icon: const Icon(Icons.redo_rounded, color: Colors.white, size: 18),
+              onPressed: _redoStack.isNotEmpty ? _redo : null,
             ),
-            onPressed: _testPlayMap,
-            icon: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 18),
-            label: const Text(
-              'PLAY TEST',
-              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w900, letterSpacing: 0.8),
+            const SizedBox(width: 8),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0EA5E9),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: _saveMap,
+              icon: const Icon(Icons.save_rounded, color: Colors.white, size: 15),
+              label: const Text(
+                'SAVE',
+                style: TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(width: 6),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF10B981),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                minimumSize: Size.zero,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              onPressed: _testPlayMap,
+              icon: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
+              label: const Text(
+                'PLAY TEST',
+                style: TextStyle(color: Colors.white, fontSize: 10.5, fontWeight: FontWeight.w900, letterSpacing: 0.8),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

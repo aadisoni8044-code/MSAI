@@ -131,33 +131,33 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
               children: [
                 // Top Header Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 12.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Back to Lobby
                       InkWell(
                         onTap: () => Navigator.of(context).pop(),
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(14),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           decoration: BoxDecoration(
                             color: const Color(0xCC0F172A),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(color: GameColors.uiGlassBorder, width: 1.2),
                           ),
                           child: const Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
-                              SizedBox(width: 6),
+                              Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 16),
+                              SizedBox(width: 4),
                               Text(
                                 'LOBBY',
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 12,
+                                  fontSize: 11,
                                   fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.0,
+                                  letterSpacing: 0.8,
                                 ),
                               ),
                             ],
@@ -174,9 +174,9 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
                           'CREATE MAP',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 22,
+                            fontSize: 18,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: 2.0,
+                            letterSpacing: 1.5,
                           ),
                         ),
                       ),
@@ -185,19 +185,19 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
                       ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF10B981),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
                           elevation: 4,
                         ),
                         onPressed: _onCreateNewMap,
-                        icon: const Icon(Icons.add_circle_rounded, color: Colors.white, size: 20),
+                        icon: const Icon(Icons.add_circle_rounded, color: Colors.white, size: 18),
                         label: const Text(
-                          'CREATE NEW MAP',
+                          'CREATE MAP',
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: 12,
+                            fontSize: 11,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: 1.0,
+                            letterSpacing: 0.8,
                           ),
                         ),
                       ),
@@ -207,10 +207,10 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
 
                 // Navigation Tabs Bar
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
                   decoration: BoxDecoration(
                     color: const Color(0xCC0F172A),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(14),
                     border: Border.all(color: GameColors.uiGlassBorder, width: 1.2),
                   ),
                   child: TabBar(
@@ -219,7 +219,7 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
                     indicatorWeight: 3,
                     labelColor: const Color(0xFF38BDF8),
                     unselectedLabelColor: Colors.white60,
-                    labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1.0),
+                    labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12, letterSpacing: 0.8),
                     tabs: const [
                       Tab(text: '🗺 MY MAPS'),
                       Tab(text: '⭐ FEATURED TEMPLATES'),
@@ -259,23 +259,26 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.map_rounded, size: 64, color: Colors.white24),
-            const SizedBox(height: 12),
+            const Icon(Icons.map_rounded, size: 52, color: Colors.white24),
+            const SizedBox(height: 10),
             const Text(
               'No Custom Maps Created Yet',
-              style: TextStyle(color: Colors.white70, fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             const Text(
-              'Tap "CREATE NEW MAP" or pick a template to build your first level!',
-              style: TextStyle(color: Colors.white38, fontSize: 12),
+              'Tap "CREATE MAP" or pick a template to build your first level!',
+              style: TextStyle(color: Colors.white38, fontSize: 11),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
             ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(backgroundColor: const Color(0xFF0EA5E9)),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF0EA5E9),
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              ),
               onPressed: _onCreateNewMap,
-              icon: const Icon(Icons.add_rounded, color: Colors.white),
-              label: const Text('BUILD A NEW MAP', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              icon: const Icon(Icons.add_rounded, color: Colors.white, size: 18),
+              label: const Text('BUILD A NEW MAP', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
             ),
           ],
         ),
@@ -283,13 +286,13 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
     }
 
     return GridView.builder(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       physics: const BouncingScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        childAspectRatio: 1.35,
-        crossAxisSpacing: 14,
-        mainAxisSpacing: 14,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 260.0,
+        mainAxisExtent: 120.0,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
       itemCount: maps.length,
       itemBuilder: (context, index) {
@@ -307,13 +310,13 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
 
   Widget _buildTemplatesGrid(List<CustomMapData> templates) {
     return GridView.builder(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       physics: const BouncingScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 4,
-        childAspectRatio: 1.15,
-        crossAxisSpacing: 14,
-        mainAxisSpacing: 14,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 260.0,
+        mainAxisExtent: 120.0,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
       ),
       itemCount: templates.length,
       itemBuilder: (context, index) {
@@ -371,19 +374,18 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
     }
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: const Color(0xEE0F172A),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: themeAccent.withValues(alpha: 0.6), width: 1.5),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: themeAccent.withValues(alpha: 0.6), width: 1.2),
         boxShadow: [
-          BoxShadow(color: themeAccent.withValues(alpha: 0.2), blurRadius: 10),
+          BoxShadow(color: themeAccent.withValues(alpha: 0.2), blurRadius: 8),
         ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header: Theme Badge & Title
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -394,23 +396,23 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 14,
+                    fontSize: 12.5,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
                 decoration: BoxDecoration(
                   color: themeAccent.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: themeAccent, width: 1),
                 ),
                 child: Text(
                   map.theme.toUpperCase(),
                   style: TextStyle(
                     color: themeAccent,
-                    fontSize: 8.5,
+                    fontSize: 7.5,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -418,74 +420,60 @@ class _CreateMapHomeScreenState extends State<CreateMapHomeScreen> with SingleTi
             ],
           ),
 
-          const SizedBox(height: 6),
+          const SizedBox(height: 2),
 
-          // Subtitle / Object Count & Stats
           Text(
-            '${map.entities.length} Objects  •  ${map.worldWidth.toInt()}px Width',
-            style: const TextStyle(color: Colors.white54, fontSize: 10),
+            '${map.entities.length} Objects  •  ${map.worldWidth.toInt()}px',
+            style: const TextStyle(color: Colors.white54, fontSize: 9.5),
           ),
-
-          if (!isTemplate && map.isCompleted) ...[
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                const Icon(Icons.emoji_events_rounded, color: GameColors.coinGold, size: 12),
-                const SizedBox(width: 4),
-                Text(
-                  'Best: ${map.bestTimeSeconds?.toStringAsFixed(1)}s  |  Coins: ${map.highestCoinsCollected}',
-                  style: const TextStyle(color: GameColors.coinGold, fontSize: 9.5, fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-          ],
 
           const Spacer(),
 
-          // Action Buttons
           Row(
             children: [
-              // Play Button
               Expanded(
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF10B981),
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: onPlay,
-                  icon: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 16),
-                  label: const Text('PLAY', style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                  icon: const Icon(Icons.play_arrow_rounded, color: Colors.white, size: 14),
+                  label: const Text('PLAY', style: TextStyle(color: Colors.white, fontSize: 9.5, fontWeight: FontWeight.bold)),
                 ),
               ),
 
-              const SizedBox(width: 6),
+              const SizedBox(width: 4),
 
-              // Edit Button
               Expanded(
                 child: OutlinedButton.icon(
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Color(0xFF38BDF8)),
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    minimumSize: Size.zero,
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                   ),
                   onPressed: onEdit,
-                  icon: const Icon(Icons.edit_rounded, color: Color(0xFF38BDF8), size: 14),
+                  icon: const Icon(Icons.edit_rounded, color: Color(0xFF38BDF8), size: 12),
                   label: Text(
-                    isTemplate ? 'COPY & EDIT' : 'EDIT',
+                    isTemplate ? 'COPY' : 'EDIT',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 9.5, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: Color(0xFF38BDF8), fontSize: 9.0, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
 
               if (onDelete != null) ...[
-                const SizedBox(width: 4),
+                const SizedBox(width: 2),
                 IconButton(
                   padding: EdgeInsets.zero,
                   constraints: const BoxConstraints(),
-                  icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFFF4D4D), size: 18),
+                  icon: const Icon(Icons.delete_outline_rounded, color: Color(0xFFFF4D4D), size: 16),
                   onPressed: onDelete,
                   tooltip: 'Delete Map',
                 ),

@@ -122,9 +122,6 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final isLandscape = mediaQuery.orientation == Orientation.landscape;
-
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -143,30 +140,30 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
             children: [
               // Header bar
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Row(
                   children: [
                     InkWell(
                       onTap: widget.onBack,
                       borderRadius: BorderRadius.circular(12),
                       child: Container(
-                        padding: const EdgeInsets.all(10),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                           color: Colors.black45,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: GameColors.uiGlassBorder),
                         ),
-                        child: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 24),
+                        child: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 20),
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 12),
                     const Text(
                       'SELECT LEVEL',
                       style: TextStyle(
                         color: GameColors.uiTextLight,
-                        fontSize: 22,
+                        fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        letterSpacing: 2.0,
+                        letterSpacing: 1.5,
                         shadows: [
                           Shadow(color: GameColors.portalGlow, blurRadius: 10),
                         ],
@@ -179,12 +176,13 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
               // Level Grid
               Expanded(
                 child: GridView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: isLandscape ? 5 : 2,
-                    childAspectRatio: isLandscape ? 1.05 : 1.25,
-                    crossAxisSpacing: 14,
-                    mainAxisSpacing: 14,
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  physics: const BouncingScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 170.0,
+                    mainAxisExtent: 110.0,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
                   ),
                   itemCount: 10,
                   itemBuilder: (context, index) {
@@ -235,7 +233,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius: BorderRadius.circular(16),
         child: Ink(
           decoration: BoxDecoration(
             gradient: LinearGradient(
@@ -248,23 +246,23 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                       gradientColors[1].withValues(alpha: 0.3),
                     ],
             ),
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isUnlocked ? accentColor.withValues(alpha: 0.8) : Colors.white24,
-              width: isUnlocked ? 1.8 : 1.0,
+              width: isUnlocked ? 1.5 : 1.0,
             ),
             boxShadow: isUnlocked
                 ? [
                     BoxShadow(
                       color: accentColor.withValues(alpha: 0.25),
-                      blurRadius: 10,
+                      blurRadius: 8,
                       spreadRadius: -2,
                     ),
                   ]
                 : [],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(10),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -276,31 +274,31 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                       meta['formattedNum'] as String,
                       style: TextStyle(
                         color: isUnlocked ? accentColor : Colors.white38,
-                        fontSize: 18,
+                        fontSize: 15,
                         fontWeight: FontWeight.w900,
-                        letterSpacing: 1.0,
+                        letterSpacing: 0.8,
                       ),
                     ),
                     if (isCompleted)
                       Container(
-                        padding: const EdgeInsets.all(4),
+                        padding: const EdgeInsets.all(3),
                         decoration: const BoxDecoration(
                           color: Color(0xFF2EC4B6),
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.check_rounded, color: Colors.black, size: 14),
+                        child: const Icon(Icons.check_rounded, color: Colors.black, size: 12),
                       )
                     else if (!isUnlocked)
-                      const Icon(Icons.lock_rounded, color: Colors.white38, size: 18)
+                      const Icon(Icons.lock_rounded, color: Colors.white38, size: 16)
                     else
-                      Icon(Icons.play_arrow_rounded, color: accentColor, size: 20),
+                      Icon(Icons.play_arrow_rounded, color: accentColor, size: 18),
                   ],
                 ),
 
-                // Center Icon / Visual
+                // Center Icon
                 Icon(
                   icon,
-                  size: 34,
+                  size: 26,
                   color: isUnlocked ? accentColor : Colors.white24,
                 ),
 
@@ -309,9 +307,9 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                   meta['name'] as String,
                   style: TextStyle(
                     color: isUnlocked ? Colors.white : Colors.white38,
-                    fontSize: 14,
+                    fontSize: 12,
                     fontWeight: FontWeight.bold,
-                    letterSpacing: 1.1,
+                    letterSpacing: 1.0,
                   ),
                 ),
               ],

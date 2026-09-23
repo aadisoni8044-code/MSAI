@@ -8,6 +8,7 @@ class SettingsOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final settings = SettingsController.instance;
+    final Size screenSize = MediaQuery.of(context).size;
 
     return ListenableBuilder(
       listenable: settings,
@@ -15,23 +16,27 @@ class SettingsOverlay extends StatelessWidget {
         return Material(
           color: Colors.black.withValues(alpha: 0.75),
           child: Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 400),
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: GameColors.uiPanelBg,
-                  borderRadius: BorderRadius.circular(24),
-                  border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.black54,
-                      blurRadius: 30,
-                      spreadRadius: 5,
-                    ),
-                  ],
-                ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: 400,
+                maxHeight: screenSize.height * 0.92,
+              ),
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              padding: const EdgeInsets.all(18),
+              decoration: BoxDecoration(
+                color: GameColors.uiPanelBg,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: GameColors.uiGlassBorder, width: 1.5),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Colors.black54,
+                    blurRadius: 24,
+                    spreadRadius: 4,
+                  ),
+                ],
+              ),
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -39,15 +44,15 @@ class SettingsOverlay extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: const [
-                        Icon(Icons.settings_rounded, color: GameColors.uiTextGold, size: 28),
-                        SizedBox(width: 10),
+                        Icon(Icons.settings_rounded, color: GameColors.uiTextGold, size: 24),
+                        SizedBox(width: 8),
                         Text(
                           'SETTINGS',
                           style: TextStyle(
                             color: GameColors.uiTextLight,
-                            fontSize: 22,
+                            fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            letterSpacing: 2,
+                            letterSpacing: 1.8,
                             shadows: [
                               Shadow(color: GameColors.playerGlow, blurRadius: 10),
                             ],
@@ -55,7 +60,7 @@ class SettingsOverlay extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 16),
 
                     // Sound Switch
                     _buildSwitchRow(
@@ -64,7 +69,7 @@ class SettingsOverlay extends StatelessWidget {
                       value: settings.soundEnabled,
                       onChanged: (val) => settings.setSoundEnabled(val),
                     ),
-                    const Divider(color: Colors.white12, height: 24),
+                    const Divider(color: Colors.white12, height: 16),
 
                     // Music Switch
                     _buildSwitchRow(
@@ -73,7 +78,7 @@ class SettingsOverlay extends StatelessWidget {
                       value: settings.musicEnabled,
                       onChanged: (val) => settings.setMusicEnabled(val),
                     ),
-                    const Divider(color: Colors.white12, height: 24),
+                    const Divider(color: Colors.white12, height: 16),
 
                     // Screen Orientation
                     Column(
@@ -81,21 +86,21 @@ class SettingsOverlay extends StatelessWidget {
                       children: [
                         Row(
                           children: const [
-                            Icon(Icons.screen_rotation_rounded, color: GameColors.mistBlue, size: 20),
-                            SizedBox(width: 10),
+                            Icon(Icons.screen_rotation_rounded, color: GameColors.mistBlue, size: 18),
+                            SizedBox(width: 8),
                             Expanded(
                               child: Text(
                                 'Screen Orientation',
                                 style: TextStyle(
                                   color: GameColors.uiTextLight,
-                                  fontSize: 15,
+                                  fontSize: 13,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Row(
                           children: [
                             Expanded(
@@ -108,7 +113,7 @@ class SettingsOverlay extends StatelessWidget {
                                 onTap: () => settings.setOrientationMode(GameOrientationMode.portrait),
                               ),
                             ),
-                            const SizedBox(width: 12),
+                            const SizedBox(width: 10),
                             Expanded(
                               child: _buildOrientationOption(
                                 context: context,
@@ -123,7 +128,7 @@ class SettingsOverlay extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const Divider(color: Colors.white12, height: 24),
+                    const Divider(color: Colors.white12, height: 16),
 
                     // Controls Section
                     Column(
@@ -131,26 +136,26 @@ class SettingsOverlay extends StatelessWidget {
                       children: [
                         Row(
                           children: const [
-                            Icon(Icons.sports_esports_rounded, color: GameColors.uiTextGold, size: 20),
-                            SizedBox(width: 10),
+                            Icon(Icons.sports_esports_rounded, color: GameColors.uiTextGold, size: 18),
+                            SizedBox(width: 8),
                             Text(
                               'CONTROLS',
                               style: TextStyle(
                                 color: GameColors.uiTextLight,
-                                fontSize: 15,
+                                fontSize: 13,
                                 fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
+                                letterSpacing: 1.0,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 12),
+                        const SizedBox(height: 8),
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(14),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.black38,
-                            borderRadius: BorderRadius.circular(16),
+                            borderRadius: BorderRadius.circular(14),
                             border: Border.all(color: GameColors.uiGlassBorder),
                           ),
                           child: Column(
@@ -159,34 +164,34 @@ class SettingsOverlay extends StatelessWidget {
                               // Mobile info
                               Row(
                                 children: const [
-                                  Icon(Icons.smartphone_rounded, color: GameColors.foliageGlow, size: 16),
-                                  SizedBox(width: 8),
+                                  Icon(Icons.smartphone_rounded, color: GameColors.foliageGlow, size: 14),
+                                  SizedBox(width: 6),
                                   Text(
                                     'Mobile:',
                                     style: TextStyle(
                                       color: GameColors.foliageGlow,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 13,
+                                      fontSize: 12,
                                     ),
                                   ),
-                                  SizedBox(width: 8),
+                                  SizedBox(width: 6),
                                   Expanded(
                                     child: Text(
                                       'Touch Controls',
-                                      style: TextStyle(color: Colors.white70, fontSize: 13),
+                                      style: TextStyle(color: Colors.white70, fontSize: 11),
                                     ),
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 8),
                               const Divider(color: Colors.white10, height: 1),
-                              const SizedBox(height: 10),
+                              const SizedBox(height: 8),
                               // Laptop info
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Icon(Icons.laptop_mac_rounded, color: GameColors.mistBlue, size: 16),
-                                  const SizedBox(width: 8),
+                                  const Icon(Icons.laptop_mac_rounded, color: GameColors.mistBlue, size: 14),
+                                  const SizedBox(width: 6),
                                   Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: const [
@@ -195,23 +200,23 @@ class SettingsOverlay extends StatelessWidget {
                                         style: TextStyle(
                                           color: GameColors.mistBlue,
                                           fontWeight: FontWeight.bold,
-                                          fontSize: 13,
+                                          fontSize: 12,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  const SizedBox(width: 12),
+                                  const SizedBox(width: 10),
                                   Expanded(
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: const [
-                                        Text('W / A / S / D', style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-                                        SizedBox(height: 2),
-                                        Text('SPACE — Jump', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                                        SizedBox(height: 2),
-                                        Text('J — Attack', style: TextStyle(color: Colors.white70, fontSize: 12)),
-                                        SizedBox(height: 2),
-                                        Text('ESC — Pause', style: TextStyle(color: Colors.white70, fontSize: 12)),
+                                        Text('W / A / S / D', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                                        SizedBox(height: 1),
+                                        Text('SPACE — Jump', style: TextStyle(color: Colors.white70, fontSize: 10.5)),
+                                        SizedBox(height: 1),
+                                        Text('J — Attack', style: TextStyle(color: Colors.white70, fontSize: 10.5)),
+                                        SizedBox(height: 1),
+                                        Text('ESC — Pause', style: TextStyle(color: Colors.white70, fontSize: 10.5)),
                                       ],
                                     ),
                                   ),
@@ -222,29 +227,29 @@ class SettingsOverlay extends StatelessWidget {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 20),
 
                     // Back / Close Button
                     SizedBox(
                       width: double.infinity,
-                      height: 48,
+                      height: 42,
                       child: ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
                           backgroundColor: GameColors.mossyGreenBright,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           elevation: 4,
                         ),
                         onPressed: () => Navigator.of(context).pop(),
-                        icon: const Icon(Icons.check_circle_outline_rounded, size: 22),
+                        icon: const Icon(Icons.check_circle_outline_rounded, size: 18),
                         label: const Text(
                           'SAVE & BACK',
                           style: TextStyle(
-                            fontSize: 15,
+                            fontSize: 13,
                             fontWeight: FontWeight.bold,
-                            letterSpacing: 1.2,
+                            letterSpacing: 1.0,
                           ),
                         ),
                       ),
@@ -267,14 +272,14 @@ class SettingsOverlay extends StatelessWidget {
   }) {
     return Row(
       children: [
-        Icon(icon, color: GameColors.mistBlue, size: 22),
-        const SizedBox(width: 10),
+        Icon(icon, color: GameColors.mistBlue, size: 18),
+        const SizedBox(width: 8),
         Expanded(
           child: Text(
             label,
             style: const TextStyle(
               color: GameColors.uiTextLight,
-              fontSize: 15,
+              fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -298,40 +303,31 @@ class SettingsOverlay extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(14),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
         decoration: BoxDecoration(
           color: isSelected ? GameColors.deepForestTeal : Colors.black26,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(14),
           border: Border.all(
             color: isSelected ? GameColors.playerGlow : GameColors.uiGlassBorder,
-            width: isSelected ? 2 : 1,
+            width: isSelected ? 1.8 : 1.0,
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: GameColors.playerGlow.withValues(alpha: 0.3),
-                    blurRadius: 10,
-                    spreadRadius: -2,
-                  ),
-                ]
-              : null,
         ),
         child: Column(
           children: [
             Icon(
               icon,
               color: isSelected ? GameColors.foliageGlow : Colors.white60,
-              size: 26,
+              size: 20,
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Text(
               label,
               style: TextStyle(
                 color: isSelected ? Colors.white : Colors.white60,
-                fontSize: 13,
+                fontSize: 11,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
