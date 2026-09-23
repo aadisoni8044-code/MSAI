@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>QR Craft Pro - Premium QR Code Generator & Scanner</title>
+  <meta name="description" content="Create custom, branded QR codes with center logos, gradients, and social links. Free, client-side, and privacy-focused.">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- External QR & Scanner Libraries -->
+  <!-- qr-code-styling: Browser library for customizable canvas/SVG QR code generation -->
+  <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+  <!-- html5-qrcode: Camera QR code scanner for mobile and desktop web browsers -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="app-header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fa-solid fa-qrcode"></i>
+        </div>
+        <div class="brand-text">
+          <h1>QR Craft <span>Pro</span></h1>
+          <p>Custom QR Generator & Scanner</p>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <button id="scanCameraBtn" class="btn btn-secondary btn-icon" title="Scan QR Code with Camera">
+          <i class="fa-solid fa-camera"></i>
+          <span class="btn-text">Scan QR</span>
+        </button>
+        <button id="themeToggleBtn" class="btn btn-icon btn-ghost" title="Toggle Light/Dark Theme" aria-label="Toggle Theme">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Dashboard Grid -->
+  <main class="app-main">
+    <div class="main-container">
+
+      <!-- Left Column: Controls & Customization -->
+      <section class="controls-column">
+
+        <!-- Section 1: Content Type Selector -->
+        <div class="card content-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-layer-group"></i> 1. Choose Content Type</h2>
+          </div>
+
+          <!-- Category Tabs -->
+          <div class="type-category-tabs">
+            <button class="cat-tab active" data-cat="social"><i class="fa-solid fa-share-nodes"></i> Social Media</button>
+            <button class="cat-tab" data-cat="general"><i class="fa-solid fa-link"></i> Links & Text</button>
+            <button class="cat-tab" data-cat="contact"><i class="fa-solid fa-address-card"></i> Contact & Wi-Fi</button>
+          </div>
+
+          <!-- Type Options Selector Grid -->
+          <div class="type-grid" id="typeGrid">
+            <!-- Social Media Options -->
+            <button class="type-btn active" data-type="instagram" data-cat="social">
+              <i class="fa-brands fa-instagram color-instagram"></i>
+              <span>Instagram</span>
+            </button>
+            <button class="type-btn" data-type="youtube" data-cat="social">
+              <i class="fa-brands fa-youtube color-youtube"></i>
+              <span>YouTube</span>
+            </button>
+            <button class="type-btn" data-type="facebook" data-cat="social">
+              <i class="fa-brands fa-facebook color-facebook"></i>
+              <span>Facebook</span>
+            </button>
+            <button class="type-btn" data-type="whatsapp" data-cat="social">
+              <i class="fa-brands fa-whatsapp color-whatsapp"></i>
+              <span>WhatsApp</span>
+            </button>
+            <button class="type-btn" data-type="telegram" data-cat="social">
+              <i class="fa-brands fa-telegram color-telegram"></i>
+              <span>Telegram</span>
+            </button>
+            <button class="type-btn" data-type="twitter" data-cat="social">
+              <i class="fa-brands fa-x-twitter color-twitter"></i>
+              <span>X / Twitter</span>
+            </button>
+
+            <!-- Links & Text Options -->
+            <button class="type-btn hide" data-type="url" data-cat="general">
+              <i class="fa-solid fa-globe color-url"></i>
+              <span>Website URL</span>
+            </button>
+            <button class="type-btn hide" data-type="text" data-cat="general">
+              <i class="fa-solid fa-align-left color-text"></i>
+              <span>Custom Text</span>
+            </button>
+
+            <!-- Contact & Wi-Fi Options -->
+            <button class="type-btn hide" data-type="phone" data-cat="contact">
+              <i class="fa-solid fa-phone color-phone"></i>
+              <span>Phone</span>
+            </button>
+            <button class="type-btn hide" data-type="email" data-cat="contact">
+              <i class="fa-solid fa-envelope color-email"></i>
+              <span>Email</span>
+            </button>
+            <button class="type-btn hide" data-type="wifi" data-cat="contact">
+              <i class="fa-solid fa-wifi color-wifi"></i>
+              <span>Wi-Fi</span>
+            </button>
+          </div>
+
+          <!-- Dynamic Input Forms Container -->
+          <div class="dynamic-inputs" id="dynamicInputs">
+
+            <!-- Instagram Form -->
+            <div class="input-group-panel active" id="form-instagram">
+              <label for="input-instagram">Instagram Username or Profile Link</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">instagram.com/</span>
+                <input type="text" id="input-instagram" placeholder="your_username" value="instagram">
+              </div>
+              <span class="input-hint">Enter username without '@' or full profile link</span>
+            </div>
+
+            <!-- YouTube Form -->
+            <div class="input-group-panel" id="form-youtube">
+              <label for="input-youtube">YouTube Channel Handle or Link</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">youtube.com/@</span>
+                <input type="text" id="input-youtube" placeholder="channel_handle">
+              </div>
+              <span class="input-hint">Enter handle, channel ID or full video link</span>
+            </div>
+
+            <!-- Facebook Form -->
+            <div class="input-group-panel" id="form-facebook">
+              <label for="input-facebook">Facebook Page or Profile</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">facebook.com/</span>
+                <input type="text" id="input-facebook" placeholder="username_or_page">
+              </div>
+            </div>
+
+            <!-- WhatsApp Form -->
+            <div class="input-group-panel" id="form-whatsapp">
+              <label for="input-whatsapp-phone">Phone Number (with Country Code)</label>
+              <div class="input-wrapper mb-2">
+                <i class="fa-solid fa-phone input-icon"></i>
+                <input type="tel" id="input-whatsapp-phone" placeholder="1234567890">
+              </div>
+              <label for="input-whatsapp-msg">Pre-filled Message (Optional)</label>
+              <textarea id="input-whatsapp-msg" rows="2" placeholder="Hello! I found your QR code..."></textarea>
+            </div>
+
+            <!-- Telegram Form -->
+            <div class="input-group-panel" id="form-telegram">
+              <label for="input-telegram">Telegram Username</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">t.me/</span>
+                <input type="text" id="input-telegram" placeholder="username">
+              </div>
+            </div>
+
+            <!-- X / Twitter Form -->
+            <div class="input-group-panel" id="form-twitter">
+              <label for="input-twitter">X / Twitter Username</label>
+              <div class="input-wrapper">
+                <span class="input-prefix">x.com/</span>
+                <input type="text" id="input-twitter" placeholder="username">
+              </div>
+            </div>
+
+            <!-- Website URL Form -->
+            <div class="input-group-panel" id="form-url">
+              <label for="input-url">Website URL</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-globe input-icon"></i>
+                <input type="url" id="input-url" placeholder="https://example.com">
+              </div>
+            </div>
+
+            <!-- Text Form -->
+            <div class="input-group-panel" id="form-text">
+              <label for="input-text">Custom Text</label>
+              <textarea id="input-text" rows="3" placeholder="Enter any text or note here..."></textarea>
+            </div>
+
+            <!-- Phone Form -->
+            <div class="input-group-panel" id="form-phone">
+              <label for="input-phone">Phone Number</label>
+              <div class="input-wrapper">
+                <i class="fa-solid fa-phone input-icon"></i>
+                <input type="tel" id="input-phone" placeholder="+1234567890">
+              </div>
+            </div>
+
+            <!-- Email Form -->
+            <div class="input-group-panel" id="form-email">
+              <label for="input-email-to">Email Address</label>
+              <div class="input-wrapper mb-2">
+                <i class="fa-solid fa-envelope input-icon"></i>
+                <input type="email" id="input-email-to" placeholder="name@example.com">
+              </div>
+              <label for="input-email-subject">Subject (Optional)</label>
+              <input type="text" id="input-email-subject" class="mb-2" placeholder="Inquiry about...">
+              <label for="input-email-body">Body Message (Optional)</label>
+              <textarea id="input-email-body" rows="2" placeholder="Write message here..."></textarea>
+            </div>
+
+            <!-- Wi-Fi Form -->
+            <div class="input-group-panel" id="form-wifi">
+              <label for="input-wifi-ssid">Network SSID (Name)</label>
+              <div class="input-wrapper mb-2">
+                <i class="fa-solid fa-wifi input-icon"></i>
+                <input type="text" id="input-wifi-ssid" placeholder="My Home Wi-Fi">
+              </div>
+              <label for="input-wifi-pass">Password</label>
+              <div class="input-wrapper mb-2">
+                <i class="fa-solid fa-key input-icon"></i>
+                <input type="password" id="input-wifi-pass" placeholder="Password">
+                <button type="button" class="btn-toggle-pass" id="toggleWifiPassBtn">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </div>
+              <div class="wifi-options">
+                <label for="select-wifi-enc">Encryption Type</label>
+                <select id="select-wifi-enc">
+                  <option value="WPA">WPA/WPA2/WPA3</option>
+                  <option value="WEP">WEP</option>
+                  <option value="nopass">None (Open Network)</option>
+                </select>
+                <label class="checkbox-label mt-2">
+                  <input type="checkbox" id="input-wifi-hidden">
+                  <span>Hidden Network</span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Section 2: Customization Panel -->
+        <div class="card customize-card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-palette"></i> 2. Customize Design</h2>
+          </div>
+
+          <div class="accordion">
+
+            <!-- Accordion item: Colors & Gradients -->
+            <details class="accordion-item" open>
+              <summary class="accordion-header">
+                <span><i class="fa-solid fa-droplet"></i> Colors & Gradients</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+              </summary>
+              <div class="accordion-content">
+
+                <div class="control-grid">
+                  <div class="control-group">
+                    <label for="qrFgColor">Foreground Color</label>
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="qrFgColor" value="#4f46e5">
+                      <span id="qrFgColorHex" class="color-hex">#4f46e5</span>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <label for="qrBgColor">Background Color</label>
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="qrBgColor" value="#ffffff">
+                      <span id="qrBgColorHex" class="color-hex">#ffffff</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="control-group mt-3">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="qrBgTransparent">
+                    <span>Transparent Background</span>
+                  </label>
+                </div>
+
+                <div class="control-group mt-3">
+                  <label class="checkbox-label">
+                    <input type="checkbox" id="qrEnableGradient">
+                    <span>Enable Color Gradient</span>
+                  </label>
+                </div>
+
+                <!-- Gradient Sub-options -->
+                <div class="gradient-options hide" id="gradientOptionsPanel">
+                  <div class="control-grid mt-2">
+                    <div class="control-group">
+                      <label for="qrGradientColor2">Gradient End Color</label>
+                      <div class="color-picker-wrapper">
+                        <input type="color" id="qrGradientColor2" value="#06b6d4">
+                        <span id="qrGradientColor2Hex" class="color-hex">#06b6d4</span>
+                      </div>
+                    </div>
+                    <div class="control-group">
+                      <label for="qrGradientType">Gradient Type</label>
+                      <select id="qrGradientType">
+                        <option value="linear">Linear</option>
+                        <option value="radial">Radial</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="control-group mt-2" id="gradientRotationGroup">
+                    <div class="label-with-val">
+                      <label for="qrGradientRotation">Gradient Rotation</label>
+                      <span id="qrGradientRotationVal">0°</span>
+                    </div>
+                    <input type="range" id="qrGradientRotation" min="0" max="360" value="0" step="15">
+                  </div>
+                </div>
+
+              </div>
+            </details>
+
+            <!-- Accordion item: Patterns & Shapes -->
+            <details class="accordion-item">
+              <summary class="accordion-header">
+                <span><i class="fa-solid fa-shapes"></i> Pattern & Eye Styles</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+              </summary>
+              <div class="accordion-content">
+
+                <div class="control-group">
+                  <label>Dot / Body Pattern</label>
+                  <div class="style-selector" id="dotStyleSelector">
+                    <button class="style-opt active" data-value="square" title="Square"><i class="fa-solid fa-square"></i> Square</button>
+                    <button class="style-opt" data-value="dots" title="Dots"><i class="fa-solid fa-circle"></i> Dots</button>
+                    <button class="style-opt" data-value="rounded" title="Rounded"><i class="fa-solid fa-square-full"></i> Rounded</button>
+                    <button class="style-opt" data-value="extra-rounded" title="Extra Rounded"><i class="fa-solid fa-icons"></i> Soft</button>
+                    <button class="style-opt" data-value="classy" title="Classy"><i class="fa-solid fa-diamond"></i> Classy</button>
+                    <button class="style-opt" data-value="classy-rounded" title="Classy Rounded"><i class="fa-solid fa-sparkles"></i> Elegant</button>
+                  </div>
+                </div>
+
+                <div class="control-grid mt-3">
+                  <div class="control-group">
+                    <label for="cornerFrameStyle">Corner Frame Style</label>
+                    <select id="cornerFrameStyle">
+                      <option value="square">Square Frame</option>
+                      <option value="dot">Dot / Circle Frame</option>
+                      <option value="extra-rounded" selected>Extra Rounded Frame</option>
+                    </select>
+                  </div>
+
+                  <div class="control-group">
+                    <label for="cornerEyeStyle">Corner Eye Style</label>
+                    <select id="cornerEyeStyle">
+                      <option value="square">Square Eye</option>
+                      <option value="dot" selected>Dot / Circle Eye</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="control-grid mt-3">
+                  <div class="control-group">
+                    <label for="cornerFrameColor">Corner Frame Color</label>
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="cornerFrameColor" value="#4f46e5">
+                      <span id="cornerFrameColorHex" class="color-hex">#4f46e5</span>
+                    </div>
+                  </div>
+
+                  <div class="control-group">
+                    <label for="cornerEyeColor">Corner Eye Color</label>
+                    <div class="color-picker-wrapper">
+                      <input type="color" id="cornerEyeColor" value="#4f46e5">
+                      <span id="cornerEyeColorHex" class="color-hex">#4f46e5</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </details>
+
+            <!-- Accordion item: Size, Margin & Error Correction -->
+            <details class="accordion-item">
+              <summary class="accordion-header">
+                <span><i class="fa-solid fa-sliders"></i> Size, Margin & Safety</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+              </summary>
+              <div class="accordion-content">
+
+                <div class="control-group">
+                  <div class="label-with-val">
+                    <label for="qrSize">Export Size Resolution</label>
+                    <span id="qrSizeVal">300 x 300 px</span>
+                  </div>
+                  <input type="range" id="qrSize" min="200" max="1200" step="50" value="300">
+                </div>
+
+                <div class="control-group mt-3">
+                  <div class="label-with-val">
+                    <label for="qrMargin">Quiet Zone / Margin Padding</label>
+                    <span id="qrMarginVal">10 px</span>
+                  </div>
+                  <input type="range" id="qrMargin" min="0" max="40" step="2" value="10">
+                </div>
+
+                <div class="control-group mt-3">
+                  <label for="qrErrorCorrection">Error Correction Level</label>
+                  <select id="qrErrorCorrection">
+                    <option value="L">L - Low (7% recovery)</option>
+                    <option value="M">M - Medium (15% recovery)</option>
+                    <option value="Q">Q - Quartile (25% recovery)</option>
+                    <option value="H" selected>H - High (30% recovery, Best for Logos)</option>
+                  </select>
+                  <span class="input-hint mt-1">High error correction ensures QR stays scannable with center logo</span>
+                </div>
+
+              </div>
+            </details>
+
+            <!-- Accordion item: Center Photo / Logo -->
+            <details class="accordion-item" open>
+              <summary class="accordion-header">
+                <span><i class="fa-solid fa-image"></i> Center Photo / Logo</span>
+                <i class="fa-solid fa-chevron-down arrow"></i>
+              </summary>
+              <div class="accordion-content">
+
+                <!-- Preset Quick Icons or Upload -->
+                <div class="logo-presets mb-3">
+                  <label>Quick Preset Logo or Upload Custom</label>
+                  <div class="preset-buttons" id="presetLogoGroup">
+                    <button class="btn-preset active" data-preset="none" title="No Logo">None</button>
+                    <button class="btn-preset" data-preset="auto" title="Auto Social Icon"><i class="fa-solid fa-wand-magic-sparkles"></i> Auto Icon</button>
+                    <button class="btn-preset" data-preset="instagram"><i class="fa-brands fa-instagram"></i></button>
+                    <button class="btn-preset" data-preset="youtube"><i class="fa-brands fa-youtube"></i></button>
+                    <button class="btn-preset" data-preset="facebook"><i class="fa-brands fa-facebook"></i></button>
+                    <button class="btn-preset" data-preset="whatsapp"><i class="fa-brands fa-whatsapp"></i></button>
+                    <button class="btn-preset" data-preset="telegram"><i class="fa-brands fa-telegram"></i></button>
+                    <button class="btn-preset" data-preset="twitter"><i class="fa-brands fa-x-twitter"></i></button>
+                  </div>
+                </div>
+
+                <!-- Custom Upload Box -->
+                <div class="upload-box" id="logoUploadDropzone">
+                  <input type="file" id="logoFileInput" accept="image/png, image/jpeg, image/webp, image/svg+xml">
+                  <div class="upload-prompt" id="uploadPrompt">
+                    <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                    <p><strong>Click or Drag & Drop Photo</strong></p>
+                    <span>PNG, JPG, WEBP, SVG (Client-side process)</span>
+                  </div>
+                  <div class="upload-preview-bar hide" id="uploadPreviewBar">
+                    <img id="logoPreviewImg" src="" alt="Logo Preview">
+                    <div class="logo-meta">
+                      <span id="logoFileName">image.png</span>
+                      <button type="button" id="removeLogoBtn" class="btn-link-danger"><i class="fa-solid fa-trash-can"></i> Remove Image</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Logo Controls -->
+                <div class="logo-controls mt-3 hide" id="logoControlsPanel">
+                  <div class="control-grid">
+                    <div class="control-group">
+                      <label for="logoCropShape">Crop Shape</label>
+                      <select id="logoCropShape">
+                        <option value="circle">Circle</option>
+                        <option value="rounded" selected>Rounded Square</option>
+                        <option value="square">Square</option>
+                      </select>
+                    </div>
+
+                    <div class="control-group">
+                      <label for="logoBgColor">Logo Background</label>
+                      <div class="color-picker-wrapper">
+                        <input type="color" id="logoBgColor" value="#ffffff">
+                        <span id="logoBgColorHex" class="color-hex">#ffffff</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="control-grid mt-2">
+                    <div class="control-group">
+                      <label for="logoBorderWidth">Border Width</label>
+                      <input type="range" id="logoBorderWidth" min="0" max="12" value="2" step="1">
+                    </div>
+
+                    <div class="control-group">
+                      <label for="logoBorderColor">Border Color</label>
+                      <div class="color-picker-wrapper">
+                        <input type="color" id="logoBorderColor" value="#ffffff">
+                        <span id="logoBorderColorHex" class="color-hex">#ffffff</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="control-group mt-2">
+                    <div class="label-with-val">
+                      <label for="logoSizeRatio">Logo Scale Ratio</label>
+                      <span id="logoSizeRatioVal">0.22</span>
+                    </div>
+                    <input type="range" id="logoSizeRatio" min="0.10" max="0.35" step="0.02" value="0.22">
+                  </div>
+
+                  <div class="control-group mt-2">
+                    <div class="label-with-val">
+                      <label for="logoMargin">Logo Margin/Padding</label>
+                      <span id="logoMarginVal">4 px</span>
+                    </div>
+                    <input type="range" id="logoMargin" min="0" max="15" step="1" value="4">
+                  </div>
+                </div>
+
+              </div>
+            </details>
+
+          </div>
+        </div>
+
+      </section>
+
+      <!-- Right Column: Sticky Preview & Action Hub -->
+      <section class="preview-column">
+        <div class="card preview-card">
+          <div class="card-header flex-between">
+            <h2><i class="fa-solid fa-eye"></i> Live QR Preview</h2>
+            <span class="badge badge-success"><i class="fa-solid fa-shield-halved"></i> Scannable</span>
+          </div>
+
+          <!-- Main Visual QR Container -->
+          <div class="qr-preview-wrapper" id="qrPreviewWrapper">
+            <div id="qrCanvasContainer" class="qr-canvas-container">
+              <!-- QR Code Canvas rendered here by qr-code-styling -->
+            </div>
+
+            <div id="qrLoadingOverlay" class="qr-loading hide">
+              <div class="spinner"></div>
+              <span>Generating QR...</span>
+            </div>
+          </div>
+
+          <!-- Content Details Badge -->
+          <div class="qr-content-summary mt-3">
+            <span class="summary-label">Target Data:</span>
+            <span id="qrSummaryText" class="summary-value">https://instagram.com/instagram</span>
+          </div>
+
+          <!-- Action Buttons Grid -->
+          <div class="action-grid mt-4">
+            <button id="downloadPngBtn" class="btn btn-primary btn-lg btn-full">
+              <i class="fa-solid fa-download"></i> Download PNG
+            </button>
+            <button id="downloadSvgBtn" class="btn btn-secondary btn-full">
+              <i class="fa-solid fa-file-code"></i> Download SVG
+            </button>
+            <button id="copyContentBtn" class="btn btn-ghost">
+              <i class="fa-solid fa-copy"></i> Copy Link
+            </button>
+            <button id="shareQrBtn" class="btn btn-ghost">
+              <i class="fa-solid fa-share-nodes"></i> Share QR
+            </button>
+            <button id="testScanBtn" class="btn btn-ghost">
+              <i class="fa-solid fa-vial"></i> Test Scan
+            </button>
+            <button id="resetCustomizationBtn" class="btn btn-ghost btn-danger-ghost">
+              <i class="fa-solid fa-rotate-left"></i> Reset Design
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p>Crafted with <i class="fa-solid fa-heart text-danger"></i> &bull; Privacy First - All QR generation & photo processing happen locally on your device.</p>
+    </div>
+  </footer>
+
+  <!-- Camera QR Scanner Modal -->
+  <div class="modal-overlay hide" id="scannerModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-camera"></i> Scan QR Code</h3>
+        <button class="btn-close-modal" id="closeScannerModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="reader" class="scanner-viewport"></div>
+        <div class="camera-select-wrapper mt-3">
+          <label for="cameraSourceSelect">Select Camera:</label>
+          <select id="cameraSourceSelect"></select>
+        </div>
+        <div id="scannerResultBox" class="scan-result-box hide mt-3">
+          <h4>Scan Result:</h4>
+          <p id="scannerResultText"></p>
+          <div class="scan-actions mt-2">
+            <button id="useScannedDataBtn" class="btn btn-primary btn-sm"><i class="fa-solid fa-circle-check"></i> Use Scanned QR Data</button>
+            <button id="copyScannedTextBtn" class="btn btn-secondary btn-sm"><i class="fa-solid fa-copy"></i> Copy Text</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Alert Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- App JavaScript ES Modules -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>
