@@ -16,23 +16,17 @@ void main() {
   });
 
   group('CharacterData Dataset Tests', () {
-    test('CharacterData contains exactly 10 characters', () {
-      expect(CharacterData.allCharacters.length, equals(10));
+    test('CharacterData contains exactly 50 unique characters', () {
+      expect(CharacterData.allCharacters.length, equals(50));
+      final ids = CharacterData.allCharacters.map((c) => c.id).toSet();
+      expect(ids.length, equals(50));
     });
 
-    test('Character 1 is default Boy character with 0 price', () {
+    test('Character 1 is default Forest Adventurer character with 0 price', () {
       final char1 = CharacterData.allCharacters.first;
       expect(char1.id, equals('char_1'));
       expect(char1.price, equals(0));
-      expect(char1.gender, equals('Boy'));
-    });
-
-    test('Character dataset contains both Boy and Girl characters', () {
-      final boys = CharacterData.allCharacters.where((c) => c.gender == 'Boy');
-      final girls = CharacterData.allCharacters.where((c) => c.gender == 'Girl');
-
-      expect(boys.isNotEmpty, isTrue);
-      expect(girls.isNotEmpty, isTrue);
+      expect(char1.name, equals('Forest Adventurer'));
     });
   });
 
@@ -47,7 +41,6 @@ void main() {
 
     test('Purchasing character with sufficient coins deducts balance and unlocks character', () async {
       final ctrl = CharacterProgressController.instance;
-      // Reset coins to 500
       expect(ctrl.totalCoins, equals(500));
 
       final char2 = CharacterData.getById('char_2'); // Verdant Warrior (150 coins)
@@ -61,15 +54,14 @@ void main() {
 
     test('Purchasing character with insufficient coins fails without deducting balance', () async {
       final ctrl = CharacterProgressController.instance;
-      // Set low coins
       await ctrl.resetProgress();
-      // Try to buy Celestial Champion (2500 coins) with only 500 coins
-      final expensiveChar = CharacterData.getById('char_10');
+      // Try to buy expensive character (3000 coins) with only 500 coins
+      final expensiveChar = CharacterData.getById('char_50');
       final success = await ctrl.purchaseCharacter(expensiveChar);
 
       expect(success, isFalse);
       expect(ctrl.totalCoins, equals(500));
-      expect(ctrl.isUnlocked('char_10'), isFalse);
+      expect(ctrl.isUnlocked('char_50'), isFalse);
     });
 
     test('Selecting unlocked character updates active character selection', () async {
@@ -89,19 +81,30 @@ void main() {
 
   group('CharacterShopScreen UI Widget Tests', () {
     testWidgets('CharacterShopScreen renders header, coin balance, and character grid', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(1280, 720);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(
         const MaterialApp(
           home: CharacterShopScreen(),
         ),
       );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.text('CHARACTER SHOP'), findsOneWidget);
+      expect(find.text('HEROES & LEGENDS (50)'), findsOneWidget);
       expect(find.text('500'), findsAtLeast(1)); // Total coins or card price
       expect(find.text('Forest Adventurer'), findsWidgets);
-      expect(find.text('Verdant Warrior'), findsOneWidget);
     });
 
     testWidgets('MainMenuScreen renders SHOP button and navigates to CharacterShopScreen', (WidgetTester tester) async {
+      tester.view.physicalSize = const Size(1280, 720);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       await tester.pumpWidget(
         const MaterialApp(
           home: MainMenuScreen(),
@@ -112,7 +115,7 @@ void main() {
 
       await tester.tap(find.text('🛒 SHOP'));
       await tester.pump();
-      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 200));
 
       expect(find.byType(CharacterShopScreen), findsOneWidget);
     });

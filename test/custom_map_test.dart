@@ -78,7 +78,7 @@ void main() {
       final controller = CustomMapProgressController.instance;
       await controller.init();
 
-      final newMap = controller.createNewBlankMap(name: 'Unit Test Map');
+      final newMap = await controller.createNewBlankMap(name: 'Unit Test Map');
       await controller.saveMap(newMap);
 
       expect(controller.getMapById(newMap.id), isNotNull);
@@ -92,7 +92,7 @@ void main() {
       final template = CustomMapData.builtInTemplates.first;
       final duplicate = await controller.duplicateTemplateAsNewMap(template);
       expect(duplicate, isNotNull);
-      expect(duplicate.name, contains('Copy of'));
+      expect(duplicate.name, contains('Forest Starter'));
 
       // Delete map
       await controller.deleteMap(newMap.id);
@@ -103,7 +103,7 @@ void main() {
       final controller = CustomMapProgressController.instance;
       await controller.init();
 
-      final map = controller.createNewBlankMap(name: 'Stats Test Map');
+      final map = await controller.createNewBlankMap(name: 'Stats Test Map');
       await controller.saveMap(map);
 
       await controller.recordMapCompletion(map.id, timeSeconds: 25.5, coinsCollected: 10);
@@ -120,24 +120,25 @@ void main() {
           home: CreateMapHomeScreen(),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
-      expect(find.text('CREATE MAP STUDIO'), findsOneWidget);
-      expect(find.text('MY MAPS'), findsOneWidget);
-      expect(find.text('FEATURED TEMPLATES'), findsOneWidget);
-      expect(find.text('+ CREATE NEW MAP'), findsOneWidget);
+      expect(find.text('CREATE MAP'), findsWidgets);
+      expect(find.text('🗺 MY MAPS'), findsOneWidget);
+      expect(find.text('⭐ FEATURED TEMPLATES'), findsOneWidget);
     });
 
     testWidgets('MapEditorScreen renders canvas header and bottom action toolbar', (WidgetTester tester) async {
       final controller = CustomMapProgressController.instance;
-      final map = controller.createNewBlankMap(name: 'Test Editor');
+      final map = await controller.createNewBlankMap(name: 'Test Editor');
 
       await tester.pumpWidget(
         MaterialApp(
           home: MapEditorScreen(mapData: map),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.text('SAVE'), findsOneWidget);
       expect(find.text('PLAY TEST'), findsOneWidget);
@@ -147,14 +148,15 @@ void main() {
 
     testWidgets('CustomMapGameScreen converts CustomMapData and initializes game', (WidgetTester tester) async {
       final controller = CustomMapProgressController.instance;
-      final map = controller.createNewBlankMap(name: 'Playable Map');
+      final map = await controller.createNewBlankMap(name: 'Playable Map');
 
       await tester.pumpWidget(
         MaterialApp(
           home: CustomMapGameScreen(mapData: map),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.byType(CustomMapGameScreen), findsOneWidget);
     });

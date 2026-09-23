@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:enchanted_forest_adventure/core/zombie_audio_controller.dart';
@@ -7,6 +8,16 @@ void main() {
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
+
+    // Mock audioplayers channel calls to prevent MissingPluginException in unit tests
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      const MethodChannel('xyz.luan/audioplayers.global'),
+      (MethodCall methodCall) async => null,
+    );
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      const MethodChannel('xyz.luan/audioplayers'),
+      (MethodCall methodCall) async => null,
+    );
   });
 
   group('ZombieAudioController Spatial Tests', () {

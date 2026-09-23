@@ -140,7 +140,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                             colors: [Color(0xFF80FFDB), Color(0xFF38BDF8), Color(0xFFEAB308)],
                           ).createShader(bounds),
                           child: const Text(
-                            'CHARACTER SHOP',
+                            'HEROES & LEGENDS (50)',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18,
@@ -216,7 +216,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                   ),
                 ),
 
-              // 4. Main Content (Left: Character Grid, Right: Large Detail Preview)
+              // 4. Main Content (Left: 50-Character Grid, Right: Large Detail Preview)
               Positioned(
                 top: 56,
                 left: 16,
@@ -224,7 +224,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                 bottom: 12,
                 child: Row(
                   children: [
-                    // LEFT: Responsive Character Grid
+                    // LEFT: Responsive 50-Character Grid
                     Expanded(
                       flex: 6,
                       child: Container(
@@ -237,8 +237,8 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                         child: GridView.builder(
                           physics: const BouncingScrollPhysics(),
                           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                            maxCrossAxisExtent: 110.0,
-                            mainAxisExtent: 92.0,
+                            maxCrossAxisExtent: 105.0,
+                            mainAxisExtent: 88.0,
                             crossAxisSpacing: 8,
                             mainAxisSpacing: 8,
                           ),
@@ -325,12 +325,12 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              width: 42,
-              height: 42,
+              width: 38,
+              height: 38,
               child: CharacterPreviewWidget(
                 character: char,
-                width: 42,
-                height: 42,
+                width: 38,
+                height: 38,
                 time: _time,
               ),
             ),
@@ -341,7 +341,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 9.5,
+                fontSize: 9.0,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -351,7 +351,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                 'SELECTED',
                 style: TextStyle(
                   color: GameColors.foliageGlow,
-                  fontSize: 8.0,
+                  fontSize: 7.5,
                   fontWeight: FontWeight.bold,
                 ),
               )
@@ -360,7 +360,7 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
                 'OWNED',
                 style: TextStyle(
                   color: Colors.white54,
-                  fontSize: 8.0,
+                  fontSize: 7.5,
                   fontWeight: FontWeight.w600,
                 ),
               )
@@ -368,13 +368,13 @@ class _CharacterShopScreenState extends State<CharacterShopScreen> with SingleTi
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 9),
+                  const Icon(Icons.monetization_on_rounded, color: GameColors.coinGold, size: 8.5),
                   const SizedBox(width: 2),
                   Text(
                     '${char.price}',
                     style: const TextStyle(
                       color: GameColors.coinGold,
-                      fontSize: 8.5,
+                      fontSize: 8.0,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
