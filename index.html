@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>QR Craft Pro - Premium QR Code Generator & Scanner</title>
-  <meta name="description" content="Create custom, branded QR codes with center logos, gradients, and social links. Free, client-side, and privacy-focused.">
+  <title>QR Craft Pro - Premium QR Code & Photo Pixel Generator</title>
+  <meta name="description" content="Create custom, branded QR codes with center logos, gradients, and Photo Pixel QR art. Free, client-side, and privacy-focused.">
 
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,6 +20,8 @@
   <!-- External QR & Scanner Libraries -->
   <!-- qr-code-styling: Browser library for customizable canvas/SVG QR code generation -->
   <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.5.0/lib/qr-code-styling.js"></script>
+  <!-- qrcode-generator: Browser library for raw 2D QR matrix generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
   <!-- html5-qrcode: Camera QR code scanner for mobile and desktop web browsers -->
   <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 </head>
@@ -34,7 +36,7 @@
         </div>
         <div class="brand-text">
           <h1>QR Craft <span>Pro</span></h1>
-          <p>Custom QR Generator & Scanner</p>
+          <p>Custom QR & Photo Pixel Generator</p>
         </div>
       </div>
 
@@ -50,9 +52,23 @@
     </div>
   </header>
 
+  <!-- Top Mode Switcher Bar -->
+  <div class="mode-switcher-bar">
+    <div class="mode-switcher-container">
+      <button class="mode-tab active" id="modeStandardBtn" data-mode="standard">
+        <i class="fa-solid fa-qrcode"></i> Standard QR
+      </button>
+      <button class="mode-tab" id="modePhotoPixelBtn" data-mode="photopixel">
+        <i class="fa-solid fa-camera-retro"></i> 📷 Photo Pixel QR
+      </button>
+    </div>
+  </div>
+
   <!-- Main Dashboard Grid -->
   <main class="app-main">
-    <div class="main-container">
+
+    <!-- MODE 1: Standard QR Generator View -->
+    <div class="main-container" id="standardQrView">
 
       <!-- Left Column: Controls & Customization -->
       <section class="controls-column">
@@ -583,12 +599,264 @@
       </section>
 
     </div>
+
+    <!-- MODE 2: Photo Pixel QR View -->
+    <div class="main-container hide" id="photoPixelQrView">
+
+      <!-- Left Column: Photo Upload & Presets -->
+      <section class="controls-column">
+
+        <!-- Card 1: Upload Photo -->
+        <div class="card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-cloud-arrow-up"></i> 1. Upload Source Photo</h2>
+          </div>
+
+          <div class="upload-box" id="pixelPhotoDropzone">
+            <input type="file" id="pixelPhotoFileInput" accept="image/png, image/jpeg, image/webp">
+            <div class="upload-prompt" id="pixelUploadPrompt">
+              <i class="fa-solid fa-camera-retro upload-icon"></i>
+              <p><strong>Upload Photo for Pixel QR Matrix</strong></p>
+              <span>PNG, JPG, WEBP (Processed 100% locally in browser)</span>
+            </div>
+            <div class="upload-preview-bar hide" id="pixelUploadPreviewBar">
+              <img id="pixelPhotoPreviewImg" src="" alt="Photo Preview">
+              <div class="logo-meta">
+                <span id="pixelPhotoFileName">photo.jpg</span>
+                <button type="button" id="removePixelPhotoBtn" class="btn-link-danger"><i class="fa-solid fa-trash-can"></i> Remove Photo</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Target QR Payload Link Input -->
+          <div class="mt-3">
+            <label for="ppQrPayloadInput">QR Code Target URL / Text Data</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-link input-icon"></i>
+              <input type="text" id="ppQrPayloadInput" placeholder="https://instagram.com/yourname" value="https://instagram.com/instagram">
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Artistic Presets -->
+        <div class="card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-wand-magic-sparkles"></i> 2. Artistic Presets</h2>
+          </div>
+
+          <div class="artistic-preset-grid">
+            <button class="preset-card active" data-preset="classic">
+              <i class="fa-solid fa-circle-dot"></i>
+              <span>Classic Dots</span>
+            </button>
+            <button class="preset-card" data-preset="micro">
+              <i class="fa-solid fa-braille"></i>
+              <span>Micro Dots</span>
+            </button>
+            <button class="preset-card" data-preset="qrdots">
+              <i class="fa-solid fa-qrcode"></i>
+              <span>QR Dots</span>
+            </button>
+            <button class="preset-card" data-preset="pixel">
+              <i class="fa-solid fa-border-all"></i>
+              <span>Pixel Photo</span>
+            </button>
+            <button class="preset-card" data-preset="mono">
+              <i class="fa-solid fa-circle-half-stroke"></i>
+              <span>Monochrome QR</span>
+            </button>
+            <button class="preset-card" data-preset="color">
+              <i class="fa-solid fa-palette"></i>
+              <span>Color Photo QR</span>
+            </button>
+            <button class="preset-card" data-preset="contrast">
+              <i class="fa-solid fa-bolt"></i>
+              <span>High Contrast</span>
+            </button>
+            <button class="preset-card" data-preset="ultradense">
+              <i class="fa-solid fa-grip-vertical"></i>
+              <span>Ultra Dense</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Card 3: Photo Pixel Customization Controls -->
+        <div class="card">
+          <div class="card-header">
+            <h2><i class="fa-solid fa-sliders"></i> 3. Fine-Tune Photo Pixels</h2>
+          </div>
+
+          <!-- Resolution Presets -->
+          <div class="control-group mb-3">
+            <label>Photo Dot Grid Resolution</label>
+            <div class="res-pill-group">
+              <button class="res-pill" data-res="low">LOW (60px)</button>
+              <button class="res-pill active" data-res="medium">MEDIUM (100px)</button>
+              <button class="res-pill" data-res="high">HIGH (160px)</button>
+              <button class="res-pill" data-res="ultra">ULTRA (220px)</button>
+            </div>
+            <span class="input-hint" id="resHintText">MEDIUM recommended for mobile devices</span>
+          </div>
+
+          <!-- Sliders Grid -->
+          <div class="control-grid">
+            <div class="control-group">
+              <div class="label-with-val">
+                <label for="ppDotSize">Dot Size Ratio</label>
+                <span id="ppDotSizeVal">0.85</span>
+              </div>
+              <input type="range" id="ppDotSize" min="0.30" max="1.20" step="0.05" value="0.85">
+            </div>
+
+            <div class="control-group">
+              <div class="label-with-val">
+                <label for="ppDotSpacing">Dot Spacing Margin</label>
+                <span id="ppDotSpacingVal">0 px</span>
+              </div>
+              <input type="range" id="ppDotSpacing" min="0" max="4" step="1" value="0">
+            </div>
+          </div>
+
+          <div class="control-grid mt-2">
+            <div class="control-group">
+              <div class="label-with-val">
+                <label for="ppBrightness">Brightness</label>
+                <span id="ppBrightnessVal">0</span>
+              </div>
+              <input type="range" id="ppBrightness" min="-100" max="100" step="5" value="0">
+            </div>
+
+            <div class="control-group">
+              <div class="label-with-val">
+                <label for="ppContrast">Contrast</label>
+                <span id="ppContrastVal">1.0</span>
+              </div>
+              <input type="range" id="ppContrast" min="0.5" max="2.5" step="0.1" value="1.0">
+            </div>
+          </div>
+
+          <div class="control-grid mt-2">
+            <div class="control-group">
+              <div class="label-with-val">
+                <label for="ppSharpness">Sharpness</label>
+                <span id="ppSharpnessVal">1.0</span>
+              </div>
+              <input type="range" id="ppSharpness" min="0.0" max="3.0" step="0.2" value="1.0">
+            </div>
+
+            <div class="control-group">
+              <div class="label-with-val">
+                <label for="ppPhotoStrength">Photo Blend Strength</label>
+                <span id="ppPhotoStrengthVal">0.75</span>
+              </div>
+              <input type="range" id="ppPhotoStrength" min="0.20" max="1.00" step="0.05" value="0.75">
+            </div>
+          </div>
+
+          <!-- Dot Shape & Color Mode -->
+          <div class="control-grid mt-3">
+            <div class="control-group">
+              <label for="ppDotShape">Dot Shape</label>
+              <select id="ppDotShape">
+                <option value="square">Square</option>
+                <option value="circle" selected>Circle</option>
+                <option value="rounded">Rounded Square</option>
+                <option value="qrmodule">QR Module</option>
+                <option value="diamond">Tiny Diamond</option>
+              </select>
+            </div>
+
+            <div class="control-group">
+              <label for="ppColorMode">Color Palette</label>
+              <select id="ppColorMode">
+                <option value="color" selected>Full Color Photo</option>
+                <option value="grayscale">Grayscale / Mono</option>
+                <option value="custom">Custom Dot Color</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Custom Colors -->
+          <div class="control-grid mt-2">
+            <div class="control-group">
+              <label for="ppDotColor">Dot Color</label>
+              <div class="color-picker-wrapper">
+                <input type="color" id="ppDotColor" value="#000000">
+                <span id="ppDotColorHex" class="color-hex">#000000</span>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label for="ppBgColor">Background Color</label>
+              <div class="color-picker-wrapper">
+                <input type="color" id="ppBgColor" value="#ffffff">
+                <span id="ppBgColorHex" class="color-hex">#ffffff</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- Right Column: Live Photo Pixel QR Preview -->
+      <section class="preview-column">
+        <div class="card preview-card">
+          <div class="card-header flex-between">
+            <h2><i class="fa-solid fa-camera-retro"></i> Photo Pixel QR Preview</h2>
+            <span class="badge badge-warning"><i class="fa-solid fa-triangle-exclamation"></i> Artistic QR</span>
+          </div>
+
+          <!-- Scannability Alert Banner -->
+          <div class="scan-alert-banner">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Highly detailed photos may reduce QR scanning reliability.</span>
+          </div>
+
+          <!-- Canvas Preview -->
+          <div class="qr-preview-wrapper mt-2">
+            <canvas id="photoPixelCanvas" width="500" height="500"></canvas>
+          </div>
+
+          <!-- Content Target Summary -->
+          <div class="qr-content-summary mt-3">
+            <span class="summary-label">Target Data:</span>
+            <span id="ppSummaryText" class="summary-value">https://instagram.com/instagram</span>
+          </div>
+
+          <!-- Action Buttons Grid -->
+          <div class="action-grid mt-4">
+            <button id="ppDownloadPngBtn" class="btn btn-primary btn-lg btn-full">
+              <i class="fa-solid fa-download"></i> Download PNG Artwork
+            </button>
+            <button id="ppDownloadSvgBtn" class="btn btn-secondary btn-full">
+              <i class="fa-solid fa-file-code"></i> Download SVG Vector
+            </button>
+            <button id="ppRegenerateBtn" class="btn btn-ghost">
+              <i class="fa-solid fa-arrows-rotate"></i> Regenerate
+            </button>
+            <button id="ppCopyContentBtn" class="btn btn-ghost">
+              <i class="fa-solid fa-copy"></i> Copy Data
+            </button>
+            <button id="ppShareBtn" class="btn btn-ghost">
+              <i class="fa-solid fa-share-nodes"></i> Share
+            </button>
+            <button id="ppResetBtn" class="btn btn-ghost btn-danger-ghost">
+              <i class="fa-solid fa-rotate-left"></i> Reset
+            </button>
+          </div>
+
+        </div>
+      </section>
+
+    </div>
+
   </main>
 
   <!-- Footer -->
   <footer class="app-footer">
     <div class="footer-container">
-      <p>Crafted with <i class="fa-solid fa-heart text-danger"></i> &bull; Privacy First - All QR generation & photo processing happen locally on your device.</p>
+      <p>Crafted with <i class="fa-solid fa-heart text-danger"></i> &bull; Privacy First - All QR generation & photo pixel processing happen locally on your device.</p>
     </div>
   </footer>
 

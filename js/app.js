@@ -1,13 +1,14 @@
 /**
  * Main Application Orchestrator & State Management
- * Connects UI events, QR Generator, Logo Handler, Social Link Builder,
- * Camera Scanner, LocalStorage persistence, Theme switching, Copy & Web Share APIs.
+ * Connects UI events, Standard QR Generator, Photo Pixel QR Controller, Logo Handler,
+ * Social Link Builder, Camera Scanner, LocalStorage persistence, and Theme switching.
  */
 
 import { QRGenerator } from './qr-generator.js';
 import { LogoHandler } from './logo-handler.js';
 import { SocialLinksBuilder } from './social-links.js';
 import { QRScanner } from './scanner.js';
+import { PhotoPixelQR } from './photo-pixel-qr.js';
 
 class App {
   constructor() {
@@ -15,6 +16,7 @@ class App {
 
     // Application State
     this.state = {
+      appMode: 'standard', // 'standard' or 'photopixel'
       theme: 'dark',
       activeType: 'instagram',
       activeCategory: 'social',
@@ -55,13 +57,14 @@ class App {
         logoSizeRatio: 0.22,
         logoMargin: 4
       },
-      uploadedLogoSource: null, // File object or Data URL
+      uploadedLogoSource: null,
       processedLogoDataUrl: null
     };
 
     // Instantiate Modules
     this.logoHandler = new LogoHandler();
     this.qrGenerator = new QRGenerator(document.getElementById('qrCanvasContainer'));
+    this.photoPixelQr = new PhotoPixelQR(document.getElementById('photoPixelCanvas'));
     this.scanner = new QRScanner({
       onScanSuccess: (scannedText) => this.handleScannedData(scannedText)
     });
@@ -77,21 +80,35 @@ class App {
     this.applyTheme(this.state.theme);
     this.bindUIEvents();
 
-    // Mount initial QR Code
+    // Mount Standard QR Code
     this.qrGenerator.mount();
 
     // Initial sync and generation
     this.syncUiFromState();
     await this.updateLogoAndGenerateQr();
 
+    // Initial render for Photo Pixel QR
+    this.photoPixelQr.scheduleRender();
+
     // Global Toast helper
     window.showToast = (msg, type) => this.showToast(msg, type);
   }
 
   /**
-   * Binds all DOM input listeners, buttons, and switches
+   * Binds all DOM input listeners, mode switcher, buttons, and switches
    */
   bindUIEvents() {
+    // Mode Switcher Tabs
+    const modeStandardBtn = document.getElementById('modeStandardBtn');
+    const modePhotoPixelBtn = document.getElementById('modePhotoPixelBtn');
+
+    if (modeStandardBtn) {
+      modeStandardBtn.addEventListener('click', () => this.switchAppMode('standard'));
+    }
+    if (modePhotoPixelBtn) {
+      modePhotoPixelBtn.addEventListener('click', () => this.switchAppMode('photopixel'));
+    }
+
     // Theme Toggle
     const themeBtn = document.getElementById('themeToggleBtn');
     if (themeBtn) {
@@ -154,6 +171,30 @@ class App {
     if (scanBtn) {
       scanBtn.addEventListener('click', () => this.scanner.start());
     }
+  }
+
+  /**
+   * Mode switch between Standard QR and Photo Pixel QR
+   */
+  switchAppMode(mode) {
+    this.state.appMode = mode;
+
+    const stdTab = document.getElementById('modeStandardBtn');
+    const pxTab = document.getElementById('modePhotoPixelBtn');
+    const stdView = document.getElementById('standardQrView');
+    const pxView = document.getElementById('photoPixelQrView');
+
+    if (stdTab) stdTab.classList.toggle('active', mode === 'standard');
+    if (pxTab) pxTab.classList.toggle('active', mode === 'photopixel');
+
+    if (stdView) stdView.classList.toggle('hide', mode !== 'standard');
+    if (pxView) pxView.classList.toggle('hide', mode !== 'photopixel');
+
+    if (mode === 'photopixel') {
+      this.photoPixelQr.scheduleRender();
+    }
+
+    this.saveLocalStorage();
   }
 
   /**
@@ -319,7 +360,6 @@ class App {
         }
         this.state.customization[ctrlId] = val;
 
-        // Update hex or value labels
         if (ctrlId === 'logoBgColor') document.getElementById('logoBgColorHex').textContent = val;
         if (ctrlId === 'logoBorderColor') document.getElementById('logoBorderColorHex').textContent = val;
         if (ctrlId === 'logoSizeRatio') document.getElementById('logoSizeRatioVal').textContent = val;
@@ -405,7 +445,6 @@ class App {
             }
           }
         } else {
-          // Fallback copy
           try {
             await navigator.clipboard.writeText(payload);
             this.showToast('Native share unavailable. Link copied to clipboard!', 'info');
@@ -439,18 +478,15 @@ class App {
   switchCategory(cat) {
     this.state.activeCategory = cat;
 
-    // Toggle active category tabs
     document.querySelectorAll('.cat-tab').forEach(t => {
       t.classList.toggle('active', t.dataset.cat === cat);
     });
 
-    // Filter visible type grid buttons
     document.querySelectorAll('.type-btn').forEach(btn => {
       const match = btn.dataset.cat === cat;
       btn.classList.toggle('hide', !match);
     });
 
-    // Activate first type button in selected category if active button is hidden
     const firstVisible = document.querySelector(`.type-btn[data-cat="${cat}"]`);
     if (firstVisible) {
       this.switchContentType(firstVisible.dataset.type);
@@ -458,17 +494,15 @@ class App {
   }
 
   /**
-   * Content type switch (e.g. instagram -> whatsapp)
+   * Content type switch
    */
   async switchContentType(type) {
     this.state.activeType = type;
 
-    // Active class on selector grid
     document.querySelectorAll('.type-btn').forEach(b => {
       b.classList.toggle('active', b.dataset.type === type);
     });
 
-    // Show corresponding form panel
     document.querySelectorAll('.input-group-panel').forEach(p => {
       p.classList.remove('active');
     });
@@ -476,7 +510,6 @@ class App {
     const activeForm = document.getElementById(`form-${type}`);
     if (activeForm) activeForm.classList.add('active');
 
-    // Auto preset logo update if preset is set to 'auto'
     if (this.state.customization.logoPreset === 'auto') {
       const logoDataUrl = this.logoHandler.getPresetLogo(type);
       this.state.uploadedLogoSource = logoDataUrl || this.logoHandler.getPresetLogo('instagram');
@@ -579,16 +612,13 @@ class App {
     const payload = this.getCurrentPayload();
     const cust = this.state.customization;
 
-    // Update target payload summary
     const summaryEl = document.getElementById('qrSummaryText');
     if (summaryEl) {
       summaryEl.textContent = SocialLinksBuilder.getSummaryLabel(this.state.activeType, payload);
     }
 
-    // Auto force high error correction when logo is present
     const errLevel = this.state.processedLogoDataUrl ? 'H' : cust.errorCorrectionLevel;
 
-    // Trigger QR render
     this.qrGenerator.update({
       data: payload,
       size: cust.size,
@@ -618,7 +648,6 @@ class App {
   async handleScannedData(scannedText) {
     if (!scannedText) return;
 
-    // If scanned URL matches social link, populate social tab
     if (scannedText.includes('instagram.com/')) {
       this.switchCategory('social');
       this.switchContentType('instagram');
@@ -642,9 +671,6 @@ class App {
     this.showToast('Scanned data loaded into generator!', 'success');
   }
 
-  /**
-   * Shows upload logo preview bar in DOM
-   */
   showLogoPreview(fileName) {
     const prompt = document.getElementById('uploadPrompt');
     const previewBar = document.getElementById('uploadPreviewBar');
@@ -666,9 +692,6 @@ class App {
     }
   }
 
-  /**
-   * Hides logo preview bar in DOM
-   */
   hideLogoPreview() {
     const prompt = document.getElementById('uploadPrompt');
     const previewBar = document.getElementById('uploadPreviewBar');
@@ -679,9 +702,6 @@ class App {
     if (controlsPanel) controlsPanel.classList.add('hide');
   }
 
-  /**
-   * Resets customization settings
-   */
   async resetCustomization() {
     this.state.customization = {
       fgColor: '#4f46e5',
@@ -715,21 +735,19 @@ class App {
     await this.updateLogoAndGenerateQr();
   }
 
-  /**
-   * Syncs HTML form elements with internal state values
-   */
   syncUiFromState() {
     const cust = this.state.customization;
     const inputs = this.state.inputs;
 
-    // Theme
+    // Theme & Mode
     this.applyTheme(this.state.theme);
+    this.switchAppMode(this.state.appMode || 'standard');
 
     // Category and Type
     this.switchCategory(this.state.activeCategory);
     this.switchContentType(this.state.activeType);
 
-    // Form inputs restoration
+    // Form inputs
     if (inputs.instagram?.username) document.getElementById('input-instagram').value = inputs.instagram.username;
     if (inputs.youtube?.channel) document.getElementById('input-youtube').value = inputs.youtube.channel;
     if (inputs.facebook?.username) document.getElementById('input-facebook').value = inputs.facebook.username;
@@ -798,9 +816,6 @@ class App {
     document.getElementById('logoMarginVal').textContent = `${cust.logoMargin} px`;
   }
 
-  /**
-   * Applies Theme (dark / light)
-   */
   applyTheme(theme) {
     this.state.theme = theme;
     document.documentElement.setAttribute('data-theme', theme);
@@ -811,12 +826,10 @@ class App {
     this.saveLocalStorage();
   }
 
-  /**
-   * Persists settings in LocalStorage
-   */
   saveLocalStorage() {
     try {
       const serialized = {
+        appMode: this.state.appMode,
         theme: this.state.theme,
         activeType: this.state.activeType,
         activeCategory: this.state.activeCategory,
@@ -829,14 +842,12 @@ class App {
     }
   }
 
-  /**
-   * Loads persisted settings from LocalStorage
-   */
   loadLocalStorage() {
     try {
       const data = localStorage.getItem(this.storageKey);
       if (data) {
         const parsed = JSON.parse(data);
+        if (parsed.appMode) this.state.appMode = parsed.appMode;
         if (parsed.theme) this.state.theme = parsed.theme;
         if (parsed.activeType) this.state.activeType = parsed.activeType;
         if (parsed.activeCategory) this.state.activeCategory = parsed.activeCategory;
@@ -848,9 +859,6 @@ class App {
     }
   }
 
-  /**
-   * Displays toast message
-   */
   showToast(message, type = 'info') {
     const container = document.getElementById('toastContainer');
     if (!container) return;
@@ -872,7 +880,6 @@ class App {
   }
 }
 
-// Instantiate App when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new App();
 });

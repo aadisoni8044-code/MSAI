@@ -157,6 +157,50 @@ html, body {
   gap: 0.5rem;
 }
 
+/* Top Mode Switcher Bar */
+.mode-switcher-bar {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--card-border);
+  padding: 0.5rem 1rem;
+}
+
+.mode-switcher-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.mode-tab {
+  flex: 1;
+  max-width: 260px;
+  padding: 0.65rem 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all var(--transition-fast);
+  min-height: 44px;
+}
+
+.mode-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.mode-tab.active {
+  background: var(--accent-gradient);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);
+}
+
 /* Buttons System */
 .btn {
   display: inline-flex;
@@ -322,6 +366,12 @@ html, body {
   background: rgba(16, 185, 129, 0.15);
   color: var(--success);
   border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-warning {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+  border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 /* Category Tabs */
@@ -827,6 +877,101 @@ input[type="range"] {
   padding: 0;
   text-align: left;
   margin-top: 0.2rem;
+}
+
+/* Photo Pixel QR Specific Styles */
+.artistic-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 600px) {
+  .artistic-preset-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.preset-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.65rem 0.4rem;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.preset-card i {
+  font-size: 1.1rem;
+  color: var(--accent-primary);
+}
+
+.preset-card:hover {
+  border-color: var(--accent-primary);
+}
+
+.preset-card.active {
+  background: rgba(99, 102, 241, 0.15);
+  border-color: var(--accent-primary);
+  color: var(--text-primary);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.2);
+}
+
+.res-pill-group {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.res-pill {
+  flex: 1;
+  padding: 0.45rem 0.25rem;
+  background: var(--input-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.res-pill.active {
+  background: var(--accent-primary);
+  color: #fff;
+  border-color: var(--accent-primary);
+}
+
+.scan-alert-banner {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  border-radius: var(--radius-md);
+  padding: 0.6rem 0.85rem;
+  color: var(--warning);
+  font-size: 0.78rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+  text-align: left;
+}
+
+#photoPixelCanvas {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: var(--radius-sm);
+  display: block;
 }
 
 /* Right Column: Preview Panel */
