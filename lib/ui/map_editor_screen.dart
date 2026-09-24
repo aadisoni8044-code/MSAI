@@ -7,7 +7,6 @@ import 'package:enchanted_forest_adventure/core/character_progress_controller.da
 import 'package:enchanted_forest_adventure/models/custom_map_data.dart';
 import 'package:enchanted_forest_adventure/models/character_data.dart';
 import 'package:enchanted_forest_adventure/models/level_data.dart';
-import 'package:enchanted_forest_adventure/models/player_state.dart';
 import 'package:enchanted_forest_adventure/rendering/character_render_helper.dart';
 import 'package:enchanted_forest_adventure/ui/custom_map_game_screen.dart';
 
@@ -64,6 +63,9 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
   bool _isDraggingEntity = false;
   ResizeHandle _activeResizeHandle = ResizeHandle.none;
 
+  // Preview placement position for single-click / single-tap preview
+  Offset? _previewPlacementPos;
+
   // Bottom Toolbar Panel Collapse
   bool _isToolbarCollapsed = false;
 
@@ -119,6 +121,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
       setState(() {
         _map.entities = previous.map((e) => e.copyWith()).toList();
         _selectedEntityId = null;
+        _previewPlacementPos = null;
       });
       _showMessage('Undo applied', success: true);
     }
@@ -131,6 +134,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
       setState(() {
         _map.entities = next.map((e) => e.copyWith()).toList();
         _selectedEntityId = null;
+        _previewPlacementPos = null;
       });
       _showMessage('Redo applied', success: true);
     }
@@ -250,6 +254,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
       setState(() {
         _map.playerStartX = x;
         _map.playerStartY = y;
+        _previewPlacementPos = null;
       });
       _showMessage('Player Start set to (${x.toInt()}, ${y.toInt()})');
       return;
@@ -257,6 +262,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
       setState(() {
         _map.finishX = x;
         _map.finishY = y;
+        _previewPlacementPos = null;
       });
       _showMessage('Finish Portal set to (${x.toInt()}, ${y.toInt()})');
       return;
@@ -424,6 +430,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
     setState(() {
       _map.entities.add(newEntity);
       _selectedEntityId = entityId;
+      _previewPlacementPos = null;
     });
     _saveHistoryState();
   }
@@ -451,6 +458,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
       setState(() {
         _map.entities.add(duplicate);
         _selectedEntityId = newId;
+        _previewPlacementPos = null;
       });
       _saveHistoryState();
       _showMessage('Object duplicated & selected');
@@ -544,7 +552,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
               child: Stack(
                 children: [
                   GestureDetector(
-                    onPanDown: (details) {
+                    onTapDown: (details) {
                       final localPos = details.localPosition;
                       final worldPos = Offset(localPos.dx + _scrollX, localPos.dy + _scrollY);
 
@@ -567,6 +575,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                             _selectedEntityId = e.id;
                             _isDraggingEntity = true;
                             _activeResizeHandle = ResizeHandle.none;
+                            _previewPlacementPos = null;
                           });
                           return;
                         }
@@ -586,14 +595,39 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                         return;
                       }
 
-                      // Tapped blank canvas -> Deselect or place new entity
-                      if (_selectedEntityId != null) {
-                        setState(() {
-                          _selectedEntityId = null;
-                        });
-                      } else {
-                        _addNewEntity(localPos);
+                      // Tapped blank canvas -> SINGLE CLICK/TAP ONLY PREVIEWS LOCATION (DOES NOT PLACE)
+                      setState(() {
+                        _selectedEntityId = null;
+                        _previewPlacementPos = localPos;
+                      });
+                    },
+                    onDoubleTapDown: (details) {
+                      final localPos = details.localPosition;
+                      final worldPos = Offset(localPos.dx + _scrollX, localPos.dy + _scrollY);
+
+                      // Ensure double interaction was not on a resize handle or existing object
+                      if (selectedEntity != null) {
+                        final handle = _hitTestResizeHandles(selectedEntity, worldPos);
+                        if (handle != ResizeHandle.none) return;
                       }
+
+                      for (int i = _map.entities.length - 1; i >= 0; i--) {
+                        final e = _map.entities[i];
+                        final rect = Rect.fromLTWH(e.x, e.y, e.width, e.height);
+                        if (rect.contains(worldPos)) return;
+                      }
+
+                      final pStartRect = Rect.fromLTWH(_map.playerStartX - 25, _map.playerStartY - 50, 50, 70);
+                      if (pStartRect.contains(worldPos)) return;
+
+                      final finishRect = Rect.fromLTWH(_map.finishX - 30, _map.finishY - 60, 60, 90);
+                      if (finishRect.contains(worldPos)) return;
+
+                      // DOUBLE CLICK / DOUBLE TAP -> PLACES EXACTLY ONE OBJECT!
+                      _addNewEntity(localPos);
+                    },
+                    onDoubleTap: () {
+                      // Handled via onDoubleTapDown to access exact tap coordinates
                     },
                     onPanUpdate: (details) {
                       if (selectedEntity != null && _activeResizeHandle != ResizeHandle.none) {
@@ -615,6 +649,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                         setState(() {
                           _scrollX = (_scrollX - details.delta.dx).clamp(0.0, max(0.0, _map.worldWidth - screenSize.width));
                           _scrollY = (_scrollY - details.delta.dy).clamp(0.0, max(0.0, _map.worldHeight - (screenSize.height - 180)));
+                          _previewPlacementPos = null; // Clear preview location while dragging/panning
                         });
                       }
                     },
@@ -632,6 +667,8 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                         scrollX: _scrollX,
                         scrollY: _scrollY,
                         selectedEntityId: _selectedEntityId,
+                        previewPlacementPos: _previewPlacementPos,
+                        activeToolType: _activeToolType,
                         gridSnap: _gridSnap,
                         gridSize: _gridSize,
                         time: _time,
@@ -1190,6 +1227,7 @@ class _MapEditorScreenState extends State<MapEditorScreen> with SingleTickerProv
                 setState(() {
                   _map.entities.clear();
                   _selectedEntityId = null;
+                  _previewPlacementPos = null;
                 });
                 _saveHistoryState();
                 _showMessage('Cleared all objects');
@@ -1256,6 +1294,8 @@ class MapEditorCanvasPainter extends CustomPainter {
   final double scrollX;
   final double scrollY;
   final String? selectedEntityId;
+  final Offset? previewPlacementPos;
+  final String activeToolType;
   final bool gridSnap;
   final double gridSize;
   final double time;
@@ -1266,6 +1306,8 @@ class MapEditorCanvasPainter extends CustomPainter {
     required this.scrollX,
     required this.scrollY,
     required this.selectedEntityId,
+    required this.previewPlacementPos,
+    required this.activeToolType,
     required this.gridSnap,
     required this.gridSize,
     required this.time,
@@ -1320,13 +1362,172 @@ class MapEditorCanvasPainter extends CustomPainter {
       }
     }
 
-    // 4. Render Real Player Character at Player Start Position
+    // 4. Render Placement Preview Ghost (Single Tap / Click Preview)
+    if (previewPlacementPos != null && selectedEntityId == null) {
+      _drawPlacementPreviewGhost(canvas);
+    }
+
+    // 5. Render Real Player Character at Player Start Position
     _drawPlayerStartCharacter(canvas);
 
-    // 5. Render Real Finish Portal
+    // 6. Render Real Finish Portal
     _drawFinishPortal(canvas);
 
     canvas.restore();
+  }
+
+  void _drawPlacementPreviewGhost(Canvas canvas) {
+    if (previewPlacementPos == null) return;
+
+    double x = previewPlacementPos!.dx + scrollX;
+    double y = previewPlacementPos!.dy + scrollY;
+
+    if (gridSnap) {
+      x = (x / gridSize).round() * gridSize;
+      y = (y / gridSize).round() * gridSize;
+    }
+
+    late double width;
+    late double height;
+
+    switch (activeToolType) {
+      case 'ground_grass':
+      case 'ground_dirt':
+      case 'ground_stone':
+        width = 400;
+        height = 100;
+        break;
+      case 'platform_small':
+        width = 120;
+        height = 28;
+        break;
+      case 'platform_medium':
+        width = 180;
+        height = 28;
+        break;
+      case 'platform_large':
+        width = 260;
+        height = 28;
+        break;
+      case 'platform_moving':
+        width = 140;
+        height = 28;
+        break;
+      case 'platform_slippery':
+        width = 180;
+        height = 28;
+        break;
+      case 'enemy_slime':
+        width = 36;
+        height = 32;
+        break;
+      case 'enemy_shadow':
+      case 'enemy_fire':
+      case 'enemy_ice':
+      case 'enemy_toxic':
+        width = 40;
+        height = 40;
+        break;
+      case 'item_coin':
+        width = 22;
+        height = 22;
+        break;
+      case 'item_health_pot':
+        width = 24;
+        height = 28;
+        break;
+      case 'item_checkpoint':
+        width = 44;
+        height = 60;
+        break;
+      case 'hazard_spike':
+        width = 80;
+        height = 20;
+        break;
+      case 'hazard_lava':
+      case 'hazard_poison':
+        width = 300;
+        height = 60;
+        break;
+      case 'hazard_lightning':
+        width = 100;
+        height = 24;
+        break;
+      case 'decor_tree':
+        width = 80;
+        height = 120;
+        break;
+      case 'decor_rock':
+        width = 50;
+        height = 30;
+        break;
+      case 'decor_bush':
+        width = 60;
+        height = 36;
+        break;
+      case 'decor_flower':
+        width = 28;
+        height = 28;
+        break;
+      case 'decor_crystal':
+        width = 32;
+        height = 44;
+        break;
+      case 'decor_ruin':
+        width = 70;
+        height = 80;
+        break;
+      case 'decor_lamp':
+        width = 28;
+        height = 60;
+        break;
+      case 'decor_sign':
+        width = 32;
+        height = 38;
+        break;
+      case 'special_player_start':
+        width = 40;
+        height = 60;
+        break;
+      case 'special_finish':
+        width = 60;
+        height = 80;
+        break;
+      default:
+        width = 180;
+        height = 28;
+    }
+
+    final previewRect = Rect.fromLTWH(x, y, width, height);
+
+    // Subtle pulsating ghost outline
+    final double pulse = 0.6 + 0.4 * sin(time * 6);
+    final ghostPaint = Paint()
+      ..color = const Color(0xFF38BDF8).withValues(alpha: 0.35 * pulse)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRRect(RRect.fromRectAndRadius(previewRect, const Radius.circular(8)), ghostPaint);
+
+    final borderPaint = Paint()
+      ..color = const Color(0xFF80FFDB).withValues(alpha: 0.8 * pulse)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.8;
+
+    canvas.drawRRect(RRect.fromRectAndRadius(previewRect, const Radius.circular(8)), borderPaint);
+
+    // Label Badge "TAP / DOUBLE-CLICK TO PLACE"
+    final TextPainter tp = TextPainter(
+      text: const TextSpan(
+        text: 'DOUBLE TAP TO PLACE',
+        style: TextStyle(color: Color(0xFF80FFDB), fontSize: 8.5, fontWeight: FontWeight.bold, letterSpacing: 0.6),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+
+    final double bannerW = tp.width + 10;
+    final Rect bannerRect = Rect.fromLTWH(previewRect.left + previewRect.width / 2 - bannerW / 2, previewRect.top - 18, bannerW, 14);
+    canvas.drawRRect(RRect.fromRectAndRadius(bannerRect, const Radius.circular(4)), Paint()..color = const Color(0xEE0F172A));
+    tp.paint(canvas, Offset(bannerRect.left + 5, bannerRect.top + 1));
   }
 
   void _drawSelectionBoundingBoxAndHandles(Canvas canvas, Rect rect) {

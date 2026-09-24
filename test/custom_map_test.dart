@@ -146,6 +146,37 @@ void main() {
       expect(find.byIcon(Icons.undo_rounded), findsOneWidget);
     });
 
+    testWidgets('MapEditorScreen double-interaction placement requirement', (WidgetTester tester) async {
+      final controller = CustomMapProgressController.instance;
+      final map = await controller.createNewBlankMap(name: 'Double Tap Test Map');
+      map.entities.clear(); // Start with empty map
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MapEditorScreen(mapData: map),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(map.entities.length, equals(0));
+
+      // Single tap on blank canvas -> Should NOT create object
+      final canvasFinder = find.byType(CustomPaint).first;
+      await tester.tap(canvasFinder);
+      await tester.pump(const Duration(milliseconds: 500)); // Wait past double-tap threshold
+
+      expect(map.entities.length, equals(0));
+
+      // Double tap sequence on blank canvas
+      await tester.tap(canvasFinder);
+      await tester.pump(const Duration(milliseconds: 40));
+      await tester.tap(canvasFinder);
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(map.entities.length, equals(1));
+    });
+
     testWidgets('CustomMapGameScreen converts CustomMapData and initializes game', (WidgetTester tester) async {
       final controller = CustomMapProgressController.instance;
       final map = await controller.createNewBlankMap(name: 'Playable Map');
