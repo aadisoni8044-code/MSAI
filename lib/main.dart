@@ -5,7 +5,7 @@ import 'package:enchanted_forest_adventure/core/character_progress_controller.da
 import 'package:enchanted_forest_adventure/core/level_progress_controller.dart';
 import 'package:enchanted_forest_adventure/core/zombie_progress_controller.dart';
 import 'package:enchanted_forest_adventure/core/custom_map_progress_controller.dart';
-import 'package:enchanted_forest_adventure/ui/main_menu_screen.dart';
+import 'package:enchanted_forest_adventure/ui/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +37,7 @@ class EnchantedForestApp extends StatelessWidget {
         scaffoldBackgroundColor: GameColors.skyBackground,
         useMaterial3: true,
       ),
-      home: const MainMenuScreen(),
+      home: const SplashScreen(),
     );
   }
 }
