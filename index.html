@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sylvan Whispers: Dark Fantasy 2D Adventure Game</title>
+    <meta name="description" content="Experience Sylvan Whispers - A premium 2D dark fantasy adventure game featuring 10 levels, Zombie survival mode, map creator, character shop with 50 characters, and custom maps. Download for Windows and Android.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <header class="navbar-header" id="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <span class="logo-icon">⚔️</span>
+                <span class="logo-text">SYLVAN <span class="highlight">WHISPERS</span></span>
+            </a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="#hero" class="nav-link active">Home</a>
+                <a href="#adventures" class="nav-link">Adventures</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#download" class="nav-link nav-btn-cta">Download</a>
+            </nav>
+
+            <button class="mobile-menu-toggle" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+                <span class="hamburger-bar"></span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+
+    <!-- Main Content Container -->
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section" id="hero">
+            <!-- Background Video & Overlay Container -->
+            <div class="video-background-container">
+                <video id="bgVideo" autoplay loop muted playsinline preload="auto">
+                    <source src="a.mp4" type="video/mp4">
+                    Your browser does not support HTML5 video playback.
+                </video>
+                <div class="video-overlay"></div>
+            </div>
+
+            <!-- Floating Sound Toggle Control -->
+            <button class="sound-control-btn" id="soundToggleBtn" aria-label="Toggle Sound">
+                <span class="sound-icon" id="soundIcon">🔇</span>
+                <span class="sound-text" id="soundText">Sound Off</span>
+            </button>
+
+            <!-- Hero Main Banner Content -->
+            <div class="hero-content">
+                <div class="game-badge">🔥 2D DARK FANTASY ADVENTURE</div>
+                <h1 class="hero-title">PLAY THE <span class="text-gradient">ADVENTURE</span></h1>
+                <p class="hero-description">
+                    A 2D fantasy adventure game with multiple game modes, levels, zombies, custom maps and more.
+                </p>
+                <div class="hero-actions">
+                    <a href="#download" class="btn btn-primary btn-glow">
+                        <span class="btn-icon">⚡</span>
+                        <span>DOWNLOAD GAME</span>
+                    </a>
+                    <a href="#adventures" class="btn btn-secondary">
+                        <span class="btn-icon">🎮</span>
+                        <span>EXPLORE MODES</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="scroll-down-indicator">
+                <a href="#download" aria-label="Scroll to Downloads">
+                    <span class="mouse-icon"></span>
+                    <span class="arrow-down"></span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Download Section -->
+        <section class="download-section section-padding" id="download">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">GET READY TO PLAY</span>
+                    <h2 class="section-title">DOWNLOAD <span class="text-gradient">SYLVAN WHISPERS</span></h2>
+                    <p class="section-description">Choose your platform below to download the latest full release for free and start your epic fantasy adventure.</p>
+                </div>
+
+                <div class="download-grid">
+                    <!-- Windows Download Card -->
+                    <div class="download-card glass-card">
+                        <div class="card-badge">PC GAMING</div>
+                        <div class="card-platform-icon">
+                            <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
+                                <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.8"/>
+                            </svg>
+                        </div>
+                        <h3 class="platform-name">Windows</h3>
+                        <div class="file-info-box">
+                            <span class="file-label">File name:</span>
+                            <span class="file-name-tag">aa.exe</span>
+                        </div>
+                        <ul class="platform-features">
+                            <li><span class="check-icon">✓</span> Native 60 FPS Desktop Performance</li>
+                            <li><span class="check-icon">✓</span> Full Keyboard & Mouse Controls</li>
+                            <li><span class="check-icon">✓</span> HD Graphics & Visual Effects</li>
+                        </ul>
+                        <a href="aa.exe" download="aa.exe" class="btn btn-download btn-windows">
+                            <span class="btn-icon">💾</span>
+                            <span>DOWNLOAD FOR WINDOWS</span>
+                        </a>
+                    </div>
+
+                    <!-- Android Download Card -->
+                    <div class="download-card glass-card highlighted-card">
+                        <div class="card-badge badge-mobile">MOBILE</div>
+                        <div class="card-platform-icon">
+                            <svg viewBox="0 0 24 24" width="48" height="48" fill="currentColor">
+                                <path d="M17.525 9.421l1.523-2.638a.562.562 0 0 0-.206-.768.563.563 0 0 0-.768.206l-1.55 2.685C14.928 8.188 13.5 7.75 12 7.75s-2.928.438-4.524 1.156L5.926 6.221a.563.563 0 0 0-.768-.206.562.562 0 0 0-.206.768l1.523 2.638C3.89 11.026 2 13.882 2 17.25h20c0-3.368-1.89-6.224-4.475-7.829zM8.5 13.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2zm7 0a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="platform-name">Android</h3>
+                        <div class="file-info-box">
+                            <span class="file-label">File name:</span>
+                            <span class="file-name-tag">aa.apk</span>
+                        </div>
+                        <ul class="platform-features">
+                            <li><span class="check-icon">✓</span> Optimized Touch Controls & Joysticks</li>
+                            <li><span class="check-icon">✓</span> Offline Play Anywhere</li>
+                            <li><span class="check-icon">✓</span> Full Game Modes & Map Editor</li>
+                        </ul>
+                        <a href="aa.apk" download="aa.apk" class="btn btn-download btn-android">
+                            <span class="btn-icon">📲</span>
+                            <span>DOWNLOAD FOR ANDROID</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Adventures / Game Modes Showcase Section -->
+        <section class="adventures-section section-padding" id="adventures">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">UNLIMITED ACTION</span>
+                    <h2 class="section-title">EPIC GAME <span class="text-gradient">MODES</span></h2>
+                    <p class="section-description">Immerse yourself in multiple dark fantasy game modes designed to test your combat and strategy skills.</p>
+                </div>
+
+                <div class="adventures-grid">
+                    <div class="adventure-card glass-card">
+                        <div class="adventure-icon">🌲</div>
+                        <h3>10 Adventure Levels</h3>
+                        <p>Embark on a story-driven journey across 10 hand-crafted dark forest environments filled with platforming obstacles and hidden secrets.</p>
+                    </div>
+                    <div class="adventure-card glass-card">
+                        <div class="adventure-icon">🧟</div>
+                        <h3>Zombie Survival Mode</h3>
+                        <p>Face endless waves of relentless undead hordes. Unlock air-drop supply crates and powerful weapons to survive the night.</p>
+                    </div>
+                    <div class="adventure-card glass-card">
+                        <div class="adventure-icon">🛠️</div>
+                        <h3>Create Map & Custom Maps</h3>
+                        <p>Build your own dark fantasy worlds with our built-in level creator! Place hazards, platforms, enemies, and share custom maps with friends.</p>
+                    </div>
+                    <div class="adventure-card glass-card">
+                        <div class="adventure-icon">🧙</div>
+                        <h3>Character Shop & 50 Characters</h3>
+                        <p>Unlock over 50 unique playable heroes featuring custom costumes, weapons, particle aura effects, and special abilities.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Features Section -->
+        <section class="features-section section-padding" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-subtitle">KEY HIGHLIGHTS</span>
+                    <h2 class="section-title">GAME <span class="text-gradient">FEATURES</span></h2>
+                    <p class="section-description">Discover everything Sylvan Whispers has to offer across mobile and desktop platforms.</p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-item glass-card">
+                        <div class="feature-badge">LEVELS</div>
+                        <div class="feature-icon-wrapper">🗺️</div>
+                        <h3 class="feature-title">10 Adventure Levels</h3>
+                        <p class="feature-desc">Progressive difficulty through magical woodland biomes, ancient ruins, and hazardous dungeons.</p>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-badge">SURVIVAL</div>
+                        <div class="feature-icon-wrapper">🧟</div>
+                        <h3 class="feature-title">Zombie Mode</h3>
+                        <p class="feature-desc">Battle 10 waves of dark zombies with intense combat mechanics, supply crates, and health pickups.</p>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-badge">CREATOR</div>
+                        <div class="feature-icon-wrapper">📐</div>
+                        <h3 class="feature-title">Create Map</h3>
+                        <p class="feature-desc">In-game map editor with drag-and-drop object placement, grid snapping, resizing, and instant playtesting.</p>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-badge">SHOP</div>
+                        <div class="feature-icon-wrapper">🏛️</div>
+                        <h3 class="feature-title">Character Shop</h3>
+                        <p class="feature-desc">Spend earned coins to collect heroes, customize hairstyles, armor, weapons, and particle trails.</p>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-badge">HEROES</div>
+                        <div class="feature-icon-wrapper">🛡️</div>
+                        <h3 class="feature-title">50 Characters</h3>
+                        <p class="feature-desc">A massive roster of 50 customizable characters with varied weapons, hairstyles, and elemental aura effects.</p>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-badge">PUZZLE</div>
+                        <div class="feature-icon-wrapper">🧮</div>
+                        <h3 class="feature-title">Maths Mode</h3>
+                        <p class="feature-desc">Engaging brain-teasing mathematical puzzles integrated directly into adventure portal progression.</p>
+                    </div>
+
+                    <div class="feature-item glass-card">
+                        <div class="feature-badge">COMMUNITY</div>
+                        <div class="feature-icon-wrapper">🗺️</div>
+                        <h3 class="feature-title">Custom Maps</h3>
+                        <p class="feature-desc">Save, load, and play custom maps built by you or imported from the community dataset.</p>
+                    </div>
+
+                    <div class="feature-item glass-card feature-coming-soon">
+                        <div class="feature-badge badge-glow">UPCOMING</div>
+                        <div class="feature-icon-wrapper">✨</div>
+                        <h3 class="feature-title">More Adventures Coming Soon</h3>
+                        <p class="feature-desc">Stay tuned for new expansion chapters, multiplayer co-op modes, and seasonal dark fantasy events!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="game-footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="footer-logo">
+                    <span class="logo-icon">⚔️</span>
+                    <span class="logo-text">SYLVAN <span class="highlight">WHISPERS</span></span>
+                </div>
+                <p class="footer-copyright">© 2026 Sylvan Whispers. All rights reserved.</p>
+            </div>
+
+            <div class="footer-nav">
+                <a href="#hero">Home</a>
+                <a href="#download">Download</a>
+                <a href="#adventures">Adventures</a>
+                <a href="#features">Features</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
