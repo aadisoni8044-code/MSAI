@@ -63,7 +63,7 @@ class _SplashScreenState extends State<SplashScreen>
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
-                radialGradient: RadialGradient(
+                gradient: RadialGradient(
                   center: Alignment.center,
                   radius: 0.85,
                   colors: [

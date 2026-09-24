@@ -26,4 +26,5 @@ flutter:
   assets:
     - assets/audio/background.wav
     - assets/audio/zombie/
+    - assets/images/a.png
     - assets/images/
