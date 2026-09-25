@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER RIFT 3D — Ultimate Action Adventure Experience</title>
+    <meta name="description" content="Download CYBER RIFT 3D for Android and Windows. Experience high-octane 3D gameplay, stunning graphics, and intense survival action.">
+    <!-- Google Fonts for Modern Gaming Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Particle & Ambient Light Canvas -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Navigation Bar -->
+    <header class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#home" class="nav-logo">
+                <img src="images/logo.png" alt="CYBER RIFT 3D Logo" class="logo-img">
+            </a>
+
+            <nav class="nav-menu" id="navMenu">
+                <a href="#home" class="nav-link active">HOME</a>
+                <a href="#game" class="nav-link">GAME</a>
+                <a href="#features" class="nav-link">FEATURES</a>
+                <a href="#videos" class="nav-link">VIDEOS</a>
+                <a href="#download" class="nav-link">DOWNLOAD</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="#download" class="btn btn-nav-download btn-glow">
+                    <span>GET GAME</span>
+                </a>
+                <button class="hamburger" id="hamburger" aria-label="Toggle Navigation Menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-section">
+        <!-- Background Video Container with Fallback & Overlays -->
+        <div class="hero-video-wrapper">
+            <video id="heroVideo" autoplay muted playsinline loop class="hero-bg-video">
+                <source src="a.mp4" type="video/mp4">
+                <source src="b.mp4" type="video/mp4">
+                Your browser does not support HTML5 video.
+            </video>
+            <div class="hero-overlay"></div>
+            <div class="hero-grid-overlay"></div>
+        </div>
+
+        <!-- Sound Unmute Control -->
+        <button id="soundToggleBtn" class="sound-toggle-btn glass-card" aria-label="Toggle Sound">
+            <span class="sound-icon" id="soundIcon">🔇</span>
+            <span class="sound-text" id="soundText">Sound Off</span>
+        </button>
+
+        <!-- Hero Main 3D Card -->
+        <div class="hero-content-wrapper">
+            <div class="hero-3d-card glass-card tilt-card" data-tilt>
+                <div class="card-glow-effect"></div>
+                <div class="badge-tag">NEXT-GEN 3D ACTION</div>
+
+                <div class="hero-logo-wrapper">
+                    <img src="images/logo.png" alt="CYBER RIFT 3D" class="hero-logo-img">
+                </div>
+
+                <h1 class="hero-title">CYBER RIFT 3D</h1>
+                <p class="hero-description">Play the ultimate action adventure experience.</p>
+
+                <div class="hero-cta-group">
+                    <a href="#videos" class="btn btn-primary btn-3d btn-glow">
+                        <span class="btn-icon">▶</span>
+                        <span>PLAY / WATCH GAMEPLAY</span>
+                    </a>
+
+                    <a href="./aa.apk" class="btn btn-secondary btn-3d download-btn" data-file="aa.apk" data-platform="Android">
+                        <span class="btn-icon">🤖</span>
+                        <span>DOWNLOAD ANDROID</span>
+                    </a>
+
+                    <a href="./aa.exe" class="btn btn-tertiary btn-3d download-btn" data-file="aa.exe" data-platform="Windows">
+                        <span class="btn-icon">🪟</span>
+                        <span>DOWNLOAD WINDOWS</span>
+                    </a>
+                </div>
+
+                <div class="hero-meta">
+                    <span class="meta-item"><i class="dot online"></i> Free to Play</span>
+                    <span class="meta-item">⚡ High Performance</span>
+                    <span class="meta-item">🎮 Touch & Gamepad Ready</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="scroll-indicator">
+            <div class="mouse-icon">
+                <div class="wheel"></div>
+            </div>
+            <span>SCROLL TO EXPLORE</span>
+        </div>
+    </section>
+
+    <!-- Game Section -->
+    <section id="game" class="section game-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">THE WORLD OF CYBER RIFT</span>
+                <h2 class="section-title text-gradient">IMMERSIVE 3D GAMEPLAY</h2>
+                <div class="section-divider"></div>
+                <p class="section-desc">
+                    Step into an expansive sci-fi universe rendered in breathtaking 3D. Battle ruthless futuristic adversaries, master high-tech weaponry, and uncover secret rift dimensions across rich atmospheric environments.
+                </p>
+            </div>
+
+            <!-- Platform Support Badges -->
+            <div class="platform-bar glass-card">
+                <div class="platform-item">
+                    <span class="platform-icon">🤖</span>
+                    <div class="platform-info">
+                        <h4>ANDROID EDITION</h4>
+                        <p>Android 8.0+ | Touch & Virtual Joystick | Optimized 60 FPS</p>
+                    </div>
+                </div>
+                <div class="platform-divider"></div>
+                <div class="platform-item">
+                    <span class="platform-icon">🪟</span>
+                    <div class="platform-info">
+                        <h4>WINDOWS EDITION</h4>
+                        <p>Windows 10/11 | Keyboard & Controller | Ultra HD 120 FPS</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3D Interactive Screenshot Cards -->
+            <div class="screenshot-grid">
+                <div class="screenshot-card glass-card tilt-card" data-tilt>
+                    <div class="card-image-wrapper">
+                        <img src="images/game1.png" alt="Combat Arena 3D" class="screenshot-img">
+                        <div class="card-image-overlay"></div>
+                        <span class="card-tag">COMBAT ARENA</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Intense 3D Arena Battles</h3>
+                        <p>Master fluid directional combat, spell chaining, and visceral finishing strikes against formidable futuristic bosses.</p>
+                    </div>
+                </div>
+
+                <div class="screenshot-card glass-card tilt-card" data-tilt>
+                    <div class="card-image-wrapper">
+                        <img src="images/game2.png" alt="Open World Exploration" class="screenshot-img">
+                        <div class="card-image-overlay"></div>
+                        <span class="card-tag">EXPLORATION</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Expansive Sci-Fi Realms</h3>
+                        <p>Traverse interconnected neon megacities, subterranean rift vaults, and mysterious cybernetic wildernesses.</p>
+                    </div>
+                </div>
+
+                <div class="screenshot-card glass-card tilt-card" data-tilt>
+                    <div class="card-image-wrapper">
+                        <img src="images/game3.png" alt="Zombie Survival Mode" class="screenshot-img">
+                        <div class="card-image-overlay"></div>
+                        <span class="card-tag">ZOMBIE SURVIVAL</span>
+                    </div>
+                    <div class="card-content">
+                        <h3>Wave Survival & Outbreaks</h3>
+                        <p>Survive infinite waves of mutated cyber-zombies with tactical supply drops, fortifications, and elite heavy artillery.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="section features-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">CORE GAME FEATURES</span>
+                <h2 class="section-title text-gradient">ENGINEERED FOR ADRENALINE</h2>
+                <div class="section-divider"></div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card glass-card tilt-card" data-tilt>
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">⚔️</span>
+                    </div>
+                    <h3>ACTION GAMEPLAY</h3>
+                    <p>High-speed combo mechanics, evasive dashes, and dynamic camera choreography bring every battle to life with visceral weight.</p>
+                </div>
+
+                <div class="feature-card glass-card tilt-card" data-tilt>
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🎮</span>
+                    </div>
+                    <h3>SMOOTH CONTROLS</h3>
+                    <p>Customizable virtual joysticks for mobile alongside native gamepad and keyboard bindings with ultra-low input latency.</p>
+                </div>
+
+                <div class="feature-card glass-card tilt-card" data-tilt>
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🧟</span>
+                    </div>
+                    <h3>ZOMBIE MODE</h3>
+                    <p>Face relentless wave survival challenges, summon air-drop weaponry, and test your endurance against specialized mutated horde bosses.</p>
+                </div>
+
+                <div class="feature-card glass-card tilt-card" data-tilt>
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🗺️</span>
+                    </div>
+                    <h3>LARGE LEVELS</h3>
+                    <p>Explore multi-layered 3D maps packed with hidden rift secrets, interactive hazards, portals, and vertical exploration paths.</p>
+                </div>
+
+                <div class="feature-card glass-card tilt-card" data-tilt>
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🏆</span>
+                    </div>
+                    <h3>CHALLENGES</h3>
+                    <p>Earn unique achievements, complete daily survival missions, and climb global leaderboard rankings with elite combat scores.</p>
+                </div>
+
+                <div class="feature-card glass-card tilt-card" data-tilt>
+                    <div class="feature-icon-wrapper">
+                        <span class="feature-icon">🎨</span>
+                    </div>
+                    <h3>CUSTOM CHARACTERS</h3>
+                    <p>Personalize your hero with custom armor shaders, glowing energy aura particle effects, cybernetic headgear, and weapon skins.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section id="videos" class="section videos-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">CINEMATIC SHOWCASE</span>
+                <h2 class="section-title text-gradient">GAMEPLAY TRAILERS</h2>
+                <div class="section-divider"></div>
+                <p class="section-desc">Experience real-time gameplay footage captured directly from the game engine.</p>
+            </div>
+
+            <!-- Main Interactive Video Theater -->
+            <div class="video-theater-container glass-card">
+                <div class="video-display-wrapper" id="videoDisplayWrapper">
+                    <video id="theaterVideo" class="theater-video" preload="metadata" playsinline muted loop>
+                        <source id="theaterVideoSource" src="a.mp4" type="video/mp4">
+                        Your browser does not support HTML5 video.
+                    </video>
+
+                    <!-- Overlay Controls -->
+                    <div class="video-controls-overlay">
+                        <div class="video-status-badge" id="videoStatusBadge">NOW PLAYING: TRAILER ALPHA (a.mp4)</div>
+                        <div class="video-control-buttons">
+                            <button id="theaterPlayBtn" class="control-btn" aria-label="Play or Pause Video">
+                                <span class="ctrl-icon">▶</span> <span class="ctrl-label">PLAY</span>
+                            </button>
+                            <button id="theaterMuteBtn" class="control-btn" aria-label="Mute or Unmute Audio">
+                                <span class="ctrl-icon">🔇</span> <span class="ctrl-label">UNMUTE</span>
+                            </button>
+                            <button id="theaterFullscreenBtn" class="control-btn" aria-label="Fullscreen Video">
+                                <span class="ctrl-icon">⛶</span> <span class="ctrl-label">FULLSCREEN</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Selection Tabs / Switcher Cards -->
+                <div class="trailer-selector-grid">
+                    <div class="trailer-card glass-card active" data-src="a.mp4" data-title="TRAILER ALPHA (a.mp4)">
+                        <div class="trailer-thumb-icon">🎬</div>
+                        <div class="trailer-info">
+                            <h4>CINEMATIC TRAILER A</h4>
+                            <p>Official Teaser & Combat Mechanics (a.mp4)</p>
+                        </div>
+                        <span class="trailer-badge">ACTIVE</span>
+                    </div>
+
+                    <div class="trailer-card glass-card" data-src="b.mp4" data-title="TRAILER BETA (b.mp4)">
+                        <div class="trailer-thumb-icon">🔥</div>
+                        <div class="trailer-info">
+                            <h4>GAMEPLAY TRAILER B</h4>
+                            <p>Zombie Survival & Level Showcase (b.mp4)</p>
+                        </div>
+                        <span class="trailer-badge">SELECT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section id="download" class="section download-section">
+        <div class="container">
+            <div class="section-header text-center">
+                <span class="section-subtitle">READY TO PLAY?</span>
+                <h2 class="section-title text-gradient">DOWNLOAD CYBER RIFT 3D</h2>
+                <div class="section-divider"></div>
+                <p class="section-desc">Select your preferred platform below to start downloading immediately.</p>
+            </div>
+
+            <div class="download-cards-grid">
+                <!-- Android Download Card -->
+                <div class="download-card platform-android glass-card tilt-card" data-tilt>
+                    <div class="platform-badge-top">APK</div>
+                    <div class="download-icon-wrapper">
+                        <span class="platform-big-icon">🤖</span>
+                    </div>
+                    <h3 class="platform-name">ANDROID</h3>
+                    <p class="download-subtitle">Download the Android version</p>
+
+                    <div class="file-details">
+                        <div class="detail-row">
+                            <span>File Name:</span> <strong>aa.apk</strong>
+                        </div>
+                        <div class="detail-row">
+                            <span>File Type:</span> <strong>APK (Android Package)</strong>
+                        </div>
+                        <div class="detail-row">
+                            <span>Version:</span> <strong>v1.0.4 Premium</strong>
+                        </div>
+                    </div>
+
+                    <a href="./aa.apk" class="btn btn-download-primary download-btn" data-file="aa.apk" data-platform="Android">
+                        <span class="btn-icon">📥</span>
+                        <span>DOWNLOAD FOR ANDROID</span>
+                    </a>
+
+                    <div class="secondary-btn-wrapper">
+                        <a href="./aa.apk" class="btn btn-download-sub download-btn" data-file="aa.apk" data-platform="Android">
+                            DOWNLOAD APK
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Windows Download Card -->
+                <div class="download-card platform-windows glass-card tilt-card" data-tilt>
+                    <div class="platform-badge-top">EXE</div>
+                    <div class="download-icon-wrapper">
+                        <span class="platform-big-icon">🪟</span>
+                    </div>
+                    <h3 class="platform-name">WINDOWS</h3>
+                    <p class="download-subtitle">Download the Windows version</p>
+
+                    <div class="file-details">
+                        <div class="detail-row">
+                            <span>File Name:</span> <strong>aa.exe</strong>
+                        </div>
+                        <div class="detail-row">
+                            <span>File Type:</span> <strong>EXE (Windows Installer)</strong>
+                        </div>
+                        <div class="detail-row">
+                            <span>Version:</span> <strong>v1.0.4 PC Edition</strong>
+                        </div>
+                    </div>
+
+                    <a href="./aa.exe" class="btn btn-download-primary download-btn" data-file="aa.exe" data-platform="Windows">
+                        <span class="btn-icon">📥</span>
+                        <span>DOWNLOAD FOR WINDOWS</span>
+                    </a>
+
+                    <div class="secondary-btn-wrapper">
+                        <a href="./aa.exe" class="btn btn-download-sub download-btn" data-file="aa.exe" data-platform="Windows">
+                            DOWNLOAD EXE
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <img src="images/logo.png" alt="CYBER RIFT 3D" class="footer-logo">
+                    <p>The ultimate action adventure 3D gaming experience. Available now on Android and Windows.</p>
+                </div>
+
+                <div class="footer-links">
+                    <h4>QUICK LINKS</h4>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#game">Game Info</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#videos">Trailers</a></li>
+                        <li><a href="#download">Downloads</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-downloads">
+                    <h4>DIRECT DOWNLOADS</h4>
+                    <ul>
+                        <li><a href="./aa.apk" class="download-btn" data-file="aa.apk" data-platform="Android">Android Package (aa.apk)</a></li>
+                        <li><a href="./aa.exe" class="download-btn" data-file="aa.exe" data-platform="Windows">Windows Executable (aa.exe)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 CYBER RIFT 3D. All Rights Reserved. Created with HTML5, CSS3 & JavaScript.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container for Download Messages -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
