@@ -1,0 +1,18 @@
+[14:01:42] === Starting Kora Build Process ===
+[14:01:42] Project: TestApp (/tmp/tmppllfdh3w)
+[14:01:42] Selected Python Interpreter: /home/jules/.pyenv/versions/3.12.13/bin/python3
+[14:01:42]
+--- Attempt #1 using PyInstaller ---
+[14:01:43] Builder 'PyInstaller' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[14:01:43] Permission to install 'PyInstaller' was denied. Skipping this builder.
+[14:01:43]
+--- Attempt #2 using Nuitka ---
+[14:01:43] Builder 'Nuitka' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[14:01:43] Permission to install 'Nuitka' was denied. Skipping this builder.
+[14:01:43]
+--- Attempt #3 using cx_Freeze ---
+[14:01:43] Builder 'cx_Freeze' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[14:01:43] Permission to install 'cx_Freeze' was denied. Skipping this builder.
+[14:01:43]
+=== BUILD FAILED ===
+[14:01:43] All 3 build strategies failed.
