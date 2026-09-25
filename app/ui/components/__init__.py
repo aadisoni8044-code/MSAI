@@ -106,7 +106,7 @@ class Sidebar(tk.Frame):
 
             self.buttons[key] = (btn_frame, lbl, label, icon)
 
-        self.set_active("dashboard")
+        self.set_active("dashboard", notify=False)
 
         # Version Footer
         footer = tk.Frame(self, bg=self.colors.sidebar_bg)
@@ -121,7 +121,7 @@ class Sidebar(tk.Frame):
             for child in frame.winfo_children():
                 child.config(bg=bg_col)
 
-    def set_active(self, key: str):
+    def set_active(self, key: str, notify: bool = True):
         self.active_tab = key
         for k, (btn_frame, lbl, label, icon) in self.buttons.items():
             if k == key:
@@ -131,7 +131,7 @@ class Sidebar(tk.Frame):
                 btn_frame.config(bg=self.colors.sidebar_bg)
                 lbl.config(bg=self.colors.sidebar_bg, fg=self.colors.text_secondary, font=("Segoe UI", 10))
 
-        if self.on_navigate:
+        if notify and self.on_navigate:
             self.on_navigate(key)
 
 

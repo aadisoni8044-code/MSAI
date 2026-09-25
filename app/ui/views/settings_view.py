@@ -74,7 +74,8 @@ class SettingsView(tk.Frame):
         # Max Attempts
         tk.Label(grid, text="Max Automatic Attempts:", font=("Segoe UI", 9, "bold"), fg=self.colors.text_primary, bg=self.colors.card_bg).grid(row=2, column=0, sticky="w", pady=8)
         self.entry_attempts = tk.Spinbox(grid, from_=1, to=10, bg=self.colors.input_bg, fg=self.colors.text_primary, bd=1, relief=tk.FLAT, font=("Segoe UI", 9), width=10)
-        self.entry_attempts.set(self.settings.max_build_attempts)
+        self.entry_attempts.delete(0, tk.END)
+        self.entry_attempts.insert(0, str(self.settings.max_build_attempts))
         self.entry_attempts.grid(row=2, column=1, sticky="w", padx=15, pady=8)
 
         # Checkboxes
