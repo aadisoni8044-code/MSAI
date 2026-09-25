@@ -3,3 +3,5 @@
 [2026-09-25 14:03:49] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
 [2026-09-25 14:05:32] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
 [2026-09-25 14:07:04] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
+[2026-09-25 14:35:01] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
+[2026-09-25 14:35:48] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
