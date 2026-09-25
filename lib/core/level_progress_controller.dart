@@ -7,18 +7,18 @@ class LevelProgressController extends ChangeNotifier {
 
   LevelProgressController._internal();
 
-  int _highestUnlockedLevel = 1;
+  int _highestUnlockedLevel = 200;
   final Set<int> _completedLevels = {};
   bool _initialized = false;
 
-  int get highestUnlockedLevel => _highestUnlockedLevel;
+  int get highestUnlockedLevel => 200;
   Set<int> get completedLevels => Set.unmodifiable(_completedLevels);
 
   Future<void> init() async {
     if (_initialized) return;
     try {
       final prefs = await SharedPreferences.getInstance();
-      _highestUnlockedLevel = prefs.getInt('highest_unlocked_level') ?? 1;
+      _highestUnlockedLevel = prefs.getInt('highest_unlocked_level') ?? 200;
       final completedList = prefs.getStringList('completed_levels_list') ?? [];
       _completedLevels.clear();
       for (final item in completedList) {
@@ -35,7 +35,7 @@ class LevelProgressController extends ChangeNotifier {
   }
 
   bool isUnlocked(int levelNumber) {
-    return levelNumber <= _highestUnlockedLevel;
+    return true; // All 200 levels are available and playable from the beginning
   }
 
   bool isCompleted(int levelNumber) {
@@ -44,8 +44,8 @@ class LevelProgressController extends ChangeNotifier {
 
   Future<void> completeLevel(int levelNumber) async {
     _completedLevels.add(levelNumber);
-    if (levelNumber < 10 && (levelNumber + 1) > _highestUnlockedLevel) {
-      _highestUnlockedLevel = levelNumber + 1;
+    if (levelNumber > _highestUnlockedLevel) {
+      _highestUnlockedLevel = levelNumber;
     }
     notifyListeners();
 
@@ -62,7 +62,7 @@ class LevelProgressController extends ChangeNotifier {
   }
 
   Future<void> resetProgress() async {
-    _highestUnlockedLevel = 1;
+    _highestUnlockedLevel = 200;
     _completedLevels.clear();
     notifyListeners();
 

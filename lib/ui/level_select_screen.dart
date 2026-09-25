@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:enchanted_forest_adventure/core/game_colors.dart';
 import 'package:enchanted_forest_adventure/core/level_progress_controller.dart';
+import 'package:enchanted_forest_adventure/models/level_data.dart';
 
 class LevelSelectScreen extends StatefulWidget {
   final Function(int levelNumber) onSelectLevel;
@@ -37,88 +38,91 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
     }
   }
 
-  static const List<Map<String, dynamic>> _levelMetaData = [
+  static const List<Map<String, dynamic>> _themeTemplates = [
     {
-      'num': 1,
-      'formattedNum': '01',
+      'theme': LevelTheme.forest,
       'name': 'Forest',
       'icon': Icons.park_rounded,
       'gradient': [Color(0xFF0F382C), Color(0xFF1B5E4A)],
       'accent': Color(0xFF72EFDD),
     },
     {
-      'num': 2,
-      'formattedNum': '02',
+      'theme': LevelTheme.fire,
       'name': 'Fire',
       'icon': Icons.local_fire_department_rounded,
       'gradient': [Color(0xFF4A1009), Color(0xFF8B2516)],
       'accent': Color(0xFFFF6B6B),
     },
     {
-      'num': 3,
-      'formattedNum': '03',
+      'theme': LevelTheme.water,
       'name': 'Water',
       'icon': Icons.water_drop_rounded,
       'gradient': [Color(0xFF0D2847), Color(0xFF1B4978)],
       'accent': Color(0xFF4EA8DE),
     },
     {
-      'num': 4,
-      'formattedNum': '04',
+      'theme': LevelTheme.ice,
       'name': 'Ice',
       'icon': Icons.ac_unit_rounded,
       'gradient': [Color(0xFF133240), Color(0xFF28586E)],
       'accent': Color(0xFF90E0EF),
     },
     {
-      'num': 5,
-      'formattedNum': '05',
+      'theme': LevelTheme.desert,
       'name': 'Desert',
       'icon': Icons.wb_sunny_rounded,
       'gradient': [Color(0xFF4D2B0B), Color(0xFF824D1B)],
       'accent': Color(0xFFFFD166),
     },
     {
-      'num': 6,
-      'formattedNum': '06',
+      'theme': LevelTheme.thunder,
       'name': 'Thunder',
       'icon': Icons.flash_on_rounded,
       'gradient': [Color(0xFF281338), Color(0xFF4E266B)],
       'accent': Color(0xFFC77DFF),
     },
     {
-      'num': 7,
-      'formattedNum': '07',
+      'theme': LevelTheme.poison,
       'name': 'Poison',
       'icon': Icons.coronavirus_rounded,
       'gradient': [Color(0xFF251030), Color(0xFF432052)],
       'accent': Color(0xFF00F5D4),
     },
     {
-      'num': 8,
-      'formattedNum': '08',
+      'theme': LevelTheme.sky,
       'name': 'Sky',
       'icon': Icons.cloud_rounded,
       'gradient': [Color(0xFF123B59), Color(0xFF286A9C)],
       'accent': Color(0xFFBEE9E8),
     },
     {
-      'num': 9,
-      'formattedNum': '09',
+      'theme': LevelTheme.shadow,
       'name': 'Shadow',
       'icon': Icons.nights_stay_rounded,
       'gradient': [Color(0xFF0B0D19), Color(0xFF181C33)],
       'accent': Color(0xFF9B5DE5),
     },
     {
-      'num': 10,
-      'formattedNum': '10',
+      'theme': LevelTheme.crystal,
       'name': 'Crystal',
       'icon': Icons.diamond_rounded,
       'gradient': [Color(0xFF33113B), Color(0xFF6B267B)],
       'accent': Color(0xFFF72585),
     },
   ];
+
+  Map<String, dynamic> _getMetaForLevel(int lvlNum) {
+    int templateIndex = (lvlNum - 1) % 10;
+    final template = _themeTemplates[templateIndex];
+    return {
+      'num': lvlNum,
+      'formattedNum': lvlNum < 10 ? '0$lvlNum' : '$lvlNum',
+      'name': template['name'],
+      'icon': template['icon'],
+      'gradient': template['gradient'],
+      'accent': template['accent'],
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,7 +162,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                     ),
                     const SizedBox(width: 12),
                     const Text(
-                      'SELECT LEVEL',
+                      'SELECT LEVEL (1 - 200)',
                       style: TextStyle(
                         color: GameColors.uiTextLight,
                         fontSize: 18,
@@ -169,11 +173,28 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                         ],
                       ),
                     ),
+                    const Spacer(),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.black38,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: GameColors.uiGlassBorder),
+                      ),
+                      child: Text(
+                        'Completed: ${_progressController.completedLevels.length}/200',
+                        style: const TextStyle(
+                          color: GameColors.uiTextGold,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
 
-              // Level Grid
+              // Level Grid (200 Levels)
               Expanded(
                 child: GridView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -184,29 +205,17 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                     crossAxisSpacing: 12,
                     mainAxisSpacing: 12,
                   ),
-                  itemCount: 10,
+                  itemCount: 200,
                   itemBuilder: (context, index) {
-                    final meta = _levelMetaData[index];
-                    final int lvlNum = meta['num'] as int;
-                    final bool isUnlocked = _progressController.isUnlocked(lvlNum);
+                    final int lvlNum = index + 1;
+                    final meta = _getMetaForLevel(lvlNum);
                     final bool isCompleted = _progressController.isCompleted(lvlNum);
 
                     return _buildLevelCard(
                       meta: meta,
-                      isUnlocked: isUnlocked,
                       isCompleted: isCompleted,
                       onTap: () {
-                        if (isUnlocked) {
-                          widget.onSelectLevel(lvlNum);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Complete Level ${lvlNum - 1} to unlock Level $lvlNum!'),
-                              duration: const Duration(seconds: 1),
-                              backgroundColor: Colors.black87,
-                            ),
-                          );
-                        }
+                        widget.onSelectLevel(lvlNum);
                       },
                     );
                   },
@@ -221,7 +230,6 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
 
   Widget _buildLevelCard({
     required Map<String, dynamic> meta,
-    required bool isUnlocked,
     required bool isCompleted,
     required VoidCallback onTap,
   }) {
@@ -239,27 +247,20 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: isUnlocked
-                  ? gradientColors
-                  : [
-                      gradientColors[0].withValues(alpha: 0.3),
-                      gradientColors[1].withValues(alpha: 0.3),
-                    ],
+              colors: gradientColors,
             ),
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isUnlocked ? accentColor.withValues(alpha: 0.8) : Colors.white24,
-              width: isUnlocked ? 1.5 : 1.0,
+              color: accentColor.withValues(alpha: 0.8),
+              width: 1.5,
             ),
-            boxShadow: isUnlocked
-                ? [
-                    BoxShadow(
-                      color: accentColor.withValues(alpha: 0.25),
-                      blurRadius: 8,
-                      spreadRadius: -2,
-                    ),
-                  ]
-                : [],
+            boxShadow: [
+              BoxShadow(
+                color: accentColor.withValues(alpha: 0.25),
+                blurRadius: 8,
+                spreadRadius: -2,
+              ),
+            ],
           ),
           child: Padding(
             padding: const EdgeInsets.all(10),
@@ -273,7 +274,7 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                     Text(
                       meta['formattedNum'] as String,
                       style: TextStyle(
-                        color: isUnlocked ? accentColor : Colors.white38,
+                        color: accentColor,
                         fontSize: 15,
                         fontWeight: FontWeight.w900,
                         letterSpacing: 0.8,
@@ -288,8 +289,6 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                         ),
                         child: const Icon(Icons.check_rounded, color: Colors.black, size: 12),
                       )
-                    else if (!isUnlocked)
-                      const Icon(Icons.lock_rounded, color: Colors.white38, size: 16)
                     else
                       Icon(Icons.play_arrow_rounded, color: accentColor, size: 18),
                   ],
@@ -299,14 +298,14 @@ class _LevelSelectScreenState extends State<LevelSelectScreen> {
                 Icon(
                   icon,
                   size: 26,
-                  color: isUnlocked ? accentColor : Colors.white24,
+                  color: accentColor,
                 ),
 
                 // Bottom Title
                 Text(
                   meta['name'] as String,
-                  style: TextStyle(
-                    color: isUnlocked ? Colors.white : Colors.white38,
+                  style: const TextStyle(
+                    color: Colors.white,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1.0,

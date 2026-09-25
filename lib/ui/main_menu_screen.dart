@@ -106,9 +106,9 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
     final zCtrl = ZombieProgressController.instance;
     final charCtrl = CharacterProgressController.instance;
 
-    final currentLevel = lvlController.highestUnlockedLevel.clamp(1, 10);
-    final isNewGame = currentLevel == 1 && lvlController.completedLevels.isEmpty;
-    final double campaignProgress = (lvlController.completedLevels.length / 10.0).clamp(0.0, 1.0);
+    final isNewGame = lvlController.completedLevels.isEmpty;
+    final currentLevel = isNewGame ? 1 : 1;
+    final double campaignProgress = (lvlController.completedLevels.length / 200.0).clamp(0.0, 1.0);
 
     final bool isCompactHeight = screenSize.height < 480;
     final double topMargin = isCompactHeight ? 52.0 : 70.0;
@@ -190,7 +190,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> with SingleTickerProvid
                                           mainAxisSize: MainAxisSize.min,
                                           children: [
                                             Text(
-                                              'Lvl $currentLevel/10',
+                                              '${lvlController.completedLevels.length}/200 Completed',
                                               style: const TextStyle(
                                                 color: Color(0xFF38BDF8),
                                                 fontSize: 10,

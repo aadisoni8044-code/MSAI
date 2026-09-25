@@ -19,7 +19,7 @@ class VictoryOverlay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool hasNext = levelNumber < 10;
+    final bool hasNext = levelNumber < 200;
 
     return Container(
       color: Colors.black.withValues(alpha: 0.75),

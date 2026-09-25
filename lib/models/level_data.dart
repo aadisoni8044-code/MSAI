@@ -45,29 +45,88 @@ class LevelData {
   });
 
   static LevelData createLevel(int levelNumber) {
-    switch (levelNumber) {
+    int clampedNumber = levelNumber;
+    if (clampedNumber < 1) clampedNumber = 1;
+    if (clampedNumber > 200) clampedNumber = 200;
+
+    int templateIndex = ((clampedNumber - 1) % 10) + 1;
+    LevelData baseLevel;
+
+    switch (templateIndex) {
       case 1:
-        return _createLevel1();
+        baseLevel = _createLevel1();
+        break;
       case 2:
-        return _createLevel2();
+        baseLevel = _createLevel2();
+        break;
       case 3:
-        return _createLevel3();
+        baseLevel = _createLevel3();
+        break;
       case 4:
-        return _createLevel4();
+        baseLevel = _createLevel4();
+        break;
       case 5:
-        return _createLevel5();
+        baseLevel = _createLevel5();
+        break;
       case 6:
-        return _createLevel6();
+        baseLevel = _createLevel6();
+        break;
       case 7:
-        return _createLevel7();
+        baseLevel = _createLevel7();
+        break;
       case 8:
-        return _createLevel8();
+        baseLevel = _createLevel8();
+        break;
       case 9:
-        return _createLevel9();
+        baseLevel = _createLevel9();
+        break;
       case 10:
-        return _createLevel10();
+        baseLevel = _createLevel10();
+        break;
       default:
-        return _createLevel1();
+        baseLevel = _createLevel1();
+    }
+
+    String themeName = _themeToName(baseLevel.theme);
+    return LevelData(
+      levelNumber: clampedNumber,
+      levelName: 'Level $clampedNumber - $themeName',
+      theme: baseLevel.theme,
+      worldWidth: baseLevel.worldWidth,
+      worldHeight: baseLevel.worldHeight,
+      playerStartX: baseLevel.playerStartX,
+      playerStartY: baseLevel.playerStartY,
+      platforms: baseLevel.platforms,
+      enemies: baseLevel.enemies,
+      collectibles: baseLevel.collectibles,
+      hazards: baseLevel.hazards,
+      checkpoints: baseLevel.checkpoints,
+      goalPortal: baseLevel.goalPortal,
+    );
+  }
+
+  static String _themeToName(LevelTheme theme) {
+    switch (theme) {
+      case LevelTheme.forest:
+        return 'Forest';
+      case LevelTheme.fire:
+        return 'Fire';
+      case LevelTheme.water:
+        return 'Water';
+      case LevelTheme.ice:
+        return 'Ice';
+      case LevelTheme.desert:
+        return 'Desert';
+      case LevelTheme.thunder:
+        return 'Thunder';
+      case LevelTheme.poison:
+        return 'Poison';
+      case LevelTheme.sky:
+        return 'Sky';
+      case LevelTheme.shadow:
+        return 'Shadow';
+      case LevelTheme.crystal:
+        return 'Crystal';
     }
   }
 
