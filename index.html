@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AETHERIA | Next-Gen Indie Action RPG</title>
+    <meta name="description" content="Download AETHERIA for Android and Windows PC. Experience high-octane dark fantasy combat and open-world exploration.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation Bar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="#hero" class="nav-logo">
+                <span class="logo-icon"><i class="fa-solid fa-gamepad"></i></span>
+                <span class="logo-text">AETHERIA</span>
+            </a>
+
+            <nav class="nav-links" id="navLinks">
+                <a href="#hero" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#downloads" class="nav-item"><i class="fa-solid fa-download"></i> Download</a>
+                <a href="#features" class="nav-item"><i class="fa-solid fa-bolt"></i> Features</a>
+                <a href="#specs" class="nav-item"><i class="fa-solid fa-microchip"></i> System Specs</a>
+                <a href="#faq" class="nav-item"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="#downloads" class="btn btn-nav-download">
+                    <i class="fa-solid fa-download"></i> Get Game
+                </a>
+                <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Navigation Menu">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Drawer Navigation -->
+    <div class="mobile-drawer" id="mobileDrawer">
+        <div class="drawer-content">
+            <a href="#hero" class="drawer-link"><i class="fa-solid fa-house"></i> Home</a>
+            <a href="#downloads" class="drawer-link"><i class="fa-solid fa-download"></i> Download Game</a>
+            <a href="#features" class="drawer-link"><i class="fa-solid fa-bolt"></i> Key Features</a>
+            <a href="#specs" class="drawer-link"><i class="fa-solid fa-microchip"></i> System Specs</a>
+            <a href="#faq" class="drawer-link"><i class="fa-solid fa-circle-question"></i> FAQ</a>
+            <a href="#downloads" class="btn btn-primary btn-full mt-4"><i class="fa-solid fa-download"></i> Download Now</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Hero Section with Background Video -->
+        <section class="hero-section" id="hero">
+            <div class="video-container">
+                <video id="heroVideo" autoplay muted loop playsinline preload="auto">
+                    <source src="a.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-overlay"></div>
+            </div>
+
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-pulse"></span>
+                    <span>Version 1.0.4 Now Live</span>
+                </div>
+                <h1 class="hero-title">ENTER THE SHADOW REALM</h1>
+                <p class="hero-subtitle">
+                    Unleash primal magic, battle colossal beasts, and conquer the shattered empire in this atmospheric action RPG.
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#downloads" class="btn btn-primary btn-hero">
+                        <i class="fa-solid fa-download"></i> Download Free
+                    </a>
+                    <button class="btn btn-secondary sound-toggle-btn" id="soundToggleBtn" title="Toggle Video Audio">
+                        <i class="fa-solid fa-volume-xmark" id="soundIcon"></i> <span id="soundText">Unmute Trailer</span>
+                    </button>
+                </div>
+
+                <div class="hero-platforms">
+                    <span class="platforms-label">Available on:</span>
+                    <div class="platform-chips">
+                        <span class="chip"><i class="fa-brands fa-android"></i> Android APK</span>
+                        <span class="chip"><i class="fa-brands fa-windows"></i> Windows 64-bit</span>
+                    </div>
+                </div>
+            </div>
+
+            <a href="#downloads" class="scroll-indicator" aria-label="Scroll to downloads">
+                <i class="fa-solid fa-chevron-down"></i>
+            </a>
+        </section>
+
+        <!-- Download Section -->
+        <section class="download-section" id="downloads">
+            <div class="section-container">
+                <div class="section-header text-center">
+                    <span class="section-tag"><i class="fa-solid fa-gamepad"></i> GET STARTED</span>
+                    <h2 class="section-title">DOWNLOAD <span class="gradient-text">AETHERIA</span></h2>
+                    <p class="section-description">
+                        Choose your preferred platform below and jump straight into battle. Cross-save enabled across Android and Windows!
+                    </p>
+                </div>
+
+                <div class="download-grid">
+                    <!-- Android Download Card -->
+                    <div class="download-card card-android">
+                        <div class="card-glow"></div>
+                        <div class="card-header">
+                            <div class="platform-icon android">
+                                <i class="fa-brands fa-android"></i>
+                            </div>
+                            <div class="platform-badge">Android</div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">Android Edition</h3>
+                            <p class="card-meta"><i class="fa-solid fa-file-code"></i> APK Package (aa.apk) &bull; v1.0.4</p>
+                            <p class="card-description">
+                                Optimized for mobile touch controls and high-refresh screens. Requires Android 8.0 or higher.
+                            </p>
+                            <ul class="card-features">
+                                <li><i class="fa-solid fa-check"></i> Touch & Gamepad Support</li>
+                                <li><i class="fa-solid fa-check"></i> 60 FPS Smooth Performance</li>
+                                <li><i class="fa-solid fa-check"></i> Offline & Online Sync</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <a href="aa.apk" download="aa.apk" class="btn btn-download btn-android download-btn-trigger" data-platform="Android">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Download for Android</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Windows Download Card -->
+                    <div class="download-card card-windows">
+                        <div class="card-glow"></div>
+                        <div class="card-header">
+                            <div class="platform-icon windows">
+                                <i class="fa-brands fa-windows"></i>
+                            </div>
+                            <div class="platform-badge">Windows PC</div>
+                        </div>
+                        <div class="card-body">
+                            <h3 class="card-title">Windows Edition</h3>
+                            <p class="card-meta"><i class="fa-solid fa-file-code"></i> Executable Installer (aa.exe) &bull; v1.0.4</p>
+                            <p class="card-description">
+                                Ultra HD graphics, unlocked framerate, custom keybindings, and DirectX 12 ray tracing rendering.
+                            </p>
+                            <ul class="card-features">
+                                <li><i class="fa-solid fa-check"></i> Ultra 4K Graphics & Ray Tracing</li>
+                                <li><i class="fa-solid fa-check"></i> Full Keyboard/Mouse & Controller</li>
+                                <li><i class="fa-solid fa-check"></i> Unlocked Framerate</li>
+                            </ul>
+                        </div>
+                        <div class="card-footer">
+                            <a href="aa.exe" download="aa.exe" class="btn btn-download btn-windows download-btn-trigger" data-platform="Windows">
+                                <i class="fa-solid fa-download"></i>
+                                <span>Download for Windows</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Showcase Section -->
+        <section class="features-section" id="features">
+            <div class="section-container">
+                <div class="section-header text-center">
+                    <span class="section-tag"><i class="fa-solid fa-fire"></i> GAME HIGHLIGHTS</span>
+                    <h2 class="section-title">WHY YOU WILL <span class="gradient-text">LOVE IT</span></h2>
+                    <p class="section-description">
+                        Engineered for fluid combat, deep customization, and endless replayability.
+                    </p>
+                </div>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                        <h3>Dynamic Magic Combos</h3>
+                        <p>Chain spell attacks with melee strikes to shatter enemy armor and deal devastating area-of-effect damage.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-globe"></i></div>
+                        <h3>Vast Seamless World</h3>
+                        <p>Explore ruins, forgotten catacombs, and high mountain peaks without loading screens.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <h3>Epic Boss Encounters</h3>
+                        <p>Face multi-phase titans that adapt to your combat style and force tactical positioning.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fa-solid fa-rotate"></i></div>
+                        <h3>Cross-Platform Sync</h3>
+                        <p>Play on your PC at home, then pick up right where you left off on your Android mobile device.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Requirements Section -->
+        <section class="specs-section" id="specs">
+            <div class="section-container">
+                <div class="section-header text-center">
+                    <span class="section-tag"><i class="fa-solid fa-sliders"></i> HARDWARE SPECS</span>
+                    <h2 class="section-title">SYSTEM <span class="gradient-text">REQUIREMENTS</span></h2>
+                    <p class="section-description">Check if your device is ready to run Aetheria.</p>
+                </div>
+
+                <div class="specs-grid">
+                    <!-- Android Specs -->
+                    <div class="specs-card">
+                        <div class="specs-card-header">
+                            <i class="fa-brands fa-android"></i>
+                            <h3>Android Requirements</h3>
+                        </div>
+                        <table class="specs-table">
+                            <tr>
+                                <td>OS</td>
+                                <td>Android 8.0 (Oreo) or higher</td>
+                            </tr>
+                            <tr>
+                                <td>Processor</td>
+                                <td>Octa-core Snapdragon 730 / Dimensity 800</td>
+                            </tr>
+                            <tr>
+                                <td>RAM</td>
+                                <td>4 GB minimum (6 GB recommended)</td>
+                            </tr>
+                            <tr>
+                                <td>Storage</td>
+                                <td>2.5 GB free space</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- Windows Specs -->
+                    <div class="specs-card">
+                        <div class="specs-card-header">
+                            <i class="fa-brands fa-windows"></i>
+                            <h3>Windows PC Requirements</h3>
+                        </div>
+                        <table class="specs-table">
+                            <tr>
+                                <td>OS</td>
+                                <td>Windows 10 / 11 64-bit</td>
+                            </tr>
+                            <tr>
+                                <td>Processor</td>
+                                <td>Intel Core i5-8400 / AMD Ryzen 5 2600</td>
+                            </tr>
+                            <tr>
+                                <td>GPU</td>
+                                <td>NVIDIA GTX 1060 (6GB) / AMD RX 580</td>
+                            </tr>
+                            <tr>
+                                <td>RAM & Storage</td>
+                                <td>8 GB RAM / 5 GB SSD Storage</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq-section" id="faq">
+            <div class="section-container">
+                <div class="section-header text-center">
+                    <span class="section-tag"><i class="fa-solid fa-circle-question"></i> SUPPORT</span>
+                    <h2 class="section-title">FREQUENTLY ASKED <span class="gradient-text">QUESTIONS</span></h2>
+                </div>
+
+                <div class="faq-accordion">
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Is AETHERIA completely free to play?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes! AETHERIA is free to download and play on both Android and Windows PC with optional cosmetic items.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>How do I install the Android APK file?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Download `aa.apk`, open it on your Android phone, and enable "Install from Unknown Sources" if prompted by your system settings.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            <span>Can I use a game controller on PC and Mobile?</span>
+                            <i class="fa-solid fa-chevron-down faq-icon"></i>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes, Xbox, PlayStation DualSense, and standard Bluetooth gamepads are natively supported on both platforms.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="#hero" class="nav-logo">
+                    <span class="logo-icon"><i class="fa-solid fa-gamepad"></i></span>
+                    <span class="logo-text">AETHERIA</span>
+                </a>
+                <p>The next-generation indie action RPG for Android & Windows PC.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="#hero">Home</a></li>
+                    <li><a href="#downloads">Download</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#specs">System Requirements</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-downloads">
+                <h4>Download Files</h4>
+                <ul>
+                    <li><a href="aa.apk" download="aa.apk"><i class="fa-brands fa-android"></i> aa.apk (Android)</a></li>
+                    <li><a href="aa.exe" download="aa.exe"><i class="fa-brands fa-windows"></i> aa.exe (Windows)</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 AETHERIA Games. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Download Toast Notification -->
+    <div class="toast" id="downloadToast">
+        <i class="fa-solid fa-circle-check toast-icon"></i>
+        <div class="toast-message">
+            <strong id="toastTitle">Starting Download...</strong>
+            <span id="toastSub">Your file is downloading.</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
