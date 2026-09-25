@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enchanted Adventure - Official Game Site</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="navbar" id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="nav-logo">
+        <span class="logo-icon">⚔️</span>
+        <span class="logo-text">ENCHANTED <span class="highlight">ADVENTURE</span></span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation Menu">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+
+      <nav class="nav-menu" id="navMenu">
+        <ul class="nav-list">
+          <li><a href="#home" class="nav-link active">Home</a></li>
+          <li><a href="#adventures" class="nav-link">Adventures</a></li>
+          <li><a href="#features" class="nav-link">Features</a></li>
+          <li><a href="#download" class="nav-link btn-nav-download">Download</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section" id="home">
+    <div class="video-wrapper">
+      <video id="heroVideo" class="hero-video" autoplay muted loop playsinline poster="">
+        <source src="a.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <div class="video-overlay"></div>
+    </div>
+
+    <button id="soundToggle" class="sound-toggle-btn" aria-label="Toggle Sound">
+      <span class="sound-icon">🔇</span>
+      <span class="sound-text">Sound Off</span>
+    </button>
+
+    <div class="hero-content">
+      <div class="hero-badge">OFFICIAL GAME RELEASE</div>
+      <h1 class="hero-title">PLAY THE <span class="text-gradient">ADVENTURE</span></h1>
+      <p class="hero-description">
+        A 2D fantasy adventure game with multiple game modes, levels, zombies, custom maps and more.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#download" class="btn btn-primary btn-glow">
+          <span class="btn-icon">⚡</span>
+          <span>DOWNLOAD GAME</span>
+        </a>
+        <a href="#features" class="btn btn-secondary">
+          <span>EXPLORE FEATURES</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="scroll-indicator">
+      <a href="#download" aria-label="Scroll to Downloads">
+        <div class="mouse">
+          <div class="wheel"></div>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- Download Section -->
+  <section class="section download-section" id="download">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">GET STARTED</span>
+        <h2 class="section-title">CHOOSE YOUR <span class="text-gradient">PLATFORM</span></h2>
+        <p class="section-subtitle">Download Enchanted Adventure and jump straight into the realm on PC or Mobile.</p>
+      </div>
+
+      <div class="download-grid">
+        <!-- Windows Download Card -->
+        <div class="download-card card-windows">
+          <div class="card-glow"></div>
+          <div class="platform-badge">
+            <svg class="platform-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+              <path d="M0 3.449L9.75 2.1v9.451H0m10.949-9.602L24 0v11.4H10.949M0 12.6h9.75v9.451L0 20.699M10.949 12.6H24V24l-13.051-1.851"/>
+            </svg>
+            <span>PC EDITION</span>
+          </div>
+
+          <h3 class="platform-title">Windows</h3>
+          <p class="file-name-tag">
+            <span class="file-icon">📦</span>
+            <span class="file-name">aa.exe</span>
+          </p>
+
+          <ul class="card-features">
+            <li>✓ Ultra HD 60 FPS Engine Support</li>
+            <li>✓ Keyboard & Custom Key Mapping</li>
+            <li>✓ Full Resolution Custom Map Editor</li>
+          </ul>
+
+          <a href="aa.exe" download="aa.exe" class="btn btn-download btn-windows">
+            <span class="btn-icon">💾</span>
+            <span>DOWNLOAD FOR WINDOWS</span>
+          </a>
+        </div>
+
+        <!-- Android Download Card -->
+        <div class="download-card card-android">
+          <div class="card-glow"></div>
+          <div class="platform-badge">
+            <svg class="platform-icon" viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+              <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997 0-.5511.4482-.9993.9993-.9993.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997 0-.5511.4482-.9993.9993-.9993.5511 0 .9993.4482.9993.9993 0 .5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592c.1251-.2167.0508-.4938-.1658-.619-.2167-.1251-.4938-.0508-.619.1658l-2.0238 3.5051c-1.4883-.681-3.1491-1.0601-4.8702-1.0601s-3.3819.3791-4.8702 1.0601l-2.0238-3.5051c-.1252-.2166-.4023-.2909-.619-.1658-.2166.1252-.2909.4023-.1658.619l1.9973 3.4592c-3.197 1.7371-5.352 5.0118-5.5843 8.8406h22.5298c-.2323-3.8288-2.3873-7.1035-5.5843-8.8406"/>
+            </svg>
+            <span>MOBILE EDITION</span>
+          </div>
+
+          <h3 class="platform-title">Android</h3>
+          <p class="file-name-tag">
+            <span class="file-icon">📱</span>
+            <span class="file-name">aa.apk</span>
+          </p>
+
+          <ul class="card-features">
+            <li>✓ Responsive Touch Joystick & Virtual Buttons</li>
+            <li>✓ Low Latency Mobile Performance</li>
+            <li>✓ Offline Campaign & Quick Play</li>
+          </ul>
+
+          <a href="aa.apk" download="aa.apk" class="btn btn-download btn-android">
+            <span class="btn-icon">📲</span>
+            <span>DOWNLOAD FOR ANDROID</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Adventures & Features Section -->
+  <section class="section features-section" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag" id="adventures">GAME HIGHLIGHTS</span>
+        <h2 class="section-title">UNLEASH THE <span class="text-gradient">MAGIC</span></h2>
+        <p class="section-subtitle">Experience a vast fantasy world packed with action, customization, and infinite replayability.</p>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🗡️</span>
+          </div>
+          <h3 class="feature-title">10 Adventure Levels</h3>
+          <p class="feature-desc">Embark on an epic quest through 10 handcrafted handcrafted levels filled with secrets, traps, and boss encounters.</p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🧟</span>
+          </div>
+          <h3 class="feature-title">Zombie Mode</h3>
+          <p class="feature-desc">Survive wave after wave of relentless undead forces with weapon upgrades, supply drops, and intense combat.</p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🎨</span>
+          </div>
+          <h3 class="feature-title">Create Map</h3>
+          <p class="feature-desc">Build and design your own adventure arenas with a powerful full-featured level editor and grid snapping tool.</p>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🛒</span>
+          </div>
+          <h3 class="feature-title">Character Shop</h3>
+          <p class="feature-desc">Unlock new heroes, weapons, auras, and headgears using coins earned from victories in the realm.</p>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🧙‍♂️</span>
+          </div>
+          <h3 class="feature-title">50 Characters</h3>
+          <p class="feature-desc">Choose from a massive roster of 50 unique playable heroes featuring distinct hairstyles, weapons, and particle effects.</p>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🧠</span>
+          </div>
+          <h3 class="feature-title">Maths Mode</h3>
+          <p class="feature-desc">Engage your brain with fun interactive puzzle challenges integrated directly into adventure gameplay mechanics.</p>
+        </div>
+
+        <!-- Feature 7 -->
+        <div class="feature-card">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">🗺️</span>
+          </div>
+          <h3 class="feature-title">Custom Maps</h3>
+          <p class="feature-desc">Play, test, and master community-created and custom saved maps with infinite layout possibilities.</p>
+        </div>
+
+        <!-- Feature 8 -->
+        <div class="feature-card feature-card-upcoming">
+          <div class="feature-icon-wrapper">
+            <span class="feature-icon">✨</span>
+          </div>
+          <h3 class="feature-title">More Adventures Coming Soon</h3>
+          <p class="feature-desc">Regular content updates featuring new story chapters, survival modes, weapons, and seasonal events.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <a href="#home" class="footer-logo">
+          <span class="logo-icon">⚔️</span>
+          <span>ENCHANTED ADVENTURE</span>
+        </a>
+        <p class="copyright">Enchanted Adventure © 2026. All rights reserved.</p>
+      </div>
+
+      <ul class="footer-links">
+        <li><a href="#home">Home</a></li>
+        <li><a href="#download">Download</a></li>
+        <li><a href="#adventures">Adventures</a></li>
+        <li><a href="#features">Features</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
