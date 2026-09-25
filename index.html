@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shadow Realm 2D - Official Game Website</title>
+  <meta name="description" content="Experience Shadow Realm 2D, the ultimate action platformer featuring 2D gameplay, Zombie Mode, Level Creator, and epic levels on Android and Windows.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome for modern gaming icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts for Futuristic Gaming Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+
+  <!-- NAVIGATION BAR -->
+  <header class="navbar-header" id="navbar">
+    <div class="nav-container">
+      <a href="#home" class="brand-logo">
+        <i class="fa-solid fa-dragon logo-icon"></i>
+        <span class="logo-text">SHADOW <span class="highlight">REALM</span></span>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="nav-links">
+        <a href="#home" class="nav-item active"><i class="fa-solid fa-house"></i> Home</a>
+        <a href="#game" class="nav-item"><i class="fa-solid fa-gamepad"></i> Game</a>
+        <a href="#features" class="nav-item"><i class="fa-solid fa-star"></i> Features</a>
+        <a href="#screenshots" class="nav-item"><i class="fa-solid fa-images"></i> Screenshots</a>
+        <a href="#downloads" class="nav-item"><i class="fa-solid fa-download"></i> Downloads</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#downloads" class="btn btn-nav-cta">
+          <i class="fa-solid fa-download"></i> GET GAME
+        </a>
+        <!-- Hamburger Menu Button for Mobile -->
+        <button class="hamburger-btn" id="hamburgerBtn" aria-label="Toggle navigation menu">
+          <span class="bar"></span>
+          <span class="bar"></span>
+          <span class="bar"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Drawer Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#home" class="mobile-nav-item"><i class="fa-solid fa-house"></i> Home</a>
+      <a href="#game" class="mobile-nav-item"><i class="fa-solid fa-gamepad"></i> Game</a>
+      <a href="#features" class="mobile-nav-item"><i class="fa-solid fa-star"></i> Features</a>
+      <a href="#screenshots" class="mobile-nav-item"><i class="fa-solid fa-images"></i> Screenshots</a>
+      <a href="#downloads" class="mobile-nav-item"><i class="fa-solid fa-download"></i> Downloads</a>
+      <div class="mobile-menu-footer">
+        <a href="./aa.apk" download class="btn btn-android btn-mobile">
+          <i class="fa-brands fa-android"></i> Download for Android
+        </a>
+        <a href="./aa.exe" download class="btn btn-windows btn-mobile">
+          <i class="fa-brands fa-windows"></i> Download for Windows
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HOME HERO SECTION -->
+  <section id="home" class="hero-section">
+    <!-- Video Background Container -->
+    <div class="hero-video-container">
+      <video id="heroVideo" class="hero-video" autoplay muted playsinline preload="auto">
+        <source src="a.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+      </video>
+      <div class="hero-overlay"></div>
+    </div>
+
+    <!-- Unobtrusive Autoplay Fallback Trigger -->
+    <div id="videoPlayFallback" class="video-play-fallback hidden">
+      <button id="tapToPlayBtn" class="tap-play-btn">
+        <i class="fa-solid fa-play-circle"></i>
+        <span>Tap to enable video sound/playback</span>
+      </button>
+    </div>
+
+    <!-- Hero Content Overlay -->
+    <div class="hero-content">
+      <div class="badge-tag">
+        <span class="pulse-dot"></span> NEXT-GEN 2D ACTION PLATFORMER
+      </div>
+
+      <h1 class="hero-title">
+        SHADOW <span class="gradient-text">REALM 2D</span>
+      </h1>
+
+      <p class="hero-description">
+        Dive into an exhilarating dark fantasy adventure! Battle relentless undead hordes in Zombie Mode, conquer custom community maps, or design your own worlds with our built-in Map Creator.
+      </p>
+
+      <!-- Primary Action Buttons -->
+      <div class="hero-cta-group">
+        <a href="#game" class="btn btn-primary glow-btn">
+          <i class="fa-solid fa-circle-play"></i> PLAY NOW
+        </a>
+        <a href="#downloads" class="btn btn-secondary glass-btn">
+          <i class="fa-solid fa-download"></i> DOWNLOAD GAME
+        </a>
+      </div>
+
+      <!-- Device Download Quick Access Buttons -->
+      <div class="hero-download-buttons">
+        <a href="./aa.apk" download class="btn btn-android hero-dl-btn">
+          <i class="fa-brands fa-android"></i>
+          <div class="btn-text">
+            <span class="sub">APK FILE (aa.apk)</span>
+            <span class="main">Download for Android</span>
+          </div>
+        </a>
+
+        <a href="./aa.exe" download class="btn btn-windows hero-dl-btn">
+          <i class="fa-brands fa-windows"></i>
+          <div class="btn-text">
+            <span class="sub">EXE FILE (aa.exe)</span>
+            <span class="main">Download for Windows</span>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <a href="#game" class="scroll-down-indicator" aria-label="Scroll to Game Overview">
+      <i class="fa-solid fa-angle-down"></i>
+    </a>
+  </section>
+
+  <!-- GAME SECTION -->
+  <section id="game" class="section-padding game-section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-subtitle">OVERVIEW</span>
+        <h2 class="section-title">GAME <span class="gradient-text">HIGHLIGHTS</span></h2>
+        <div class="title-bar"></div>
+      </div>
+
+      <div class="game-overview-card glass-card">
+        <div class="game-intro-text">
+          <p class="lead-text">
+            Shadow Realm 2D brings classic side-scrolling action to life with cutting-edge visual effects, smooth controls, and deep customization.
+          </p>
+        </div>
+
+        <div class="game-elements-grid">
+          <div class="element-box">
+            <div class="element-icon"><i class="fa-solid fa-gamepad"></i></div>
+            <h3 class="element-title">2D Gameplay</h3>
+            <p class="element-desc">Precise, fluid 60FPS platforming action with responsive controls engineered for both touchscreen devices and desktop hardware.</p>
+          </div>
+
+          <div class="element-box">
+            <div class="element-icon"><i class="fa-solid fa-layer-group"></i></div>
+            <h3 class="element-title">Levels</h3>
+            <p class="element-desc">Navigate through dozens of challenging stages filled with hazardous obstacles, hidden secrets, and powerful end-level bosses.</p>
+          </div>
+
+          <div class="element-box">
+            <div class="element-icon"><i class="fa-solid fa-user-ninja"></i></div>
+            <h3 class="element-title">Characters</h3>
+            <p class="element-desc">Unlock a roster of unique heroes, each equipped with distinct combat abilities, custom animations, and upgradeable equipment.</p>
+          </div>
+
+          <div class="element-box">
+            <div class="element-icon"><i class="fa-solid fa-biohazard"></i></div>
+            <h3 class="element-title">Zombie Mode</h3>
+            <p class="element-desc">Test your survival skills against endless waves of relentless zombies, unlocking weapons and tactical air-drops as you survive.</p>
+          </div>
+
+          <div class="element-box">
+            <div class="element-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+            <h3 class="element-title">Create Map</h3>
+            <p class="element-desc">Unleash your creativity with an intuitive built-in level editor. Place terrain, traps, and enemies to build custom maps and play them anytime.</p>
+          </div>
+
+          <div class="element-box">
+            <div class="element-icon"><i class="fa-solid fa-mountain-sun"></i></div>
+            <h3 class="element-title">Different Game Environments</h3>
+            <p class="element-desc">Explore diverse atmospheric settings ranging from mystical enchanted forests and ancient ruins to dark volcanic dungeons and icy peaks.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES SECTION -->
+  <section id="features" class="section-padding features-section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-subtitle">KEY FEATURES</span>
+        <h2 class="section-title">WHY YOU WILL <span class="gradient-text">LOVE IT</span></h2>
+        <div class="title-bar"></div>
+      </div>
+
+      <div class="features-grid">
+        <!-- Feature 1 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <i class="fa-solid fa-cubes"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">1. Multiple Levels</h3>
+            <p class="feature-desc">Engage in extensive campaigns with progressing difficulty, unique objective goals, dynamic environmental hazards, and rewarding achievements.</p>
+          </div>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <i class="fa-solid fa-skull"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">2. Zombie Mode</h3>
+            <p class="feature-desc">An intense survival game mode featuring object-pooled zombie hordes, lethal weapon upgrades, supply drops, and wave-based survival leaderboards.</p>
+          </div>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <i class="fa-solid fa-users"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">3. Character System</h3>
+            <p class="feature-desc">Unlock diverse combat avatars, customize hairstyles, armor, magical auras, and special elemental attacks using in-game earnings.</p>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <i class="fa-solid fa-pen-ruler"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">4. Create Map</h3>
+            <p class="feature-desc">Full-featured level designer with real-time vector asset drag-and-drop, object resizing, undo history, grid snapping, and instant playback testing.</p>
+          </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <i class="fa-brands fa-android"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">5. Android Support</h3>
+            <p class="feature-desc">Fully optimized APK for Android mobile phones and tablets with responsive virtual joystick controls, touch HUD, and fast loading performance.</p>
+          </div>
+        </div>
+
+        <!-- Feature 6 -->
+        <div class="feature-card glass-card">
+          <div class="feature-icon-wrapper">
+            <i class="fa-brands fa-windows"></i>
+          </div>
+          <div class="feature-content">
+            <h3 class="feature-title">6. Windows Support</h3>
+            <p class="feature-desc">Dedicated Windows executable supporting high-FPS gameplay, custom keyboard and mouse mappings, and crisp high-resolution monitor support.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCREENSHOTS SECTION -->
+  <section id="screenshots" class="section-padding screenshots-section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-subtitle">GALLERY</span>
+        <h2 class="section-title">IN-GAME <span class="gradient-text">SCREENSHOTS</span></h2>
+        <div class="title-bar"></div>
+      </div>
+
+      <div class="screenshots-gallery">
+        <div class="gallery-item glass-card" data-src="./b.png">
+          <div class="gallery-image-wrapper">
+            <img src="./b.png" alt="Shadow Realm 2D Gameplay Screenshot 1" loading="lazy">
+            <div class="gallery-overlay">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>View Fullscreen</span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h3>2D Action Gameplay</h3>
+            <p>Fluid platforming and melee combat</p>
+          </div>
+        </div>
+
+        <div class="gallery-item glass-card" data-src="./c.png">
+          <div class="gallery-image-wrapper">
+            <img src="./c.png" alt="Shadow Realm 2D Gameplay Screenshot 2" loading="lazy">
+            <div class="gallery-overlay">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>View Fullscreen</span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h3>Zombie Mode Survival</h3>
+            <p>Battle endless undead waves</p>
+          </div>
+        </div>
+
+        <div class="gallery-item glass-card" data-src="./d.png">
+          <div class="gallery-image-wrapper">
+            <img src="./d.png" alt="Shadow Realm 2D Gameplay Screenshot 3" loading="lazy">
+            <div class="gallery-overlay">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>View Fullscreen</span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h3>Create Map Level Editor</h3>
+            <p>Design and test custom maps</p>
+          </div>
+        </div>
+
+        <div class="gallery-item glass-card" data-src="./e.png">
+          <div class="gallery-image-wrapper">
+            <img src="./e.png" alt="Shadow Realm 2D Gameplay Screenshot 4" loading="lazy">
+            <div class="gallery-overlay">
+              <i class="fa-solid fa-magnifying-glass-plus"></i>
+              <span>View Fullscreen</span>
+            </div>
+          </div>
+          <div class="gallery-caption">
+            <h3>Diverse Environments</h3>
+            <p>Explore lush and dangerous worlds</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX MODAL -->
+  <div id="lightboxModal" class="lightbox-modal">
+    <button id="lightboxClose" class="lightbox-close" aria-label="Close Lightbox">&times;</button>
+    <div class="lightbox-content">
+      <img id="lightboxImage" src="" alt="Enlarged Screenshot">
+      <div id="lightboxCaption" class="lightbox-caption-text"></div>
+    </div>
+  </div>
+
+  <!-- DOWNLOAD SECTION -->
+  <section id="downloads" class="section-padding downloads-section">
+    <div class="container">
+      <div class="section-header center">
+        <span class="section-subtitle">GET STARTED</span>
+        <h2 class="section-title">DOWNLOAD <span class="gradient-text">THE GAME</span></h2>
+        <div class="title-bar"></div>
+      </div>
+
+      <div class="download-cards-container">
+        <!-- Android Download Card -->
+        <div class="download-card glass-card">
+          <div class="card-badge">ANDROID</div>
+          <div class="card-icon android-icon">
+            <i class="fa-brands fa-android"></i>
+          </div>
+          <h3 class="platform-name">Android</h3>
+          <div class="file-info">
+            <i class="fa-solid fa-file-zipper"></i>
+            <span class="filename">aa.apk</span>
+          </div>
+          <p class="platform-desc">Compatible with Android smartphones and tablets running Android 7.0 and above.</p>
+          <a href="./aa.apk" download class="btn btn-download btn-android-gradient">
+            <i class="fa-solid fa-download"></i> Download for Android
+          </a>
+        </div>
+
+        <!-- Windows Download Card -->
+        <div class="download-card glass-card">
+          <div class="card-badge">WINDOWS</div>
+          <div class="card-icon windows-icon">
+            <i class="fa-brands fa-windows"></i>
+          </div>
+          <h3 class="platform-name">Windows</h3>
+          <div class="file-info">
+            <i class="fa-solid fa-file-zipper"></i>
+            <span class="filename">aa.exe</span>
+          </div>
+          <p class="platform-desc">Standalone executable for Windows PCs and laptops (Windows 10 / 11 64-bit).</p>
+          <a href="./aa.exe" download class="btn btn-download btn-windows-gradient">
+            <i class="fa-solid fa-download"></i> Download for Windows
+          </a>
+        </div>
+      </div>
+
+      <!-- Installation Note -->
+      <div class="download-note center">
+        <i class="fa-solid fa-circle-info"></i>
+        <span>Download and install the version for your device.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <a href="#home" class="brand-logo">
+          <i class="fa-solid fa-dragon logo-icon"></i>
+          <span class="logo-text">SHADOW <span class="highlight">REALM</span></span>
+        </a>
+        <p class="footer-tagline">The ultimate 2D dark fantasy platforming experience.</p>
+      </div>
+
+      <nav class="footer-nav">
+        <a href="#home" class="footer-link">Home</a>
+        <a href="#downloads" class="footer-link">Downloads</a>
+        <button id="privacyLinkBtn" class="footer-modal-link">Privacy</button>
+        <button id="contactLinkBtn" class="footer-modal-link">Contact</button>
+      </nav>
+
+      <div class="footer-copyright">
+        <p>Shadow Realm &copy; 2026. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PRIVACY MODAL -->
+  <div id="privacyModal" class="info-modal">
+    <div class="info-modal-content glass-card">
+      <button class="info-modal-close" id="privacyClose">&times;</button>
+      <h2><i class="fa-solid fa-shield-halved"></i> Privacy Policy</h2>
+      <div class="info-modal-body">
+        <p>Shadow Realm 2D respects your privacy. Our game is built to operate offline or via local storage and does not collect or transmit personal user data to external tracking servers.</p>
+        <p>Any game settings, unlocked characters, custom created maps, and campaign level progress are stored locally on your device.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTACT MODAL -->
+  <div id="contactModal" class="info-modal">
+    <div class="info-modal-content glass-card">
+      <button class="info-modal-close" id="contactClose">&times;</button>
+      <h2><i class="fa-solid fa-envelope"></i> Contact Us</h2>
+      <div class="info-modal-body">
+        <p>Have questions, feedback, or custom map submissions? Reach out to our community support team:</p>
+        <ul class="contact-info-list">
+          <li><i class="fa-solid fa-at"></i> <strong>Email:</strong> support@shadowrealmgame.com</li>
+          <li><i class="fa-brands fa-discord"></i> <strong>Discord:</strong> discord.gg/shadowrealm2d</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
