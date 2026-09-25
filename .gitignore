@@ -1,0 +1,9 @@
+*.pyc
+__pycache__/
+*.log
+logs/
+.pytest_cache/
+kora_history.db
+dist/
+build/
+.kora_build/

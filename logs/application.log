@@ -1,0 +1,64 @@
+[2026-09-25 13:58:06] [INFO] [kora]: Base models and logger initialized successfully
+[2026-09-25 13:58:40] [INFO] [kora]: Scanning project at: /tmp/tmpe1mtt279
+[2026-09-25 13:58:40] [INFO] [kora]: Scan complete for 'tmpe1mtt279': 1 python files, 1 entry point candidates, 1 asset files detected.
+[2026-09-25 13:59:36] [INFO] [kora]: Executing command: python3 -c import sys; sys.stdout.write("OK"); sys.stderr.write("ERR") (CWD: None)
+[2026-09-25 13:59:36] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\
+[2026-09-25 13:59:53] [INFO] [kora]: Executing command: python3 -c import sys; sys.stdout.write("OK"); sys.stderr.write("ERR") (CWD: None)
+[2026-09-25 13:59:53] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\
+[2026-09-25 13:59:53] [INFO] [kora]: EXE Verification Result for '/tmp/tmproep4wmg/dist/app.exe': {'exe_path': '/tmp/tmproep4wmg/dist/app.exe', 'exists': True, 'size_bytes': 18, 'size_mb': 0.0, 'has_exe_extension': True, 'is_valid': True}
+[2026-09-25 14:00:23] [INFO] [kora]: Error Analysis Result: Detected error: MISSING_MODULE (requests)
+[2026-09-25 14:01:42] [INFO] [kora]: === Starting Kora Build Process ===
+[2026-09-25 14:01:42] [INFO] [kora.build]: === Starting Kora Build Process ===
+[2026-09-25 14:01:42] [INFO] [kora]: Project: TestApp (/tmp/tmppllfdh3w)
+[2026-09-25 14:01:42] [INFO] [kora.build]: Project: TestApp (/tmp/tmppllfdh3w)
+[2026-09-25 14:01:42] [INFO] [kora]: Using current system Python: /home/jules/.pyenv/versions/3.12.13/bin/python3
+[2026-09-25 14:01:42] [INFO] [kora]: Selected Python Interpreter: /home/jules/.pyenv/versions/3.12.13/bin/python3
+[2026-09-25 14:01:42] [INFO] [kora.build]: Selected Python Interpreter: /home/jules/.pyenv/versions/3.12.13/bin/python3
+[2026-09-25 14:01:42] [INFO] [kora]:
+--- Attempt #1 using PyInstaller ---
+[2026-09-25 14:01:42] [INFO] [kora.build]:
+--- Attempt #1 using PyInstaller ---
+[2026-09-25 14:01:43] [INFO] [kora]: Builder 'PyInstaller' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[2026-09-25 14:01:43] [INFO] [kora.build]: Builder 'PyInstaller' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[2026-09-25 14:01:43] [INFO] [kora]: Permission to install 'PyInstaller' was denied. Skipping this builder.
+[2026-09-25 14:01:43] [INFO] [kora.build]: Permission to install 'PyInstaller' was denied. Skipping this builder.
+[2026-09-25 14:01:43] [INFO] [kora]:
+--- Attempt #2 using Nuitka ---
+[2026-09-25 14:01:43] [INFO] [kora.build]:
+--- Attempt #2 using Nuitka ---
+[2026-09-25 14:01:43] [INFO] [kora]: Builder 'Nuitka' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[2026-09-25 14:01:43] [INFO] [kora.build]: Builder 'Nuitka' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[2026-09-25 14:01:43] [INFO] [kora]: Permission to install 'Nuitka' was denied. Skipping this builder.
+[2026-09-25 14:01:43] [INFO] [kora.build]: Permission to install 'Nuitka' was denied. Skipping this builder.
+[2026-09-25 14:01:43] [INFO] [kora]:
+--- Attempt #3 using cx_Freeze ---
+[2026-09-25 14:01:43] [INFO] [kora.build]:
+--- Attempt #3 using cx_Freeze ---
+[2026-09-25 14:01:43] [INFO] [kora]: Builder 'cx_Freeze' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[2026-09-25 14:01:43] [INFO] [kora.build]: Builder 'cx_Freeze' is not installed in /home/jules/.pyenv/versions/3.12.13/bin/python3.
+[2026-09-25 14:01:43] [INFO] [kora]: Permission to install 'cx_Freeze' was denied. Skipping this builder.
+[2026-09-25 14:01:43] [INFO] [kora.build]: Permission to install 'cx_Freeze' was denied. Skipping this builder.
+[2026-09-25 14:01:43] [INFO] [kora]:
+=== BUILD FAILED ===
+[2026-09-25 14:01:43] [INFO] [kora.build]:
+=== BUILD FAILED ===
+[2026-09-25 14:01:43] [INFO] [kora]: All 3 build strategies failed.
+[2026-09-25 14:01:43] [INFO] [kora.build]: All 3 build strategies failed.
+[2026-09-25 14:03:49] [INFO] [kora]: Error Analysis Result: Detected error: MISSING_MODULE (requests)
+[2026-09-25 14:03:49] [INFO] [kora]: Executing command: python3 -c import sys; sys.stdout.write('out'); sys.stderr.write('err') (CWD: None)
+[2026-09-25 14:03:49] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
+[2026-09-25 14:03:49] [INFO] [kora]: EXE Verification Result for '/tmp/tmp0yt4193d/dist/myapp.exe': {'exe_path': '/tmp/tmp0yt4193d/dist/myapp.exe', 'exists': True, 'size_bytes': 20, 'size_mb': 0.0, 'has_exe_extension': True, 'is_valid': True}
+[2026-09-25 14:03:49] [INFO] [kora]: Scanning project at: /tmp/tmpnskx3z5w
+[2026-09-25 14:03:49] [INFO] [kora]: Scan complete for 'tmpnskx3z5w': 1 python files, 1 entry point candidates, 2 asset files detected.
+[2026-09-25 14:05:32] [INFO] [kora]: Error Analysis Result: Detected error: MISSING_MODULE (requests)
+[2026-09-25 14:05:32] [INFO] [kora]: Executing command: python3 -c import sys; sys.stdout.write('out'); sys.stderr.write('err') (CWD: None)
+[2026-09-25 14:05:32] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
+[2026-09-25 14:05:32] [INFO] [kora]: EXE Verification Result for '/tmp/tmpgs6yzxjz/dist/myapp.exe': {'exe_path': '/tmp/tmpgs6yzxjz/dist/myapp.exe', 'exists': True, 'size_bytes': 20, 'size_mb': 0.0, 'has_exe_extension': True, 'is_valid': True}
+[2026-09-25 14:05:32] [INFO] [kora]: Scanning project at: /tmp/tmpo6z7rfb6
+[2026-09-25 14:05:32] [INFO] [kora]: Scan complete for 'tmpo6z7rfb6': 1 python files, 1 entry point candidates, 2 asset files detected.
+[2026-09-25 14:07:03] [INFO] [kora]: Error Analysis Result: Detected error: MISSING_MODULE (requests)
+[2026-09-25 14:07:03] [INFO] [kora]: Executing command: python3 -c import sys; sys.stdout.write('out'); sys.stderr.write('err') (CWD: None)
+[2026-09-25 14:07:04] [ERROR] [kora]: Command failed safety validation: del /f /s /q c:\\
+[2026-09-25 14:07:04] [INFO] [kora]: EXE Verification Result for '/tmp/tmp0chbkay5/dist/myapp.exe': {'exe_path': '/tmp/tmp0chbkay5/dist/myapp.exe', 'exists': True, 'size_bytes': 20, 'size_mb': 0.0, 'has_exe_extension': True, 'is_valid': True}
+[2026-09-25 14:07:04] [INFO] [kora]: Scanning project at: /tmp/tmpy3ruo68_
+[2026-09-25 14:07:04] [INFO] [kora]: Scan complete for 'tmpy3ruo68_': 1 python files, 1 entry point candidates, 2 asset files detected.
