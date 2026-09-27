@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 580 140" width="100%" height="100%">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&amp;display=swap');
+
+      .bg-light { fill: #F8FAFC; }
+
+      .brand-blue { fill: url(#blueGradientLight); }
+      .brand-blue-solid { fill: #0066FF; }
+
+      .zip-letter {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 800;
+        font-size: 38px;
+        letter-spacing: 2px;
+        fill: #FFFFFF;
+      }
+
+      .gram-letter {
+        font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        font-weight: 700;
+        font-size: 64px;
+        fill: #0066FF;
+        letter-spacing: -0.5px;
+      }
+    </style>
+
+    <linearGradient id="blueGradientLight" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0066FF" />
+      <stop offset="100%" stop-color="#0052CC" />
+    </linearGradient>
+
+    <!-- Custom double-storey 'g' -->
+    <g id="custom-g-light">
+      <path d="M 22 22
+               C 11 22, 3 29, 3 39
+               C 3 49, 11 56, 22 56
+               C 31 56, 38 50, 40 42
+               L 42 42
+               C 42 30, 33 22, 22 22 Z
+               M 22 30
+               C 27 30, 31 34, 31 39
+               C 31 44, 27 48, 22 48
+               C 17 48, 13 44, 13 39
+               C 13 34, 17 30, 22 30 Z" />
+      <path d="M 33 23
+               C 35 17, 41 14, 46 15
+               C 47 19, 44 24, 39 26 Z" />
+      <path d="M 23 54
+               C 13 54, 5 60, 5 69
+               C 5 78, 14 85, 26 85
+               C 37 85, 44 78, 44 68
+               C 44 60, 37 56, 28 56
+               C 34 60, 34 67, 27 69
+               C 20 71, 16 69, 16 65
+               C 16 61, 20 58, 26 58 Z" />
+    </g>
+  </defs>
+
+  <!-- Background Layer -->
+  <rect class="bg-light" width="580" height="140" rx="16" />
+
+  <!-- Integrated Logo Group -->
+  <g transform="translate(42, 20)">
+    <!-- Standalone Squircle Icon (100x100, rx=26) -->
+    <rect class="brand-blue" x="0" y="0" width="100" height="100" rx="26" ry="26" />
+
+    <!-- White ZIP Text inside Icon -->
+    <text class="zip-letter" x="50" y="63" text-anchor="middle" dominant-baseline="central">ZIP</text>
+
+    <!-- 'gram' Wordmark beside Icon -->
+    <g transform="translate(124, 14)">
+      <!-- Render Refined Distinctive 'g' -->
+      <use href="#custom-g-light" class="brand-blue-solid" />
+
+      <!-- 'ram' aligned seamlessly with 'g' -->
+      <text class="gram-letter" x="48" y="47" dominant-baseline="central">ram</text>
+    </g>
+  </g>
+</svg>
