@@ -14,9 +14,10 @@ from app.configuration.manager import ConfigurationManager
 from app.permission_manager.manager import PermissionManager
 from app.build_engine.engine import BuildEngine
 from app.output_detector.detector import OutputDetector
+from app.image_exporter.generator import ImageExeExporter
 from app.ui.theme import ThemeManager, DARK_PALETTE
 from app.ui.components import Sidebar
-from app.ui.views import DashboardView, BuildView, HistoryView, LogsView, SettingsView
+from app.ui.views import DashboardView, BuildView, ImageView, HistoryView, LogsView, SettingsView
 from app.ui.permission_dialog import PermissionDialog
 from app.logger import logger
 
@@ -69,6 +70,14 @@ class MainWindow(tk.Tk):
             self.workspace,
             colors=self.colors,
             on_stop_build=self.stop_build,
+            on_test_exe=self.test_generated_exe,
+            on_open_folder=self.open_output_folder
+        )
+
+        self.views["image_exe"] = ImageView(
+            self.workspace,
+            colors=self.colors,
+            on_start_export=self.start_image_export,
             on_test_exe=self.test_generated_exe,
             on_open_folder=self.open_output_folder
         )
@@ -166,6 +175,38 @@ class MainWindow(tk.Tk):
 
         threading.Thread(target=build_worker, daemon=True).start()
 
+    def start_image_export(self, image_path: str, exe_name: str, output_dir: str):
+        self.is_building = True
+        self.views["image_exe"].btn_create.config(state=tk.DISABLED)
+        self.views["image_exe"].lbl_status.config(text="● Creating Image EXE...", fg=self.colors.primary)
+        self.views["image_exe"].terminal.clear_logs()
+
+        exporter = ImageExeExporter(settings=self.settings)
+
+        def export_worker():
+            result = exporter.export_image_to_exe(
+                image_path=image_path,
+                output_exe_name=exe_name,
+                output_dir=output_dir,
+                on_status_update=lambda msg: self.after(0, lambda m=msg: self.views["image_exe"].lbl_status.config(text=f"● {m}")),
+                on_log_line=lambda log_msg: self.after(0, lambda l=log_msg: self.views["image_exe"].terminal.append_log(l))
+            )
+            self.after(0, lambda: self._on_image_export_finished(result))
+
+        threading.Thread(target=export_worker, daemon=True).start()
+
+    def _on_image_export_finished(self, result: BuildResult):
+        self.is_building = False
+        self.last_build_result = result
+        self.views["image_exe"].btn_create.config(state=tk.NORMAL)
+
+        if result.status == "SUCCESS":
+            self.views["image_exe"].lbl_status.config(text="✓ Image EXE Created", fg=self.colors.success)
+            messagebox.showinfo("Kora Image EXE Complete", f"Image EXE Created Successfully!\n\nLocation:\n{result.output_exe}")
+        else:
+            self.views["image_exe"].lbl_status.config(text="× Image EXE Failed", fg=self.colors.error)
+            messagebox.showerror("Kora Image EXE Failed", f"Failed to create Image EXE.\n\n{result.summary_message}")
+
     def _on_build_status_update(self, message: str):
         if "PyInstaller" in message:
             self.views["build"].strategy_widget.update_status("PyInstaller", "RUNNING")
@@ -213,7 +254,8 @@ class MainWindow(tk.Tk):
     def test_generated_exe(self):
         if self.last_build_result and self.last_build_result.output_exe:
             exe_path = self.last_build_result.output_exe
-            detector = OutputDetector(self.current_project.project_path)
+            proj_path = self.current_project.project_path if self.current_project else os.path.dirname(exe_path)
+            detector = OutputDetector(proj_path)
             test_res = detector.test_launch_exe(exe_path, timeout_seconds=3.0)
 
             if test_res.get("crashed_immediately"):

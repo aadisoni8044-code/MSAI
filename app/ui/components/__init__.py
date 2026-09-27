@@ -33,6 +33,7 @@ class Sidebar(tk.Frame):
     NAV_ITEMS = [
         ("dashboard", "⌂", "Dashboard"),
         ("build", "⚡", "Build"),
+        ("image_exe", "🖼", "Image → EXE"),
         ("history", "◷", "History"),
         ("logs", "▤", "Logs"),
         ("settings", "⚙", "Settings")
