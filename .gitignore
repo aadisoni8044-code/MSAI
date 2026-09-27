@@ -1,0 +1,49 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Android
+android/app/debug
+android/app/profile
+android/app/release
+android/.gradle
+android/captures/
+android/gradlew
+android/gradlew.bat
+android/local.properties
+
+# iOS / macOS
+*.mode1v3
+*.mode2v3
+*.moved-aside
+*.pbxuser
+*.perspectivev3
+**/Pods/
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/
+macos/Runner.xcworkspace/
+macos/Runner.xcodeproj/
+
+# Linux / Windows
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+
+# IDE
+.idea/
+*.iml
+*.iws
+.vscode/
+
+# Misc
+*.log
+android/
+ios/
+linux/
+macos/
+windows/
+web/
