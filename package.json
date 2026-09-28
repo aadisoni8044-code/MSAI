@@ -1,0 +1,159 @@
+{
+  "name": "keyboard-sound",
+  "displayName": "Keyboard Sound",
+  "description": "Play realistic mechanical keyboard sounds while typing in VS Code with ultra-low latency.",
+  "version": "1.0.0",
+  "publisher": "aadi-soni",
+  "author": {
+    "name": "Aadi Soni",
+    "url": "https://github.com/aadisoni8044-code"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/aadisoni8044-code",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aadisoni8044-code"
+  },
+  "bugs": {
+    "url": "https://github.com/aadisoni8044-code"
+  },
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other",
+    "Accessibility"
+  ],
+  "keywords": [
+    "keyboard",
+    "sound",
+    "mechanical",
+    "typing",
+    "audio",
+    "thock",
+    "typewriter",
+    "productivity"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "keyboardSoundContainer",
+          "title": "Keyboard Sound",
+          "icon": "$(keyboard)"
+        }
+      ]
+    },
+    "views": {
+      "keyboardSoundContainer": [
+        {
+          "type": "webview",
+          "id": "keyboardSound.audioEngineView",
+          "name": "Audio Engine",
+          "visibility": "hidden"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "keyboardSound.enable",
+        "title": "Enable",
+        "category": "Keyboard Sound"
+      },
+      {
+        "command": "keyboardSound.disable",
+        "title": "Disable",
+        "category": "Keyboard Sound"
+      },
+      {
+        "command": "keyboardSound.toggle",
+        "title": "Toggle",
+        "category": "Keyboard Sound"
+      },
+      {
+        "command": "keyboardSound.testSound",
+        "title": "Test Sound",
+        "category": "Keyboard Sound"
+      },
+      {
+        "command": "keyboardSound.openSettings",
+        "title": "Open Settings",
+        "category": "Keyboard Sound"
+      },
+      {
+        "command": "keyboardSound.selectSoundPack",
+        "title": "Select Sound Pack",
+        "category": "Keyboard Sound"
+      },
+      {
+        "command": "keyboardSound.setVolume",
+        "title": "Set Volume",
+        "category": "Keyboard Sound"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "Keyboard Sound",
+      "properties": {
+        "keyboardSound.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable keyboard sound effects while typing."
+        },
+        "keyboardSound.volume": {
+          "type": "number",
+          "default": 70,
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Sound playback volume percentage (0% = Mute, 100% = Maximum volume)."
+        },
+        "keyboardSound.soundPack": {
+          "type": "string",
+          "enum": [
+            "mechanical",
+            "thock",
+            "typewriter"
+          ],
+          "enumDescriptions": [
+            "Classic mechanical switch key sound pack",
+            "Deep mechanical thock sound pack",
+            "Classic mechanical typewriter sound pack"
+          ],
+          "default": "mechanical",
+          "description": "Select active mechanical keyboard sound profile."
+        },
+        "keyboardSound.specialKeySounds": {
+          "type": "boolean",
+          "default": true,
+          "description": "Play distinct realistic sounds for special keys like Space, Enter, Backspace, Tab, and Delete."
+        },
+        "keyboardSound.randomizeSounds": {
+          "type": "boolean",
+          "default": true,
+          "description": "Randomize key click variations to sound authentic and non-repetitive."
+        },
+        "keyboardSound.onlyWhenEditorFocused": {
+          "type": "boolean",
+          "default": true,
+          "description": "Only play keyboard sounds when an active text editor in VS Code is focused."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package --no-dependencies --baseContentUrl https://github.com/aadisoni8044-code --baseImagesUrl https://github.com/aadisoni8044-code"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^2.22.0",
+    "typescript": "^5.3.3"
+  }
+}
