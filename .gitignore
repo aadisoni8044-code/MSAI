@@ -1,0 +1,6 @@
+*.pyc
+__pycache__/
+*.swp
+*.swo
+.pytest_cache/
+ui_screenshot.png
