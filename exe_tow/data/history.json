@@ -1,0 +1,13 @@
+{
+  "projects": [
+    {
+      "id": "proj_1_1790758026",
+      "name": "integration_proj",
+      "path": "/tmp/pytest-of-jules/pytest-8/test_full_app_integration0/integration_proj",
+      "main_file": "app.py",
+      "last_build": "2026-09-30 08:47:06",
+      "last_status": "READY"
+    }
+  ],
+  "builds": []
+}
