@@ -1,0 +1,14 @@
+import.game
+import.box
+
+
+a = size.game(1000,1000)
+
+b = run.game()
+
+c = run.box()
+
+d = switch.box()
+
+
+print(a,b,c,d)
