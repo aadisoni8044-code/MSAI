@@ -1,0 +1,26 @@
+name: zippro
+description: "Zippro - Next-gen Snapchat-like Mobile Application with 50 Camera Filters"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  provider: ^6.1.2
+  camera: ^0.11.0+2
+  shared_preferences: ^2.5.2
+  google_fonts: ^6.2.1
+  font_awesome_flutter: ^10.8.0
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
