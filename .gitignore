@@ -1,0 +1,60 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Android Studio details
+.navigation/
+captures/
+pointer_location.xml
+
+# Flutter repo
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+
+# Symbol specification
+app.*.symbols
+
+# Obfuscation map files
+app.*.map.json
+
+# Android
+android/app/debug
+android/app/profile
+android/app/release
+
+# iOS
+ios/Runner/GeneratedPluginRegistrant.h
+ios/Runner/GeneratedPluginRegistrant.m
+
+# Coverage
+coverage/
+
+# Xcode
+*.mode1v3
+*.mode2v3
+*.moved-builder
+*.pbxuser
+*.perspectivev3
+*.xcclassmodel
+xcuserdata/
+
+# Visual Studio Code
+.vscode/
