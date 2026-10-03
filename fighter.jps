@@ -1,0 +1,7 @@
+import.box
+
+a = body_2D.box()
+
+b = size.box(500,500)
+
+print(a,b)
